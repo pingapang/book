@@ -1,0 +1,1381 @@
+
+\chapter{Linear mixed modelling: introduction}
+
+
+\section{Fixed effects and random effects}
+In the simplest form of linear modelling, we have one dependent continuous variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $x_1$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
+
+
+\begin{eqnarray}
+y = b_0 + b_1 x_1 + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+Using this model, we know that for a person with a value of 5 for $x_1$, we expect $y$ to be equal to $b_0 + b_1 \times 5$. As another example, if $y$ is someone's IQ score, $x_1$ is someone's brain size in cubic milliliters, $b_0$ is equal to 70, and $b_1$ is equal to 0.1, we expect on the basis of this model that a person with a brain size of 1500 cubic millimeters has an IQ score of $70 + 0.01 \times 1500$, which equals 85.
+\\
+\\
+Now, for any model the predicted values usually are not the same as the observed values. If the model predicts on the basis of my brain size that my IQ is 140, my true IQ might be in fact 130. This discrepancy is termed the residual: the observed $y$, minus the predicted $y$, or $\hat{y}$, so in this case the residual is $y - \hat{y}=130-140= -10$.
+\\
+\\
+Here we have the model for the relationship between IQ and brain size.
+
+\begin{eqnarray}
+IQ = 70 + 0.1 \times Brainsize + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+Note that in this model, the values of 70 and 0.1 are \textit{fixed}, that is, we use the same intercept and the same slope for everyone. You use these values for any person, for Henry, Jake, Lizz, and Margaret. We therefore call these effects of intercept and slope \textit{fixed effects}, as they are all the same for all research units. In contrast, we call the $e$ term, the random error term or the residual in the regression, a \textit{random effect}. This is because the error term is \textit{different for every research unit}. We don't know the specific values of these random errors or residuals for every person, but nevertheless, we assume that they come from a distribution, in this case a normal distribution with mean 0 and an unknown variance. This unknown variance is given the symbol $\sigma^2$ 
+
+Here are a few more examples. 
+
+\begin{enumerate}
+\item Suppose we study a number of schools, and for every school we use a simple linear regression equation to predict the number of students (dependent variable) on the basis of the number of teachers (independent variable). For every research unit (in this case: school), the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect). 
+
+\item Suppose we study a number of students, and for every student we use a simple linear regression equation to predict the math test score on the basis of the number of hours of study the student puts in. Here, the research unit is student, and for every student, the  intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+
+\item Suppose we study reaction times, and for every measure of reaction time -- a trial -- we use a simple linear regression equation to predict reaction time in milliseconds on the basis of the characteristics of the stimulus. Here, the research unit is trial, and for every trial, the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+\end{enumerate}
+
+Now, what happens when we have a lot of data on students, but the students come from different schools? Suppose we want to predict average grade for every student, on the basis of the number of hours of study the student puts in. We again could use a simple linear regression equation. 
+
+\begin{eqnarray}
+y = b_0 + b_1 hourswork + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+
+
+That would be fine if all schools would be all very similar. But suppose that some schools have a lot of high scoring students, and some schools have a lot of low scoring students? Then school itself would also be a very important predictor, apart from the number of hours of study. One thing we could therefore do is to include school as a categorical predictor. We would then have to code this school variable into a number of dummy variables. The first dummy variable called $school1$ would indicate whether students are in the first school (school1=1) or not (school1=0). The second dummy variable $school2$ would indicate whether students are in the second school (school2=1) or not (school2=0), etcetera. You can then add these dummy variables to the regression equation like this:
+
+\begin{eqnarray}
+y = b_0 + b_1 hourswork + b_2 school1 + b_3 school2 + b_4 school3 + ... + e  \nonumber\\
+e \sim N(0, \sigma^2)  \nonumber
+\end{eqnarray}
+
+In the output we would find a large number of effects, one for each dummy variable. For example, if the students came from 100 different schools, I would get 99 fixed effects for the 99 dummy variables. However, one could wonder whether this is very useful. As stated earlier, fixed effects are called fixed because they are the same for every unit of research, in this case every student. But working with 99 dummy variables, where students mostly score 0, this seems very much over the top. In fact, we're not even interested in these 99 effects. We're interested in the relationship between test score and hours of work, meanwhile taking into account that there are test score differences across schools. The dummy variables are only there to account for differences across schools; the prediction for one school is a little bit higher or lower than for another school, depending on how well students generally perform in each school. 
+\\
+\\
+We could therefore try an alternative model, where we treat the school effect as $random$: we assume that every school has a different average test score, and that these averages are normally distributed. We call these average test score deviations \textit{school effects}:
+
+\begin{eqnarray}
+y = b_0 + b_1 hourswork + schooleffect + e \\
+schooleffect \sim N(0, \sigma_s^2)\\
+e \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+So in this equation, the intercept is fixed, that is, the intercept is the same for all observed test scores. The regression coefficient $b_1$ for the effect of hours of work is also fixed. But the schooleffect is random, since it is different for every school. The residual $e$ is also random, being different for every student. It could also be written like this:
+
+\begin{eqnarray}
+y = (b_0  + schooleffect) + b_1 hourswork + e \\
+schooleffect \sim N(0, \sigma_s^2)\\
+e \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+
+This representation emphasizes that for every school, the intercept is a little bit different: for school A the intercept might be $b_0 + 2$, and for school R the intercept might be $b_0 - 3$.
+
+So, this equation states that every observed test score is 1) partly influenced by an intercept that is random, with a certain average $b_0$ and variance $\sigma_s^2$, that is dependent on which school students are in, 2) partly influenced by the number of hours of work, an effect that is the same no matter what school a student is in (fixed), and 3) partly influenced by unknown factors, indicated by a random residual $e$ coming from a normal distribution with variance $\sigma^2_e$.
+
+To put it more formally: test score $y_{ij}$, that is, the test score from student $j$ in school $i$, is the sum of an effect of the school $b_0 + schooleffect_i$ (the average test score in school $i$), plus an effect of hours of work,  $b_1 \times hourswork$, and an unknown residual $e_{ij}$ (a specific residual for the test score for studuent $j$ in school $i$).
+
+\begin{eqnarray}
+y_{ij} = b_0 + schooleffect_i + b_1 hourswork + e_{ij} \\
+schooleffect_i \sim N(0, \sigma_s^2)\\
+e_{ij} \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_s^2$, we also have an assumption that the school averages are normally distributed, in this case with mean $b_0$ and variance $\sigma_s^2$.
+\\
+\\
+Let's go back to the example of reaction times. Suppose in an experiment we measure reaction time in a large number of trials. We want to know whether the size of the stimulus (large/small) has an effect on reaction time. Let's also suppose that we carry out this experiment with 20 participants, where every participant is measured during 100 trials: 50 large stimuli and 50 small stimuli in random order. Now probably, some participants show generally very fast responses, and some participants show generally very slow responses. In other words, the average reaction time for the 100 trials may vary from participant to participant. This means that we can use participant as an important predictor of reaction times. To take this into account we can use the following equation:
+
+
+\begin{eqnarray}
+y_{ij} = b_0 + speed_i + b_1 size + e_{ij} \\
+speed_i \sim N(0, \sigma_s^2)\\
+e_{ij} \sim N(0, \sigma_e^2),
+\end{eqnarray}
+
+where $y_{ij}$, is the reaction time $j$ from participant $i$, $(b_0 + speed_i)$ is a random effect representing the average speed for each participant $i$ (where $b_0$ is the overall average across all participants), $b_1$ is the fixed effect of the size of the stimulus, and unknown residual $e_{ij}$ is a specific residual for the reaction time for trial $j$ of participant $i$.
+\\
+\\
+The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools. When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you only use a simple linear model. With clustered data, it is therefore necessary to work with an extension of the linear model, the so-called linear mixed model. The above models for test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. 
+\\
+\\
+If you have clustered data, you should take this clustering into account, either by using the grouping variable as a qualitative predictor (using a number of dummy variables) or by using a linear mixed model. As a rule of thumb: if you have fewer than 10 groups, consider dummy variables; if you have 10 or more groups, consider a linear mixed model. Use a linear mixed model if the assumption of normally distributed group differences is tenable. Use dummy variables if you are actually interested in the size of group differences.
+\\
+\\
+Below, we will start with a very simple example of linear mixed model, one that we use for a simple pre-post intervention design.
+
+
+
+\section{Pre-post intervention design}
+
+
+Imagine a study where we hope to show that aspirin helps reduce headache. For 100 patients we ask to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients were randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course headaches differ from person to person, so we might have to take into account that some patients have a higher average level of headache than other patients. Now, the data could be represented in different ways, but suppose we have the following data matrix (showing only the first 5 patients):
+ \\
+ \\
+ \begin{tabular}{lrr}
+ patient & pre & post \\ \hline
+ 001 & 55 & 45 \\
+ 002 & 63 & 50 \\
+ 003 & 66 & 56 \\
+ 004 & 50 & 37 \\
+ 005 & 63 & 50 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+\\
+\\
+What we observe here is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
+\\
+\\
+
+There is an alternative way of representing the same data. Let's look at the same data in a new format:
+<<analysisprepost1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+patient <- rep (seq(1:100), 2)
+measure <- rep( c( 1,2), each=100)
+# time <- as.factor(time)
+headache1 <-  rnorm(100, 60, 5)
+headache2 <-  headache1 + rnorm(100, -10, 3)
+headache1 <- headache1 +  rnorm(100, 0, 3)
+headache = c(headache1, headache2)
+headache <- round(headache,0)
+data <- data.frame(patient, measure, headache) %>%  dplyr::arrange(patient)
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepost.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdata.sps',
+              package = c("SPSS"))
+data[1:10,] %>% kable()
+@
+%  \\
+%  \\
+%  \begin{tabular}{lrr}
+%  patient & intervention & severity \\ \hline
+%  001 & pre & 80 \\
+%  001 & post & 65 \\
+%  002 & pre & 34 \\
+%  002 & post & 25 \\
+%  003 & pre & 23 \\
+%  003 & pre & 15 \\
+%  004 & post & 90 \\
+%  004 & pre & 70 \\
+%  005 & post & 23 \\
+%  005 & pre & 13 \\
+%  \dots & \dots & \dots \\
+%  \end{tabular}
+% \\
+% \\
+Here we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). Here we might consider applying a simple linear regression model, using severity as the dependent variable and \textbf{measure} (1st or 2nd) as a qualitative predictor (using a dummy variable). However, since we know that there is a correlation between the pre and post severity measures, we know that measures systematically vary across patients: some score high on average and some score low on average. Therefore we have to run a linear \textit{mixed} model, including not only the fixed effect of \textbf{measure} but also a random effect for each patient. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \textbf{measure}). For the patient effect, because there are so many patients (100) and we're really not interested in all of these individual differences, we use a random effect. This means that we only assume there is a normal distribution for all of the patient differences. So we get the following equation:
+
+
+\begin{eqnarray}
+y_{ij} = b_0 + patient_i + b_1 measure + e_{ij} \\
+patient_i \sim N(0, \sigma_p^2)\\
+e_{ij} \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+$y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + patient_i)$ is the average headache for patient $i$, \textit{measure} is a dummy variable for which measure (first or second), and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
+\\
+\\
+This analysis can be done with the following SPSS syntax, treating time as a qualitative variable (using BY) for which SPSS will create a dummy variable automatically. 
+
+
+\begin{verbatim}
+MIXED headache  BY measure
+  /FIXED=measure
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
+\end{verbatim}
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm} ]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepost.pdf}
+    \end{center}
+\end{figure}
+
+The most interesting output is given here. We're mostly interested in the fixed effect of the intervention: does aspirin reduce headache? After an F-test, we see the linear model coefficients, with an intercept of around 49 and a positive effect of the intervention dummy variable, around $+10$. We see that the dummy variable was coded 0 for the second measure and 1 for first meausure. So, for our dependent variable headache, we see that the expected headache severity for the observations with a 0 for the dummy variable (that is, measure 2, which is \textit{after} taking aspirin), is equal to $49 + (10) \times 0 = 49$. Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable (that is, \textit{before} taking aspirin), is equal to $49 + (10) \times 1 = 49 + 10 = 59$. So, average pain severity is 10 points higher before the intervention than after the intervention. Whether this difference is significant is indicated by a $t$-test. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t(99) = 25.46, p < 0.01$. The degrees of freedom are taken from the Test of Fixed Effects table with the $F$-statistics. Alternatively we can write 
+
+\begin{quote}
+{The average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $F(1,99) = 648.28, p < 0.01$}\end{quote}
+
+
+We might therefore carefully conclude that aspirin reduces headache in the population of NY Times readers with headache problems, where the reduction is around 10 points on a 1...100 scale (95\% CI: 9.55 -- 11.17). 
+\\
+\\
+Now, this looks like reporting the output of a regular linear model, but of course it isn't. We also have some extra output, about the random effect of patient. We assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the Covariance Parameters part of the SPSS output. We there see two random effects: the one for the residuals and one for the patients. The intercept seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
+
+\begin{eqnarray}
+y_{ij} = b_0 + patient_i + b_1 measure + e_{ij} \\
+y_{ij} = 49 + patient_i + 10 measure + e_{ij} \\
+patient_i \sim N(0, 27)\\
+e_{ij} \sim N(0, 8)
+\end{eqnarray}
+
+Since measure is coded 0 for the headache level after the intervention, we conclude that the average pain level after taking aspirin is 49. However, not everybody's pain level after taking aspirin is 49: people show variance. The pain level after aspirin varies with a variance of 27, which is equavalent to a standard deviation of arond 5.2. Figure below shows how much this variance actually is. It depicts a normal distribution with mean 49 and a standard deviation of 5.2.
+
+
+<<resultsprepost1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+interval <- seq(0:100)
+density <- dnorm(interval, mean=49, sd=5.2)
+data <- data.frame(interval,density )
+ggplot(data, aes (x=interval, y=density)) + geom_line() + xlab("headache")
+@
+
+So \textit{after} taking aspirin, most patients show headache levels between 30 and 60. More specificially, if we would take the middle 95\% by using plus or minus twice the standard deviation, we can estimate that 95\% of the patients shows levels between $49 - 2 \times 5.2 = 38.6$ and $49 + 2 \times 5.2 = 59.4$
+\\
+\\
+Now let's look at the levels \textit{before} taking aspirin. The average headache leves is equal to $49 + 10 = 59$. So 95\% of the patients shows headache levels between $59 - 2 \times 5.2 = 48.6$ and $59 + 2 \times 5.2 = 49.4$ before taking aspirin. 
+\\
+\\
+Together these results can be graphically explained in the plot below:
+<<resultsanalysisprepost2, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+interval <- seq(0:100)
+density1 <- dnorm(interval, mean=59, sd=5.2)
+density2 <- dnorm(interval, mean=49, sd=5.2)
+data <- data.frame(interval,density1, density2)
+ggplot(data, aes (x=interval, y=density1), show.legend = F) + geom_line(show.legend = F, col="blue") + 
+                xlab("headache")  + ylab("density")+
+        geom_line(aes(y=density2), col='black', show.legend = F) +
+        geom_label(  aes(x=70, y=0.06), col='blue', label='before aspirin', show.legend = F) +
+        geom_label(  aes(x=40, y=0.06), col='black', label='3 hrs after aspirin', show.legend = F) 
+@
+
+
+In this plot you see there is variability in headache levels before taking aspirin, and there is variation in headache levels after taking aspirin. We also see that these distributions have the same spread (variance): in the model we assume that the variability in headache before aspirin is equal to the variability after aspirin. The distributions are equal, except for a horizontal shift: the distribution for heachache after aspirin is the same as the distribution before apsirin, except for a shift to the left of about 10 points. This is of course the effect of aspirin in the model, the $b_1$ parameter in our model above. 
+\\
+\\
+The fact that the two distributions before and after aspirin show the same spread (variance) was an inherent assumption in our model: we only have one random effect for patient in our output. If the assumption of equal variance (homoscedasticity) is not tenable, then one should consider other linear mixed models. But this is beyond the scope of this chapter. The assumption can be checked by plotting the residuals, using differnt colours for residuals from before taking aspirin and for residuals from after taking aspirin. 
+
+
+
+\subsection{Exercises}
+
+Suppose an intervention study looked at the effect of therapy on depression levels. A random sample of patients were measured before and after the therapy. Given the following equation, based on output of the statistical software package R. The dummy variable \textit{measure} was coded 0 for before therapy and 1 for after therapy.
+
+
+<<analysisprepostexample1, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+set.seed(1234)
+patient <- rep (seq(1:100), 2)
+measure <- rep( c( 1,2), each=100)
+# time <- as.factor(time)
+depression1 <-  rnorm(100, 8, 1)
+depression2 <-  depression1 + rnorm(100, -2, 3)
+depression1 <- depression1 +  rnorm(100, 0, 3)
+depression = c(depression1, depression2)
+depression <- round(depression,0)
+data <- data.frame(patient, measure, depression) %>%  dplyr::arrange(patient)
+out  <- lme4::lmer(depression ~ measure + (1|patient) , data=data)
+# summary(out)
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostdepression.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostdepression.sps',
+              package = c("SPSS"))
+@
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf}
+    \end{center}
+\end{figure}
+
+
+Look at the output below. You see information about random effects and you see information about fixed effects. 
+
+\begin{itemize}
+\item 1. What is the intercept of the model?\\
+\item 2. What is the slope coefficent for the measure variable?\\
+\item 3. What is the variance of the residuals? What is the standard deviation?\\
+\item 4. What is the variance of the individual differences among patients? What is the standard deviation?\\
+\item 5. Fill in the values in the linear mixed model below:
+
+\begin{eqnarray}
+depression_{ij} = \dots + patient_i + \dots \times measure + e_{ij} \\
+patient_i \sim N(0, \sigma_p^2 = \dots)\\
+e_{ij} \sim N(0, \sigma_e^2 = \dots)
+\end{eqnarray}
+
+
+\item 6. what can you say about the average depression level before therapy? \\
+\item 7. what can you say about the average depression level after therapy?\\
+\item 8. How much variance in depression level before therapy does this model predict? What is the standard deviation? \\
+\item 9. Between what values do depression levels before therapy in the middle 95\% of patients show?\\
+\item 10. How much variance in depression level after therapy does this model predict? What is the standard deviation? \\
+\item 11. Between what values do depression levels after therapy in the middle 95\% of patients show?\\
+\item 12. Does therapy help to alleviate depression in patients? You may use an approximation to construct a confidence interval.
+
+\item 13. A researcher has two groups of patients: one group receives medicine and one group receives therapy. The null-hypothesis is that depression levels after medicine are as high as depression levels after therapy. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer.
+
+\item 14. A researcher studies one group of students: they first get lectures from teacher A and then they get lectures from teacher B. The null-hypothesis is that the average teacher evaluation for teacher A is the same as the average teacher evaluation for teacher B. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer. 
+
+
+\item 15. For a study to the effect of light on mood, we have data on 100 teachers They were asked to rate their mood on a cloudy day and asked to rate their mood on a sunny day. We have the variable \textbf{mood}, the dummy variable \textbf{sunny} and we want to include a random effect for \textbf{teacher} From the three syntaxes below, choose the one that is most suitable for your analysis and fill in the blanks.
+
+
+\begin{verbatim}
+MIXED ...  WITH ...
+  /FIXED=...
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(...) COVTYPE(VC).
+\end{verbatim}
+
+
+\begin{verbatim}
+UNIANOVA ... WITH ... 
+/ design = ...
+/ print = parameter.
+\end{verbatim}
+
+
+\begin{verbatim}
+UNIANOVA ... BY ... 
+/ design = ...
+/ print = parameter.
+\end{verbatim}
+
+
+\item 16. A researcher wants to know whether students in green classrooms (colour = 1) perform better than students in yellow classrooms (colour = 2). The following data were collected (showing only a part):
+
+<<analysisprepostexample2, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+student <- rep (seq(1:100), 1)
+colour <- rep( c( 1,2), each=1)
+# time <- as.factor(time)
+performance <-  rnorm(100, 8, 1)
+
+performance <- round(performance,2)
+data <- data.frame(student, colour, performance) 
+data[1:10,] %>% kable()
+@
+
+Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+
+\item 17. A researcher wants to know whether students in dark classrooms (brightness = 0) perform better than students in bright classrooms (brightness = 1). The following data were collected (showing only a part):
+
+
+<<analysisprepostexample3, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(0234)
+student <- rep (seq(1:100), each=2)
+brightness <- rep( c( 0,1), each=1)
+# time <- as.factor(time)
+performance <-  rnorm(100, 8, 1)
+
+performance <- round(performance,2)
+data <- data.frame(student, brightness, performance) %>%  dplyr::arrange(student)
+data[1:10,] %>% kable()
+@
+
+Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+
+<<analysisprepostexample4, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+set.seed(0123)
+employee <- rep (seq(1:100), 2)
+green <- rep( c( 0,1), each=100)
+sunny <- rbinom(200, 1, 0.5)
+# time <- as.factor(time)
+creativity1 <-  rnorm(100, 60, 5)
+creativity2 <-  creativity1 + rnorm(100, -5, 3)
+creativity1 <- creativity1 +  rnorm(100, 0, 3)
+creativity = c(creativity1, creativity2)
+creativity <- round(creativity,0)
+data <- data.frame(employee, green, sunny , creativity) %>%  dplyr::arrange(employee)
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostcreativity.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostcreativity.sps',
+              package = c("SPSS"))
+@
+
+\item 18.
+A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is meassured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
+
+\begin{verbatim}
+MIXED creativity  WITH green sunny
+  /FIXED= green sunny
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(employee) COVTYPE(VC).
+\end{verbatim}
+
+We get the following output: 
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf}
+    \end{center}
+\end{figure}
+
+Write a short paragraph describing these results and the conclusions in APA format.
+
+
+\end{itemize}
+
+
+\subsubsection{Answers:}
+
+\begin{itemize}
+
+\item Ad1: \Sexpr{summary(out)$coef[ 1,1 ]} \\
+\item Ad2: \Sexpr{summary(out)$coef[ 2,1 ]} \\
+\item Ad3: \Sexpr{8.31},\Sexpr{2.88} \\
+\item Ad4: \Sexpr{1.79},\Sexpr{1.34} \\
+
+\item Ad5:
+\begin{eqnarray}
+depression_{ij} = \Sexpr{summary(out)$coef[1,1]} + patient_i + (\Sexpr{summary(out)$coef[2,1]}) \times measure + e_{ij} \\
+patient_i \sim N(0, \sigma_p^2 = 1.79)\\
+e_{ij} \sim N(0, \sigma_e^2 = 8.31)
+\end{eqnarray}
+
+
+
+
+\item Ad 6: \Sexpr{summary(out)$coef[1,1]}\\
+\item Ad 7: \Sexpr{summary(out)$coef[ 1,1 ]} + \Sexpr{summary(out)$coef[ 2,1 ]}  = \Sexpr{summary(out)$coef[1,1]+summary(out)$coef[2,1] }\\
+% Ad 8: SD = 1.34, variance is 1.34^2= 1.80$. \\
+\item Ad 8: 1.79, 1.34 \\
+
+\item Ad 9: $10.57 \pm 2 \times 1.34 = {7.89, 13.25}$\\
+
+\item Ad 10: 1.79, 1.34 \\
+
+\item Ad 11: $(10.57 -2.28)  \pm  2 \times 1.34 = {5.61, 10.79 }   $\\
+
+\item Ad 12: For the effect of therapy (the measure variable), we see a $b$-value of \Sexpr{summary(out)$coef[2,1]} with a standard error of \Sexpr{summary(out)$coef[2,2]}, so if we use the +/-2 rule to compute a 95\% confidence interval, we get $[ -2.28 - 2\times 0.41 , -2.28 + 2\times 0.41]  = [ -3.1 ,  -1.46]$. The 95\% interval does NOT contain the value 0 so we can reject the null-hypothesis that the effect of therapy is zero. Therefore, we conclude that therapy has an influence on depression. In this case we saw a decrease in depression levels after therapy.
+
+\item Ad 13: Two groups of patients are studied, and for each patient we have only one measure. Because we only have one measure for each unit of observation we conduct an ordinary linear model.
+
+\item Ad 14: One group of students is studied, and for each student we have two evaluations: one for teacher A and one for teacher B. Because we have more than one measure for each unit of observation, we have to use a linear mixed model. 
+
+\item Ad15: 
+
+\begin{verbatim}
+MIXED mood  WITH sunny
+  /FIXED=sunny
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(teacher) COVTYPE(VC).
+\end{verbatim}
+
+\item Ad16: it seems as if each student was only measured once, there is no clustering, so we can use an ordinary linear model.
+
+\item Ad17: it seems as if each student was measured twice, in both dark and bright conditions, so we use a linear mixed model to account for clustering.
+
+\item Ad18: 
+\begin{quotation}
+
+A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. The variance not explained by weather and greenness was largely explained by individual differences in creativity among employees, with an intraclass correlation of $\frac{23.7}{23.7+9.2}= 0.72$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
+
+\end{quotation}
+
+\end{itemize}
+
+
+
+\section{Pre-mid-post intervention design}
+
+
+In many intervention studies, one has more than two measurement moments. For instance, you'd like to know if there is not only a short term effect of aspirin, but also a long-term effect. Suppose that the study mentioned in the previous section on headache among NY Times readers was extended by asking patients not only to rate their headache before aspirin and 3 hours after intake, but also 24 hours after intake. In this case our data could look like this:
+
+<<analysispremidpost1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+patient <- rep (seq(1:100), 3)
+measure <- rep( c( 1,2,3), each=100)
+# time <- as.factor(time)
+headache1 <-  rnorm(100, 60, 5)
+headache2 <-  headache1 + rnorm(100, -10, 3)
+headache3 <-  headache1 + rnorm(100, -8, 3)
+headache1 <- headache1 +  rnorm(100, 0, 3)
+headache = c(headache1, headache2, headache3)
+headache <- round(headache,0)
+datalong <- data.frame(patient, measure, headache) %>% dplyr::arrange(patient)
+datawide <- datalong %>% tidyr::spread(measure, headache)
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(datalong, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/premidpost.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/getdatapremidpost.sps',
+              package = c("SPSS"))
+names(datawide) <- c("patient", "measure1", "measure2", "measure3")
+kable(datawide[1:10,])
+@
+
+So for each patient we have three measures: pre, post1 and post2. To see if there is some significant clustering, it is no longer possible to study this by computing a single correlation. We could however compute 3 different correlations: pre-post1, pre-post2, and post1-post2, but this is rather tedious, and moreover does not give us a single measure of the extent of clustering of the data. But there is an alternative: one could compute not a Pearson correlation, but an \textit{intraclass correlation} (ICC). To do this, we need to bring the data again into a regression type format, like this (we call this \textit{long format}, as opposed to \textit{wide format}):
+
+<<analysispremidpost2, fig.height=4, echo=FALSE, fig.align='center'>>=
+kable(datalong[1:10,])
+@
+
+We can perform an analysis using a MIXED analysis in SPSS:
+
+\begin{verbatim}
+
+MIXED headache BY measure
+  /FIXED=measure
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
+\end{verbatim}
+
+The output is given below:
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm} ]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirin.pdf}
+    \end{center}
+\end{figure}
+
+
+In the output we see the fixed effects of two automatically created dummy variables \textbf{measure=1} and \textbf{measure=2}, and the intercept. We also see the variances of the random effects: the variance of the residuals and the variance of the random effects for each patient.
+
+From this output, we can plug in the values into the equation:
+
+
+\begin{eqnarray}
+headache_{ij} = 51 + patient_i +7.5 \times measure1 - 2.4 \times measure2 + e_{ij} \nonumber\\
+patient_i \sim N(0, 28.3)\nonumber\\
+e_{ij} \sim N(0, 8.5)\nonumber
+\end{eqnarray}
+
+Based on this equation, the expected headache severity score in the population 24 hours after aspirin intake is 51 (the third measure is the reference group). Dummy variable \textbf{measure=1} is coded 1 for the measurements before taking aspirin. Therefore, the expected headache score before aspirin intake is equal to $51+7.5 = 58.5$. Dummy variable \textbf{measure=2} was coded 1 for the measurements 3 hours after aspirin intake. Therefore, the expected headache score 3 hours after aspirin intake is equal to $51 - 2.4 = 48.6$. In sum, in this sample we see that the average headache level decreases directly after aspirin intake from 58.5 to 48.6, but then increases again to 51. 
+\\
+\\
+There was quite some variation in individual headache levels: the variance is equal to 28.3, so the standard deviation (its square root) is equal to about 5.3. Therefore, if we look at roughly 95\% of the sample, we see that prior to taking aspirin, the scores vary between $58.5 -2\times 5.3 = 47.9$ and $58.5 + 2 \times 5.3 = 69.1$. For the short-term effect of aspirin after 3 hours, we see that roughly 95\% of the scores lie between $48.6 -2\times 5.3 = 38.0$ and $48.6 + 2 \times 5.3 = 59.2$. The normal distributions, predicted by this model, are depicted in the figure below:
+
+
+<<analysispremidpost3, fig.height=4, echo=FALSE, fig.align='center'>>=
+interval <- seq(0:100)
+density1 <- dnorm(interval, mean=58.5, sd=5.3)
+density2 <- dnorm(interval, mean=48.6, sd=5.3)
+density3 <- dnorm(interval, mean=51, sd=5.3)
+data <- data.frame(interval,density1, density2)
+ggplot(data, aes (x=interval, y=density1), show.legend = F) + geom_line(show.legend = F, col="blue") + 
+                xlab("headache")  + ylab("density")+
+        geom_line(aes(y=density2), col='black', show.legend = F) +
+        geom_line(aes(y=density3), col='red', show.legend = F) +
+        geom_label(  aes(x=70, y=0.06), col='blue', label='before aspirin', show.legend = F) +
+        geom_label(  aes(x=40, y=0.06), col='black', label='3 hrs after aspirin', show.legend = F) +
+        geom_label( aes(x=45, y=0.055), col='red', label='24 hrs after aspirin', show.legend = F)
+@
+
+
+
+So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
+
+If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the relevant chapter on how to perform planned comparisons and post hoc tests.
+\\
+\\
+Now recall that we mentioned an intraclass correlation, or ICC. An intraclass correlation indicates how much clustering there is within the groups, in this case, clustering of headache scores within NY Times readers. How much are the three scores alike that come from the same patient? This correlation can be computed on the basis of the SPSS output, using the following formula:
+
+\begin{eqnarray}
+ICC = \frac{\sigma^2_{patient} } {\sigma^2_{patient} +\sigma^2_e }   
+\end{eqnarray}
+
+Here, the variance of the \textbf{patient} random effects is equal to 28.3, and the variance of the residuals $e$ is equal to 8.5, so the intraclass correlation for the headache severity scores is equal to 
+\begin{eqnarray}
+ICC = \frac{28.3} {28.3 + 8.5 } =  0.80
+\end{eqnarray}
+
+As this correlation is quite higher than 0, there seems to be quite a lot of clustering. Therefore it's a good thing that we used random effects for the individual differences in headache scores among NY Times readers. Had this correlation been 0 or very close to 0, however, then it would not have mattered to include these random effects. In that case, we might as well use an ordinary linear model, using the UNIANOVA syntax for example. Note from the formula that the correlation becomes 0 when the variance of the random effects for patients is 0.
+\\
+\\
+
+
+\subsection{Exercises}
+
+Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are as follows:
+\\
+ \\
+ \begin{tabular}{lrr}
+ student & colour & score \\ \hline
+ 001 & yellow & 60 \\
+ 001 & red & 66 \\
+ 001 & blue & 60 \\
+ 002 & yellow & 24 \\
+ 002 & red & 15 \\
+ 002 & blue & 30 \\
+ 003 & yellow & 90 \\
+ 003 & red & 90 \\
+ 003 & blue & 89 \\
+ 004 & yellow & 10 \\
+ 004 & red & 20 \\
+ 004 & blue & 15 \\
+ 005 & yellow & 23 \\
+ 005 & red & 13 \\
+ 005 & blue & 18 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+\\
+\\
+
+\begin{itemize}
+\item 1. If you want to test the hypothesis that the colour of the walls do not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be? \\
+\item 2. In the output that would result from that syntax from question 1, would you look at a $t$-test or or an $F$-test? Explain your answer.
+\item 3. How many degrees of freedom would you see for the denominator?\\
+\item 4. Suppose you see this in the output for this colour experiment. How important are the individual difference in math performance in the population of students? Can you quantify the amount of clustering?
+
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.png}
+    \end{center}
+\end{figure}
+
+\end{itemize}
+
+
+Answers:
+\begin{itemize}
+\item 1.
+\\
+\begin{verbatim}
+MIXED score BY colour
+  /FIXED=colour
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+\end{verbatim}
+
+\item 2. $F$-test. There will be two dummy variable and I want to know if the effects of both of these are significantly different from 0. The $t$-tests  give me only information about the dummy variables separately. \\
+\item 3. 2, because there are 3 different colours, which can be represented by 2 dummy-variables. \\
+\item 4. In the table with the data you generally see that students who score high in one room also score high in another room (for instance, students 001 and 003). Students who score low in one room also score low in another room (for instance students 002, 004 and 005). This clustering can be quantified using an intraclass correlation, in this case equal to $\frac{228}{228+270}=0.46$. 
+\end{itemize}
+
+
+\section{Pre-mid-post intervention design: linear effects}
+In the previous section, we've looked at \textit{qualitative} variables: \textbf{measure} (pre intervention, 3 hours after, and 24 hours after), or \textbf{colour} (yellow, red, and blue rooms). We can use the same type of analysis for \textit{quantitative} variables. In fact, we could have used a linear effect for time in the headache example: using time of measurement as a variable. Let's look at the headache data again. But now we've created a new variable \textbf{time} that is based on the measure \textbf{variable}: all first measurements are coded as \textbf{time}=0, all second measurements after 3 hours are coded as \textbf{time}=3, and all third measurements after 24 hours are coded as \textbf{time}=24.
+
+ <<analysispremidpost4, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalongnew <- datalong %>%  mutate( time = replace(measure, measure==c(1,2,3), c(0, 3, 24) ))
+kable(datalongnew[1:10,])
+@
+ 
+ 
+Instead of using a qualitative variable intervention, with three levels, we now use a quantitative variable, time, indicating the number of hours that have elapsed after aspirin intake. At point 0 hours, we measure headache severity, and patients take an aspirin. Next we measure headache after 3 hours and 24 hours. Above, we wanted to know if there were differences in average headache between before intake and 3hrs and 24 hrs after intake. Another question we might ask ourselves: is there a \textit{linear} reduction in headache severity after taking aspirin?
+
+For this we can do a linear regression type of analysis. We want to take into account individual differences in headache severity levels among patients, so we perform a MIXED analysis in SPSS, using the following syntax, replacing the key word BY with WITH, and the variable \textbf{measure} by \textbf{time}:
+
+\begin{verbatim}
+MIXED headache WITH time
+  /FIXED=time
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
+\end{verbatim}
+
+
+Below we see the corresponding output:
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm} ]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear.pdf}
+    \end{center}
+\end{figure}
+
+
+Based on the output, we see that the model for our data is equivalent to
+
+
+\begin{eqnarray}
+headache_{ij} = 54 + patient_i - 0.16 \times time + e_{ij} \\
+patient_i \sim N(0, 21)\\
+e_{ij} \sim N(0, 31)
+\end{eqnarray}
+
+This model predicts that at time 0, the average headache severity score equals 54, and that for every hour after intake, the headache level drops by 0.16 points. So it predicts for example that after 10 hours, the headache has dropped 1.6 points to 52.4. 
+\\
+\\
+Is this a good model for the data? Probably not, look at the variance of the residuals: with its 31 it is now a lot bigger than in the previous analysis with the same data (see previous section). Larger variance of residuals means that the model explains the data worse: predictions are worse, so the residuals increase in size. 
+\\
+\\
+That the model is not appropriate for this data set is also obvious when we plot the data, focusing on the relationship between time and headache levels:
+
+
+ <<analysispremidpost5, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalongnew %>% ggplot( aes(x=time, y=headache) ) + geom_point() +xlab("time after aspirin intake") +ylab("headache score") + geom_abline(intercept=54, slope=-0.16)
+@
+
+The line shown is the fitted line based on the SPSS output. It can be seen that the prediction for time=0 is too low, for time=2 too high, and for time=24 again too low. So for this particular data set on headache, it would be better to use a qualitative predictor for the effect of time on headache, like we did in the previous section.
+\\
+\\
+As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like this:
+
+
+ <<analysispremidpost6, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalongnew2 <- datalongnew %>% mutate( time = replace(time, time==24 ,2 ))
+
+datalongnew2 %>% ggplot( aes(x=time, y=headache) ) + geom_point() +xlab("time after aspirin intake") +ylab("headache score") + geom_abline(intercept=58.972, slope=-3.349)
+@
+
+Here we see a gradual increase of headache levels right after aspirin intake. Here, a quantitative treatment of the time variable would be more appropriate. The SPSS output is given below.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm} ]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear2.pdf}
+    \end{center}
+\end{figure}
+
+
+From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in the above figure. 
+
+Because we are confident that this model is appropriate for our data, we can interpret the statistical output from SPSS. 
+
+\begin{quotation}
+A linear mixed model was run, using a quantitive variable time and random effects for the variable patient. We saw a significant linear effect of time on headache level, $t(199)=-24.42, p < 0.001$. The estimated effect of time based on this analysis is negative, $-3.3$, so with every hour that elapses after aspirin intake, the predicted headache score decreases with 3.3 points. 
+\end{quotation}
+
+
+\subsection{Exercises}
+
+Suppose you have a number of CEOs with smart watches and you have these smart watches log skin conductance. Skin conductance is a good measure for stress. These measurements are done at random intervals, for at most 4 times during one day. The experiment starts at 7am and stops at 7pm. The \textbf{time} variable measures how many hours have passed since 7am.
+ \\
+ \\
+ \begin{tabular}{lrr}
+ CEO & time & conductance \\ \hline
+ 001 & 2 & 80 \\
+ 001 & 3 & 65 \\
+ 001 & 10 & 60 \\
+ 001 & 11 & 60 \\
+ 002 & 4 & 34 \\
+ 002 & 6 & 25 \\
+ 002 & 9 & 30 \\
+ 002 & 12 & 30 \\
+ 003 & 3 & 23 \\
+ 003 & 4 & 15 \\
+ 003 & 5 & 20 \\
+ 003 & 8 & 20 \\
+ 004 & 0 & 90 \\
+ 004 & 3 & 70 \\
+ 004 & 4 & 65 \\
+ 004 & 11 & 65 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+\\
+\\
+Now you'd like to know if skin conductance in CEOs shows a general decrease during the day. Your null-hypothesis is therefore that there is no linear effect of time on skin conductance. Now, you have multiple measures for each CEO (repeated measures), and there might be individual differences in the average skin conductance that you would like to take into account. Therefore you perform a MIXED analysis in SPSS. 
+
+\begin{itemize}
+\item 1. What would the SPSS syntax look like? \\
+\item 2. If you got the following output, what would your predicted skin conductance be for a CEO at 15.00 hrs? \\
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
+    \end{center}
+\end{figure}
+
+
+
+\item 3. Look at the data plotted: do you think a linear effect is reasonable for this data set?
+
+ <<analysispremidpost7, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+time <- runif(100, 0, 12)
+skinconductance <- rnorm(100, 78 -4.2 * time ,10    )
+sc <- data.frame(time, skinconductance)
+sc %>% ggplot( aes(x=time, y=skinconductance)) + geom_point() + ylab("skin conductance") + xlab("time elapsed after 7am in hours") +ylim(c(0,100))
+@
+
+
+
+
+\item 4. How much clustering is there for skin conductance across CEOs? \\
+\item 5. Would you say these individual differences are very important to take into account? \\
+\item 6. Is there a significant effect of time of day on skin conductance in CEOs?\\
+\item 7. What is the effect of time of day on skin conductance in CEOs? Also give the 95\% confidence interval of this effect.
+\item 8. Write a short paragraph that describes the results in APA format.
+\item 9. Given a new data set where every student's mood was tested at three points in time: During Christmas holidays (time points 1), during Easter holidays (time point 2) and at the start of the academic year, September 1 (time point 3). Look at the data plotted: do you think a linear effect is reasonable for this data set? Explain your answer.
+
+ <<analysispremidpost8, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+time <- rep(c(1, 2, 3), 50)
+mood <- rnorm(150, 2780 -64.2 * time^3 ,100    )
+data <- data.frame(time, mood)
+data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time point") 
+@
+
+\item 10. Provide the syntax you would use to analyse the problem of question 9.
+
+
+\end{itemize}
+
+Answers:
+\begin{itemize}
+\item 1. \\
+\begin{verbatim}
+MIXED conductance WITH time
+  /FIXED=time
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(CEO) COVTYPE(VC).
+\end{verbatim}
+\item 2. 15 hrs is equal to 8 hours after 7am, so the expected skin conductance is equal to $62 - 4 \times 8= 30$\\
+\item 3. Yes, a general linear downward trend is observed for the skin conductance.
+\item 4. The intraclass correlation coefficient is equal to $\frac{235}{235+247}=0.49$, 
+\item 5. The correlation is quite different from 0, so there is certainly some clustering in the data and it is important to take these individual differences into account. \\
+\item 6. Yes, there is a signficant linear effect of time on skin conductance in CEOs, $t(59)=-4.24, p < 0.01$.\\
+\item 7. The linear effect of time of day on skin conductance in CEOs is around -4.13 points per hour after 7am (95 \% CI: -6.08 -- -2.18). \\
+\item 8. \begin{quotation}
+        A linear mixed model was run with time as a quantitative predictor for skin conductance, including random effects for CEO. We found an effect of time of -4.13 points per hour which was significantly different from 0, $t(59)=-4.24, p < 0.001$. Therefore we conclude that time of day has an effect on skin conductance in the entire population of CEOs.
+        \end{quotation}
+        
+\item 9. The relationship is not linear: you cannot draw a straight line through the means of the three measurements. 
+\item 10. Because we have multiple measurements from the same students we should use a MIXED analysis. Furthermore, a qualitave analysis would be more suitable, given the nonlinear relationship between time and mood. So we use the syntax:
+
+\begin{verbatim}
+MIXED mood BY time
+  /FIXED=time
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+\end{verbatim}
+
+\end{itemize}
+
+
+
+\section{Linear mixed models and interaction effects}
+
+
+Suppose we carry out the aspirin and headache study not only with a random sample of NY Times readers that suffer from regular headaches, but also with a random sample of readers of the Wall Street Journal that suffer from regular headaches. We'd like to know whether aspirin works, but we are also interested to know whether the effect of aspirin is similar in the two groups of readers. Our null-hypothesis is that the effect of aspirin in affecting headache severity is the same in NY Times and Wall Street Journal readers that suffer from headache.\\
+\\
+H\_0: The effect of aspirin is the same for NY Times readers as for Wall Street Journal readers.
+\\
+\\
+Suppose we have the following data set (we only show the first six patients), and we only look at the measurements before aspirin intake and 3 hours after aspirin intake (pre-post design):
+
+<<analysisprepostmixed1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+patient <- rep (seq(1:100), 2)
+measure <- rep( c( 1,2), each=100)
+# time <- as.factor(time)
+group <- rep(c("NYTimes", "WallStreetJ"),100 )
+headache1 <-  rnorm(100, 60, 5)
+headache2 <-  headache1 + rnorm(100, -10, 3)
+headache1 <- headache1 +  rnorm(100, 0, 3)
+headache = c(headache1, headache2)
+headache <- round(headache,0)
+datalong <- data.frame(patient, group, measure, headache) %>% dplyr::arrange(patient)
+datawide <- datalong %>% tidyr::spread(measure, headache) %>% dplyr::arrange(patient)
+names(datawide) <- c('patient','group','pre','post') 
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(datalong, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixedprepost.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixedprepost.sps',
+              package = c("SPSS"))
+datawide %>% head() %>% kable()
+@
+
+
+
+In this part of the data set, patients 2, 4, and 6 read the Wall Street Journal, and patients 1, 3 and 5 read the NY Times. We assume that people only read one of these newspapers. We measure their headache before and after the intake of aspirin (a pre-post design). The data are now in what we call \textit{wide format}: the dependent variable \textbf{headache} is spread over two columns, \textbf{pre} and \textbf{post}. In order to analyse the data with linear models, we need them in \textit{long format}, like this:
+
+<<analysisprepostmixed2, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalong %>% head() %>% kable()
+@
+
+
+The new variable \textbf{measure} now indicates whether a given measurement of headache refers to a measurement before intake (first measurement) or after intake (second measurement). Again we could investigate whether there is an effect of aspirin with a linear mixed model, with \textbf{measure} as our qualitative predictor, but that is not really what we want to test: we only want to know whether the effect of aspirin (being small, large, negative or non-existent) \textit{is the same for both groups}. Remember that this hypothesis states that there is no interaction effect of aspirin (\textbf{measure}) and group. The null-hypothesis is that group is \textit{not} a moderator of the effect of aspirin on headache. There may be an effect of aspirin or there may not, and there may be an effect of newspaper (\textbf{group}) or there may not, but we're interested in the \textit{interaction} of aspirin and group membership. Is the effect of aspirin different for NY times readers than for Wall Street Journal readers?
+
+In our analysis we therefore need to specify an interaction effect. Since the data are clustered (2 measures per patient), we use a linear \textit{mixed} model. First we show how to analyse these data using dummy variables, later we will show the results using a different approach. 
+\\
+\\
+We recode the data into two dummy variables, one for the aspirin intervention (measure), and one for group membership. 
+
+\begin{verbatim}
+RECODE measure (1=0) (2=1) INTO post.
+RECODE group ('WallStreetJ'=0) ('NYTimes'=1) INTO NYTimes.
+EXECUTE.
+\end{verbatim}
+
+Next we need to compute the product of these two dummies to code for the interaction effect. Since with the above dummy coding, all post measures get a 1, and all NYTimes readers get a 1, only the observations that are post aspirin and that are from NYTimes readers get a 1 for the product, the interactiondummy . That's why it is best to name this interaction effect PostNYTimes. 
+
+\begin{verbatim}
+COMPUTE PostNYTimes=post*NYTimes.
+EXECUTE.
+\end{verbatim}
+
+With these three new dummy variables we can specify the linear mixed model.
+
+\begin{verbatim}
+MIXED headache WITH post NYTimes PostNYTimes
+  /FIXED= post NYTimes PostNYTimes
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
+\end{verbatim}
+
+
+In the output below, we recognize the three fixed effects for the three dummy variables. Since we're interested in the interaction effect, we look at the effect of PostNYTimes. The effect is in the order of +0.6. So what does this mean? 
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 19cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostdummy.pdf}
+    \end{center}
+\end{figure}
+
+
+
+Remember that a reader from the Wall Street Journal gets a 0 for the group dummy \textbf{NYTimes}. All headache measures before aspirin intake are given a 0 for the intervention dummy \textbf{post}. 
+Since the product of $ 0\times 0$ equals 0, all these measures before aspirin in Wallstreet Journal readers get a 0 for the interaction dummy \textbf{PostNYTimes}.
+Therefore, the intercept of 59.5 refers to the expected headache severity of Wall Street Journal readers \textit{before} they take their aspirin. This is significantly different from zero, meaning that in the population of Wall Street Journal readers, headache before aspirin intake is different from zero.
+
+Furthermore, we see that the effect of the intervention is -10.7. So, relative to Wall Street Journal readers prior to aspirin intake, the level of post intake headache is 10.7 points \textit{less}. So in the population of Wall Street Journal readers, the effect of aspirin is different from 0, since the effect of -10.7 is significant. 
+
+If we look further down in the table, we see the effect of NYTimes equals 0.32. So, relative to Wall Street Journal readers, before aspirin intake (the reference group), NY Times readers score on average 0.32 points higher on the headache scale before aspirin intake. 
+
+However, we're not interested in a general difference between those two groups of readers, we're interested in the effect of aspirin and whether it is different in the two groups of readers. In the last row we see the interaction effect: being a reader of the NY Times AND at the same time being a measure after aspirin intake, the expected increase in mean headache equals 0.60. So the effect of aspirin is -10.7 in Wall Street Journal readers, as we saw above, but the  effect is $-10.7 + 0.6 = -10.1$ in NY Times readers. So in this sample the effect of aspirin on headache is 0.6 \textit{smaller} than in Wall Street Journal readers (note that even while the interaction effect is positive, it is positive on a scale where a high score means more headache). 
+
+
+Let's look at it in the different way, using a table with the dummy codes. For each group of data, pre or post aspirin and New York Times readers and Wall Street Journal readers, we note the dummy codes for the new dummy variables. In the last column we use the output estimates and multiply them with the respective dummy codes (1 and 0) to obtain the expected headache level (using rounded numbers):
+\\
+ \\
+ \begin{tabular}{llrrrr}
+  measure & group & post & NYTimes & PostNYT & exp mean \\ \hline
+  pre   & WallStreet      &  0 & 0 & 0 & $60$ \\
+ post   &  WallStreet     &  1 & 0 & 0 & $60 + (-11)=49$ \\
+ pre    & NYtimes         &  0 & 1 & 0 & $60 + 0.3=60.3$  \\
+ post   &  NYtimes        &  1 & 1 & 1 & $60 +(-11) + 0.3 + 0.6=49.9$ \\
+ \end{tabular}
+\\
+\\
+The exact numbers are displayed in the graph below:
+
+<<analysisprepostmixed3, fig.height=4 , echo=FALSE, fig.align='center', warning=F>>=
+fun_mean <- function(x){
+  return(data.frame(y=mean(x),label=mean(x,na.rm=T)  ) ) %>% round(1) }
+datalong %>% ggplot( aes(x=as.factor(group), y=headache)   ) + geom_bar(aes(fill=as.factor(measure)),position='dodge',stat = "summary", fun.y = "mean") +
+        xlab('Group')+scale_fill_discrete(name="Measure",
+                         breaks=c("1", "2"),
+                         labels=c("Pre", "Post")) + ylab("Expected mean headache") +
+        # stat_summary(fun.y = mean, aes(fill= as.factor(measure)), geom="point",colour="darkred", size=3, position=position_dodge(width = 1) )+
+stat_summary(fun.data = fun_mean,  aes(fill= as.factor(measure)), geom="text", vjust=0) +geom_label(aes(x=1, y=55, label='difference = 10')) + 
+        geom_label(x=2, y=55, label="difference = 10.6")
+@
+
+
+We see that the specific effect of aspirin in NYTimes readers is 0.6 smaller than the effect of aspirin in Wall Street Journal readers. This difference in the effect of aspirin between the groups was not significantly different from 0. The null-hypothesis that the effect is the same in the two populations of readers cannot be rejected. We therefore conclude that the effect that aspirin has on patients is the same for NY Times and Wall Street Journal readers. 
+
+Note that we could have done the analysis in another way, not treating the variables in a quantitative way and using dummy variables, but by treating them qualitatively using the key word BY. The SPSS syntax would then be:
+
+\begin{verbatim}
+MIXED headache BY measure group 
+  /FIXED=measure group measure*group
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
+\end{verbatim}
+
+
+The output would then look like below:
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostquali.pdf}
+    \end{center}
+\end{figure}
+
+
+
+Here SPSS has automatically created dummy variables, one for \textbf{measure=1}, one for \textbf{group=1}, and one for the interaction effect, \textbf{group=1 AND measure=1}. Because the dummy coding is different, the intercept and the main effects of group and measure have changed, but you see that the interaction effect is still 0.6, albeit now negative. We also see that the significance level of the interaction effect is still the same. You are always free to choose to either construct your own dummy variables and analyze them in a quantitative way (using WITH), or to let SPSS construct the dummy variables for you (using BY): the $p$-value for the interaction effect will always be the same (this is not true for the intercept and the main effects).
+
+Because the two analyses are equivalent (they end up with exactly the same predictions, feel free to check!), we can safely report that we've found a nonsignificant group by measure interaction effect, $t(98)=0.74, p=0.46$. We therefore conclude that in the populations of NY Times readers and Wall Street Journal readers, the short-term effect of aspirin on headache is the same. 
+
+
+
+\subsection{Exercises}
+
+Below we see data from a study on the effects of the financial crisis on the number of employees in specific Dutch companies. The companies are distinguised into food and non-food related companies. The number of employees are recorded in January 2008 and January 2011.
+
+<<analysisprepostmixed11, fig.height=4, echo=FALSE, fig.align='center', warning=F>>=
+set.seed(1234)
+company <- rep (seq(1:1000), 2)
+year <- rep( c( 2008,2011), each=1000)
+# time <- as.factor(time)
+food <- rep(c("nonfood", "food"),1000 )
+employees <-  rnorm(2000, 60 + 21*(year==2011) + 40 *(food=="food")  , 15) %>% round(0)
+datalong <- data.frame(company, food, year, employees) %>% dplyr::arrange(company)
+datawide <- datalong %>% tidyr::spread(year, employees) %>% dplyr::arrange(company)
+names(datawide) <- c('company','food','2008','2011') 
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(datalong, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixedprepostexercise.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixedprepostexercise.sps',
+              package = c("SPSS"))
+datawide %>% head(4) %>% kable()
+@
+
+\begin{enumerate}
+\item These data are in wide format. Rewrite the datamatrix in such a way that we have the same data in long format. Provide column (variable) names. 
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Do we need to use a linear mixed model, or can we analyse these data with an ordinary linear model?
+\item We want to test the null-hypothesis that the effects of the financial crisis in 2008 has the same effect on the number of employees in the food sector as in the non-food sector. Provide the syntax that helps you test this hypothesis. 
+\item Suppose the following output results from an analysis done by a colleague:
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf}
+    \end{center}
+\end{figure}
+
+She provides you with the information that food=1 means the food sector and food=2 is the nonfood sector.
+
+What does the model predict regarding the number of employees in 2008 in the non-food sector?
+\item What does the model predict regarding the number of employees in 2011 in the non-food sector?
+\item What does the model predict regarding the number of employees in 2008 in the food sector?
+\item What does the model predict regarding the number of employees in 2011 in the food sector?
+\item How large is the effect of the crisis in the food sector?
+\item How large is the effect of the crisis in the non-food sector
+\item How large is the intraclass correlation (ICC)? Give the computation.
+\item Could we have done the analysis with an ordinary linear model? Explain your answer.
+\item Can we reject the null-hypothesis that the effects of the crisis were the same in the food and non-food sectors? Explain your answer.
+\end{enumerate}
+
+
+Answers:
+\\
+\begin{enumerate}
+\item It could look like this:
+\\
+\\
+\begin{tabular}{llrrrr}
+   & company & sector  & year & NEmployees  & \dots  \\ \hline
+  & 1 & nonfood  & 2008 & 42  & \dots  \\
+  & 1 & nonfood  & 2011 & 63  & \dots  \\
+  & 2 & food  & 2008 & 104  & \dots  \\
+  & 2 & food  & 2011 & 126  & \dots  \\
+  & 3 & nonfood  & 2008 & 76  & \dots  \\
+  & 3 & nonfood  & 2011 & 58  & \dots  \\
+  & 4 & food  & 2008 & 65  & \dots  \\
+  & 4 & food  & 2011 & 131  & \dots  \\
+\end{tabular}
+\\
+\\
+\item The data are clustered into companies: for each company we have two data points, so we should at least try a linear mixed model. Only if the variance of the company random effects is extremely small, we could use a linear model without random effects.
+\item One option is to let SPSS construct the dummy variables:
+
+\begin{verbatim}
+MIXED employees BY year sector 
+  /FIXED=year sector year*sector
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+\end{verbatim}
+
+Or you do the dummy coding yourself, for example like this:
+
+\begin{verbatim}
+
+RECODE year (2008=0) (2011=1) INTO year2011.
+RECODE sector ('Nonfood'=0) ('food'=1) INTO food.
+EXECUTE.
+
+COMPUTE food2011=year2011*food.
+EXECUTE.
+
+MIXED employees WITH year2011 food food2011
+  /FIXED= year2011 food food2011
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+\end{verbatim}
+
+\item the nonfood sector is food=2, so the predicted number of employees in 2008 in the nonfood sector is equal to $81.57 + 0 -22.056 + 0= 59.514$
+\item the nonfood sector is food=2, so the predicted number of employees in 2011 in the nonfood sector is equal to $81.57 + 0 + 0 + 0= 81.57$
+\item the food sector is food=1, so the predicted number of employees in 2008 in the food sector is equal to $81.57 + 39.31 -22.056 + 0.85=99.674 $
+\item the food sector is food=1, so the predicted number of employees in 2011 in the food sector is equal to $81.57 + 39.31 + 0 + 0 = 120.88   $ 
+\item in the food sector the effect is a $120.88 - 99.674 =   21.206$ increase in number of employees
+\item in the non-food sector the effect is a $81.57 - 59.514 =   22.056$ increase in number of employees
+\item the ICC is $\frac{12}{12+208}=0.05$
+\item we have clustering, with multiple data point per company, so in general a linear mixed model is better than an ordinary linear model. However, since the intraclass correlation is rather low, the results would be very similar if we would use an ordinary linear model.
+\item The null-hypothesis cannot be reject as the year by sector interaction effect is not signifcantly different from 0, $t(998)=0.66, p=0.51$. (alternatively, $F(1,998)=0.44, p=0.51$). Note however that the statistical results are in terms of absolute number of employees. These data show that the average number of employees in 2008 is larger in the food sector than in the non-food sector. Perhaps it would be wiser to look at percentage increase in number of employees: A change from 100 to 102 reflects a larger impact than a change from 1000 to 1002.
+
+\end{enumerate}
+
+
+
+
+
+\section{Mixed designs}
+The design in the previous section where we had both a grouping variable and a pre-post or repeated measures design, is often called a \textit{mixed design}. It is a mixed design in the sense that there are two kinds of variables: one is a \textit{between-individuals} variable, and one variable is a \textit{within-individual} variable. Here the between-individuals variable is \textbf{group}: two different populations of readers. It is called \textit{between} because one individual can only be part of one group. When we study the effect of the group effect we are essentially comparing the scores of one group of individuals with the scores of another group of individuals, so the comparison is \textit{between different individuals}. 
+The two groups of data are said to be \textit{independent}, as we knew that none of the readers in this data set reads both journals. 
+
+The within-variable in this design is the aspirin intervention, indicated by the variable \textbf{measure}. For each individual we have two observations: all individuals are present in both the pre condition data as well as in the post condition data. With this intervention variable, we are comparing the scores of a group of indiviudals with the scores \textit{of that same group of individuals} at another time point. The comparison of scores is within a particular individual, at timepoint 1 and at timepoint 2. So the pre and post sets of data are not independent: the headache scores in both conditions are coming from the same individuals. 
+
+Mixed designs are often seen in psychological experiments. For instance, you want to know how large the effect of alcohol intake is on driving performance. You want to know whether the effect of alcohol on driving performance is the same in a Fiat 600 as in a Porsche. Suppose you have 100 participants for your study. There are many choices you can make regarding the design of your study. Here we discuss 4 alternative research designs:
+
+\begin{enumerate}
+
+
+\item One option is to have all participants participate in all four conditions: they all drive a Fiat with and without alcohol, and they all drive a Porsche, with and without alcohol. In this case, both the car and the alcohol are within-participant variables.
+
+\item The second option is to have 50 participants drive a Porsche, with and without alcohol, and to have the other 50 participants drive the Fiat, with and without alcohol. In this case, the car is the between-participants variable, and alcohol is the within-participant variable. 
+
+\item The third option is to have 50 participants without alcohol drive both the Porsche and the Fiat, and to have the other 50 participants drive the Porsche and the Fiat with alcohol. Now the car is the within-participant variable, and the alcohol is the between-participants variable.
+
+\item The fourth option is to have 25 participants drive the Porsche with alcohol, 25 other participants drive the Porsche without alcohol, 25 participants drive the Fiat with alcohol, and the remaining 25 participants drive the Fiat without alcohol. Now both the car variable and the alcohol variable are between-participant variables: none of the participants is present in more than 1 condition.
+
+\end{enumerate}
+
+Only the second and the third design described here are mixed designs, having at least one between-participants variable and at least one within-participant variable. 
+
+Remember that when there is at least one within variable in your design, you have to use a linear mixed model. If all variables are between variables, one can use an ordinary linear model. Note that the term \textit{mixed} in linear mixed model refers to the effects in the model that can be both random and fixed. The term \textit{mixed} in mixed designs refers to the mix of two kinds of variables: within variables and between variables. 
+
+Also note that the within and between distinction refers to the units of analysis. If the unit of analysis is school, then the location of the school building is a between-school variable. An example of a within-school variable could be time: before a major curriculum reform and after a major curriculum reform. 
+
+\subsection{Exercises}
+
+\begin{enumerate}
+\item A psychologist studies whether age affects math performance. In 2017, she measures math performance (one score) in a group of 80-year-olds and she measures math performance (one score) in a group of 90-year-olds. \\
+1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
+\\
+\\
+\item A psychologist studies whether age affects math performance. She measures math performance (one score) in a group of 7-year-olds and she measures math performance again when the same children are 8 years old. \\
+1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
+\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{rllr}
+  ID & Nationality & Sex & Mathscore  \\ \hline
+  1   & Dutch      &  Male & 67   \\
+ 2   &  Dutch     &  Female & 88   \\
+ 3    & German         &  Male & 50   \\
+ 4   &  German        &  Female & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+In this data set on Math performance, we see two variables, nationality and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.
+\\
+1. Would you call this a mixed design? Explain.\\
+2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{rllr}
+  ID & Nationality & Age & Mathscore  \\ \hline
+  1   & Dutch      &  3 & 67   \\
+ 1   &  Dutch     &  5 & 88   \\
+ 2    & German         &  4 & 50   \\
+ 2   &  German        &  6 & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+1. Would you call this a mixed design? Explain.\\
+2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{rllr}
+  ID & Subject & Sex & Mood  \\ \hline
+  1   & Psychology      &  Male & 67   \\
+ 1   &  Psychology     &  Female & 88   \\
+ 2    & Sociology         &  Female & 50   \\
+ 2   &  Sociology        &  Male & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+1. Would you call this a mixed design? Explain.\\
+2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{lrrr}
+  SchoolID & Country & Year & Avarage Mathscore  \\ \hline
+ 1   & The Netherlands      &  2010 & 67   \\
+ 1   &  The Netherlands     &  2011 & 88   \\
+ 1    & The Netherlands         &  2012 & 50   \\
+ 1   &  The Netherlands        &  2013 & 98  \\
+ 2   & Germany      &  2010 & 67   \\
+ 2   &  Germany     &  2011 & 88   \\
+ 2    & Germany         &  2012 & 50   \\
+ 2   &  Germany        &  2013 & 98  \\
+  \dots   & \dots        &  \dots & \dots  \\
+ \end{tabular}
+\\
+\\
+In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
+1. Would you call this a mixed design? Explain.\\
+2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.\\
+
+\end{enumerate}
+
+
+Answers:
+
+\begin{enumerate}
+
+\item 
+
+1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.
+2. Two groups of participants were studied. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+
+
+\item
+1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.
+2. One group of participants was studied and for each participant we have two math scores. Because we have more than one measure for each participant, we have to use a linear mixed model to account for clustering.
+
+\item 
+Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.
+1. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. 
+2. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+
+
+\item 
+Each participant is either Dutch or German. This is a between-participants variable.
+On measurement 1 participants have a different age than on measurement 2. This is a within-participant variable.
+1. This is a mixed design as it has both a within-participant and a between-participants independent variable. 
+2. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
+
+\item
+Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.
+1. This is a mixed design as it has both a within-participant and a between-participants independent variable. 
+2. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
+
+
+\item
+
+Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.
+1. This is a mixed design as it has both a within-school and a between-schools independent variable. 
+1. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
+
+
+
+\end{enumerate}
+
+
+
+
+
+\section{Mixed design with a linear effect}
+
+In an earlier section we looked at a mixed design where the between variable was \textbf{newspaper} and the within variabe was \textbf{measure}: pre or post. It was a 2 by 2 design ($2 \times 2$) design: 2 measures and 2 newspapers, where we were interested in the interaction effect. We wanted to know whether newspaper moderated the effect of aspirin on headache. We used the within variable \textbf{measure} in a qualitative way by dummy coding it. 
+
+In an earlier section in this chapter we saw that we can also model linear effects in linear mixed models, where we treated the time variable quantitatively: 0hrs, 3hrs after aspirin intake and 24 hrs after intake. Here we will give an example of a $3 \times 20$ mixed design: we have a qualitative group (between) variable with 3 levels and a quantitative time (within) variable with 20 levels. The example is about stress in athletes that are going to partake in the 2018 Winter Olympics. Stress can be revealed in morning cortisol levels. In the 20 days preceding the start of the Olympics, each athlete was measured every morning after waking and before breakfast by letting them chew on cotton. The cortisol level in the saliva was then measured in the lab. Our research question is whether cortisol levels rise in athletes that prepare for the Olympics.
+
+Three groups were studied. One group consisted of 50 athletes who were selected to partake in the Olympics, one group consisted of 50 athletes that were very good but were not selected to partake (Control group I) and one group consisted of 50 non-athlete spectators that were going to watch the games (Control group II). The null-hypothesis was that the linear change in cortisol levels during those 20 days was the same for the three groups: the Olympeans, Control group I and Control group II. 
+
+Below you see part of the data, the first 6 measurements on person 1 that belongs to the group of Olympeans.
+
+<<analysismixed20_1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+person <- rep (seq(1:150), 20)
+measure <- rep( c( 1:20), each=150)
+random <- rep (rnorm(150), 20)
+group <- rep(  c("Olympean", "Control group I" , "Control group II" ) , 50*20  ) %>% as.factor()
+cortisol <- 20 + random + (0.6 + 0.4 * (group=="Olympean")) * measure + rnorm(150*20) 
+
+datalong <- data.frame(person, group, measure, cortisol) %>% dplyr::arrange(person)
+# datawide <- datalong %>% tidyr::spread(measure, headache) %>% dplyr::arrange(patient)
+# names(datawide) <- c('patient','group','pre','post') 
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(datalong, 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixed20.sav', 
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixed20.sps',
+              package = c("SPSS"))
+datalong %>% head() %>% kable()
+@
+
+When we plot the data, and use different colours for the three different groups, we already notice that the Olympeans show generally higher cortisol levels, but particulary at the end of the 20-day period.
+
+
+
+<<analysismixed20_2, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalong  %>% ggplot( aes(x=measure, y=cortisol)  ) + geom_point( aes(color=group))
+@
+
+So we want to know whether the linear effect of time is moderated by group. Since for every person we have 20 measurements, the data are clustered so we use a linear mixed model. We're looking for a linear effect of time, so we use the WITH keyword to indicate that we want to use the \textbf{measure} variable in a quantitative way. We also use \textbf{group} as a predictor, but in a qualitative way, by using the keyword BY, so that SPSS will automatically make dummy variables. Because we're interested in an interaction effect, we include both main effects of \textbf{group} and \textbf{measure} and their interaction under the DESIGN subcommand. Lastly, we control for individual differences in cortisol levels by introducing a random effect for \textbf{person}.
+
+
+\begin{verbatim}
+MIXED cortisol WITH measure BY group 
+  /FIXED=measure group measure*group
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(person) COVTYPE(VC).
+\end{verbatim}
+
+
+The SPSS output is presented below. 
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixed20.pdf}
+    \end{center}
+\end{figure}
+
+In the output we see an intercept of 19.7, a slope of 1.0 for the effect of measure, two main effects for the group variable (group3 is the reference group, in this case the Olympeans, see the plot above), and two effects for the interaction effect (one for control group I and one for control group II). Let's fill in the linear equation based on this output:
+
+
+\begin{eqnarray}
+cortisol_{ij} = 19.7 + person_i + 1 \times measure + .4  ContrG1 + \nonumber\\
+      0.18 ContrG2 -.4  ContrG1 \times measure -.4  ContrG2 \times measure+   e_{ij} \nonumber\\
+person_i \sim N(0, \sigma_p^2 = 0.99)\nonumber\\
+e_{ij} \sim N(0, \sigma_e^2 = 1.00) \nonumber
+\end{eqnarray}
+
+We see a clear intraclass correlation of around $\frac{0.986}{0.986+0.997}= 0.5 $ so it's a good thing we've included a random effect for persons. The expected means at various time points and for various groups can be made with the use of the above equation. 
+
+It's easier to see what linear effects we have for the three different groups. Filling in the above equation for Control group 1, we get:
+
+\begin{eqnarray}
+cortisol_{ij} &=& 19.7 + person_i + 1 \times measure + .4    -.4  \times measure +   e_{ij} \nonumber \\
+               &=&  20.1 + person_i +0.6 \times measure +   e_{ij} \nonumber
+\end{eqnarray}
+
+For Control group 2 we get:
+
+\begin{eqnarray}
+cortisol_{ij} &=& 19.7 + person_i + 1 \times measure  + 0.18  - .4  \times measure+   e_{ij} \nonumber \\
+        &=&   19.88 + person_i   + 0.6 \times measure    +   e_{ij}    \nonumber
+\end{eqnarray}
+
+And for the Olympeans we get:
+
+\begin{eqnarray}
+cortisol_{ij} = 19.7 + person_i + 1 \times measure  +   e_{ij} \nonumber \\
+\end{eqnarray}
+
+
+In these equations all intercepts are around 20. The slopes are 0.6 in both Control groups I and II, whereas the slope is 1.0 in the group of Olympean athletes. For illustration, these implied linear regression lines are depicted below:
+
+
+<<analysismixed20_3, fig.height=4, echo=FALSE, fig.align='center'>>=
+datalong  %>% ggplot( aes(x=measure, y=cortisol)  ) + geom_point( aes(color=group)) +
+        geom_abline(  intercept = 19.7 + 0.4 , slope=(1-0.4)) +
+        geom_abline(  intercept = 19.7 + .18 , slope =(1-0.4)) +
+        geom_abline(  intercept = 19.7 , slope=1) 
+        
+@
+
+So based on the linear equation, we see that in this sample the rise in cortisol levels is much steeper in Olympeans than in the two control groups. But is this true for all Olympeans and the rest of the populations of high performing athletes and spectators? Note that in the regression table we see two interaction effects: one for \textbf{group1*measure} and one for \textbf{group2*measure}. Here we're interested in the overall signficance of the interaction effects. That answer we find in the top table with the $F$-statistics: we see a significant group by measure interaction effect, $F(2, 28)= 18.57, p<0.001$. The null-hypothesis of the same cortisol change in three different populations can be rejected, and we conclude that Olympean athletes, non-Olympean athletes and spectators show a different change in cortisol levels in the weeks preceding the games.  
+
+
+
+

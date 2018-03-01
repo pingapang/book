@@ -1,0 +1,93 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Exploring your data}{4}
+\contentsline {section}{\numberline {1.1}Types of variables}{4}
+\contentsline {subsection}{\numberline {1.1.1}Continuous, ordinal, and categorical variables}{4}
+\contentsline {subsubsection}{Exercises}{5}
+\contentsline {subsection}{\numberline {1.1.2}Qualitative and quantitative treatment of variables in data analysis}{5}
+\contentsline {subsection}{\numberline {1.1.3}Dependent and independent variables}{6}
+\contentsline {subsubsection}{Exercises}{6}
+\contentsline {chapter}{\numberline {2}Linear modelling: introduction FULYA}{7}
+\contentsline {section}{\numberline {2.1}Linear relationships}{7}
+\contentsline {section}{\numberline {2.2}Pearson correlation}{7}
+\contentsline {section}{\numberline {2.3}Simple regression with a continuous predictor}{7}
+\contentsline {section}{\numberline {2.4}Predicting the dependent variable}{7}
+\contentsline {chapter}{\numberline {3}Multivariate regression}{8}
+\contentsline {section}{\numberline {3.1}R-squared}{8}
+\contentsline {chapter}{\numberline {4}Inference MARIAN}{9}
+\contentsline {section}{\numberline {4.1}Random sampling and confidence intervals}{9}
+\contentsline {section}{\numberline {4.2}$t$-statistics, null-hypothesis testing and $p$-values}{9}
+\contentsline {section}{\numberline {4.3}Inference: from sample to population}{9}
+\contentsline {chapter}{\numberline {5}Categorical predictor variables}{10}
+\contentsline {section}{\numberline {5.1}Dummy coding}{10}
+\contentsline {section}{\numberline {5.2}Predicting group means}{10}
+\contentsline {section}{\numberline {5.3}Dummy coding for more than two groups}{10}
+\contentsline {section}{\numberline {5.4}Comparing more than two groups}{10}
+\contentsline {subsection}{\numberline {5.4.1}Analyzing categorical predictor variables}{11}
+\contentsline {subsubsection}{Treating dummy variables quantitatively}{11}
+\contentsline {subsubsection}{Treating the original variable qualitatively}{13}
+\contentsline {subsubsection}{Reporting one-way ANOVA}{14}
+\contentsline {section}{\numberline {5.5}$F$-test for multiple group comparisons}{14}
+\contentsline {chapter}{\numberline {6}Moderation: testing interaction effects}{15}
+\contentsline {section}{\numberline {6.1}Categorical by linear interaction}{15}
+\contentsline {subsection}{\numberline {6.1.1}Exercises}{21}
+\contentsline {section}{\numberline {6.2}Interaction with two dummy variables}{22}
+\contentsline {section}{\numberline {6.3}More than two groups}{24}
+\contentsline {subsubsection}{Exercises}{26}
+\contentsline {subsubsection}{Answers}{27}
+\contentsline {section}{\numberline {6.4}Linear by linear interaction}{27}
+\contentsline {chapter}{\numberline {7}Assumptions of linear models RUYA}{28}
+\contentsline {subsection}{\numberline {7.0.1}Independence}{28}
+\contentsline {subsection}{\numberline {7.0.2}Linearity (additivity)}{33}
+\contentsline {subsection}{\numberline {7.0.3}Homogeneity of variance}{33}
+\contentsline {subsection}{\numberline {7.0.4}Residuals normally distributed}{33}
+\contentsline {section}{\numberline {7.1}Testing assumptions}{33}
+\contentsline {subsection}{\numberline {7.1.1}Independence}{33}
+\contentsline {subsection}{\numberline {7.1.2}Linearity (additivity)}{33}
+\contentsline {subsection}{\numberline {7.1.3}Homogeneity of variance}{33}
+\contentsline {subsection}{\numberline {7.1.4}Residuals normally distributed}{33}
+\contentsline {subsection}{\numberline {7.1.5}What to do when assumptions are violated?}{33}
+\contentsline {subsection}{\numberline {7.1.6}nonlinearity}{33}
+\contentsline {chapter}{\numberline {8}Linear modelling: more advanced topics}{35}
+\contentsline {subsection}{\numberline {8.0.1}Planned comparisons}{35}
+\contentsline {subsection}{\numberline {8.0.2}Testing more than one contrast}{41}
+\contentsline {subsection}{\numberline {8.0.3}Post-hoc comparisons}{42}
+\contentsline {subsection}{\numberline {8.0.4}Posthoc tests for complex contrasts}{45}
+\contentsline {subsection}{\numberline {8.0.5}Fishing expeditions}{45}
+\contentsline {subsubsection}{Exercises}{45}
+\contentsline {chapter}{\numberline {9}When assumptions are not met: non-parametric alternatives}{48}
+\contentsline {section}{\numberline {9.1}Spearman's rho}{52}
+\contentsline {section}{\numberline {9.2}Kendall rank-order correlation coefficient $T$}{54}
+\contentsline {section}{\numberline {9.3}Kruskall-Wallis test for group comparisons}{55}
+\contentsline {chapter}{\numberline {10}Linear mixed modelling: introduction}{58}
+\contentsline {section}{\numberline {10.1}Fixed effects and random effects}{58}
+\contentsline {section}{\numberline {10.2}Pre-post intervention design}{62}
+\contentsline {subsection}{\numberline {10.2.1}Exercises}{67}
+\contentsline {subsubsection}{Answers:}{70}
+\contentsline {section}{\numberline {10.3}Pre-mid-post intervention design}{73}
+\contentsline {subsection}{\numberline {10.3.1}Exercises}{76}
+\contentsline {section}{\numberline {10.4}Pre-mid-post intervention design: linear effects}{78}
+\contentsline {subsection}{\numberline {10.4.1}Exercises}{81}
+\contentsline {section}{\numberline {10.5}Linear mixed models and interaction effects}{85}
+\contentsline {subsection}{\numberline {10.5.1}Exercises}{90}
+\contentsline {section}{\numberline {10.6}Mixed designs}{94}
+\contentsline {subsection}{\numberline {10.6.1}Exercises}{95}
+\contentsline {section}{\numberline {10.7}Mixed design with a linear effect}{98}
+\contentsline {chapter}{\numberline {11}Non-parametric alternatives for linear mixed models}{103}
+\contentsline {section}{\numberline {11.1}Checking assumptions}{103}
+\contentsline {section}{\numberline {11.2}Friedman's test for $k$ measures}{106}
+\contentsline {section}{\numberline {11.3}How to perform Friedman's test in SPSS}{111}
+\contentsline {section}{\numberline {11.4}Wilcoxon's signed ranks test for 2 measures}{113}
+\contentsline {section}{\numberline {11.5}How to perform Wilcoxon's signed ranks test in SPSS}{115}
+\contentsline {section}{\numberline {11.6}Ties}{117}
+\contentsline {section}{\numberline {11.7}Exercises}{118}
+\contentsline {chapter}{\numberline {12}Generalized linear models}{123}
+\contentsline {section}{\numberline {12.1}Introduction}{123}
+\contentsline {section}{\numberline {12.2}Logistic regression}{127}
+\contentsline {subsection}{\numberline {12.2.1}Bernoulli distribution}{129}
+\contentsline {subsection}{\numberline {12.2.2}Odds and odds ratios}{130}
+\contentsline {subsection}{\numberline {12.2.3}Exercises}{132}
+\contentsline {subsection}{\numberline {12.2.4}Link functions}{135}
+\contentsline {section}{\numberline {12.3}Logistic regression in SPSS}{138}
+\contentsline {subsection}{\numberline {12.3.1}Exercises}{140}
+\contentsline {section}{\numberline {12.4}Linear models for count data}{143}
+\contentsline {section}{\numberline {12.5}Linear model as a special case of a generalized linear model}{143}

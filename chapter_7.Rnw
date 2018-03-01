@@ -1,0 +1,141 @@
+\chapter{Assumptions of linear models RUYA}
+\subsection{Independence}
+The assumption of independence is about the way in which observatins are similar and dissimilar. Take for instance the following regression equation for children's height predicted by their age:
+
+\begin{eqnarray}
+height = 100 + 5 \times age + e
+\end{eqnarray}
+
+This regression equation predicts that a child of age 5 has a height of 125 and a child of age 10 has a height of 150. In fact, all children of age 5 have the same predicted height of 125 and all children of age 10 have the same predicted height of 150. Of course, in reality, children of the same age will have very different heights: they differ. According to the above regression equation, children are similar in height because they have the same height, but they differ because of the random term $e$ that has a normal distribution: predictor age makes them similar, residual $e$ makes them dissimilar. Now, if this is all there is, then this is a good model. But let's suppose that we're studying height in an international group of 50 Ethiopian children and 50 Vietnamese children. Let's plot their heights:
+
+
+<<fig14, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+age <- runif(50, 4, 12)
+country <- rep(seq(1:2), each=50)
+country <-replace(country, country==1, 'Ethiopean')
+country <- replace(country, country==2, 'Vietnamese')
+country <- as.factor(country)
+height <- 101 + 5*age + 2*(country=='Ethiopean') + rnorm(100)
+data <- data.frame(age, country, height)
+ggplot(data, aes(x=age, y=height,col=country)) + geom_point() 
+out <- lm( height~ age + country + age*country, data=data )
+summary(out)
+@
+
+From this graph, we see that heights are similar because of age: older children are taller than younger children. But we also see that children are similar because of their national background: Ehtiopian children are systematically taller than Vietnamese children, irrespective of age. So here we see that a simple regression of height on age is not a good model. We see that when we estimate the simple regression on age and look at the residuals:
+
+<<fig141, fig.height=4, echo=FALSE, fig.align='center'>>=
+res <- lm(height~ age, data=data)$res
+data <- data.frame(age, country, height, res)
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('child')
+@
+
+As our model predicts random residuals, we expect a random scatter of residuals. However, what we see here is a systematic order in the residuals: they tend to be positive for the first 50 children and negative for the last 50 children. These turn out to be the Ethiopean and the Vietnamese children, respectively. This systematic order in the residuals is a violations of independence: the residuals should be random, and they are not. The residuals are dependent on country: positive for Ethiopeans, negative for Vietnamese children. Thus, there is more than just age that makes children similar. 
+If we use multiple regression, including both age and country, we get the following regression equation:
+
+<<fig1412, fig.height=4, echo=FALSE, fig.align='center'>>=
+out <- lm(height~ age + country, data=data)
+@
+
+\begin{eqnarray}
+height = 102.641 + 5.017 \times age - 1.712 \times country + e
+\end{eqnarray}
+
+When we now plot the residuals we get a nice random scatter:
+
+<<fig18888, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+data$res <- out$res
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('child')
+@
+
+
+Another typical example of non random scatter of residuals is the following:
+
+<<fig1413, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+set.seed(1234)
+student <- rep(1:10, each=10)
+student <- as.factor(student)
+IQ <- rnorm(10, 100, 15)
+IQ <- rep(IQ, each=10)
+person <- rnorm(10, 0, 3)
+person <- rep(person, each=10)
+RT <- 200 - 1* IQ - person + rnorm(100, 0, 1)
+out <- lm(RT ~ IQ)
+res <- out$residuals
+data <- data.frame(IQ, person, RT, res, student)
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('trial') + ylab('residual')
+@
+
+They come from an analysis of reaction times, done on 10 students where we also measured their IQ. Each student was measured on 10 trials. We predicted reaction time on the basis of student's IQ using a simple regression analysis. The residuals are clearly not random, and if we look more closely, we see some clustering if we give different colours for the data from the different students:
+
+
+<<fig1415, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+ggplot(data, aes(x=1:100, y=res, col=student)) + geom_point() + xlab('trial') + ylab('residual') 
+ggplot(data, aes(x=student, y=res)) + geom_boxplot() + xlab('student') + ylab('residual') 
+@
+
+We see that residuals that are close toghether come from the same student. So, reaction time are not only similar because of IQ, but also because they come from the same student: clearly something else other than IQ explains why reaction times are dissimilar across individuals. The residuals in this analysis are not independent given IQ, they are dependent on the student. Thus, the assumption of independently distributed residuals is violated. 
+
+
+
+
+\subsection{Linearity (additivity)}
+\subsection{Homogeneity of variance}
+\subsection{Residuals normally distributed}
+
+\section{Testing assumptions}
+\subsection{Independence}
+
+Check the residuals, do you see any regularities? More specifically: Do you see any clustering? 
+
+\subsection{Linearity (additivity)}
+\subsection{Homogeneity of variance}
+\subsection{Residuals normally distributed}
+
+Make a histogram of the residuals: is the shape symmetric or skew? Is it more or less bell-shaped? Note that for small data sets, the shape is never perfectly normal. It should however have one peak and be symmetric.
+
+\subsection{What to do when assumptions are violated?}
+
+When the assumption of independence is violated, try including more predictors in your regression model. Like in the example of height in children, adding country into the equation solved the problem. In the case of reaction times, it was not clear what explains the clustering of residuals: we only know that reaction times from the same person were very similar. In such situations, consider linear \textit{mixed} models, to be discussed in a later chapter, and include a so-called \textit{random factor}, in this case for students. 
+
+
+
+\subsection{nonlinearity}
+If we have data and we analyze these with a linear (mixed) model, we can find nonlinearity. In that case we might introduce a quadratic term to make it more linear. For example, suppose we have the following data set, summarized in a scatter plot:
+
+<<nonpar1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234)
+X <- rnorm(100, 0 ,1)
+Y <- rnorm( 100, 5 + 0.5 * X + 1 * X^2, 1 )
+data <- data.frame(X, Y)
+data %>% ggplot( aes(X, Y) ) + geom_point()
+@
+
+
+We might then fit the following linear model, and find that it does not fit the data well:
+
+\begin{equation}
+y = b_0 + b_1 X + e 
+\end{equation}
+
+<<nonpar2, fig.height=4, echo=FALSE, fig.align='center'>>=
+        data %>% ggplot( aes(X, Y) ) + geom_point() + geom_smooth(method=lm, se=F)
+@
+
+A better model might be gained by introducing a new variable $X2$ that is computed by multiplying variable $X$ by itself: $X2=X^2$, and use this as an extra predictor:
+
+\begin{equation}
+y = b_0 + b_1 X + b_2 X2 + e 
+\end{equation}
+
+
+% <<ass1, fig.height=4, echo=FALSE, fig.align='center'>>=
+% % dat2 <- data %>% mutate(X2 = X*X   )
+% %        dat2   + ggplot( aes(X, Y) ) + geom_point() + geom_smooth(method=lm, se=F, formula= Y~ X+ X2)
+% % 
+% % 
+% % names()
+% @
+
+

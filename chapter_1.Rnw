@@ -1,0 +1,67 @@
+\chapter{Exploring your data}
+
+\section{Types of variables}
+Data analysis is about variables. In linear models there are different kinds of variables. One important distinction is between dependent variables and independent variables. The other important distinction is about the measurement level of the variable: continuous, ordinal or categorical. 
+
+
+\subsection{Continuous, ordinal, and categorical variables}
+A typical example of a contiuous variable is age: in theory, you could calcualate your age in the number of minutes that have passed since your time of birth. It is continuous in the sense that it has an (almost) infinite number of possible values. For example, for two children born one minute a part, there could be a third child that was born just in between the other two. In practice of course, we measure age in days, and sometimes only in months in years, but given there are many values, we usually treat such an age variable in years as continuous. Other examples of continuous variables include height in inches, temperature in degrees Celcius, years of education, or systolic bloodpressure in millimeters of mercury. Note that in all these examples, quantities (age, height, temperature) are expressed as the number of a particlar unit (years, inches, degrees). Therefore continuous variables are often called quantitative variable, or quantitative measures. There is a further distinction into interval and ratio variables; this distinction is treated in the research methods course in Module 1.
+
+With ordinal measures, there are no units. An example would be a variable that would quantify size, by stating whether a t-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state EXACTLY how much of that quantity is available. Similar for age, we could code a number of people as young, middle-aged or old, but on the basis of such a variable we could not state by \textit{how much} two individuals differ in age. Ordinal data are usually \textit{discrete}: there are no infinite number of levels of the variable. It goes up in discrete steps, for example, having values of 1, 2 and 3, and nothing in between.
+
+Lastly, categorical variables are not about quantity at all. Categorical variables are about quality. A typical example of a categorical variable would be the colour of pencils: they can be either green, blue, black, white, red, yellow, etcetera. Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour, other than saying that a green pens are greener than other pens, and red pens are redder than other pens. There is usually no logical order in the values of such variables. Other examples include nationality (French, Turkish, Indian, other) or sex (male, female, other). Categorical variables are often called nominal variables, or qualitative variables.
+
+\subsubsection{Exercises} 
+In the following, identify the type of variable in termes of continuous, ordinal discrete, or categorical:\\
+Age: \dots years\\
+Weight: \dots kilograms\\
+Size: \dots meters\\
+Size: small, medium, large\\
+Exercise intensity: low, moderate, high\\
+Agreement: not agree, somewhat agree, agree\\
+Agreement: totally not agree, somewhat not agree, neither disagree nor agree, somewhat agree, totally agree\\
+Pain: 1, 2.. ..... , 99, 100\\
+Quality of life: 1=extremely low, \dots, \dots, 7=extremely high\\
+Colour: blue, green, yellow, other\\
+Nationality: Chinese, Korean, Australian, Dutch, other\\
+Gender: Female, Male, other \\
+Gender: Female, Male
+Number of shoes: \\
+
+
+
+
+\subsection{Qualitative and quantitative treatment of variables in data analysis}
+There is a fundamental difference between continuous and ordinal variables, but it is possible to treat them the same way in data analysis. For data analysis with linear models, you have to decide for each variable whether you want to treat it as qualitative or quantitative. Continuous variables are always treated as quantitative. Categorical data are always treated as qualitative. The problem is with ordinal variables: you can either treat them as quantitative variables or as qualitative variables. The choice is usually based on common sense and whether the results are meaningful. For instance, if you have an ordinal variable with 8 levels, like a Likert scale, it usually does not make sense to treat it as qualitative. If the variable has only 3 levels, it is often meaningful to treat it as qualitative: assuming that the three levels can show qualitative differences. In the coming chapters, we will come back to this distinction. Remember, in the coming chapters we will only speak of quantitative and qualitative treatment of variables, and remember that continuous variables are always treated as quantitative and categorical data are always treated as qualitative.
+
+
+\subsection{Dependent and independent variables}
+So now that we have discussed the distinction between continuous, ordinal and categorical variables, let's turn to dependent and independent variables. Determining whether a variable is treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a father and that if his child, the more logical it would be to see the height of the child **as a function** of the height of the father. This because we assume that the genes are transferred from the father to the child. The father comes first, and the height of the child is partly the *result* of the genes that were transmitted during fertilisation. Similarly, when predicting precipitation on the basis of the hours of sun light on the previous day, it seems natural to study the effect of hours of sunlight on the previous day on precipitation on the next day. That which is the result is usually taken as the dependent variable. The theoretical cause or antecedent is usually taken as the independent variable. \\
+The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}.
+
+Examples: the effect of income on health
+
+size is caused by inflation
+
+size is influenced by weight
+
+shoe size is predicted by sex
+
+
+\subsubsection{Exercises} 
+
+
+From each of the following statements, identify the dependent variable and the independent variable:
+
+The less you drink the more thirsty you become \\
+The more calories you eat, the more you weigh\\
+Weight is affected by food intake \\
+Weight is affected by exercise \\
+Food intake is predicted by time of year \\
+There is an effect of exercise on heart rate \\
+Inflation leads to higher wages \\
+Unprotected sex leads to pregnancy \\
+HIV-infection is caused by unprotected sex\\
+The effect of alcohol intake on driving performance\\
+Sunshine causes growth
+
