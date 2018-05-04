@@ -1,0 +1,622 @@
+
+
+
+\chapter{Generalized linear models for count data: Poisson regression}
+
+
+\section{Poisson regression}
+
+
+Count data are inherently discrete, and often when using linear models, we see non-normal distributions of residuals. Let's go back to the beginning of this chapter, where we discussed a data set on the scores that a group of students got for an assignment. There were four criteria, and the score consisted of the number of criteria that were met for each student's assignment. Figure \ref{fig:gen_3} showed that after an ordinary linear model analysis, the residuals did not look normal at all.
+
+Table \ref{tab:gen_14} shows part of the data that were analysed. Similar to logistic regression, perhaps we can find a distribution other than the normal distribution that is more suitable for this kind of data? For dichotomous data (1/0) we found the Bernoulli distribution very useful. For count data, the traditional distrbitution is the Poisson distribution.
+
+
+<<gen_14, fig.height=4, echo=FALSE, fig.align='center', message=F, results='asis'>>=
+set.seed(1234)
+ID <- seq(1:100)
+score <- rnorm(100, 1, 3) %>%  round(0)
+score [score>4] <- 4
+score [score<0] <- 0
+previous = rnorm(100, 0, 1)
+data=data.frame(ID, score, previous)
+data %>%
+        head() %>%
+        xtable(caption="Scores on an assignment.", label="tab:gen_14",digits=c(0,0,0,2)) %>%
+        print(include.rownames=F, caption.placement = "top")
+outcount <-  glm(score ~ previous, data=data , family="poisson" )
+# density <- dnorm(residual, mean(residual), sd(residual))
+# data <- data.frame(residual, density)
+# data %>% ggplot(aes(x=residual, y=density)) + geom_histogram(aes(y=..density..))  + geom_line(aes(y=density))
+@
+
+The normal distribution has two parameters, the mean and the variance. The Bernoulli distribution has only 1 parameter (the probability), and the Poisson distribution has also only 1 parameter, lambda or $\lambda$. $\lambda$ is a parameter that indicates tendency. Figure \ref{fig:gen_15} shows a Poisson distribution with a tendency of 4.
+
+<<gen_15, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Count data example where the normal distribution is not a good approximation of the distribution of the residuals.'>>=
+set.seed(1234)
+probability4 <- dpois(seq(0,10) , 4)
+data.frame(probability4) %>% ggplot(aes(x=seq(0,10), y=probability4) )+geom_bar(stat = "identity")+ xlim(c(0,12)) + scale_x_continuous(breaks=seq(0,12)) +
+        xlab("count") + ylab("probability")
+@
+
+What we see is that many values center around the tendency parameter value of 4 (therefore we call it a tendency parameter)! We see only discrete values, and no values below 0. We see a few values higher than 10. If we take the mean of the distribution, we will find a value of 4. If we would compute the variance of the distribution we would find also find 4! In general, if we have a Poisson distribution with a tendency parameter $\lambda=4$, we know that both the mean and the variance will be equal to $\lambda$.
+
+A Poisson model could be suitable for our data: a linear equation could predict the parameter $\lambda$ and then the actual data show a Poisson distribution.
+
+
+\begin{eqnarray}
+\lambda = b_0 + b_1 X \\
+y \sim Poisson(\lambda)
+\end{eqnarray}
+
+However, because of the additivity assumption, the equation $b_0 + b_1 X$ leads to negative values. A negative value for $\lambda$ is not logical, because we then have a tendency to observe data like -2 and -4 in our data, which is contrary to the having count data, which consists of non-negative integers. A Poisson distribution always shows integers of at least 0, so one or way or another we have to make sure that we always have a $lambda$ of at least 0.
+
+Remember that we saw the reverse problem with logistic regression: there we wanted to have negative values for our dependent variable logoddsratio, so therefore we used the logarithm. Here we want to have positive values for our dependent variable, so we can use the inverse of the logarithm function: the exponential. Then we have the following model:
+
+
+\begin{eqnarray}
+\lambda = exp(b_0 + b_1 X)= e^{b_0+b_1X} \\
+y \sim Poisson(\lambda)
+\end{eqnarray}
+
+
+This is a generalized linear model, now with a Poisson distribution and an exponential link function. The exponential function makes any value positive, for instance $exp(0)=1$ and $exp(-100)=\Sexpr{round(exp(-100),4)}$.
+
+Let's analyze the assignment data with this generalized linear model. Our dependent variable is the number of criteria met for the assignment (a number between 0 and 4), and the independent variable is previous, which is a standardized mean of a number of previous assignments. We expect that the mean score on previous assignments is associated with a higher score on the present assignment. When we run the analysis, the result is as follows:
+
+
+\begin{eqnarray}
+\lambda = exp(\Sexpr{outcount$coef[1]} \Sexpr{outcount$coef[2]} \times previous) \\
+score \sim Poisson(\lambda)
+\end{eqnarray}
+
+What does it mean? Well, similar to logistic regression, we can understand such equations by making some predictions for interesting values of the independent variable. For instance, a value of 0 for \textbf{previous} means an average grade on previous advanced that is around the mean value. So if we choose \textbf{previous}=0, then we have the prediction for an average student. If we fill in that value, we get the equation $\lambda=exp(\Sexpr{outcount$coef[1]} \Sexpr{outcount$coef[2]} \times 0)= exp (\Sexpr{outcount$coef[1]})= \Sexpr{round(exp(outcount$coef[1]),2)}$. Thus, for an avarage student, we expect to see a score of \Sexpr{round(exp(outcount$coef[1]),2)}. A Poisson distribution with $\lambda=\Sexpr{round(exp(outcount$coef[1]),2)}$ is depicted in Figure \ref{fig:gen_16}.
+
+
+<<gen_16, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Poisson distribution with lambda=1.17.'>>=
+# set.seed(1234)
+# number <- rpois(100000, round(exp(outcount$coef[1]),2))
+# data.frame(number) %>% ggplot(aes(x=number) )+geom_histogram(binwidth = 0.5) +xlim(c(0,11))
+
+set.seed(1234)
+probability2 <- dpois(seq(0,10) , round(exp(outcount$coef[1]),2))
+data.frame(probability2) %>% ggplot(aes(x=seq(0,10), y=probability2) )+geom_bar(stat = "identity")+ xlim(c(0,12)) + scale_x_continuous(breaks=seq(0,12)) +
+        xlab("count") + ylab("probability")
+
+@
+
+Another interesting value of \textbf{previous} might be -2. That represents a student with generally very low grades. Because the average grades were standardized, only about 2.5\% of the students has lower average grade than -2. If we fill in that value, we get: $\lambda=exp(exp(\Sexpr{outcount$coef[1]}  \Sexpr{outcount$coef[2]} \times -2)= \Sexpr{round(exp(outcount$coef[1]-2*outcount$coef[1]),2)}$. A Poisson distribution with $\lambda=\Sexpr{round(exp(outcount$coef[1]-2*outcount$coef[2]),2)}$ is depicted in Figure \ref{fig:gen_17}.
+
+<<gen_17, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Poisson distribution with lambda=0.85.'>>=
+# set.seed(1234)
+# number <- rpois(100000, round(exp(outcount$coef[1]-2*outcount$coef[1]),2))
+# data.frame(number) %>% ggplot(aes(x=number) )+geom_histogram(binwidth = 0.5) +xlim(c(0,11))
+
+set.seed(1234)
+probability1 <- dpois(seq(0,10) , round(exp(outcount$coef[1]-2*outcount$coef[1]),2))
+data.frame(probability1) %>% ggplot(aes(x=seq(0,10), y=probability1) )+geom_bar(stat = "identity")+ xlim(c(0,12)) + scale_x_continuous(breaks=seq(0,12)) +
+        xlab("count") + ylab("probability")
+
+
+@
+
+The last value of \textbf{previous} for which we calculate $\lambda$ is +2, representing a high-performing student. We then get $\lambda=exp(\Sexpr{outcount$coef[1]}  \Sexpr{outcount$coef[2]} \times 2)= \Sexpr{round(exp(outcount$coef[1]+2*outcount$coef[1]),2)}$. A Poisson distribution with $\lambda=\Sexpr{round(exp(outcount$coef[1]+2*outcount$coef[1]),2)}$ is depicted in Figure \ref{fig:gen_18}.
+
+<<gen_18, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Poisson distribution with lambda=1.60.'>>=
+# set.seed(1234)
+# number <- rpois(100000, round(exp(outcount$coef[1]+2*outcount$coef[1]),2))
+# data.frame(number) %>% ggplot(aes(x=number) )+geom_histogram(binwidth = 0.5) +xlim(c(0,11))
+
+set.seed(1234)
+probability3 <- dpois(seq(0,10) , round(exp(outcount$coef[1]+2*outcount$coef[1]),2))
+data.frame(probability3) %>% ggplot(aes(x=seq(0,10), y=probability3) )+geom_bar(stat = "identity")+ xlim(c(0,12)) + scale_x_continuous(breaks=seq(0,12)) +
+        xlab("count") + ylab("probability")
+
+
+@
+
+
+If we superimpose these figures, we obtain Figure \ref{fig:19}, where we see that the higher the average score on previous assignments, the higher is the expected score on the present assignment.
+
+<<gen_19, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, fig.cap='Three different Poisson distributions with lambdas 0.85, 1.17, and 1.60, for three different kinds of students.'>>=
+
+average <- probability2
+
+low <- number <- probability1
+
+high <- probability3
+scores <- c(low, average, high)
+
+previous <- factor(rep(c("low", "average", "high"), each=11))
+previous <- factor(previous,levels(previous)[c(3,1,2)])
+data.frame(scores, previous) %>%
+        ggplot(aes(x=rep(seq(0,10),3), y=scores, fill=previous))+
+        geom_bar(stat="identity", position="dodge") + scale_x_continuous(breaks=seq(0,12)) +
+        xlab("count") +ylab("probability")
+set.seed(1234)
+ID <- seq(1:100)
+score <- rnorm(100, 1, 3) %>%  round(0)
+score [score>4] <- 4
+score [score<0] <- 0
+previous = rnorm(100, 0, 1)
+degree <- rep(c("Bachelor","Master", "PhD"), 50)
+data<- data.frame(ID, score, previous, degree[1:100])
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/assignment.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/assignment.sps',
+              package = c("SPSS"))
+@
+
+
+
+We found that in this data set, previous high marks for assignments predicted a higher mark for the present assignment. In the next section we see how to perform the analysis in SPSS, and check whether there is also a relationship in the population of students.
+
+\section{Poisson regression in SPSS}
+
+Poisson regression is form of a generalized model analysis, similar to logistic regression. However, instead of using a Bernoulli distribution we use Poisson distribution. For a quantitative predictor like the variable \textbf{previous}, the syntax is as follows.
+
+\begin{verbatim}
+GENLIN scores WITH previous
+  /MODEL previous
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION.
+\end{verbatim}
+
+
+The output with parameter values is shown in Figure \ref{fig:assignment1}.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/assignment1.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting assignments scores from the average of previous assignments.}
+    \label{fig:assignment1}
+\end{figure}
+
+
+We see the same values for the intercept and the effect of \textbf{previous} as in the previous section. We now also see 95\% confidence intervals for these parameter values. For both, the value 0 is included in the confidence intervals, therefore we know that we cannot reject the null-hypotheses that these values are 0 in the population of students. This is also reflected by the Wald statistics. Remember that the Wald chi-square ($X^2$) statistic is computed by $B^2/SE^2$. For large enough samples, these $X^2$ statistics follow a $\chi^2$ distribution with 1 degree of freedom. From that distribution we know that a value of 0.372 is not significant at the 5\% level. It has an associated $p$-value of 0.542.
+
+We can write:
+
+\begin{quotation}
+Scores for the assignment (1-4) for 100 students were analysed using a generalized linear model with a Poisson distribution (Poisson regression). The scores were not significantly predicted by the average score of previous assignments, $B=-0.06, X^2(1)=0.37, p=0.54$. Therefore we cannot reject the null-hypothesis that there is no relationship between the average of previous assignments and the score on the present assignment in the population of students.
+\end{quotation}
+
+
+
+Suppose we also have a qualitative predictor, for example degree that the students are working for. Some do the assignment for bachelor's degree (degree=1), some for a master's degree (degree=2), and some for a PhD (degree=3). The syntax would then look like:
+
+
+\begin{verbatim}
+GENLIN scores BY degree
+  /MODEL degree
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION.
+\end{verbatim}
+
+Note that only the independent variable has changed and the WITH statement is changed into BY. The output is given in Figure \ref{fig:assignment2}.
+
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/assignment2.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting assignments scores from the degree that is studied for.}
+    \label{fig:assignment2}
+\end{figure}
+
+
+We see that the parameter for the degree=3 category is fixed to 0, meaning that it is used as the reference category. If we make a prediction for this group of students that is studying for a PhD degree, we have $\lambda = exp(.354 + 0) = exp(0.354)=\Sexpr{round(exp(0.354),1)}$. For the students studying for a Master's degree we have $\lambda = exp(.354 - 0.089) =\Sexpr{round(exp(.354 - 0.089),1)}$ and for students studying for their Bachelor's degree we have $\lambda = exp(.354 - 0.584) =\Sexpr{round(exp(.354 - 0.584),1)}$. These $\lambda$-values correspond to the expected number in a Poisson distribution, so for Bachelor students we expect a score of $\Sexpr{round(exp(.354 - 0.584),1)}$, for Master students we expect a score of $\Sexpr{round(exp(.354 - 0.089),1)}$ and for Phd students a score of $\Sexpr{round(exp(0.354),1)}$. Are these different scores also present in the population? We see that the effect for degree=1 is significant, $X^2(1)=5.85, p=0.02$, so there is a difference in score between students studying for a Bachelor's degree and students studying for a PhD. The effect for degree=2 is not significant, $X^2(1)=0.18, p=0.67$, so there is no difference in assignment scores between Master students and PhD students.
+\\
+\\
+Remember that for the linear model, when we wanted to compare more than two groups at the same time, we used an $F$-test to test for an overall difference in group means. Also for the generalized linear model, we might be interested in whether there is an overall difference in scores between Bachelor, Master and PhD students. For that we need to tweak the syntax a little bit, by stating that we also want to see an overall test printed. The PRINT statements then also needs the word SUMMARY. In other words, the syntax becomes
+
+\begin{verbatim}
+GENLIN scores BY degree
+  /MODEL degree
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION SUMMARY.
+\end{verbatim}
+
+
+
+
+We then get the relevant output in Figure \ref{fig:assignment3}. There we see a Wald Chi-Square statistic for the effect of \textbf{degree}. It has 2 degrees of freedom, since the effect for the 3 categories is coded by 2 dummy variables. So this test tells us that the null-hypothesis that the expected scores in each group of students are the same can be rejected, $X^2(2)=6.27, p=0.04$.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/assignment3.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting assignments scores from the degree that is studied for.}
+    \label{fig:assignment3}
+\end{figure}
+
+
+\section{Interaction effects in Poisson models}
+
+In the previous subsection we looked at a count variable, the number of criteria fulfilled, and we wanted to predict it from the degree that students were studying for. Let's look at an example where we want to predict a count variable from two qualitative predictors.
+
+In 1912, the ship Titanic sank after the collision with an iceberg. There we \Sexpr{sum(Titanic)} people on board that ship. Some of these were male, others were female. Some were passengers, others were crew, and some survived, and some did not. For the passengers there were three groups: those travelling first class, second class and third class. There were also children on board. If we focus on only the adults, suppose we want to know whether there is a relationship between the sex and the counts of people that survived the disaster. The table in \ref{tab:gen_20} gives the counts of survivors for males and females separately.
+
+
+<<gen_20, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+
+## Higher survival rates in females?
+data <- as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,2])
+colnames(data)="count"
+data %>%
+        xtable(caption="Counts of adult survivors on the Titanic.", label="tab:gen_20",digits=c(0)) %>%
+        print(include.rownames=T, caption.placement = "top")
+
+data.spss <- data.frame(sex = c("Male", "Female"), data)
+
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data.spss,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic1.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic1.sps',
+              package = c("SPSS"))
+
+# outtitanic1 <- glm(count~ sex, data=data.spss, family="poisson")
+# exp(outtitanic1$coef)
+@
+
+
+Let's analyse this small data set with SPSS. In SPSS we assign the value sex=1 to Females and sex=2 to Males. Our dependent variable is count, and the independent variable is sex.
+
+\begin{verbatim}
+GENLIN count BY sex
+  /MODEL sex
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION.
+\end{verbatim}
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/titanic1.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting numbers of men and women onboard the Titanic.}
+    \label{fig:titanic1}
+\end{figure}
+
+
+From the output in Figure \ref{fig:titanic1} we see that the expected count for females is $exp(5.823-0.067)=\Sexpr{round(exp(5.83-0.067),1)}$ and the expected count for males is $exp(5.823)=\Sexpr{round(exp(5.83),1)}$. These expected counts are close to the observed counts of males and females. The only reason that they differ from the observed is because of rounding errors (SPSS shows only the first three decimals). From the Wald statistic, we see that the difference in counts between males and females is not significant, $X^2(1)=0.74, p=0.39$\footnote{Note that a hypothesis test is a bit odd here: there is no clear population that we want to generalize the results to: there was only one Titanic disaster. Also, here we have data on the entire population of those people on board the Titanic, there is no random sample here.}.
+
+The difference in these counts is very small. But does this tell us that women were as likely to survive as men? Note that we have only looked at those who survived. How about the people that perished: were there more men that died then women? Table \ref{tab:gen_21} shows the counts of male survivors, female survivors, male non-survivors and female non-survivors. Then we see a different story: on the whole there were many more men than women, and a relatively small proportion of the men survived. Of the men, most of them perished: 1329 perished and only 338 survived, a survival rate of \Sexpr{round(100*338/(338+1329),1)}\%. Of the women, most of them survived: 109 perished and 316 survived, yielding a survival rate of \Sexpr{round(100*316/(316+109),0)}\%. Does this tell us that women are much more likely than men to survive collisions with icebergs?
+
+
+<<gen_21, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+
+## Higher survival rates in females?
+data <- as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])
+
+data <- as.vector(data)
+
+data <- matrix(data, 4,1)
+
+
+sex <- rep(c("Male", "Female"),2)
+survived <- rep(c(0,1), each=2)
+data <- data.frame(sex, survived, count=data)
+
+data %>%
+        xtable(caption="Counts of adults on the Titanic.", label="tab:gen_21",digits=c(0)) %>%
+        print(include.rownames=F, caption.placement = "top")
+
+
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic2.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic2.sps',
+              package = c("SPSS"))
+
+# outtitanic2 <- glm(count~ sex + survived, data=data, family="poisson") %>% summary()
+
+@
+
+Let's first run a multivariate Poisson regression analysis including the effects of both sex and survival. The syntax is
+
+
+\begin{verbatim}
+GENLIN count BY sex WITH survived
+  /MODEL sex survived
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION.
+\end{verbatim}
+
+where we treat sex qualitatively and survival quantitatively for convenience (\textbf{survived} is alread coded as a dummy, \textbf{sex} is not).
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/titanic2.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting numbers of men and women that perished and survived onboard the Titanic.}
+    \label{fig:titanic2}
+\end{figure}
+
+The output is given in Figure \ref{fig:titanic2}. From the parameter values, we can calculate the predicted numbers of male (sex = 2) and female (sex = 1) that survived and perished. For female survivors we have $exp(7.04 -1.37 -.79)=\Sexpr{round(exp(7.04 -1.37 -.79),2)}$, for female non-survivors we have $exp(7.04 -1.37)=\Sexpr{round(exp(7.04 -1.37 ),2)}$, for male survivors we have $exp(7.04 -.79)=\Sexpr{round(exp(7.04 -.79),2)}$ and for male non-survivors we have $exp(7.04)=\Sexpr{round(exp(7.04 ),2)}$.
+
+
+These predicted numbers are displayed in Figure \ref{fig:gen_22}. It also shows the observed counts. The pattern that is observed is clearly different from the one that is predicted from the generalized linear model. The linear model predicts that there are fewer survivors then non-survivors, irrespective of sex, but we observed that in females, there are more survivors then non-survivors. It seems that sex is is moderator of the effect of survival on counts.
+
+<<gen_22, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+data$survived <- as.factor(data$survived)
+outtitanic2 <- glm(count~ sex + as.factor(survived), data=data, family="poisson")
+data <- rbind(data,data)
+data$predicted <- as.factor(rep(c("predicted",'observed'),each=4))
+data$count[1:4] <- predict(outtitanic2, data[1:4,1:2], type="response")
+data %>% ggplot(aes(x=sex, y=count, fill=survived)) +geom_bar(stat = "identity", position="dodge") + facet_wrap(~predicted)
+
+@
+
+
+In order to test this moderation effect, we run a new generalized linear model for counts including an interaction effect of sex by survived. This is done in SPSS syntax by changing the MODEL part by includding a sex*survived interaction:
+
+
+\begin{verbatim}
+GENLIN count BY sex WITH survived
+  /MODEL sex survived sex*survived
+ DISTRIBUTION=POISSON LINK=LOG
+  /PRINT CPS DESCRIPTIVES SOLUTION.
+\end{verbatim}
+
+
+The output is displayed in Figure \ref{fig:titanic3}.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/titanic3.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting numbers of men and women that perished and survived onboard the Titanic.}
+    \label{fig:titanic3}
+\end{figure}
+
+
+
+When we plot the predicted counts from this new model with an interaction effect, we see that they are exactly equal to the counts that are actually observed in the data, see Figure \ref{fig:gen23}.
+
+<<gen_23, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+outtitanic3 <- glm(count~ sex + survived + sex:survived, data=data[5:8,], family="poisson")
+data$count[1:4] <- predict(outtitanic3, data[1:4,1:2], type="response")
+data %>% ggplot(aes(x=sex, y=count, fill=survived)) +
+        geom_bar(stat = "identity", position="dodge") +
+        facet_wrap(~predicted)
+@
+
+From the output we see that the interaction effect is significant, $X^2(1)=\Sexpr{round(summary(outtitanic3)$coef[3,3]^2,2)}, p=\Sexpr{round(summary(outtitanic3)$coef[3,4],2)}$. If we regard this data set as a random sample of all ships that sink after collision with an icebergs, we may conclude that in such situations, sex is a significant moderator of the difference in the numbers of survivors and non-survivors. One could also say: the proportion of people that survive a disaster like this is different in females than it is in males. Here we saw a higher survival rate in women than in men.
+
+
+\section{Crosstabulation and the Pearson chi-square statistic}
+
+The data on male and female survivors and non-nonsurvivors are often tabulated in a cross-table like in Table \ref{tab:gen_24}
+
+
+<<gen_24, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+data <- as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])
+
+row.names(data) <- c("Male","Female")
+  data %>%        xtable(caption="Counts of adult survivors and non-survivors on the Titanic.", label="tab:gen_24",digits=c(0)) %>%
+        print(include.rownames=T, caption.placement = "top")
+@
+
+
+
+In the previous section these counts were analysed using a generalized linear model with a Poisson distribution and an exponential link function. We wanted to know whether there was a significant difference in the proportion of survivors for men and women. In this section we discuss an alternative method of analyzing count data. We discuss an alternative chi-square ($X^2$) statistic for the moderation effect of one variable of the effect of another variable.
+
+First let's have a look at the overall survival rate. In total there we  \Sexpr{sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2])} people that survived and \Sexpr{sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,1])} people that did not survive. Table \ref{tab:gen_25} shows these column totals.
+
+<<gen_25, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+
+A = apply(Titanic, c(2, 3,4), sum)[,2,]
+B= data.frame(No=sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,1]), Yes=sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2]))
+
+data<- rbind(A, B)
+
+row.names(data) <- c("Male","Female","Total")
+
+         data %>% xtable(caption="Counts of adult survivors and non-survivors on the Titanic.", label="tab:gen_25",digits=c(0)) %>%
+        print(include.rownames=T, caption.placement = "top", hline.after=c(0,2,3))
+@
+
+Looking at these total numbers of survivors and non-survivors, we can calculate the proportion of survivors overall (the survival rate) as $\Sexpr{sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2])}/(\Sexpr{sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2])}+\Sexpr{sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,1])})= \Sexpr{round(sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2])/(sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,2])+sum(as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])[,1])),2)}$.
+
+Table \ref{tab_gen26} shows the totals for men and women, as well as the overall total number of adults.
+
+
+<<gen_26, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+
+data <- data %>% mutate(Total=c(sum(apply(Titanic, c(2,3,4), sum)[1,2,]) , sum(apply(Titanic, c(2,3,4), sum)[2,2,]), sum(Titanic[,,2,])))
+
+row.names(data) <- c("Male","Female","Total")
+
+
+data %>% xtable(caption="Counts of adult survivors and non-survivors on the Titanic.", label="tab:gen_26",digits=c(0)) %>%
+        print(include.rownames=T, caption.placement = "top", hline.after=c(0,2,3))
+@
+
+
+
+Suppose we only know that of the \Sexpr{sum(Titanic[,,2,])} people, 1667 were men, and of all people, 654 survived. Then suppose we pick a random person from these \Sexpr{sum(Titanic[,,2,])} people. What is the probability that we get a male person that survived, \textit{given that sex and survival have nothing to do with eachother}?
+
+Well, from probability theory we know that if two events $A$ and $B$ are independent, the probability of observing A and B at the same time, is equal to the product of the probability of event $A$ and the probabilty of event $B$.
+
+\begin{equation}
+Prob(A and B) = Prob(A) \times Prob(B)
+\end{equation}
+
+If sex and survival are independent from eachother, then the probabilty of observing a male survivor is equal to the probability of seeing a male times the probability of seeing a survivor. The probability for survival is 0.31, as we saw earlier, and the probability of seeing a male is equal to the proportion of males in the data, which is $1667/\Sexpr{sum(Titanic[,,2,])} =\Sexpr{round(1667/sum(Titanic[,,2,]),2) }$. Therefore, the probability of seeing a male survivor is $\Sexpr{round(1667/sum(Titanic[,,2,]),2)} \times 0.31 =\Sexpr{round(0.79*0.31,2)} $. The expected number of male survivors is then that probability times the total number of people, $\Sexpr{round(0.79*0.31,2)} \times \Sexpr{sum(Titanic[,,2,])}= \Sexpr{sum(Titanic[,,2,])*round(0.79*0.31,2)}$. Similarly we can calculate the expected number of non-surviving males, the number of surviving females, and the number of non-surviving females.
+
+
+These numbers, after rounding, are displayed in Table \ref{tab:gen_27}.
+
+
+<<gen_27, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+
+expected <-  data.frame(No=c((1-0.31)*0.8*2092,(1-0.31)*0.2*2092), Yes=c(0.31*0.8*2092,0.31*0.2*2092  ) )
+
+row.names(expected) <- c("Male","Female")
+
+expected         %>% xtable(caption="Expected numbers of adult survivors and non-survivors on the Titanic.", label="tab:gen_27",digits=c(0)) %>%
+        print(include.rownames=T, caption.placement = "top")
+@
+
+
+The expected numbers in Table \ref{tab:gen_27} are quite different from the observed numbers in Table \ref{tab:gen_24}. Are the differences large enough to think that the two events of being male and being a survivor are NOT independent? If the expected numbers on the assumption of independence are different enough from the observed numbers, then we can reject the null-hypothesis that being male and being a survivor have nothing to do with eachother. To measure the difference between expected and observed counts, we need a test statistic. Here we use Pearson's chi-square statistic. It involves calculating the difference between the numbers in the respective cells, and standardize them by the expected number. Here's how it goes:
+
+For each cell, we take the predicted count subtract it from the observed count. For instance, for the male survivors, we expected 519 but observed 338. The difference is therefore $338-519= \Sexpr{-(519-338)}$. Then we take the square of this difference, $ 181^2=\Sexpr{(519-338)^2}$. Then we divide this number by the expected number, and then we get $\Sexpr{(519-338)^2}/519=\Sexpr{(519-338)^2/519}$. We do exactly the same thing for the male non-survivors, the female survivors and the female non-survivors. Then we add these 4 numbers, and then we have the Pearson chi-square statistic. In formula form:
+
+\begin{equation}
+X^2 = \Sigma_i    \frac{(O_i-E_i)^2}{E_i}
+\end{equation}
+
+
+So for male survivors we get
+
+
+\begin{equation}
+ \frac{(338-519)^2}{519} =\Sexpr{(338-519)^2/519}
+\end{equation}
+
+
+
+
+For male non-survivors we get
+
+
+\begin{equation}
+ \frac{(1329-1155)^2}{1155} =\Sexpr{(1329-1155)^2/1155}
+\end{equation}
+
+For female survivors we get
+
+
+\begin{equation}
+ \frac{(316-130)^2}{130} =\Sexpr{(316-130)^2/130}
+\end{equation}
+
+and for female non-survivors we get
+
+\begin{equation}
+ \frac{(109-289)^2}{289} =\Sexpr{(109-289)^2/289}
+\end{equation}
+
+
+
+
+If we add these 4 numbers we have the chi-square statistic: $X^2= \Sexpr{round(sum((338-519)^2/519+(1329-1155)^2/1155+(316-130)^2/130+ (109-289)^2/289),2)}$. Note that we only use the rounded expected numbers. Better would be to use the non-rounded numbers. Had we used the non-rounded expected numbers, we would have gotten $X^2 = \Sexpr{ round(chisq.test(  as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,]), correct=F )$statistic,2) }$.
+
+The Wald chi-square statistic for the sex*survived interation effect was \Sexpr{summary(outtitanic3)$coef[4,3]^2}, see Figure \ref{fig:titanic3}. It tests exactly the same null-hypothesis as the Pearson chi-square: that of independence, or in other words, that the numbers can be explained by only two main effects, sex and survival.
+
+If the data set is large enough and the numbers are not too close to 0, the same conclusions will be drawn, whether from a Wald chi-square for an interaction effect in a generalized linear model, or from a crosstabulation and computing a Pearson chi-square. The advantage of the generalized linear model approach is that you can do much more with them, for instance more than two predictors, and that you make it more explicit that when computing the statistic, you take into account the main effects of the variables. You do that also for the Pearson chi-square but it is less obvious: we did that by first calculating the probability of survival and second calculating the proportion of males.
+
+
+
+\section{Poisson regression or logistic regression?}
+
+
+In the previous section we analyzed the relationship between the variable \textbf{sex} of the person onboard the Titanic, and the variable \textbf{survived}: whether or not a person survived the shipwreck. We found a relationship between these two variables by studying the crosstabulation of the counts, and testing that relationship using a Pearson chi-square statistic. In the section before that, we saw that this relationship could also be tested by applying a Poisson regression model and looking at the sex by survived interaction effect. These methods are equivalent.
+
+There is yet a third way to analyze the sex and survived variables. Remember that in the previous chapter we discussed logistic regression. In logistic regression, a dichotomous variable (a variable with only two values, say 0 and 1) is the dependent variable, with one or more quantitaive or qualitative independent variables. Both sex and survived are dichotomous variables: male and female, and survived yes or survived no. In prinicple therefore, we could do a logistic regression: for example predicting whether a person is a male or female, on the basis of whether they survived or not, or the other way around, predicting whether people survive or not, on the basis of whether a person is a women or a man.
+
+
+What variable is used here as your dependent variable, depends on your research question. If your question is whether females are more likely to survive than men, perhaps because of their body fat composition, or perhaps because of male chivalry, then the most logical choice is to take survival as the dependent variable and sex as the independent variable.
+
+The syntax for logistic regression then looks like
+
+\begin{verbatim}
+GENLIN survived (REFERENCE=FIRST) BY sex
+  /MODEL business
+ DISTRIBUTION=BINOMIAL LINK=LOGIT
+  /PRINT CPS DESCRIPTIVES   SOLUTION.
+\end{verbatim}
+
+
+Note however that the data is the wrong format. For the Poisson regression, the data were there in the form of what we see in Table \ref{tab:gen_24}. However, for a logistic regression, we need the data in the format like in Table \ref{tab:gen_28}. For every person onboard the ship, we have to know their sex and their survival status.
+
+<<gen_28, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+data <- as.matrix(apply(Titanic, c(2, 3,4), sum)[,2,])
+
+data <- as.vector(data)
+
+data <- matrix(data, 4,1)
+
+
+sex <- rep(c("Male", "Female"),2)
+survived <- rep(c(0,1), each=2)
+data <- data.frame(sex, survived, count=data)
+
+
+
+
+data.new <- c(  rep(c("Male","0"), data[1,3]) ,
+                rep(c("Female","0"), data[2,3]) ,
+                rep(c("Male","1"), data[3,3]) ,
+                rep(c("Female","1"), data[4,3]) )
+
+data.new <- t( matrix(data.new, 2, sum(data[,3])  )   )
+
+ID <- 1:sum(data[,3])
+
+data.logistic <- data.frame(ID, sex = data.new[,1], survived=data.new[,2])
+
+set.seed(1234)
+data.logistic[sample(ID,10),]         %>% xtable(caption="Individual data of adult survivors and non-survivors on the Titanic.", label="tab:gen_28",digits=c(0)) %>%
+        print(include.rownames=F, caption.placement = "top")
+
+write.foreign(data.logistic,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic3.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples poisson/titanic3.sps',
+              package = c("SPSS"))
+@
+
+
+
+We use BY to treat the sex variable as qualitative. We use (REFERENCE = FIRST) because we want to predict whether people survive (survive=1). Then our reference category is survive=0, which is the first value.
+In the output in Figure \ref{fig:titanic4} we see that sex is a significant predictor of the survival status, $B=2.434, X^2=368,98, p<0.001$. The logoddsratio for a male surviving the shipwreck is $-1.37$, and the logoddsratio for a female surviving the shipwreck is $-1.37+2.43=1.06$. These logoddsratios correspond to probabilities of $0.20$ and $0.74$, respectively. Thus, some are much more likely to survive than men.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/titanic4.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting numbers of men and women that perished and survived onboard the Titanic.}
+    \label{fig:titanic4}
+\end{figure}
+
+However, suppose you are the relative of a passenger onboard a ship that shipwrecks. After two days, there is news that a person was found. The only thing known about the person is that he or she is alive. Your relative is your niece, so you'd like to know on the basis that the person that was found lives, what is the probability that that person is a woman, cause then it could be your believed niece! You could therefore run a logistic regression on the Titanic data to see to what extent the survival of a person predicts the sex of the person. The syntax would then look like this:
+
+\begin{verbatim}
+GENLIN sex (REFERENCE=LAST) WITH survived
+  /MODEL survived
+ DISTRIBUTION=BINOMIAL LINK=LOGIT
+  /PRINT CPS DESCRIPTIVES   SOLUTION.
+\end{verbatim}
+
+
+Note that we use WITH in order to treat the dummy variable survived as quantitative. We also use (REFERENCE=LAST) to indicate that we use the last (second) category of sex (2) as the reference category, because that category refers to men, because we want to predict whether a person is a female.
+
+The output is give in Figure \ref{fig:titanic5}
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "poisson/titanic5.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting numbers of men and women that perished and survived onboard the Titanic.}
+    \label{fig:titanic5}
+\end{figure}
+
+
+From this output we conclude that survival is a signficant predictor of sex, $B=-2.434, X^2=368,98, p<0.001$. The logoddsratio for a surviving person to be a woman is $-4.93 +2.43= -2.50$, and the logoddsratio for a non-surviving person to be a woman is $-4.93$. These logoddsratios correspond to probabilities of $0.08$ and $0.01$, respectively. Thus, if you know that there is a person that survived the Titanic, it is not very likely that it was a woman, only 8\% chance. If you think this is counterintuitive, remember that even though a large proportion of the women survived the Titanic, there were many more men onboard than women.
+\\
+\\
+In summary if you have count data, and one of the variables is dichotomous, you have the choice whether to use a Poisson regression model or a logistic regression. The choice depends on the research question: if your question involves \textit{prediction} of a dichotomous variable, logistic regression is the logical choice. If you have a theory that one or more independent variable \textit{explain} one other variable, logistic regression is the logical choice. If however your theory does not involve a natural direction or prediction of one variable, and you are simply interested in associations among variables, then Poisson regression is the obvious choice.
+
+
+
+

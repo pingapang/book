@@ -10,7 +10,7 @@
 % Title Page
 \title{Analyzing data using linear models}
 
-\author{Stephanie van den Berg}
+\author{St\'ephanie van den Berg}
 \date{Versie 0.1 \\ (\today)}
 
 
@@ -25,6 +25,8 @@ library(dplyr)
 library(lme4)
 library(tidyr)
 library(xtable)
+library(scales)
+library(DAAG)
 @
 
 
@@ -36,1317 +38,841 @@ This book is intended to be of use to bachelor students in social sciences that 
 \tableofcontents
 
 
-\Sexpr{knit_child('chapter_1.Rnw')} % exploring your data
+% % \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
+% % 
+% % \chapter{Linear modelling: introduction FULYA}
+% % \section{Linear relationships}
+% % \section{Pearson correlation}
+% % \section{Simple regression with a continuous predictor}
+% % \section{Predicting the dependent variable}
+% % 
+% % 
+% % 
+\Sexpr{knit_child('chapter_3.Rnw')} % multiple regression
 
 
-\chapter{Linear modelling: introduction FULYA}
-\section{Linear relationships}
-\section{Pearson correlation}
-\section{Simple regression with a continuous predictor}
-\section{Predicting the dependent variable}
+\chapter{Inference I: random samples, standard errors and confidence intervals}
+
+In the previous chapters on simple and multiple regression we have seen how a linear equation can describe a data set: the linear equation describes the behaviour of one variable, the dependent variable, on the basis of one or more other variables, the independent variables. Sometimes we are indeed interested in the relationship between variables in one given data set. For instance, a teacher wants to know whether her exam gradings in her class of last year predict how well they do in a second course a year later.
+
+<<inf_0, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in a sample of 200 bottles.'>>=
+set.seed(1234)
+bottles <- data.frame(ID=1:800000,
+                      volume= round(rnorm(800000, 30,1 ),2),
+                      temperature=  round(runif(800000, 18,21 ),2)                 )
+bottles1 <- bottles[sample(1:80000,200),]
+out.sample <-  lm(volume~temperature, bottles1 )
 
 
-\chapter{Multivariate regression}
-\section{R-squared}
+bottles1  %>%  ggplot(aes(temperature, volume)) + geom_point() +xlim(c(17,22)) + geom_smooth(method="lm", se=F) + xlab("Temperature in degrees centigrade") + ylab("Volume in centiliters")
+@
 
-\chapter{Inference MARIAN}
-\section{Random sampling and confidence intervals}
-\section{$t$-statistics, null-hypothesis testing and $p$-values}
+
+But very often, researchers are not interested in the relationships between variables in one data set, but interested in the relationship between variables in general, not limited to only the observed data. For example, a researcher would like to know what the relationship is between the temperature in a brewery and the volume of beer that goes into one bottle. In order to study the effect of temperature on volume, the researcher measures the volume of beer in 200 bottles and determines from log files the temperature in the factory during production for each measured bottle. The researcher might find a small effect of temperature ($t$) on the volume of beer in the 200 produced bottles. The linear equation might be $volume = \Sexpr{out.sample$coef[1]} \Sexpr{out.sample$coef[2]} \times t + e$, see Figure \ref{fig:inf_0}. But the question is what the effect of temperature is in \textit{all} bottles.
+
+
+
+In other words, we might have data on a sample of bottles, but we might really be interested to know whether there is an effect \textit{had we been able to measure the volume in all bottles}.
+
+
+\section{Population data and sample data}
+
+In the beer bottle example above, the volume of beer was measured in a total of 200 bottles. Let's do a thought experiment. Suppose we could have access to volume data about all bottles of beer on all days where the factory was operating, including information about the temperature for each day of production. Suppose that the total number of bottles produced is 80,000 bottles. When we plot the volume of each bottle against the temperature of the factory we get the scatter plot in Figure \ref{fig:inf_1}.
+
+
+<<inf_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in all 80,000 bottles.'>>=
+out.population <- lm(volume~ temperature, bottles)
+bottles[sample(1:80000,18000),]  %>%  ggplot(aes(temperature, volume)) + geom_point() +xlim(c(17,22)) + geom_smooth(method = "lm" , se=F)+ xlab("Temperature in degrees centigrade") + ylab("Volume in centiliters")
+
+@
+
+
+In our thought experiment, we could determine the regression equation using all bottles that were produced: all 80,000 of them. We then find the blue regression line displayed in Figure \ref{fig:inf_1}. Its equation is $Volume = \Sexpr{out.population$coef[1]} + \Sexpr{out.population$coef[2]} \times t$.
+
+
+However, in the data example above, data was only collected on 200 bottles. These bottles were randomly selected: there were many more bottles but we could measure only a limited number of them. This explains why the regression equation based on the sample differed from the regression equation based on all bottles: we only see part of the data.
+
+Here we see a discrepency between the regression equation based on the sample, and the regresssion equation based on the population. Here, the \textit{population} is the collection of all bottles produced in the factory. The \textit{sample} is the collection of 200 randomly selected bottles. Here we have a slope of \Sexpr{out.population$coef[2]} in the population, and we see a slope of \Sexpr{out.sample$coef[2]} in the sample. To distinguish between the two, the population slope is often denoted by the Greek letter $\beta$ and the sample slope by the Roman letter $b$.
+
+
+
+\begin{eqnarray}
+Population: Volume &=& \Sexpr{out.population$coef[1]} + \Sexpr{out.population$coef[2]} \times t  \nonumber\\
+Sample: Volume &=&  \Sexpr{out.sample$coef[1]}  \Sexpr{out.sample$coef[2]} \times t \nonumber
+\end{eqnarray}
+
+The discrependency here is simply the result of chance: had we selected another sample of 200 bottles, we probably would have found a different linear equation with a different slope. The intercept and slope based on sample data, are the result of chance. The population intercept and slope (the true ones) are fixed, but unknown. If we want to know something about the population intercept and slope, we only have the sample equation to go on. Our best guess for the population equation is the sample equation, but how certain can we be about how close the sample intercept and slope are to the population intercept and slope?
+
+
+\section{Random sampling and the standard error}
+
+
+In order to know how close the intercept and slope in a sample are to their values in the population, we do another thought experiment. Let's see what happens if we take more than one random sample of 200 bottlees. With random, we mean that every bottle has the same chance of being picked.
+
+We put the 200 bottles that we selected earlier back into the population and we again blindly pick a new collection of 200 bottles. We then measure for each bottle the volume of beer it contains and we determine the temperature of the factory on the day of its production. We then apply a regression analysis and determine the intercept and the slope. Next, we put these bottles back into the population and draw a next random sample of 200 bottles.
+
+You can probably imagine that if we repeat this procedure of randomly picking 200 bottles from a large population of 80,000, each time we find a different intercept and a different slope. Let's carry out this procedure 100 times by a computer. If we then plot the 100 sample intercepts and sample slopes we get the picture in Figure \ref{fig:inf_3}.
+
+
+
+<<inf_3, fig.height=4, echo=FALSE, fig.align='center', message=F,fig.cap='Distribution of the sample mean when population variance is 225 and sample size equals 200.'>>=
+set.seed(1234)
+sample.intercept <- c()
+sample.slope <- c()
+for (i in 1:100)
+{
+        sample <- bottles[sample(1:80000,200),]
+        out <- lm(volume~temperature, sample)
+        sample.intercept[i] <- out$coef[1]
+        sample.slope[i] <- out$coef[2]
+}
+data.frame(x=c(sample.intercept, sample.slope), fill=rep(c("intercept","slope"), each=100)) %>% ggplot(aes(x=x)) +geom_histogram(binwidth = 0.1) + facet_wrap(~fill)
+@
+
+We see a large variation in the intercepts that we find, and only a small variation in the slopes (all values very close to 0).
+
+
+For now, let's focus on the slope; this because we are mostly interested to know whether there is a relationship between volume and temperature, but everything that follows also applies to the intercept. In Figure \ref{fig:inf_5} we see the histogram of the slopes if we carry out the random sampling 1000 times.
+
+<<inf_5, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Distribution of the sample mean when population variance is 225 and sample size equals 200.'>>=
+set.seed(1234)
+sample.intercept <- c()
+sample.slope <- c()
+for (i in 1:1000)
+{
+        sample <- bottles[sample(1:80000,200),]
+        out <- lm(volume~temperature, sample)
+        sample.intercept[i] <- out$coef[1]
+        sample.slope[i] <- out$coef[2]
+}
+data.frame(sample.slope) %>% ggplot(aes(x=sample.slope)) +geom_histogram(binwidth = 0.01) + xlim(c(-0.3,0.3))
+se<- sd(sample.slope)
+@
+
+If we look at the distribution of the 1000 sample slopes in Figure \ref{fig:inf_5}, we see that on average the sample slope is around $\Sexpr{out.population$coef[2]}$, which is the population slope (the slope if we analyse all bottles). But there is variation around that mean of 0: the standard deviation of all 1000 sample slopes turns out to be \Sexpr{se}.
+
+The standard deviation of the sample mean is called the $\Sexpr{out.population$coef[2]}$. Had the population slope been 110 or -40, the sample slopes would cluster around 110 or -40, but the standard deviation of the sample slopes, the standard error, would be the same.
+
+The standard error for a sample slope represents the uncertainty about the population slope. If the standard error is large, it means that if we would draw many different random samples from the same population data, we would get very different sample slopes. If the standard error is small, it means that if we would draw many different random samples from the same population data, we would get sample slopes that are very close to one another, and very close to the population slope.
+
+It turns out that the standard error for a sample slope depends on many things, but the most important factor is the \textit{sample size}: how many bottles there were in each random sample. In the above example, the sample size is 200 bottles.
+
+% In the above bottle example, the standard deviation of all 80,000 volumes was \Sexpr{sd(bottles$volume)}, where most of the volumes (roughly 95\%) lie between 28 and 32 cl. The variance is the square of the standard deviation so the variance is \Sexpr{var(bottles$volume)}. Now imagine that we have another population, say bottles from a different brand, where we see a much smaller variation in volumes: suppose the average volume is also 30, but the standard deviation is 0.5, so that roughly 95\% of the scores lie between 29 and 31. If we then take 1000 samples from this distribution of bottles from this other brand, we get the distribution in Figure \ref{fig:inf_6}.
+
+% <<inf_6 ,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when population variance is 25 and sample size equals 200.'>>=
+% set.seed(1234)
+% bottles <- data.frame(ID=1:800000,
+%                       volume= round(rnorm(800000, 30, 0.5 ),2),
+%                       temperature=  round(runif(800000, 18,21 ),2)                 )
+% sample.intercept <- c()
+% sample.slope <- c()
+% for (i in 1:1000)
+% {
+%         sample <- bottles[sample(1:80000,200),]
+%         out <- lm(volume~temperature, sample)
+%         sample.intercept[i] <- out$coef[1]
+%         sample.slope[i] <- out$coef[2]
+% }
+% data.frame(sample.slope) %>% ggplot(aes(x=sample.slope)) +geom_histogram(binwidth = 0.01) +  xlim(c(-0.3,0.3))
+% @
+
+% Now we see that the sample slopes cluster much closer around the value of 0. The standard deviation of this distribution, that is, the standard error, is now much smaller: \Sexpr{sd(sample.slope)}. This makes sense: the larger the variation at population level, the higher the probability that you find extreme values in your sample that influence the sample slope upwards or downwards. The smaller the variation at population level, the higher the proportion of data points in your sample that are very close to the population slope, so that the sample intercept will be very close to the population slope In sum: the higher the population variance, the larger the standard error, the larger the uncertainty about the population slope.
+
+Imagine that you draw only 2 bottles from a population of bottles. Then there is quite some probability that by sheer luck you find one bottle with a low temperature and a small volume, and another bottle with a high temperature and a large volume. This would yield a sample slope that is quite large and positive. But there is also an equally high probability that you get one bottle with a low temperature with a large volume, and another bottle with a high temperature and a small volume. Then based on these two other bottles, the sample slope will be large and negative. In case of a sample size of only 2, you see that there will be quite a lot of variation in the sample slope if we draw various random samples. This large variation in sample slopes is then captured by the standard error, that will be large. With only 2 bottles per sample, the uncertainty about the population slope will then also be large.
+
+Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Because of this averaging effect, the slope based on 20 bottles will then be closer to the population slope. The standard error therefore decreases with increasing sample size.
+
+In Figure \ref{fig:inf_7} we see the distributions of the sample slope where the sample size is either 2 (left panel) or 20 (right panel). We see quite a lot of variation in sample slopes with sample size equal to 2, and considerably less variation in sample slopes if sample size is 20. This shows that the larger the sample size, the smaller the standard error, the larger the certainty about the population slope.
+
+
+<<inf_7,fig.height=4, echo=FALSE, fig.align='center', warning=F, fig.cap='Distribution of the sample slope when sample size is 2 and when sample size is 20.'>>=
+
+sample.slope <- c()
+for (i in 1:1000)
+{
+        sample <- bottles[sample(1:80000,2),]
+        out <- lm(volume~temperature, sample)
+
+        sample.slope[i] <- out$coef[2]
+
+}
+for (i in 1001:2000)
+{
+        sample <- bottles[sample(1:80000,20),]
+        out <- lm(volume~temperature, sample)
+
+        sample.slope[i] <- out$coef[2]
+
+}
+panel <- rep(c("sample size 2","sample size 20"), each=1000)
+
+data.frame(sample.slope, panel) %>% ggplot(aes(x=sample.slope)) + geom_histogram(binwidth =0.5)  + facet_wrap(~ panel) + xlim(c(-20,20)) + xlab("sample slope")
+ @
+
+
+
+
+So if we have a small standard error, we can be relatively certain that our sample slope is close to the population slope. Above we've done a thought experiment where we knew everything about the population intercept and slope, and we drew 1000 samples from this population. In reality, we don't know anything about the population: we only have the sample data to go on. So suppose we draw a sample of 200 from an unknown population of bottles, and we find a slope of 1, we have to look at the standard error to know how close that sample slope is to the population slope.
+
+For example, suppose we find a sample slope of 1 and the standard error is equal to 0.1. Then we know that the population slope is more likely to be in the neighbourhood of values like 0.9, 1, or 1.1 than in the neighbourhood of 10 or -10.
+
+Now suppose we find a sample slope of 1 and the standard error is equal to 10. Then we know that the sample slope is more likely to be somewhere in the neighbourhood of values like -9, 1 or 11, than around values in the neighbourhood of -100 or +100. However, values like -9, 1 and 11 are quite far apart, so actually we have no idea where the population slope is; we don't even know whether the population slope is positive or negative! The standard error is simply too large.
+
+
+As we have seen, the standard error depends very much on sample size. Apart from sample size, the standard error for a slope also depends on the variance of the independent variable, the variance of the dependent variable, and the correlations between the independent variable and other independent variables in the equation (in case of multiple regression). We will not bore you with the complicated formula for the standard error for regression coefficients \footnote{See https://www3.nd.edu/~rwilliam/stats1/x91.pdf for the formula. In this pdf, 'IV' means independent variable}. Instead, we look at the standard error that SPSS or other computer packages compute for us.
+
+
+
+% % \begin{equation}
+% % \sigma_{\bar{y}} = \frac{\sigma}{\sqrt{n}}
+% % \end{equation}
+% %
+% % where $\sigma$ is the population standard deviation and $n$ is sample size. Sample size we know, this is 100, but how about the population standard deviation? We don't know anything about the population, that's the whole reason that we took a sample. But we do know the standard deviation in the sample data. It turns out the \textit{sample standard deviation} $s$ is a rough approximation of the population variance. Therefore we often see the following formula for a standard error
+% %
+% % \begin{equation}
+% % \sigma_{\bar{y}} = \frac{s}{\sqrt{n}}
+% % \end{equation}
+% %
+% %
+% % where $s$ represents an approximation of the population standard deviation using the sample data, more specifically the sums of squares (SS, see Chapter 1).
+% % \begin{equation}
+% % s = \sqrt{\frac{SS}{n-1}}
+% % \end{equation}
+% %
+% % Note the similarity between the standard deviation of a particular set of values, $\sigma=\sqrt{\frac{SS}{n}}$ and the formula for $s$: if you're interested in the standard deviation for a specific set of values, then you use $\sigma=\sqrt{\frac{SS}{n}}$, if you're interested in the standard deviation of the population that a set of numbers is a random sample of, then you use $s=\sqrt{\frac{SS}{n-1}}$.\footnote{Confusingly, $s$ is often called the $sample standard deviation$, while it is really an approximation of the population standard deviation based on the sample data.}
+% %
+% % Suppose in the Paris data we find an $s$ of 12, then we know that the standard error is equal to $\frac{12}{\sqrt{100}}=\Sexpr{12/10}$.
+
+
+
+\section{$t$-distributions}
+
+Above we saw that if there is a large collection of data points (population) with a particular slope that describes the relationship between two variables, and if you then take random samples out of this collection, each time you find a different value for the slope in the sample, the sample slope. We saw that the standard deviation of the distribution of all such slopes is called the standard error. The standard error gives us information about how certain we can be that a slope in the sample is close to the slope in the population. The smaller the standard error the more certain that the population slope has a value that is in the neighboorhood of the value for the sample slope.
+
+
+
+<<inf_8,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Difference in the shapes of a normal distribution and a t-distribution'>>=
+x=seq(-3,3,0.1)
+data.frame(x)  %>%  ggplot(aes(x=x)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1), aes(colour = "normal"))  +
+  stat_function(fun = dt, args = list( df= 3), aes(colour = "t")) +
+  scale_color_manual("Distribution", values = c("blue", "red")) +
+        ylab("density") + xlim(c(-5,5)) +xlab(" ")
+
+@
+
+
+
+When we look at the distribution of the sample slope, for instance in Figure \ref{fig:inf_5}, we notice that the distribution looks very much like a normal distribution. Well, actually it isn't quite a normal distribution. In reality it has the shape of a $t$-distribution. Figure \ref{fig:inf_8} shows the difference between a $t$-distribution (in red) and a normal distribution (in blue). In this figure, the means are equal (0) and the areas under the curve are equal (1), but the shapes are clearly different. Compared to the $t$-distribution, the normal distribution has more observed values close to the mean (the distribution is more peaked). The $t$-distribution has relatively more observations in the tails of the distribution (heavy tails).
+
+
+
+Actually, the shape of the distribution of sample slopes depends on the size of the samples. In Figure \ref{fig:inf_9} we see what the distribution would look like if all samples would be of size 4 (the red line) and what the distribution would like like if the samples would be of size 200 (the blue line). Remember: we are talking here only about the \textit{shape} of the distribution. If sample size is large, like for instance 200 (the blue line), the shape looks extremely close to the normal distribution.
+
+
+In summary, when we draw many samples from a population, the shape of the distribution of sample slopes is that of a $t$-distribution. The shape of the $t$-distribution depends on sample size. The larger the sample size, the more the shape of the $t$-distribution looks like a normal distribution.
+
+
+<<inf_9,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The shape of the distribution of sample slopes depends on sample size.'>>=
+set.seed(1234)
+
+
+data.frame(x)  %>%  ggplot(aes(x=x)) +
+  stat_function(fun = dt, args = list(df=199), aes(colour = "sample size 200"))  +
+  stat_function(fun = dt, args = list( df= 3), aes(colour = "sample size 4")) +
+  #       stat_function(fun = dnorm, args = list( mean=0, sd=1.005708), aes(colour = "sample size 200")) +
+  # stat_function(fun = dnorm, args = list( mean=0, sd=1.70675), aes(colour = "sample size 4")) +
+  scale_color_manual("t-distribution", values = c("blue", "red")) +
+        ylab("density") + xlim(c(-4,4))
+
+# rt(10000, df=199) %>% sd()
+@
+
+
+
+
+
+\section{$T$-statistics}
+
+
+Above we saw that sample slopes have a $t$-distribution, and that if sample size is large, say larger than 200, the $t$-distribution looks very much like a normal distribution. From the normal distribution, we know that if we standardize the scores by computing $z$-scores, that is, if we subtract the mean and then divide by the standard deviation, $z= \frac{x-\bar{x}}{\sigma}$, then 2.5\% of the $z$-values is smaller than -1.96 and 2.5\% of the $z$-values is larger than +1.96.
+
+
+Therefore, if for large sample size the $t$-distribution is practically indistinguishable from the normal distribution, we know that if we standardize the sample slope values, we get a similar result. Instead of looking at the raw slope value, we can compute a standardized slope, let's call that standardized result $t$. Then we get:
+
+
+\begin{equation}
+t = \frac{b-\beta}{se}
+\end{equation}
+
+In words: we take a particular sample slope $b$ and we subtract the population slope $\beta$. The result we divide by the standard deviation of the sample slopes, which is callled the standard error $se$.
+
+
+Let's go back to the example of the beer bottles. In our first random sample of 200 bottles, we found a sample slope of \Sexpr{out.sample$coef[2]}. We also happened to know the population slope, which was \Sexpr{out.population$coef[2]}. From our computer experiment, we saw that the standard deviation of the sample slopes with sample size 200 was equal to \Sexpr{se}. Thus, if we fill in the formula for the standardized slope $t$, we get for this particular sample
+
+
+\begin{equation}
+T = \frac{\Sexpr{out.sample$coef[2]}-\Sexpr{out.population$coef[2]}}{\Sexpr{se}}= \Sexpr{(out.sample$coef[2]-out.population$coef[2])  / se }
+\end{equation}
+
+
+Notice that we distinguish between a variable $t$ that has a $t$-distribution, and a $T$-statistic that is based on a computation.
+
+
+Now, what can we say about this $T$-value? Since with a sample size of 200 the distribution closely resembles a normal distribution, we can use normal tables published online or in computer packages to see how likely a value of $T=\Sexpr{(out.sample$coef[2]-out.population$coef[2])  / se }$ actually is. In normal tables we find that a Z-value of $\Sexpr{(out.sample$coef[2]-out.population$coef[2])  / se }$ is not that strange: in the standard normal distribution, $\Sexpr{100*pnorm((out.sample$coef[2]-out.population$coef[2])  / se) }$\% of the values is smaller than $\Sexpr{(out.sample$coef[2]-out.population$coef[2])  / se }$. The area is shown in Figure \ref{fig:inf_9b}.
+
+
+<<inf_9b,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The standard normal distribution and the probability of a Z-score lower than -1.06'>>=
+
+df = 198; ncp = 0; limits = c(-5,5)
+lb=-20; ub=(out.sample$coef[2]-out.population$coef[2])  / se
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dnorm(areax))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dnorm(x)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     # + geom_area(data = area, mapping = aes(x = seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100),  y = dt(seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = (out.sample$coef[2]-out.population$coef[2])  / se )  + xlab("T") )
+@
+
+
+When would we say that a certain $T$-value would cause concern? Well, perhaps we could say that if the $T$-value we would find were 3 standard deviations away from the population value, either 3 standard deviations above the population value or 3 standard deviations below the population value. From the normal tables, we know that that happens in only $\Sexpr{2*100*pnorm(-3)}$\% of the time.
+
+Alternatively, we could say that we would perhaps also be worried if the sample slope were 2 standard deviations away from the population slope, corresponding to $T$-value of 2 or -2. We know that the probabilty that that happens is around 5\%, small enough perhaps to raise concern about our knowledge about the population slope.
+
+In this section, when discussing $T$-statistics, we assumed we knew the population slope, that is, the slope of the linear equation based on all 80,000 bottles. In reality, we never know the population slope: the whole reason to look at the sample slope is to have an idea about the population slope. Let's look at some hypothetical population slopes.
+
+
+
+
+
+\section{Hypothetical population slopes}
+
+
+Since we don't know the actual value of the population slope, we could ask the personnel in the beer factory what they think is a likely value for the slope. Suppose Mark says he believes that a slope of 2 could be true. Well, let's find out whether that is a reasonable guess. Now we \textit{assume} that the population slope $\beta$ is 2, and we compute the $T$-statistic for our sample slope:
+
+
+
+\begin{equation}
+T = \frac{\Sexpr{out.sample$coef[2]}-2}{\Sexpr{se}}= \Sexpr{(out.sample$coef[2]-2)  / se }
+\end{equation}
+
+From the normal distribution, we know that such a $T$-value is very unlikely: the probability of finding a sample slope 26 standard deviations away form a population slope of 2 is less than 0.00000000000000000000000000001. Because we know that such a $T$-value of 26 is unlikely, we know that a sample slope of \Sexpr{out.sample$coef[2]} is unlikely \textit{if the population slope is equal to 2}.
+
+
+Now let's ask Martha. She thinks a reasonable value for the population slope is 0, as she doesn't believe there is a linear relationship between temperature and volume. She feels that the fact that we found a sample slope that was not 0 was a pure coincidence. Based on that hypothesis, we compute $T$ again and find:
+
+
+\begin{equation}
+T = \frac{\Sexpr{out.sample$coef[2]}-0}{\Sexpr{se}}= \Sexpr{(out.sample$coef[2])  / se }
+\end{equation}
+
+In other words, if we believe Martha, our sample slope is only about 1 standard deviation away from her hypothesized value. That's not a very bad idea, since from the normal distribution we know that a value more than 1.05 standard deviations away from the mean (above or below) is $\Sexpr{100 *round(2*pnorm((out.sample$coef[2]-0)  / se), 4)}$\%. In other words, if the population is truly 0, then our sample slope of $\Sexpr{out.sample$coef[2]}$ is quite a reasonable finding. If we reverse this line of reasoning: if our sample slope is $\Sexpr{out.sample$coef[2]}$, with a standard error of $\Sexpr{se}$, then a population slope of 0 is quite a reasonable guess! It is reasonable, since the difference between the sample slope and the hypothesised value is only $\Sexpr{(out.sample$coef[2])  / se }$ standard errors.
+
+So when do we no longer feel that a value for the population slope is reasonable? Perhaps if the probability of finding a sample slope of a certain size given a certain population slope is so small that we no longer believe that the hypothesised value is reasonable. We might for example choose a small probability like 1\%. We know from the normal distribution that 1\% of the values lie at least $\Sexpr{qnorm(0.005)}$ standard deviations above and below the mean. So if our sample slope is more than $\Sexpr{qnorm(0.005)}$ standard errors away from the hypothesised population slope, then that population slope is \textit{not} a reasonable guess. In other words, if the \textit{distance} between the sample slope and the hypothesised population slope is more than 2.32 standard errors, then the hypothesised population slope is no longer reasonable.
+
+This implies that any value within the range of $\Sexpr{qnorm(0.005)}$ standard errors around the sample slope is a collection of reasonable values for the population slope.
+
+Thus, in our example of the 200 bottles, a sample slope of $\Sexpr{out.sample$coef[2]}$ and a standard error of $\Sexpr{se}$, the interval from $\Sexpr{out.sample$coef[2]- 2.32* se}$ to $\Sexpr{out.sample$coef[2]+ 2.32* se}$ contains reasonable values for the population mean. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between $\Sexpr{out.sample$coef[2]- 2.32* se}$ and $\Sexpr{out.sample$coef[2]+ 2.32* se}$, \textit{if we feel that 1\% is a small enough probability}.
+
+In data analysis, such an interval that contains reasonable values for the population value, if we only know the sample value, is called a \textit{confidence interval}. Here we've chosen to use $\Sexpr{qnorm(0.005)}$ standard deviations as our cut-off point, because we felt that 1\% would be a small enough probability to dismiss a population value as a reasonable candidate. Such a confidence interval based on this 1\% cut-off point is called a 99\% confidence interval, because in 99\% of the cases the population value will lie in the confidence interval.
+
+One often also sees 95\% confidence intervals, particularly in social and behavioural sciences. Those are intervals that contain the population value in 95\% of the cases. Because with the normal distribution, 5\% of the observations lie more than 1.96 standard deviations away from the mean, the 95\% confidence interval is constructed by subtracting/addding 1.96 standard errors from/to the sample value. Thus, in the case of our bottle sample, the 95\% confidence interval for the population slope is from $\Sexpr{out.sample$coef[2]}- 1.96* \Sexpr{se}$ to $\Sexpr{out.sample$coef[2]}+ 1.96* \Sexpr{se}$, so our population slope should be somewhere between $\Sexpr{out.sample$coef[2]- 1.96* se}$ and $\Sexpr{out.sample$coef[2]+ 1.96* se}$. Luckily, this corresponds to the truth, because we happen to know that the population slope is equal to \Sexpr{out.population$coef[2]}. In real life we don't know the population slope and of course it might happen that the true population value is not within the 95\% confidence interval, but the probability of such an error is rather low, only 5\%.
+
+
+\section{Confidence intervals for smaller sample sizes}
+
+In the previous section we used the normal distribution to come up with 95\% and 99\% confidence intervals for the slope coefficient. These were constructed using 1.96 and $\Sexpr{qnorm(0.005)}$ times the standard error, respectively. However, these numbers 1.96 and $\Sexpr{qnorm(0.005)}$ can only be used when the sample size is large enough to say that the distribution of the sample slope is very close to a normal distribution. Earlier, we saw that the distribution of the sample slope is actually a $t$-distribution, that doesn't look normal at all for small sample sizes.
+
+So for small sample sizes, we need to know the cut-off points that correspond to 5\% and 1\% probabilities for the $t$-distribution.
+
+
+
+
+
+
+
+
+% In data analysis, one often uses a \textit{confidence interval} to indicate a range of reasonable values for the population value. Here we found a sample slope of 112. Now imagine that 112 were also the population slope. Then if we would draw many random samples of size 100, we know from the computed standard error of \Sexpr{12/10} that roughly 95\% of the sample means would lie between $112 - 2 \times \Sexpr{12/10} = 109.6$ and $112 + 2 \times \Sexpr{12/10} = 114.4$.
+
+% Now suppose that the true population mean were not 112 but 114.4. In that case, if we draw many samples of size 100, we could reasonably find a value of 112, since 95\% of the sample mean would then lie between $114.4 - 2 \times \Sexpr{12/10} = 112$ and $114.4 + 2 \times \Sexpr{12/10} = 116.8$. So even if the true population mean were 112.4, it's very possible that we could find a sample slope of ?. We cannot neglect the possiblity that the true slope is 114.4. Similarly, we cannot neglect the possibility that the true slope is 109.6, because if the true mean were 109.6, 95\% of the sample means of size 100 would lie between $109.6 - 2 \times \Sexpr{12/10} = 107.2$ and $109.6 + 2 \times \Sexpr{12/10} = 112$. So our range of reasonable values for the population slope would be somewhere between 107.2 and 114.4. This range is referred to as the \textit{95\% confidence interval}. The 95\% confidence interval can be computed by subtracting and adding twice the standard error of the mean to the sample mean.
+
+
+For large sample sizes we can approximate the $t$-distribution by a normal distribution so that we know that 95\% of the observations lie between -1.96 and +1.96 times the standard deviation. For small sample sizes we have to use a $t$-distribution to construct confidence intervals. For small sample sizes, we need to know the particular shape of the distribution to find out where the middle 95\% of the sample means lie.
+
+Figure \ref{fig:inf_10} shows the case for the situation where the population slope is 0 and the sample size is 4. Suppose the standard error is equal to 1. Then this figure shows that roughly 95\% of the sample slopes lie between $\pm$ 3.18 standard errors below and above the mean. In the same figure we also see that if sample size is 200, 95\% of the sample means lie between $\pm$ 1.97 standard errors below and above the mean. This is almost the same as for the normal distribution, where 95\% of the observations lie between $\pm$ 1.96 standard deviations below and above the mean.
+
+Because for every sample size, the middle region where 95\% of the observations lie is different, there are tables available where these values can be found. However, these tables are built-in in every statistical package, so it is far easier to let SPSS construct the 95\% confidence intervals for us.
+
+
+<<table_inf_1, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
+probs <- c(0.0005, 0.001, 0.005,0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975,0.99, 0.995,0.999, 0.9995)
+    norm <- qnorm(probs)
+    t198 <- qt(probs, df=198)
+    t100 <- qt(probs, df=100)
+    t50 <- qt(probs, df=50)
+    t10 <- qt(probs, df=10)
+    t2 <- qt(probs, df=2)
+    data.frame(probs, norm, t198, t100, t50, t10, t2) %>%
+        xtable(caption="Quantiles for the normal and several t-distributions.", label="tab:nonparmixed_4", digits=c(0,4,2,2,2,2,2,2)) %>%
+        print(include.rownames=F, caption.placement = "top")
+ @
+But let us look at a few regularities. For several probabilities, the corresponding quantiles are presented in Table \ref{tab:table_inf_1} for the standard normal distribution and several $t$-distributions.
+
+The shape of the $t$-distribution is indicated by its \textit{degrees of freedom}. The shape of the distribution of sample slopes when sample size is 200, is a $t$-distribution with 198 degrees of freedom. The shape of the distribution of sample slopes when sample size is 4, is a $t$-distribution with 2 degrees of freedom. In general, the shape of the distribution of sample slopes for sample size $n$, is a $t$-distribution with $n-2$ degrees of freedom. The higher the degrees of freedom, the more the corresponding $t$-distribution looks like a normal distribution. We will come back to degrees of freedom and the $n-2$ rule in the next section.
+
+Table \ref{tab:table_inf_1} shows for instance the cutoff points for 2.5\% and 97.5\% for the normal distribution and the $t$-distribution with 198 degrees of freedom: 1.96 and 1.97 standard deviations (standard errors) respectively. For the $t$-distribution with 100 degrees of freedom, the cutoff point is 1.98 standard errors. This would be the appropriate $t$-distribution for a sample size of 102. But for smaller sample sizes, the increase in number of standard errors goes up quickly: with 50 degrees of freedom (sample size 52), the cutoff is 2.01, for 10 degrees of freedom it is 2.23 and for 2 degrees of freedom it becomes even 4.30 standard errors. Thus, if we have a sample size of 4, we construct a 95\% confidence interval of 4.30 standard errors below the sample slope and 4.30 standard errors above the sample slope.
+
+If you want to have the 99\% confidence interval, you look at the cutoff points for 0.005 and 0.995 which are -2.58 and +2.58, respectively, for the normal distribution, but -9.92 and +9.92 for a $t$-distribution with 2 degrees of freedom. Suppose we sample 4 bottles and find a sample slope of 5 with a standard error of 4, then the 99\% confidence for the slope is from $5-9.92\times 4$ to $5+9.92\times 4$, so from -34.68 to 44.68, which is of course a huge interval. On the other hand, a sample of only 4 bottles is of course very small.
+
+In short, we can look up the cutoff points for 95\%, 99\% and other intervals from tables online, in books, or in statistical packages. Generally, the smaller the sample size, the lower the degrees of freedom, the larger the number of standard errors you need to construct your confidence intervals.
+
+
+<<inf_10,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Two t-distributions when sample size is 4 or 200, with corresponding 95 percent intervals.'>>=
+set.seed(1234)
+
+
+data.frame(x)  %>%  ggplot(aes(x=x)) +
+  stat_function(fun = dt, args = list(df=199), aes(colour = "sample size 200"))  + geom_vline(xintercept=qt(c(0.025, 0.975), df=3), colour="red") +
+  stat_function(fun = dt, args = list( df= 3), aes(colour = "sample size 4")) +  geom_vline(xintercept=qt(c(0.025, 0.975), df=199), colour="blue") +
+  scale_color_manual("Distribution", values = c("blue", "red")) +
+        ylab("density") + xlim(c(-7,7))
+
+# rt(10000, df=3) %>% sd()
+@
+
+
+
+
+\subsection{Exercises}
+
+\begin{enumerate}
+
+
+\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age (independent variable) and height (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{table_inf_1}.
+
+\item What can we say about values within this constructed confidence interval?
+
+\item Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a slope of 0.010? Motivate your answer using the 95\% confidence interval.
+
+
+\end{enumerate}
+
+
+Answers:
+
+\begin{enumerate}
+
+\item Sample size is 102, so degrees of freedom for the sample slope is 100. The 95\% cutoff values for the $t$-distribution with 100 degrees of freedom are -1.98 and 1.98. Therefore the 95\% interval ranges from $0.010 - 1.98 \times 0.009$ to $0.010 + 1.98 \times 0.009$, so from -0.008 to 0.028.
+
+\item These values are reasonable values for the population slope.
+
+\item Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
+
+
+
+
+\end{enumerate}
+%
+
+\section{Degrees of freedom}
+
+
+What does the term, "degrees of freedom" mean? It refers to the number of independent pieces of information in a sample of data.
+
+Suppose that we have a sample with four values {4, 2, 6, 8}. There are four separate pieces of information here. There is no particular connection between these values. They are free to take any values, in principle. We could say that there are “four degrees of freedom” associated with this sample of data.
+
+Now, suppose that I tell you that three of the values in the sample are 4, 2, and 6; and I also tell you that the sample average is 5. You can immediately deduce that the fourth value has to be 8. There is no other logical possibility.
+
+So, once I tell you that the sample average is 5, I am effectively introducing a \textit{constraint}. The value of the unknown fourth sample value is implicitly being determined from the other three values, and the constraint. That is, once the constraint is introduced, there are only three logically independent pieces of information in the sample. That is to say, there are only three "degrees of freedom", once the sample average is revealed.
+
+Now let's carry this example to regression analysis. Suppose I have four observations of variables $x$ and $y$. Each value of $y$ is one piece of information. These values could be anything, so we say that we have 4 degrees of freedom. Now suppose I use a linear equation for these data points, and suppose I only use an intercept. Let the intercept be 5. Now the first bit of information, $x$ and $y$ could be anything, say 1 and 2 respectively. The second and third bits of information could also be anything, say 2 and 6, and 4 and 2. Figure \ref{fig:inf_11} shows these bits of information as dots in a scatterplot. Since we know that the intercept is equal to 5, with no slope (slope=0), we can also draw the regression line.
+
+<<inf_11,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when sample size is 4 or 200'>>=
+
+x <- c(1, 2, 4)
+y<- c(2, 6, 2 )
+data.frame(x, y) %>% ggplot(aes(x, y)) + geom_point() + geom_hline(yintercept=5)
+@
+
+If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -3. Since we know that all residuals should sum to 0 in a regression analysis, we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$, for example) has to be 8, since then the residual is equal to $8-5=3$.
+
+In short, when we do a regression analysis with only an intercept, the degrees of freedom is equal to the number of data points (combinations of $x$ and $y$) minus 1, or in short notation: $n-1$.
+
+Now let's look at the situation where we do a regression analysis with both an intercept and a slope: suppose the intercept is equal to 3 and the slope is equal to 1: $y=3+1 x$. Then suppose we have the same $x$-values as the example above: 1, 2 and 4. When we give these $x$-values corresponding $y$-values, 2, 6, and 3, we get the plot in Figure \ref{fig:inf_12}.
+
+<<inf_12,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when sample size is 4 or 200'>>=
+x <- c(1, 2 ,4)
+y<- c(2, 6 ,3)
+data.frame(x, y) %>% ggplot(aes(x, y)) + geom_point() + geom_abline(intercept=3, slope=1, size=2) + geom_smooth(method='lm', se=F)+
+        ylim(c(0,12.5))
+# X<- matrix(c(1,1,1,1,1,2,3,4),4,2)
+# XX=(t(X)%*%X)^(-1)
+# M= diag(4) -  X %*% XX %*% t(X)
+# y_star <- c(2, 6 ,8,3)
+# M%*% y_star
+@
+
+The black line is the regression line that should be imposed on the data. The blue line is the regression line based on the three data points. Now the question is, is it possible for a fourth data point with $x=3$, to think of a $y$-value such that the regression line based on these four data points is equal to $y=3+1x$?
+
+Figure \ref{fig:inf_13} shows a number of possibilities for the value of $y$ if $x=3$. It can be seen, that it is impossible to pick a value for $y$ such that we get a regression equation $y=3+1x$.
+
+<<inf_13,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+x <- rep(c(1, 2 ,3, 4),4)
+fill <- c(8,9.5, 11, 12)
+y<- rep (c(2, 6 ,0,3),4)
+
+y [seq(3,16, 4) ]<- fill
+line = rep(1:4, each=4) %>% as.factor()
+data.frame(x, y,line) %>% ggplot(aes(x, y)) + geom_point(aes(col=line)) + geom_abline(intercept=3, slope=1, size=2) + geom_smooth(aes(col=line),method='lm', se=F) +
+        ylim(c(0,12.5))
+@
+
+So, with 4 data points, we can never freely choose 3 residuals in order to satisfy the constraint that a particular regression equation holds. It turns out, that in this case we can only choose 2 residuals freely, and the remaining residuals are already determined. To prove this requires matrix algebra, but the gist of it is that if you have a regression equation with both an intercept and a slope, the degrees of freedom is equal to the number of data points minus 2: $n-2$.
+
+In the more general case of multiple regression, with the number of independent variables equal to $k$ and including an intercept, the degrees of freedom for the $t$-distribution is equal to $n-k-1$. One could also say, the degrees of freedom is equal to sample size minus the number of parameters in your model.
+
+For example, suppose you have 200 data points and 4 independent variables. Then you have 4 slope parameters and 1 intercept parameter in your model, so 5 parameters in total. The degrees of freedom is in that case $n-5=195$.
+
+
+\chapter{Inference II: hypothesis testing, $p$-values and beyond}
+
+\section{The null-hypothesis}
+
+Often data analysis is about finding an answer to the question whether there is a relationship between two variables. In most cases, the question pertains to the population: is there a relationship between variable y and variable x in the population? In many cases, one looks for a linear relationship between two variables.
+
+One common method to answer this question is to analyse a sample of data, apply a linear model, and look at the slope. However, one then knows the slope in the sample, but not the slope in the population. We have seen that the slope in the sample can be very different from the slope in the population. Suppose we find a slope of 1: does that mean there is a slope in the population or that there is no slope in the population?
+
+In inferential data analysis, one often works with two hypotheses: the null-hypothesis says that the population slope is equal to 0 and the alternative hypothesis says that there is a  slope that is different from 0. Remember that if the slope is equal to 0, that is saying that there is no linear relationship between $x$ and $y$. Therefore, the null-hypothesis states there is no linear relationship between $x$ and $y$ in the population. If there is a slope, whether positive or negative, is the same as saying there is a linear arelationship, so the alternative hypothesis states there that is a linear relationship between $x$ and $y$ in the population. The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_1$. In formula form, we have
+
+
+\begin{eqnarray}
+H_0: \beta_{slope}=0 \\
+H_1: \beta_{slope} \neq 0
+\end{eqnarray}
+
+So the population slope, $\beta_{slope}$, is either 0 or it is not. Our data analysis is then aimed at determining which of these two hypotheses is true. Key is that we do a thought experiment on the null-hypothesis: we wonder what would happen if the the population slope would be really 0. In our imagination we draw many samples of a certain size, say 40 data points, and then determine the slope for each sample. Earlier we learned that the many sample slopes would form a histogram in the shape of a $t$-distribution with $n-2=38$ degrees of freedom. For example suppose we would draw 1000 samples of size 40, then the histogram of the 1000 slopes would be like depicted in Figure \ref{fig:inf_14}
+
+<<inf_14,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when population variance is 25 and sample size equals 200.'>>=
+# sample.intercept <- c()
+sample.slope <- c()
+for (i in 1:1000)
+{
+        sample <- bottles[sample(1:80000,40),]
+        out <- lm(volume~temperature, sample)
+        # sample.intercept[i] <- out$coef[1]
+        sample.slope[i] <- out$coef[2]
+
+}
+
+data.frame(sample.slope, panel) %>% ggplot(aes(x=sample.slope)) + geom_histogram(binwidth =0.1)  + scale_x_continuous(limits=c(-1,1),breaks=seq(-1,1,.1))
+ @
+
+From this histogram we see that all observed sample slopes are well between -0.8 and 0.8. This gives us the information we need. Of course, we have only one sample of data, and we don't know anything about the population data. But we do know that if the population slope is equal to 0, then it is very unlikely to find a sample slope of say 1 or 2, or -2 for that matter. Thus, if we happen to find a sample slope of say -2, we know that this finding is extremely unlikely \textit{if we hold the null-hypothesis to be true}. In other words, if the population slope is equal to 0, it would be quite improbable to find a sample slope of -2. Therefore, we regard the null-hypothesis to be false, since it does not provide a good explanation of why we found a slope of -2. In that case, we say that \textit{we reject the null-hypothesis}.
+
+% \section{$T$-statistics}
+%
+% In previous sections we looked at the distribution of the slope based on sample data, if you draw many random samples from a population of data points. We saw that nearly always, the slope based on your sample data is different from the slope in the population data. We learned that the shape of the distribution is that of a $t$-distribution. The particular shape of the distribution depends on the degrees of freedom, and we learned that the degrees of freedom is equal to the number of data points in your sample (sample size $n$) minus the number of parameters/coefficients in your linear equation.
+%
+% We said that the distribution of the regression slope has the \textit{shape} of a $t$-distribution. In order to get a $t$-distribution, you have to standardize the scores. Similar to standardizing other scores to z-scores, by subtracting the mean and dividing by the standard deviation, we too standardize slope estimates into T-scores.
+%
+% Similar to the normal distribution. If you know a value is 2, then you know nothing, but if you know that a value is 20 standard deviations away from the mean, that is, a $z$-score of 20, then you know that such a value is rather unlikely.
+%
+% The same is true for the distribution of sample slopes. Only knowing that the sample slope is 1, says nothing, but that the slope is 30 standard errors away from a particular value is saying that such a value is unlikely.
+%
+% So similar to $z$-scores, we subtract the mean from the sample slope and divide by the standard deviation. If the null-hypothesis is true, the mean of the sample slopes is 0. We also know that the standard deviation of the sample slopes is the standard error.
+%
+% This standardized slope is called a $T$-statistic. A statistic is a quantity that is based on a calculation using your sample data. For example, using least squares, you determine the slope parameter $b_{slope}$, and you determine the standard error $se$. Next, you compute the $T$-statistic:
+%
+% \begin{equation}
+% T = \frac{b_{slope}-0}{se} = \frac{b_{slope}}{se}
+% \end{equation}
+%
+%
+% Figure \ref{fig:inf_15} shows the $t$-distribution with $40-2=38$ degrees of freedom. This is the distribution for the $T$-statistic if our sample size is equal to 40 and the true population slope is equal to 0.
+%
+%
+% <<inf_15,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+% data.frame(x)  %>%  ggplot(aes(x=x)) +
+%   stat_function(fun = dt, args = list(df=38))  +
+%         ylab("density") + xlim(c(-4,4)) + xlab("T")
+% @
+%
+% Suppose the true value of the slope (the slope in the population data) is equal to exactly 0. Then if you analyse a sample of 40 data points, you might find a slope of $b_{slope}=1$, and the standard error turns out to be 2. If we then compute $T$, we get $T=\frac{b_{slope}}{se}=1/2=0.5$. In other words, our slope is half a standard error away from the hypothesised value of 0. Whether this is a lot, depends on the shape of the distribution. For this $T$ we know that it has a $t$-distribution with 38 degrees of freedom. Figure \ref{fig:inf_16} shows this distribution. The tails that each contain 2.5\% are shaded. Thus, if the true slope is 0, and if we would draw a lot of samples and for each sample determine the slope, then 95\% of those slopes will lie within the non-shaded area. The figure also indicates the value for our T-statistic, 0.5. It can be clearly seen that a value of 0.5 lies well within the middle 95\% of the distribution, in other words, a value of 0.5 is not that strange for a $t$-distribution with 38 degrees of freedom.
+%
+%
+% <<inf_16,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+%
+% df = 38; ncp = 0; limits = c(-5,5)
+% lb=-20; ub=qt(0.025, df=df, ncp=ncp)
+%     x <- seq(limits[1], limits[2], length.out = 100)
+%     xmin <- max(lb, limits[1])
+%     xmax <- min(ub, limits[2])
+%     areax <- seq(xmin, xmax, length.out = 100)
+%     area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+%     (ggplot()
+%      + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+%                  mapping = aes(x = x, y = y))
+%      + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+%      + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+%      + geom_area(data = area, mapping = aes(x = seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100),  y = dt(seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100), df=df, ncp=ncp)))
+%             + geom_vline(xintercept = 0.5)  + xlab("T") )
+% @
+%
+%
+%
+%
+%
+%
+%
+%
+%
+% Based on our reasoning in the section on confidence intervals, we can construct an interval of reasonable values for the population $T$ by taking the middle 95\% of the distribution.
+
+\section{The $p$-value}
+
+The $p$-value is a probability. It represents the probability of observing certain events, given that the null-hypothesis is true.
+
+Earlier we obtained a sample slope of 1, and we saw that this value was 0.5 standard errors away from 0. Thus, the $T$-statistic was 0.5. We looked at the $t$-distribution with 38 degrees of freedom, and saw that such a value of 0.5 was not very strange: it lies well within the middle 95\% of the $t$-distribution.
+What is often done is to compute the probability that we obtain such a value of 0.5 or larger. Figure \ref{fig:inf_17} shows the area under the curve for values of $T$ that are larger than 0.5.
+
+<<inf_17,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=qt(0.025, df=df, ncp=ncp)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     # + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(0.5, 5, length.out = 100),  y = dt(seq(0.5, 5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = 0.5)  + xlab("T") )
+@
+
+In tables online, in books, or available in statistical packages, we can look up how large this area is. It turns out to be \Sexpr{pt(-0.5, df=38)}. So, if the population slope is equal to 0 and we draw an infinite number of samples of size 40 and compute the sample slopes, then 31\% of them will be larger than 0.5. The proportion of the shaded area is what we call a one-sided $p$-value. We call it one-sided, because we only look at one side of the $t$-distribution: we only look at values that are larger than our value of 0.5.
+
+Earlier we observed that a value of 0.5 is not that strange to find if the population slope is 0. On the same token, it would also have been probable to find a slope of -1, corresponding to a $T$-value of -0.5. Since the $t$-distribution is symmetrical, the probability of finding a $T$-value of less than -0.5 is depicted in Figure \ref{fig:inf_18}, and of course this probability is also \Sexpr{pt(-0.5, df=38)}.
+
+<<inf_18,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=qt(0.025, df=df, ncp=ncp)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     # + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(-5, -0.5, length.out = 100),  y = dt(seq(-5, -0.5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = 0.5)  + xlab("T") )
+@
+
+Remember that the null-hypothesis is that the population slope is 0, and the alternative hypothesis is that the population slope is \textit{not} 0. We should therefore conclude that if we find a very large positive \textit{or} negative slope, large in the sense of the number of standard errors away from 0, that the null-hypothesis is unlikely to be true. Therefore, if we find a slope of 0.5 or -0.5, then we should determine the probability of finding a $T$-value that is larger than 0.5 or smaller than 0.5. This probability is depicted in Figure \ref{fig:inf_19} and is equal to twice the one-side $p$-value, $2 \times \Sexpr{pt(-0.5, df=38)}=\Sexpr{2*pt(-0.5, df=38)}$.
+
+<<inf_19,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=-0.5
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(0.5, 5, length.out = 100),  y = dt(seq(0.5, 5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = 0.5)  + xlab("T") )
+@
+
+This probability is called the \textit{two-sided} $p$-value. This is the one that should always be used, since the alternative hypothesis is also two-sided: the population slope can be positive or negative. The question now is: is a sample slope of 1 enough evidence to reject the null-hypothesis? To determine that, we determine how many standard errors away from 0 the sample slope is and we look up in tables how often that happens. Thus in our case, we found a slope that is 0.5 standard errors away from 0 and the tables told us that the probability of finding a slope that is at least 0.5 standard deviations away from 0 (positive or negative) is equal to \Sexpr{2*pt(-0.5, df=38)}. We find this probability rather large, so we decide that we \textit{do not reject the null-hypothesis}.
+
+
+\section{Hypothesis testing}
+
+When do we think the probability is small enough to conclude that the null-hypothesis can be rejected? This was a question posed to the founding father of statistical hypothesis testing, Sir Ronald Fischer. In his book \textit{Statistical Methods for Research Workers} (1925), Fisher proposed a probability of 5\%. He advocated 5\% as a standard level for concluding that there is evidence against the null-hypothesis. However, he did not see it as an absolute rule: "If P is between .1 and .9 there is certainly no reason to suspect the hypothesis tested. If it is below .02 it is strongly indicated that the hypothesis fails to account for the whole of the facts. We shall not often be astray if we draw a conventional line at .05...". So Fisher saw the $p$-value as an informal index to be used as a measure of discrepancy between the data and the null-hypothesis: “The null hypothesis is never proved or established, but is possibly disproved”.
+
+
+Later, Neyman and Pearson saw the $p$-value as an instrument in decision making: is the null-hypothesis true, or is the alternative hypothesis true? You either reject the null-hypothesis or you don't, there is nothing in between. This view to data-analysis is still rather popular in the social and behavioural sciences, but also in particle physics. In order to make such a black-and-white decision, you decide before-hand, that is, before collecting data, what \textit{level of significance} you choose for your $p$-value to decide whether to reject the null-hypothesis. For example, as your significance level, you might want to choose 1\%. Let's call this chosen significance level $\alpha$. Then you collect your data, you apply your linear model to the data, and find that the $p$-value associated with the slope effect equals $p$. If $p$ is smaller than or equal to $\alpha$ you \textit{reject the null-hypothesis}, and if $p$ is larger than $\alpha$ then you \textit{do not reject the null-hypothesis}. A coefficient with a $p \leq \alpha$ is said to be a \textit{significant} effect, and a coefficient with a $p > \alpha$ is said to be \textit{non-significant}. If the slope is significant, then one should reject the null-hypothesis and say there is a slope in the population different from zero. If the slope is not significant, then one should not reject the null-hypothesis and say there is no slope in the population (i.e., the slope is 0).
+
+
+Since data-analysis is about probabilities, there is always a chance that you draw the wrong conclusion: you can wrongfully reject the null-hypothesis, or you can wrongfully accept the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error). The probability of a type I error is the same as our $\alpha$ for the significance level, and the probability of a type II error by $\beta$.
+
+
+As an example, suppose you want to determine the slope for the effect of age on height in children. The null-hypothesis is that the effect is 0 in the population of all children. You might study a sample of children and you might find a value for the slope. You might decide that if the $p$-value is lower than a critical value you conclude that the null-hypothesis is not true. Suppose you think a probability of 1\% is enough to reject the null-hypothesis as true. In other words, if $p \leq 0.01$ then we no longer think 0 is a reasonable value for the population slope. In this case, we have determined our $\alpha$ or type I error rate to be $\alpha=0.01$. This means that if we study a random sample of children, we look at the slope and find a $p$-value of 0.011, then we do not reject the null-hypothesis, but if we find a $p$-value of 0.010, we reject the null-hypothesis.
+
+Setting the $\beta$ value is bit trickier. It is not possible to to compute the probability that we find a non-significant effect $(p < alpha)$, given that the alternative hypothesis is true, because the alternative hypothesis is only saying that the slope is not equal to 0. In order to compute $\beta$, we need to think first of a reasonable size of the slope that we expect. For example, suppose we believe that a slope of 1 is quite reasonable, given what we know about growth in children. Let that be our alternative hypothesis. Next, we determine the distribution of sample slopes under the assumption that the population slope is 1.
+We know that this distribution has a mean of 1 and a standard deviation equal to the standard error.
+We also know it has the shape of a $t$-distribution. Let sample size be equal to 102 and the standard error 1. If we standardize the slopes by dividing by the standard error, we get the two $t$-distributions in Figure \ref{fig:inf_20}: one distribution of $T$-values if the population slope is 0, and one distribution of $T$-values if the population slope is 1.
+The black areas represent the area where $p < \alpha$: for all values of $T$ smaller than $\Sexpr{qt(0.01, df=df, ncp=0)}$ and larger than $\Sexpr{qt(0.99, df=df, ncp=0)}$, we reject the null-hypothesis. The probability that this happens, \textit{if the null-hypothesis is true}, is equal to $\alpha$ which is 0.01 in this example. The probability that this happens \textit{if the alternative hypothesis is true} (here, population slope is 1), is depicted in Figure \ref{fig:inf_21}.
+
+
+<<inf_20,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 100; ncp = 0; limits = c(-5,5)
+lb=-20; ub=qt(0.01, df=df)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+            + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=1)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(qt(0.99, df=df) , 5, length.out = 100),  y = dt(seq(qt(0.99, df=df), 5, length.out = 100), df=df, ncp=ncp))) )
+@
+
+<<inf_21,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 100; ncp = 0; limits = c(-5,5)
+lb=-20; ub=qt(0.01, df=df)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+            + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=1)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = dt(x, df=df, ncp=1)))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(qt(0.99, df=df, ncp=0) , 5, length.out = 100),  y = dt(seq(qt(0.99, df=df, ncp=0), 5, length.out = 100), df=df, ncp=1)))
+            +xlab("T"))
+@
+
+The area that is black in Figure \ref{fig:inf_21} turns out to be $\Sexpr{1-pt(2.364217, df=100, ncp=1) + pt(-2.364217,df=100,ncp=1)}$. This represents the probability that we find a signficant effect, \textit{if the population slope is 1}. This is actually the \textit{complement} of the probability to find a non-significant effect, \textit{if the population slope is 1}, which is $\beta$ or the probability of a type II error. Therefore, Figure \ref{fig:inf_21} represents $1- \beta$: the probability of finding a significant $p$-value, if indeed the null-hypothesis is not true. In this example, $1-\beta$ is equal to $\Sexpr{1-pt(2.364217, df=100, ncp=1) + pt(-2.364217,df=100,ncp=1)}$, so $\beta$ is equal to its complement, $1- \Sexpr{1-pt(2.364217, df=100, ncp=1) + pt(-2.364217,df=100,ncp=1)} = \Sexpr{1- (1-pt(2.364217, df=100, ncp=1) + pt(-2.364217,df=100,ncp=1))}$.
+
+
+
+
+
+In its turn, the $p$-value, as we have seen, depends on the $T$-statistic and the degrees of freedom. The degrees of freedom in turn depends on sample size. The $T$-statistic also depends on sample size, as it is partly based on the standard error.
+
+If the alternative hypothesis is true, that is, if the population slope is not 0, then the probability of getting a $p$-value larger than 0.1, is equal to $\beta$. This is because by definition $\beta$ is the probablity of a type II error: the error that we \textit{do not reject the null-hypothesis, while the null-hypothesis is not true}. For example, suppose the population slope is 0.01. In a sample we find a slope of 1, with a $T$-statistic of 2.50 with 45 degrees of freedom. The associated $p$-value is equal to $\Sexpr{round(2*pt(-2.5,45),3)}$. If $\alpha=0.01$ then we conclude that this slope of 1 is not significantly different from zero. However, since the population is actually different from 0, namely 0.01, we draw the wrong conclusion. The conditional probability\footnote{$\alpha$, $\beta$ and the $p$-value are conditional probabilities. For the distinction between a probability and a conditional probability, see \dots. In short, suppose that in the whole world, 51\% of the people are at most 17 years old. However, suppose that in the Netherlands that proportion is only 20\%. Then if we pick a random person, the probability that that person is at most 17 years old is 0.51. However, if we happen to know that the person was picked from the Dutch population, then we know better: we know that the probability has decreased to 20\%. Thus the conditional probablity that a person is under age, given that the person is Dutch, equals 0.20. The conditional probabiilty that a person is under age, given that the person is \textit{not} Dutch, equals more than 0.51.} that we find a non-significant slope (we reject the null-hypothesis), given that the population slope differs from 0 (the null-hypothesis is not true) is equal to $\beta$.
+
+
+Of course we'd like to have a small $\beta$: we don't like making mistakes. So if indeed the null-hypothesis is false, we want the probability that we reject the null-hypothesis as large as possible. In order to achieve that, we need to have a $T$-value as large as possible. Since $T=b/se$, this can be achieved by having a standard error as small as possible, and this happens when our sample size is as large as possible.
+
+
+
+%%%%%%%%%%
+
+
+In later editions, Fisher explicitly contrasted the use of the p-value for statistical inference in science with the Neyman–Pearson method, which he terms "Acceptance Procedures".[19] Fisher emphasizes that while fixed levels such as 5\%, 2\%, and 1\% are convenient, the exact p-value can be used, and the strength of evidence can and will be revised with further experimentation. In contrast, decision procedures require a clear-cut decision, yielding an irreversible action, and the procedure is based on costs of error, which, he argues, are inapplicable to scientific research.
+
+There is widespread agreement that p-values are often misused and misinterpreted.[21][22][23] One practice that has been particularly criticized is accepting the alternative hypothesis for any p-value nominally less than .05 without other supporting evidence. Although p-values are helpful in assessing how incompatible the data are with a specified statistical model, contextual factors must also be considered, such as "the design of a study, the quality of the measurements, the external evidence for the phenomenon under study, and the validity of assumptions that underlie the data analysis".[23] Another concern is that the p-value is often misunderstood as being the probability that the null hypothesis is true.[23][24] Some statisticians have proposed replacing p-values with alternative measures of evidence,[23] such as confidence intervals,[25][26] likelihood ratios,[27][28] or Bayes factors,[29][30][31] but there is heated debate on the feasibility of these alternatives.[32][33] Others have suggested to remove fixed significance thresholds and to interpret p-values as continuous indices of the strength of evidence against the null hypothesis.[34][35]
+%%%%%%%%%%%%%
+
+
+
+
+In 2016, the American Statistical Association published a statement on $p$-values, saying that "the widespread use of 'statistical significance' (generally interpreted as '$p \leq 0.05$') as a license for making a claim of a scientific finding (or implied truth) leads to considerable distortion of the scientific process".
+
+
+
+\section{Relationship between $p$-value and confidence intervals}
+We could have also come to the same conclusion using the 95\% confidence interval. If we find a sample slope of 1, and we know that the standard error is equal to 2, then we can find the 95\% confidence interval for the $T$-statistic (0.5) if we use a $t$-distribution with 38 degrees of freedom. From tables we can deduce that with a $t$-distribution of 38 degrees of freeedom, 2.5\% of the area is left of \Sexpr{qt(0.025, df=38)} and 2.5\% of the area is right of \Sexpr{qt(0.975, df=38)}. This way we know that the confidence interval for the $T$-value is from $1  \Sexpr{qt(0.025, df=38)}\times 2$ to $1 + \Sexpr{qt(0.975, df=38)}\times 2$, so from $\Sexpr{1+2*qt(0.025, df=38)}$ to \Sexpr{1+qt(0.025, df=38)*2}.
+
+We see that the value 0 is within this range, so 0 is a reasonable value for the population slope. From this we know that the $p$-value for the null-hypothesis is less than 5\%.
+
+
+<<inf_22,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=-2.02
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(2.02, 5, length.out = 100),  y = dt(seq(2.02, 5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = 0.5)  + xlab("T")
+            +geom_vline(xintercept=(0.5-2.02), col=2) + geom_vline(xintercept=(0.5+2.02), col=2))
+@
+
+
+<<inf_23,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=-2.02
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(2.02, 5, length.out = 100),  y = dt(seq(2.02, 5, length.out = 100), df=df, ncp=ncp)))
+            + geom_vline(xintercept = 2.02)  + xlab("T")
+            +geom_vline(xintercept=(2.02-2.02), col=2) + geom_vline(xintercept=(2.02+2.02), col=2))
+@
+
+
+
+\section{Criticism on null-hypothesis testing and $p$-values}
+
+
+
+
+
+
 \section{Inference: from sample to population}
 
 
+Remember, we're usually not interested in whether there is a linear relationship between x and y in a sample. The probability that the sample slope will be exactly 0 is practically zero, so the answer will be usually no.
+We're usually interested in the population: is there a linear relationship between x and y in the population?
 
-\Sexpr{knit_child('chapter_5.Rnw')} % dummy variables and categorical predictors
-\Sexpr{knit_child('chapter_6.Rnw')} % moderation
-\Sexpr{knit_child('chapter_7.Rnw')} % assumptions
-\Sexpr{knit_child('chapter_8.Rnw')} % advanced topices linear models
-\Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
+But when we think about it, it is often ridiculous to think that the population slope will be 0 exactly! Why not 0.00000111 or -0.000000008827100? Why is a slope of exactly 0 very improbable for a sample size of 200 bottles, but less improbable in the population of 80,000 bottles? Perhaps a more interesting question is how large is the population slope?
+
+So, instead of asking research questions like Is there a linear relationship between x and y? you might ask: How large is the linear effect of x on y? Instead of a question like Is there an effect of the intervention? it might be more interesting to ask: How large is the effect of the intervention?
+
+
+
+
+% \Sexpr{knit_child('chapter_5.Rnw')} % dummy variables and categorical predictors
+% \Sexpr{knit_child('chapter_6.Rnw')} % moderation
+% \Sexpr{knit_child('chapter_7.Rnw')} % assumptions
+% \Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
+
+%% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
+
+% \Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
 \Sexpr{knit_child('chapter_10.Rnw')} % introduction linear mixed models
+\Sexpr{knit_child('chapter_11.Rnw')} % nonparametrics for within designs
+%
 
+\Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
 
-
-\chapter{Non-parametric alternatives for linear mixed models}
-
-
-\section{Checking assumptions}
-
-In previous chapters we have discussed the assumptions of linear models and linear mixed models: linearity (in parameters), homoscedasticity (equal variance), normal distribution of residuals, normal distribution of random effects (relevant for linear mixed models only), and independence (no clustering unaccounted for). 
-
-
-
-
-The problem of nonlinearity can be solved by introducing quadratic terms, for instance by replacing a linear model $Y = b_0 + b_1 X + e$ by another linear model $Y = b_0 + b_1 X + b_2 X^2 + e$.
-
-If we have nonindependence, then you can introduce either an extra fixed effect or a random effect for this clustering. For example, if you see that cars owned by low income families have much more mileage than cars owned by high income families, you can account for this by adding a fixed effect of an income variable as predictor. If you see that average milage is rather similar within municipality but that average mileage can vary quite a lot across municipalities, you can introduce a random effect for municipality (if you have data say from 30 different municipalities). 
-
-Unequal variance of residuals and nonnormal distribution of residuals are harder to tackle. Unequal variance can be tackled sometimes by using linear models, but with more advanced options, or by making corrections to $p$-values that make inference more robust against model violations. Violations of normality are even a bigger problem. Nonnormality can sometimes be solved by using generalized linear models (see next chapter). A combination of nonnormality and unequal variance can sometimes be solved by using a transformation of the data, for instance not analyzing $Y = b_0 + b_1 X + e$ but analyzing $log(Y)=  b_0 + b_1 X + e$ or $\sqrt{Y}=  b_0 + b_1 X + e$.
-
-If these data transformations or advanced options don't work (or if you're not acquainted with them), and your data show nonequal variance and/or nonnormally distributed residuals, there are nonparametric alternatives.  Here we discuss two: Friedman's test and Wilcoxon's signed rank test. We explain them using an imaginary data set on speedskating.
-\\
-\\
-Suppose we have data on 12 speedskaters that participate on the 10 kilometers distance in three separate championships in 2017-2018: the European Championships, the Winter Olympics and the World Championships. Your friend expects that speedskaters will perform best at the Olympic games, so there she expects the fastest times. So you decide to test the null-hypothesis that average times are the same at the three occasions. In Figure \ref{fig:nonparmixed_1} we see a boxplot of the data.
-
-% H_0: $\mu_{EC}=\mu_{WC}_\mu{WO}$
-
-
-<<nonparmixed_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Boxplot of the imaginary speed skating data.'>>=
-set.seed(01234)
-athlete <- rep (seq(1:12), 3)  %>% as.factor()
-occasion <- rep(c("EuropeanChampionships","WorldChampionships","Olympics"), each=6) %>% as.factor()
-time <- rnorm(36, log(1017), .002 ) %>%  exp() %>%   round(2)  -1000
-time <- time + rep( c(-0.2, 1, 0.2), each=12   )
-time[  which(time==max(time))   ] <- 28
-time[  which(time==min(time))   ] <- 27.9
-datalong <- data.frame(athlete, occasion, time) %>% dplyr::arrange(athlete)
-datawide <- datalong %>% tidyr::spread(occasion, time) %>% dplyr::arrange(athlete)
-# datawide <- datawide[, c(1, 2,4,3)]
-# names(datawide) <- c('patient','group','pre','post')
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(datalong,
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedspeedskate.sav',
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedspeedskate.sps',
-              package = c("SPSS"))
-datalong %>% ggplot( aes(x=occasion, y=time)  )  + geom_boxplot() + ylab("Time in minutes") + xlab("Occasion")
-@
-
-In order to test this null-hypothesis, we run a linear mixed model with dependent variable time, and independent variable occasion. We use random effects for the differences in speed across skaters. In Figure \ref{fig:nonparmixed_2} we see the residuals:
-
-<<nonparmixed_2, fig.height=4, echo=FALSE, fig.align='center', warning=F, fig.cap='Residuals of the speedskating data with a linear mixed model.'>>=
-res <- datalong %>%  lmer( time ~ occasion +  (1|athlete), data=. ) %>%
-        resid()
-datalong <- cbind(datalong, res)
-datalong %>% ggplot( aes(x=occasion, y=res)    ) + geom_point() + ylab("Residual") + xlab("Occasion")
- @
-
-From this plot we clearly see that the assumption of equal variance (homogeneity of variance) is violated: the variance of the residuals in the Worldchampionships condition is clearly smaller than the variance of the European championships condition. From the histogram of the residuals in Figure \ref{fig:nonparmixed_3} we also see that the distribution of the residuals is not bell-shaped: it is positively skewed (skewed to the right).
-
-
-
-
-<<nonparmixed_3, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Histogram of the residuals of the speedskating data with a linear mixed model.'>>=
-datalong %>% ggplot( aes( x=res )  ) + geom_histogram() + xlab("Residual") + ylab("Count")
- @
-% \\
-% \\
-Since the assumptions of homogeneity of variance and of normally distributed residuals are violated\footnote{Remember that assumptions relate to the population not samples: oftentimes your data set is too small to say anything about assumptions at the populationlevel. Residuals for a data set of 8 persons might show very nonnormal residuals, or very different variances for two subgroups of 4 persons each, but that might just be a coincidence, a random result because of the small sample size. If in doubt, it is best to use nonparametric methods.}, the results from the linear mixed model cannot be trusted. In order to answer our research question, we therefore have to resort to another kind of test. Here we discuss Friedman's test, a non-parametric test, for testing the null-hypothesis that the \textit{medians} of the three groups of data are the same. This Friedman test can be used in all situations where you have at least 2 levels of the within variable. In other words, you can use this test when you have data from three occasions, but also when you have data from 10 occassions or only 2. In the following section the Wilcoxon signed ranks test is discussed. This test is often used in social and behavioural sciences. The downside of this test is that it can only handle data sets with 2 levels of the within variable. In other words, it can only be used when we have data from two occassions. Friedman's test is therefore more generally applicable than Wilcoxon's. We therefore advise to always go with the Friedman test, but for the sake of completeness, we will also explain the Wilcoxon test.
-
-
-
-
-
-\section{Friedman's test for $k$ measures}
-
-
-Similar to many other nonparametric tests for testing the equality of medians, Friedman's test is based on ranks. Figure \ref{fig:nonparmixed_4} shows the speedskating data in wide format.
-
-
-<<nonparmixed_4, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
-datawide %>%
-        xtable(caption="The speedskating data in wide format.", label="tab:nonparmixed_4") %>%
-        print(include.rownames=F, caption.placement = "top")
- @
-
-We rank all of these time measures by determining the fastest time, then the next to fastest time, etcetera, until the slowest time. But because the data in each row belong together (we compare individuals with themselves), we do the ranking \textit{row-wise}. For each athlete separately, we determine the fastest time (1), the next fastest time (2), and the slowest time (3) and put the ranks in a table.
-
-
-<<nonparmixed_5, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
-ranks <- apply(datawide[,2:4], 1,  function(x) rank(x) )
-datawideranks<- datawide
-datawideranks[,2:4] <- t(ranks)
-datawideranks %>%
-        xtable(caption="Row-wise ranks of the speedskating data.", label="tab:nonparmixed_5") %>%
-        print(include.rownames=F, caption.placement = "top")
- @
-
-From this table we see for example that athlete 1 had the fastest time on the European Championships (14.35, rank 1) and the slowest at the Olympics (16.42, rank 3).
-
-
-Next we compute the sum of the ranks column-wise: the sum of the ranks for the European Championships data is \Sexpr{sum(datawideranks[2]) }, for the Olympic data it's \Sexpr{sum(datawideranks[3])} and for the World Championships data it is \Sexpr{sum(datawideranks[4])}.
-
-From these sums we can gather that in general, these athletes showed their best times (many rank 1s) at the World Championships, as the sum of the ranks is lowest. We also see that in general these athletes showed their worst times (many rank 2s and 3s) at the European Championships, as the relevant column showed the highest sum of ranks.
-
-In order to know whether these sums of ranks are significantly different from eachother, we may compute an $F_r$-value based on the following formula:
-
-
-\begin{equation}
-F_r = \left[  \frac{12}{Nk(k+1)} \Sigma^k_{j=1} S_j^2      \right] - 3N (k+1)
-\end{equation}
-
-
-In this formula, $N$ stands for the number of rows (12 athletes), $k$ stands for the number of columns (3 occasions), and $S_j^2$ stands for the squared sum of column $j$ ($31^2$, $26^2$ and $15^2$). If we fill in these numbers, we get:
-
-\begin{eqnarray}
-F_r &=& \left[  \frac{12}{12 \times  3(3+1)} \times (\Sexpr{sum(datawideranks[2]) }^2 + \Sexpr{sum(datawideranks[3]) }^2 + \Sexpr{sum(datawideranks[4]) }^2)      \right] - 3 \times 12 (3+1) \nonumber \\
-  &=&   \left[  \frac{12}{144} \times  1862      \right] - 144 = 11.17  \nonumber
-\end{eqnarray}
-
-
-
-What can we tell from this $F_r$-statistic? In order to say something about significance, we have to know what values are to be expected under the null-hypothesis that there are no differences across the three groups of data. Suppose we randomly mixed up the data by taking all the speedskating times and randomly assigning them to the three contests and the twelve athletes, until we have a newly filled datamatrix in Table \ref{tab:nonparmixed_26}:
-
-<<nonparmixed_26, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
-set.seed(234)
-r <- sample ( 1:    (dim(datawide[-1])[1]*dim(datawide[-1])[2]), replace=F)
-datawide_random1 <- datawide
-datawide_random1[-1] <- matrix(  as.matrix(datawide[-1])[r] , dim(datawide[-1])[1], dim(datawide[-1])[2]) %>%  as.data.frame()
-datawide_random1  %>%
-        xtable(caption="The raw skating data in random order.", label="tab:nonparmixed_26") %>%
-        print(include.rownames=F, caption.placement = "top")
- @
-
-If we then compute $F_r$ for these mixed up data, we get another value. If we do this say 1000 times, we get the following values for $F_r$, summarized in the  histogram in Figure \ref{fig:nonparmixed_36}.
-
-%fig.cap='Histogram of 1000 possible values for F_r given that the null-hypothesis is true, for 12 speedskaters.'
-
-<<nonparmixed_36, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=F,  fig.cap='Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 12 speedskaters.' >>=
-set.seed(234)
-F_r <- c()
-for (i in 1:1000)
-{
-r <- sample ( 1:    (dim(datawide[-1])[1]*dim(datawide[-1])[2]), replace=F)
-datawide_random1 <- datawide
-datawide_random1[-1] <- matrix(  as.matrix(datawide[-1])[r] , dim(datawide[-1])[1], dim(datawide[-1])[2]) %>%  as.data.frame()
-
-ranks <- apply(datawide_random1[,2:4], 1,  function(x) rank(x) )
-datawideranks<- datawide_random1
-datawideranks[,2:4] <- t(ranks)
-sums <- apply(datawideranks[,2:4],2, sum )
-squaredsums <- sums^2
-SUM <- sum(squaredsums)
-F_r[i] <- 12 / (12*3*4) *SUM - 3*12 *4
-}
-data <- as.data.frame(F_r)
-data %>% ggplot( aes(F_r)  ) + geom_histogram()
-@
-
-So if the data is just randomly distributed over the three columns in the data matrix, we expect no systematic differences and so the null-hypothesis is true. So now we know what the distribution of $F_r$ looks like when the null-hypothesis is true. Remember that for the true data that we actually gathered, we found an $F_r$-value of 11.17. From the histogram, we see that only very few values of 11.17 or larger are observed when the null-hypothesis is true. If we look more closely, we find that only \Sexpr{table(F_r>11.17)[2]/length(F_r)*100}\% of the values are larger than 11.17, so we have a $p$-value of 0.004. The 95th percentile of these 1000 $F_r$-values is \Sexpr{quantile(F_r, 0.95)}, meaning that of the 1000 values for $F_r$, 5\% are larger than \Sexpr{quantile(F_r, 0.95)}. So if we use a signficance level of 5\%, our observed value of 11.17 is larger than the critical value for $F_r$, and we conclude that the null-hypothesis can be rejected.
-
-Now this $p$-value of 0.004 and the critical value of \Sexpr{quantile(F_r, 0.95)} are based on our own computations. Actually there are better ways. One is to look up critical values of $F_r$ in tables, for instance in Kendall M.G. (1970) \textit{Rank correlation methods}. (fourth edition). The $p$-value corresponding to this $F_r$-value depends on $k$, the number of groups of data (here 3 columns) and $N$, the number of rows (12 individuals). If we look up that table, we find that for $k=3$ and $N=12$ the critical value of $F_r$ for a type I error rate of 0.05 equals 6.17. Our observed $F_r$-value of 11.17 is larger than that, therefore we can reject the null-hypothesis that the median skating times are the same at the three different championships. So we have to tell your friend that there are general differences in skating times at different contests, $F_r=11.17, p < 0.05$, but it is not the case that the fastest times were observed at the Olympics.
-
-Another way is to make an approximation of the distribution of $F_r$. Note that the distribution in the histogram is very strangely shaped. The reason is that the data set is quite limited. Suppose we have not data on 12 speedskaters, but on 120. If we then randomly mix up data again and compute 1000 different values for $F_r$, we get the histogram in Figure \ref{fig:nonparmixed_46}.
-
-
-<<nonparmixed_46, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=F, fig.cap='Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 120 speedskaters.'>>=
-
-set.seed(01234)
-athlete2 <- rep (seq(1:120), 3)  %>% as.factor()
-occasion2 <- rep(c("EuropeanChampionships","WorldChampionships","Olympics"), each=6) %>% as.factor()
-time2 <- rnorm(360, log(1017), .002 ) %>%  exp() %>%   round(2)  -1000
-time2 <- time2 + rep( c(-0.2, 1, 0.2), each=120   )
-time2[  which(time2==max(time2))   ] <- 28
-time2[  which(time2==min(time2))   ] <- 27.9
-datalong2 <- data.frame(athlete2, occasion2, time2) %>% dplyr::arrange(athlete2)
-datawide2 <- datalong2 %>% tidyr::spread(occasion2, time2) %>% dplyr::arrange(athlete2)
-
-
-F_r <- c()
-for (i in 1:1000)
-{
-r <- sample ( 1:    (dim(datawide2[-1])[1]*dim(datawide2[-1])[2]), replace=F)
-datawide_random12 <- datawide2
-datawide_random12[-1] <- matrix(  as.matrix(datawide2[-1])[r] , dim(datawide2[-1])[1], dim(datawide2[-1])[2]) %>%  as.data.frame()
-
-ranks2 <- apply(datawide_random12[,2:4], 1,  function(x) rank(x) )
-datawideranks2<- datawide_random12
-datawideranks2[,2:4] <- t(ranks2)
-sums2 <- apply(datawideranks2[,2:4],2, sum )
-squaredsums2 <- sums2^2
-SUM2 <- sum(squaredsums2)
-F_r[i] <- 12 / (120*3*4) *SUM2 - 3*120 *4
-}
-data <- as.data.frame(F_r)
-data %>% ggplot( aes(F_r)  ) + geom_histogram()
-@
-
-The shape becomes more regular. It also starts to resemble another distribution, that of the $\chi^2$ (chi-square). It can be shown that the distribution of the $F_r$ for a large number of rows in the data matrix, and at least 6 columns, approaches the shape of the $\chi^2$-distribution with $k-1$ degrees of freedom. This is shown in Figure \ref{fig:nonparmixed_56}.
-
-<<nonparmixed_56, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=F, fig.cap='The distrbution of Fr under the null-hypothesis, overlain with a chi-square distribution with 2 degrees of freedom.'>>=
-data <- dplyr::data_frame(
-  F_r = F_r,
-  chi = dchisq(F_r, df=2)
-)
-
-data %>% ggplot( aes(x=F_r)  ) + geom_histogram(aes(y=..density..)) + geom_line(aes(y = chi))
- @
-
-The line of the $\chi^2$-distribution with 2 degrees of freedom approaches the histogram quite well, but not perfectly. In general, for large $N$ and $k>5$, the approximation is good enough. In that way it gets easier to look up $p$-values for certain $F_r$-values, because the $\chi^2$-distribution is well-known\footnote{The $\chi^2$-distribution is based on the normal distribution: the $\chi^2$-distribution with $k$ degrees of freedom is the distribution of a sum of the squares of $k$ independent standard normal random variables.}, so we don't have to look up critical values for $F_r$ in old tables. For a significance level of 5\%, the critical value of a $\chi^2$ with 2 degrees of freedom is \Sexpr{round(qchisq(df=2, p=0.95), 3)}. This is close to the value in the table for $F_r$ in old books: 6.17. The part of the $\chi^2$-distribution with 2 degrees of freedom that is larger than the observed 11.17 is \Sexpr{pchisq(11.17,df=2, lower.tail=F)}, so our approximate $p$-value for our null-hypothesis is \Sexpr{round(pchisq(11.17,df=2, lower.tail=F),3)}.
-
-
-\section{How to perform Friedman's test in SPSS}
-
-First of all, you need data in wide format. If your data happens to be in long format, use the CASETOVARS procedure to get the data in wide format. CASETOVARS requires your data to be ordered, so use the SORT CASE BY procedure before CASETOVARS. Suppose your data is in long format, as in Table \ref{tab:nonparmixed_6}.
-
-<<nonparmixed_6, fig.height=4, echo=FALSE, fig.align='center', warning=F, results="asis">>=
-occasion_old<- datalong$occasion
-datalong$occasion <-  datalong$occasion %>% as.numeric()
-head(datalong[1:3]) %>%
-        xtable(caption="The raw skating data in long data format.", label="tab:nonparmixed_6") %>%
-        print(include.rownames=F, caption.placement = "top")
- @
-
-
-Then the following syntax turns the data into wide format:
-
-
-\begin{verbatim}
-SORT CASES BY athlete occasion.
-CASESTOVARS
-  /ID=athlete
-  /INDEX=occasion
-  /GROUPBY=VARIABLE
- /SEPARATOR = "_".
-\end{verbatim}
-
-
-This creates the wide format data matrix in Table \ref{tab:nonparmixed_7}:
-
-
-<<nonparmixed_7, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
-names(datawide)[2:4] <- c("time_1.00", "time_2.00","time_3.00")
-datawide %>%
-        xtable(caption="The raw skating data in wide data format after CASETOVARS", label="tab:nonparmixed_7") %>%
-        print(include.rownames=F, caption.placement = "top")
-@
-
-Note the variable names: they start with the dependent variable time and are then indexed by the number of the occasion, 1.00, 2.00 and 3.00, that relate to European Championships, Olympic Games and World Championships, respectively.
-
-We can then specify that we want Friedman's test by using the NPAR TESTS procedure with the FRIEDMAN subcommand and indicating which variables we want to use:
-
-\begin{verbatim}
-NPAR TESTS
-/FRIEDMAN=time_1.00 time_2.00 time_3.00.
-\end{verbatim}
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman1.pdf}
-    \end{center}
-     \caption{SPSS output of the Friedman test.}
-    \label{fig:friedman1}
-\end{figure}
-
-
-In the output in Figure \ref{fig:friedman1} you first see the mean ranks. Note that if you multiply these by 12 (the number of rows), you get the sum of the ranks per column that we also computed above. Next you see a chi-square statistic, degrees of freedom, and an asymptotic $p$-value (Asymp. Sig.). Why don't we see an $F_r$-statistic?
-
-The reason is, as discussed in the previous section, that for large number of measurements (columns) and a large number of individuals (rows), the $F_r$ statistic tends to behave like a chi-square, $\chi^2$, with $k-1$ degrees of freedom. So what we are looking at in this output is really an $F_r$-value of 11.17 (exactly the same value as we computed by hand in the previous section). In order to approximate the $p$-value, this value of 11.17 is interpreted as a chi-square ($\chi^2$), which with 2 degrees of freedom has a $p$-value of 0.004.
-
-
-This asymptotic (approximated) $p$-value is the correct $p$-value if you have a lot of rows (large $N$) and at least 6 variables ($k>5$). If you do not have that, as we have here, this asymptotic $p$-value is only what it is: an approximation. If you want to have the exact $p$-value, then do
-
-\begin{verbatim}
-NPAR TESTS
-/FRIEDMAN=time_1.00 time_2.00 time_3.00
-/METHOD=EXACT.
-\end{verbatim}
-
-and then use the $p$-value under $exact sign.$, in this case 0.002, see Figure \ref{fig:friedman2}.
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman2.pdf}
-    \end{center}
-    \caption{SPSS output of the Friedman test with the exact p-value.}
-    \label{fig:friedman2}
-\end{figure}
-
-
-Thus, a Friedman's test of equal medians showed that speedskaters show significantly different median times on the 10 kilometer distance at the three types of contests, $F_r=11.17, p=0.002$.
-
-
-
-\section{Wilcoxon's signed ranks test for 2 measures}
-
-Friedman's test can be used for 2 measures, 3 measures or even 10 measures. As stated earlier, the well-known Wilcoxon's test can only be used for 2 measures. For completeness, we also discuss that test here.
-\\
-\\
-For each athlete, we take the difference in skating times and call it $d$, see Table \ref{tab:nonparmixed_77}. Next we rank these $d$-values, irrespective of sign, and call these ranks $rank_d$. From the table \ref{nonparmixed_77} we see that athlete 12 shows the smallest difference in skating times ($d$= 0.06, rank = 1) and athlete 2 the largest difference.
-
-<<nonparmixed_77, fig.height=4, echo=FALSE, fig.align='center',results='asis'>>=
-names(datawide)[2:4] <- c("EuropeanChampionsips", "Olympics","WorldChampionships")
-datawilcoxon <-
-        datawide[,c(1,3:4)] %>%  mutate(d = Olympics-WorldChampionships  )   %>%
-        mutate(rank_d =  rank(abs(d))   )  %>%
-        mutate(ranksign =  ifelse(d>0, rank_d,-rank_d   ))
-datawilcoxon %>%
-        xtable(caption="The raw skating data and the computations for Wilcoxon signed ranks test", label="tab:nonparmixed_77") %>%
-         print(include.rownames=F, caption.placement = "top")
- @
-
-Next we indicate for each rank whether it belongs to a positive or a negative difference $d$ and call that variable \textbf{ranksign}.
-
-Under the null-hypothesis, we expect that some of the larger $d$-values are positive and some of them negative, in a fairly equal amount. If we sum the ranks having plus-signs and sum the ranks having minus-signs, we would expect that these two sums are about equal, but only if the null-hypothesis is true. If the sums are very different, then we should reject this null-hypothesis. In order to see if the difference in sums is too large, we compute them as follows:
-
-
-\begin{eqnarray}
-T^+ &=& 5+ 12 + 8 +10+6+11+4 +2 +7 +1 = \Sexpr{ sum (   datawilcoxon$ranksign[datawilcoxon$ranksign>0])     } \nonumber \\
-T^- &=& 3 + 9= \Sexpr{ -1 * sum (   datawilcoxon$ranksign[datawilcoxon$ranksign<0])     } \nonumber
-\end{eqnarray}
-
-
-
-To know whether $T^+$ is significantly larger than $T^-$, the value of $T^+$ can be looked up in a table, for instance in Siegel \& Castellan (1988). There we see that for $T^+$, with 12 rows, the probability of obtaining a $T^+$ of at least 66 is 0.0171. For a two-sided test (if we would have switched the columns of the two championships, we would have gotten a $T^-$ of 66 and a $T^+$ of 12!), we have to double this probability. So we end up with a $p$-value of $2 \times 0.0171=\Sexpr{2*0.0171}$.
-
-
-In the table we find no critical values for large sample size $N$, but fortunately, similar to the Friedman test, we use an approximation using the normal distribution. It can be shown that for large sample sizes, the statistic $T^+$ is approximately normally distributed with mean
-
-
-\begin{equation}
-\mu = \frac{N(N+1)}{4}
-\end{equation}
-
-and variance:
-
-\begin{equation}
-\sigma^2= \frac {N(N+1)(2N+1)  }  {24}
-\end{equation}
-
-
-If we therefore standardize the $T^+$ by subtracting the $\mu$ and then dividing by the square root of the variance $\sqrt(\sigma^2)=\sigma$, we get a $Z$-value with mean 0 and standard deviation 1. To do that, we use the following formula:
-
-\begin{equation}
-Z = \frac{T^+ - \mu}{\sigma} =  \frac  { T^+ - N(N+1)/4} {\sqrt{N(N+1)(2N+1)/24}}
-\end{equation}
-
-
-Here $T^+$ is 66 and $N$ equals 12, so if we fill in the formula we get $Z= \Sexpr{ (66 - 39) / sqrt(162.5)   }$. From the standard normal distribution we know that 5\% of the observations lie above 1.96 and below -1.96. So a value for $Z$ larger than 1.96 or smaller than -1.96 is enough evidence to reject the null-hypothesis. Here our $Z$-statistic is larger than 1.96, therefore we reject the null-hypothesis that the median skating times are the same at the World Championships and the Olympics. The $p$-value associated with a $Z$-score of \Sexpr{ (66 - 39) / sqrt(162.5)} is \Sexpr{ round(pnorm((66 - 39) / sqrt(162.5), lower.tail=F)*2, 3)}.
-
-
-
-
-
-\section{How to perform Wilcoxon's signed ranks test in SPSS}
-
-If you want to use the Wilcoxon test, then use the following syntax:
-
-\begin{verbatim}
-NPAR TESTS
-/WILCOXON=time_2.00 time_3.00
-/METHOD=EXACT.
-\end{verbatim}
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 18cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/wilcoxon1.pdf}
-    \end{center}
-    \caption{SPSS output of the Wilcoxon test.}
-    \label{fig:wilcoxon1}
-\end{figure}
-
-In the output in Figure \ref{fig:wilcoxon1} we see a $Z$-statistic, an asymptotic $p$-value, and two exact $p$-values. The reason that we see a $Z$-statistic is that the Wilcoxon $T^+$ statistic approaches a normal distribution in case we have a large number of observations (many rows). If $N>15$, the approximation is good enough so that the statistic can be interpreted as a $z$-score (standardized score with a normal distribution). That means that a $z$-score of 1.96 or larger or -1.96 or smaller can be regarded as significant at the 5\% significance level. Since the standard normal distribution is only an approximation, and we have $N=12$, we have to look at the exact significance level, which is in this case 0.034. We see that the exact $p$-value is in this case equal to the approximate $p$-value. Note that we use a two-sided test, to allow for the fact that random sampling could lead to a higher median for the Olympic Games or a higher median for the World Championships. We just want to know whether the null-hypothesis that the two medians differ can be rejected (in whatever direction) or not.
-\\
-\\
-
-
-Let's compare the output with the Friedman test, but then only use the relevant variables in your syntax:
-
-\begin{verbatim}
-NPAR TESTS
-/FRIEDMAN=  time_2.00 time_3.00
-/METHOD=EXACT.
-\end{verbatim}
-
-
-In the output in Figure \ref{fig:friedman3} we see that the null-hypothesis of equal medians at the World Championships and the Olympic Games can be rejected, with a $p$-value of 0.039.
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman3.pdf}
-    \end{center}
-    \caption{SPSS output of the Friedman test for two measures.}
-    \label{fig:friedman3}
-\end{figure}
-
-
-
-Note that both the Friedman and Wilcoxon tests come up with very similar $p$-values. Their rationales are very similar: Friedman's test is based on ranks and Wilcoxon's test is based on positive and negative differences between measures 1 and 2, so in fact ranks 1 and 2 for each row in the data matrix. Both can therefore be used in the case you have two measures. We recommend to use the Friedman test, since that test can be used in all situations where you have 2 or more measures per row. Wilcoxon's test can only be used if you have 2 measures per row.
-\\
-\\
-In sum, we can report in two ways on our hypothesis regarding similar skating times at the World Championships and at the Olympics:
-
-\begin{enumerate}
-
-\item
-
-\begin{quotation}
-A Friedman test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $F_r = 5.33, p=0.04$. Athletes more often show their fastest times at the World Championships than can be expected due to chance.
-\end{quotation}
-
-\item
-
-\begin{quotation}
-A Wilcoxon signed ranks test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $Z = -2.12, p=0.03$. Athletes more often show their fastest times at the World Championships than can be expected due to chance.
-\end{quotation}
-
-\end{enumerate}
-
-How do we know that the fastest times were at the World Championships? If we look at raw data above, that does not seem that obvious. But this conlusion is based on the sum of ranks: we saw a sum of ranks of 26 for the Olympics and 15 for the World Championships. So the average rank is lower at the World Championships.
-
-
-\section{Ties}
-
-Many nonparametric tests are based on ranks. For example, if we have the data sequence {0.1, 0.4, 0.5, 0.2}, we give these values the ranks {1, 3, 4, 2}, respectively. But in may data cases, data sequences cannot be ranked unequivocally. Let's look at the sequence {0.1, 0.4, 0.4, 0.2}. Here we have 2 values that are exactly the same. We say then that we have \textit{ties}. If we have ties in our data like the 0.4 in this case, one very often used option is to arbitrarily choose one of the 0.4 values as smaller than the other, and then average the ranks. Thus, we rank the data into {1, 3, 4, 2} and then average the tied observations: {1, 3.5, 3.5, 2}. As another example, suppose we have the sequence {23, 54, 54, 54, 19}, we turn this into ranks {2, 3, 4, 5, 1} and take the average of the ranks of the tied observations of 54: {2, 4, 4, 4, 1}. These ranks corrected for ties can then be used to compute the test statistic, for instance Friedman's $F_r$ or Wilcoxon's $Z$. However, in many cases, because of these corrections, a slightly different formula is to be used. So the formulas become a little bit different. This is all done in SPSS automatically. If you want to know more, see Siegel and Castellan (1988).
-
-
-
-
-\section{Exercises}
-
-
-A researcher is interested in the relationship between mood and day of the week: are people generally moodier on Monday than on Wednesday or Friday?
-
-Below we see the data on 4 people that rated their mood from 1 (very moody) to 10 (not moody at all) on three separate days in a week in February: Day 1 is Monday, day 2 is Wednesday and day 3 is Friday:
-
-<<nonparmixed_8, fig.height=4, echo=FALSE, fig.align='center'>>=
-set.seed(1234565910)
-ID <- rep(c(1,2,3,4), each=3)
-Day <- rep (c(1, 2, 3), 4)
-Mood <- rpois(12, 5)
-data <- data.frame(ID, Day, Mood)
-data %>% kable()
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(data,
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sav',
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sps',
-              package = c("SPSS"))
-@
-
-\begin{enumerate}
-
-\item Put the data into wide format, and think of appropriate variable names
-\\
- \\
- \begin{tabular}{llrrrr}
-   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
- \end{tabular}
-\\
-\\
-\item Rank these data row-wise: for each row determine the lowest mood (1), the second lowest mood (2) and the highest mood score (3)
-\\
- \\
- \begin{tabular}{llrrrr}
-   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
- \end{tabular}
-\\
-\\
-\item Determine the column sums: the sum of the ranks for Monday, Wednesday and Friday.
-\item How many rows do you have ($N$) and how many columns of data do you have ($k$)?
-\item Compute $F_r$.
-\item Copy the data into SPSS and run a Friedman's test. Should you ask for an exact $p$-value? Provide the syntax.
-\item Suppose you get the SPSS output in Figure \label{ref:friedmanmood1}. What would your conclusion be regarding the research question about the relationship between moodiness and the day of the week?
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedmanmood1.pdf}
-    \end{center}
-    \caption{SPSS output of a Friedman test.}
-    \label{fig:friedmanmood1}
-\end{figure}
-
-\item
-In this data set, for which day did we observe the personal best mood? How many of the individuals showed their best mood on that day?
-
-
-\item
-A linear mixed model was run on this data set. When checking model assumptions, we saw the following graphs in Figures \ref{fig:nonparmixed_11a} and \ref{fig:nonparmixed_11b}.
-
-<<nonparmixed_11a, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Residual plot after a linear mixed model analysis.'>>=
-res <- data %>%  lmer( Mood ~ as.factor(Day) +  (1|ID), data=. ) %>%
-        resid()
-datalong <- cbind(data, res)
-datalong %>% ggplot( aes(x=as.factor(Day), y=res)    ) + geom_point()  + xlab("Day") + ylab("Residual")
-datalong %>% ggplot( aes( x=res )  ) + geom_histogram() + xlab("Residual")
- @
-
-<<nonparmixed_11b, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Histogram of residuals after a linear mixed model analysis.'>>=
-datalong %>% ggplot( aes( x=res )  ) + geom_histogram() + xlab("Residual")
- @
-
-
-Would you prefer to stick to the Friedman's test for this data set, or would you prefer to report a linear mixed model? Explain your answer.
-
-\item Could you have performed a Wilcoxon test on these data? Why, or why not?
-
-\end{enumerate}
-
-
-Answers:
-\begin{enumerate}
-
-\item
-The raw data in wide format:
-<<nonparmixed_9, fig.height=4, echo=FALSE, fig.align='center'>>=
-data <- data %>% dplyr::arrange(ID)
-datawide <- data %>% tidyr::spread(Day, Mood) %>% dplyr::arrange(ID)
-names(datawide) <- c("ID", "Mood_1", "Mood_2", "Mood_3")
-datawide %>% kable()
-@
-
-\item
-The row-wise ranked data:
-<<nonparmixed_10, fig.height=4, echo=FALSE, fig.align='center'>>=
-ranks <- apply(datawide[,2:4], 1,  function(x) rank(x) )
-datawideranks<- datawide
-datawideranks[,2:4] <- t(ranks)
-datawideranks %>% kable()
- @
-\item Day 1: \Sexpr{sum(datawideranks[2]) }, Day 2: \Sexpr{sum(datawideranks[3])} and Day3: \Sexpr{sum(datawideranks[4])}.
-\item $N=4$ and $k=3$
-\item
-
-\begin{eqnarray}
-F_r &=& \left[  \frac{12}{4 \times  3(3+1)} \times (\Sexpr{sum(datawideranks[2]) }^2 + \Sexpr{sum(datawideranks[3]) }^2 + \Sexpr{sum(datawideranks[4]) }^2)      \right] - 3 \times 4 (3+1) \nonumber \\
-  &=&   \left[  \frac{12}{48} \times  \Sexpr{sum(datawideranks[2])^2 +sum(datawideranks[3])^2+sum(datawideranks[4])^2  }      \right] - 48 = 1.50  \nonumber
-\end{eqnarray}
-
-\item
-
-\begin{verbatim}
-NPAR TESTS
-/FRIEDMAN=  Mood_1   Mood_2    Mood_3
-/METHOD=Exact.
-\end{verbatim}
-
-\item
-\begin{quotation}
-We found no significant effect of day of the week on mood, $F_r=1.50, p=0.65$, so the null-hypothesis of equal mood during the week is not rejected. Note however that the sample size was extremely small (12 data points), so even if there is a real relationship between mood and day of the week, there was little chance to find evidence of that in this data set.
-\end{quotation}
-
-\item The highest column sum of the ranks was found for day 2, which was Wednesday. So in this data set we saw that the four individuals generally showed their personal highest mood score on Wednesday. Actually, 2 persons out of 4 showed their highest score (rank 3) on Wednesday (ID=2 and ID=3).
-
-\item The plots suggests that the variance of the residuals is very small for the second day, compared to the other two days. The distribution is also hardly normal. But it is hard to tell whether the assumptions are reasonable, since there are so few data points. It would therefore be safest to report a Friedman test.
-
-\item A Wilcoxon test can only be performed on two measures, say Monday and Wednesday data, or Monday and Friday data. You could not test the null-hypothesis of the same moods on three days with a Wilcoxon test.
-
-\end{enumerate}
-
-
-
-
-
-
-
-
-
-\chapter{Generalized linear models}
-
-\section{Introduction}
-In previous chapters we were introduced to the linear model, with its basic form
-
-
-\begin{eqnarray}
-y = b_0 + b_1 X_1 + \dots + b_n X_n + e \\
-e \sim N(0, \sigma_e^2)
-\end{eqnarray}
-
-The basic assumptions of this model is the linearity in the parameters, and the normally distributed residual $e$. Linearity in the parameters means that the effects of intercept and the independent variables $X_1 \dots X_n$ are additive: the assumption is that you can sum these effects to come to a predicted value for $y$. So that is also true when we include interaction effects to account for moderation effects, 
-
-\begin{eqnarray}
-y = b_0 + b_1 X_1 +  b_2 X_2 + b_3 X_1 X_2 + e \\
-e \sim N(0, \sigma_e^2)
-\end{eqnarray}
-
-
-or when we use a quadratic term to account for other types of nonlinearity in the data:
-
-
-\begin{eqnarray}
-y = b_0 + b_1 X_1 +  b_2 X_1 X_1 + e \\
-e \sim N(0, \sigma_e^2)
-\end{eqnarray}
-
-In all these models, the assumption is that the effects of the parameters can be added to one another. 
-
-The other major assumption of linear (mixed) models is the normal distribution of the residuals. As we have seen in for instance the previous chapter, sometimes the residuals are not normally distributed. Remember that with a normal distribution $N(0,\sigma^2)$, in principle all values between $-\infty$ and $+\infty$ are possible, but they tend to concentrate around the value of 0, in the shape of the bell-curve. Figure \ref{fig:gen_1} shows the normal distribution $N(0,\sigma^2=4)$: it is centered around 0 and has variance 4. Note that the inflection point, that is the point where the decrease in density tends to decelerate, is exactly at the values -2 and +2. These are equal to the square root of the variance, which is the standard deviation, $+\sigma$ and $-\sigma$.
-
-
-<<gen_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Density function of the normal distribution, with mean 0 and variance 4 (standard deviation 2). Inflection points are positioned at residual values of minus 1 standard deviation and plus 1 standard deviation.'>>=
-residual <- seq (-6,6,0.1)
-density <- dnorm(residual, 0, 2)
-data <- data.frame(residual, density)
-data %>% ggplot(aes(x=residual, y=density)) + geom_line() + 
-        geom_vline(xintercept = -2, col='blue') +geom_vline(xintercept = 2, col='blue') +
-        geom_label(  aes(x=5, y=dnorm(2,0,2)), col='black', label='Inflection point', show.legend = F) +
-        geom_segment(aes(x=3.5, xend=2.1, y=dnorm(2,0,2), yend=dnorm(2,0,2)), size = 1,
-               arrow = arrow(length = unit(0.1, "cm")))+
-        geom_label(  aes(x=-5, y=dnorm(2,0,2)), col='black', label='Inflection point', show.legend = F) +
-        geom_segment(aes(x=-3.5, xend=-2.1, y=dnorm(2,0,2), yend=dnorm(2,0,2)), size = 1,
-               arrow = arrow(length = unit(0.1, "cm"))) + scale_x_continuous(breaks=seq (-6,6,1))
-        @
-
-A normal distribution is suitable for continuous data: for example a variable that can take all possible values between -1 and 0. For many data sets this is not true. Think for example of temperature measures: if the thermometer gives degrees centigrade with a precision of only 1 decimal, we can never have values of say 10.07 or -56.789. Our data will in fact be \textit{discrete}, showing rounded values like 10.1, 10.2, 10.3, but no values in between. 
-
-Nevertheless, the normal distribution can still be used in many such cases. Take for instance a data set where the temperature in Amsterdam in summer was predicted on the basis of a linear model. Fig \ref{fig:gen_2} shows the distribution of the residuals of that model:
-
-<<gen_2, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Even if residuals are really discrete, the normal distribution can be a good approximation of their distribution.'>>=
-set.seed(1234)
-residual <- rnorm(1000, 0, 3) %>%  round(1)
-density <- dnorm(residual, 0, 3)
-data <- data.frame(residual, density)
-data %>% ggplot(aes(x=residual, y=density)) + geom_histogram(aes(y=..density..))  + geom_line(aes(y=density))
-@
-
-
-The temperature measures were discrete with a precicsion of one tenth of a degree centigrade, but the distribution seems well approximated by a normal curve. 
-
-
-But let's look at an example where the discreteness is more prominent. In Figure \ref{fig:gen_3} we see the residuals of an analysis of exam results. Students had to do an asssignment that had to meet 4 criteria: 1) originality, 2) language, 3) structure, and 4) literature review. Each criterion was scored as either fulfilled (1) or not fulfilled (0). The score for the assignment was given on the basis of \textit{the number of criteria} that were met, so the scores could be 0, 1, 2, 3 or 4. The score was predicted on the basis of the average exam score on previous assignments using a linear model. 
-
-
-<<gen_3, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Count data example where the normal distribution is not a good approximation of the distribution of the residuals.'>>=
-set.seed(1234)
-score <- rnorm(100, 1, 3) %>%  round(0) 
-score [score>4] <- 4
-score [score<0] <- 0
-x = rnorm(100, 0, 1)
-data=data.frame(score, x)
-residual <-  lm(score ~ x, data=data   )$res
-density <- dnorm(residual, mean(residual), sd(residual))
-data <- data.frame(residual, density)
-data %>% ggplot(aes(x=residual, y=density)) + geom_histogram(aes(y=..density..))  + geom_line(aes(y=density))
-@
-
-
-Figure \ref{fig:gen_3} shows that the residuals are very discrete, and that the continous normal distribution is a very bad approximation of the histogram. We often seen this phenomenon when our data consists of \textit{counts} with a limited maximum number. 
-
-An even more extreme case we observe when our dependent variable consists of whether or not students passed the assignment: only those assignments that fulfilled all 4 criteria are regarded as sufficient. If we score all students with a sufficient assignment as passed (1) and all students with an insufficient assignment as failed (0) and we predict this again by the average exam score on previous assignments using a linear model, we get the residuals displayed in Figure \ref{fig:gen_4}.
-
-
-<<gen_4, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Dichotomous data example where the normal distribution is not a good approximation of the distribution of the residuals.'>>=
-set.seed(1234)
-score <- rnorm(100, 1, 3) %>%  round(0) 
-score [score<=4] <- 0
-score [score>3] <- 1
-x = rnorm(100, 0, 1)
-data=data.frame(score, x)
-residual <-  lm(score ~ x, data=data   )$res
-density <- dnorm(residual, mean(residual), sd(residual))
-data <- data.frame(residual, density)
-data %>% ggplot(aes(x=residual, y=density)) + geom_histogram(aes(y=..density..))  + geom_line(aes(y=density))
-@
-
-
-Here it is definitely evident that a normal approximation of the residuals will not do. When the dependent variable has only 2 possible values, a linear model will never work because the residuals can never have a distribution that is even remotely looking normal. 
-
-In this chapter we will discuss how generalized linear models can be used to analyze data sets where the assumption of normally distributed residuals is not tenable. First we discuss the case where the dependent variable has only 2 possible values (dichotomous dependent variables like yes/no or pass/fail, heads/tails, 1/0). Next, we will discuss the case where the dependent variable consists of counts ($1, 2, 3, 4, \dots$).
-
-
-\section{Logistic regression}
-
-Imagine that we analyze results on an exam for third grade children. These children are usually either 6 or 7 years old, dependending on what month they were born in. The exam is on February 1st. A researcher wants to know whether the age of the child can explain why some children pass the test and others fail. She computes the age of the child in months. Each child that passes the exam gets a score 1 and all the others get a score 0. Figure \ref{fig:gen_5} plots the data.
-
-<<gen_5, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Data example: Exam outcome (score) as a function of age, where 1 means pass and 0 means fail.'>>=
-set.seed(12345)
-age = rnorm(100, 78, 3) %>% round(1)
-logoddsscore <- 0.51*(age-78) %>%  round(0)
-score <- exp(logoddsscore)/ (1+logoddsscore)
-score [score<=4] <- 0
-score [score>3] <- 1
-data.exam <- data.frame(score, age)
-data.exam %>% ggplot(aes(x=age, y=score)) + geom_point() + xlab("age in months")
-@
-
-
-She wants to use the following linear model:
-
-\begin{eqnarray}
-score = b_0 + b_1 age  + e \\
-e \sim N(0, \sigma_e^2)
-\end{eqnarray}
-
-Figure \ref{fig:gen_6} shows the estimated regression line and Figure \ref{fig:gen_7} shows the distribution of the residuals as a function of age.
-
-<<gen_6, fig.height=4, echo=FALSE, fig.align='center', message=F, , fig.cap='Example exam data with a linear regression line.'>>=
-data.exam %>% ggplot(aes(x=age, y=score)) + geom_point() + xlab("age in months") + geom_smooth(formula=y~x, method="lm", se=F)
-@
-
-
-<<gen_7, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Residuals as a function of age, after a linear regression analysis of the exam data.'>>=
-residual <-  lm(score ~ age, data=data.exam   )$res
-data.exam <- data.frame(residual, age, score)
-data.exam %>% ggplot(aes(x=age, y=residual)) + geom_point() + xlab("age in months")
-outglm <- glm(score~ age, data=data.exam)
-@
-
-Clearly a linear model is not appropriate. Here, the assumption that the dependent variable, score in this case, is scattered randomly around the predicted value with a normal distribution is not reasonable. The main problem is that the dependent variable score can only have 2 values, 0 and 1.
-
-
-\subsection{Bernoulli distribution}
-
-Rather than using a normal distribution, we could try a Bernoulli distributiuon. The Bernoulli distribution is the distribution of a coin flip. For example, if the probability of heads is 0.1, we can expect that if we flip the coin, on average we expect to see $0.1$ times heads and 0.9 times tails. Our best bet then is that the outcome is tails. However, if we actually flip the coin, we might see heads anyway. There is some randomness to be expected. Let $y$ be the outcome of a coin flip: heads or tails. If we have a Bernoulli distribution for variable $y$ with probability $p$ for heads, we \textit{expect} to see heads $p$ times, but we actually \textit{observe} heads or tails.
-
-\begin{equation}
-y \sim Bern(n, p)
-\end{equation}
-
-The same is true for the normal distribution in the linear model case: we \textit{expect} that the observed value of $y$ is exactly equal to its predicted value ($b_0 + b_1 X$), but we always \textit{observe} that it is different.
-
-\begin{equation}
-y \sim N(\mu= b_0 + b_1 X, \sigma^2_e)
-\end{equation}
-
-In our example, the pass rate could also be conceived as the outcome of a coin flip: pass instead of heads and fail instead of tails. So would it be an idea to predict the \textit{probability} of success on the basis of age? And then for every predicted probability, we allow for the fact that actually the observed success can differ. Our linear model could then look like this:
-
-
-\begin{eqnarray}
-p_i = b_0 + b_1 age_i \\
-score_i \sim Bern(p_i)
-\end{eqnarray}
-
-So for each child $i$, we predict the probability of success, $p_i$, on the basis of her/his age. Next, the randomness in the data comes from the fact that a probability is only a probability, so that the observed success of a child $score_i$, is like a coin toss with probability of $p_i$ for success. 
-
-For example, suppose that we have a child with an age of 80 months, and we have $b_0=-3.8$ and $b_1=0.05$. Then the predicted probability $p_i$ is equal to $-3.8 + 0.05 \times 80 = 0.20$. The best bet for such a child would be that it fails the exam. But 0.20 is only a probability, so by chance the child could pass the exam. This model also means that if we would have 100 children of age 80 months, we would \textit{expect} that 20 of these children would pass the test and 80 would fail.  But we can't make predictions for one individual alone: we don't know which child exactly will pass and which child won't. Note that this is similar to the normally distributed residual in the linear model: in the linear model we expect a child to have a certain value for $y$, but we know that there will be a deviation from this predicted value: the residual. For a whole group of children with the same predicted value for $y$, we know that the whole group will show residuals that have a normal distribution. But we're not sure what the residual will be for each individual child.
-
-Unfortunately, this model for probabilities is not very helpful. If we use a linear model for the probability, this means that we can predict probability values of less than 0 and more than 1, and this is not possible for probabilities. If we use the above values of $b_0=-3.8$ and $b_1=0.05$, we predict a probability of -.3 for a child of 70 months and a probability of 1.2 for a child of 100 months. Those values are meaningless!
-
-\subsection{Odds and odds ratios}
-Instead of predicting probabilities, we could predict \textit{odds}, or rather \textit{odds ratios}. The nice property of odds ratios is that they can have very large values, much larger than 1. 
-
-What are odds again? Odds are a different way of talking about probability. Suppose the probability of winning the lottery is 1\%. Then the probability of loosing is $99\%$. This is equal to saying that the odds of winning against loosing are 1 to 99, or $1:99$, because the probability of success is 99 times smaller than the probability of loosing.
-
-As another example, suppose the probability of being alive tomorrow is equal to 0.9999. Then the probability of not being alive tomorrow is $1-0.9999=0.0001$. Then the probability of being alive tomorrow is $0.9999/0.0001=9999$ times larger than the the probability of not being alive. Therefore the odds of being alive tomorrow against being dead is 9999 to 1 (9999:1).
-
-If we have a slightly biased coin, the probability of heads might be 0.6. The probability of tails is then 0.4. So the probability of heads is then 1.5 times bigger than the probability of heads (0.6/0.4=1.5). So the odds of heads against tails is then 1.5 to 1. Odds are often multiplied by a constant to get nice integers, so we can also say the odds of heads aganst tails are 3 to 2. Similarly, if the probablity of heads were 0.61, the odds of heads against tails would be 0.61 to 0.39, which can be modified into 61 to 39.
-
-Now that we know how to go from probability statements to statements about odds, how do we go from odds to probability? If someone says the odds of heads against tails is 10 to 1, this means that for every 10 heads, there will be 1 tails. In other words, if there were 11 coin tosses, 10 would be heads and 1 would be tails. We can therefore transform odds back to probabilities by noting that 10 out of 11 toin tosses is heads, so $10/11 = 0.91$, and 1 out of 11 is tails, so $1/11=0.09$. 
-
-
-If someones says the odds of winning a gold medal at the Olympics is a thousand to one (1000:1), this means that if there were $1000+1=1001$ opportunities, there would be a gold medal in 1000 cases and failure in only one. This corresponds to a probability of 1000/1001 for winning and 1/1001 for failure. 
-
-As a last example, if at the horse races, the odds of Bruno winning against Sacha are four to five (4:5), this means that for every 4 winnings by Bruno, there would be 5 winnings by Sacha. So out of a total of 9 winnings, 4 will be by Bruno and 5 will be by Sacha. The probability of Bruno outrunning Sacha is then $4/9=0.44$.
-\\
-\\
-If we would summarize the odds by doing the division, we have an \textit{odds ratio}. Odds ratios have values that can be larger than 1. For instance, the odds 1:1 can be summarized as an odds ratio of 1, the odds 3:2 can be summarized as an odds ratio of 1.5, the odds 61:39 can be summarized as 1.564, and the odds 1000/1 can be summarized as an odds ratio of 1000.
-
-However, note that odds ratios can never be negative: a very small odds is 1 to a 100000. This can be summarized into an odds ratio of 0.00001, but that is still larger than 0.
-
-Mathematicians have therefore proposed to use the \textit{natural logarithm}\footnote{The natural logarithm of a number is its logarithm to the base of the constant $e$, where $e$ is approximately equal to 2.7. The natural logarithm of $x$ is generally written as 
-$ln x$ or $log^e x$. The natural logarithm of $x$ is the power to which $e$ needs to be raised to equal $x$. For example, $ln(2)$ is 0.69, because $e^{0.69} = 2$, and $ln(0.2)=-1.6$ because $e^{-1.6}=0.2$. The natural logarithm of $e$ itself, $ln(e)$, is 1, because $e^1 = e$, while the natural logarithm of 1, $ln(1)$, is 0, since $e^0 = 1$.} of the odds ratio as the preferred transformation of probabilities. For example, suppose we have the probability of heads of 0.42. This can be transformed into an odds by noting that in 100 coin tosses, we would expect 42 times heads and 58 times tails. So the odds are 42:58. The odds ratio is then $\frac{42}{58}=\Sexpr{42/58}$. The \textit{natural} logarithm of \Sexpr{42/58} equals \Sexpr{log(42/58)} (use the $ln$ button on your calculator!). If we have a value between 0 and 1 and we take the logarithm of that value, we always get a value smaller than 0.
-
-Figure \ref{fig:gen_8} shows the relationship between a probability (with values between 0 and 1) and the natural logarithm of the corresponding odds ratio.
-
-
-<<gen_8, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='The relationship between a probability and the natural logarithm of the corresponding odds ratio.'>>=
-probability <-  seq(0.001,0.999, 0.001)
-logodds <- log( probability/(1-probability)  )
-data <- data.frame(probability, logodds)
-data %>% ggplot(aes(x=probability, y=logodds)) + geom_line() + ylab("natural logarithm of the odds ratio")
-@
-
-The result is a mirrored S-shaped curve on its side. For large probabilities close to one, the equivalent odds ratio becomes infinitely positive, and for very small probabilities close to zero, the equivalent odds ratio becomes infinitely negative. An odds ratio of 0 is equal to a probability of 0.5.
-\\
-\\
-In summary, if we use a linear model to predict probabilities, we have the problem of predicted probabilities smaller than 0 and larger than 1 that are meaningless. If we use a linear model to predict odds ratios we have the problem of predicted odds ratios smaller than 0 that are meaningless. If on the other hand we use a linear model to predict \textit{the natural logarithm of odds ratios}, we have no problem whatsoever. We therefore propose to use a linear model to predict \textit{logoddsratios}.
-\\
-\\
-Returning back to our example of the children passing the exam, suppose we have the following linear equation for the relationship between age and the logarithm of the odds of passing the exam
-
-
-\begin{eqnarray}
-logoddsratio=\Sexpr{round(outglm$coef[1],2)} + \Sexpr{round(outglm$coef[2],2)} age, \nonumber
-\end{eqnarray}
-
-
-This equation predicts that a child aged 70 months has a logoddsratio of $\Sexpr{round(outglm$coef[1],2)} + \Sexpr{round(outglm$coef[2],2)} \times 70 =\Sexpr{round(predict.glm(outglm, newdata=data.frame(age=70)),2)}$. In order to transform that logoddsratio back to a probability, we first have to take the exponential of the logoddsratio\footnote{If we know $ln(x)=60$, we have to infer that $x$ equals $e^{60}$, because $ln(e^{60})=60$ by definition of the natural logarithm, see previous footnote. Therefore, if we know that $ln(x)=c$, we know that $x$ equals $e^c$. The exponent of $c$, $e^c$, is often written as $exp(c)$. So if we know that the logarithm of the odds ratio equals $c$, $logoddsratio=ln(oddsratio)=c$, then the odds ratio is equal to $exp(c)$.} to get the odds ratio:
-
-
-\begin{eqnarray}
-oddsratio = exp(logoddsratio)= e^{logoddsratio}=e^{\Sexpr{round(predict.glm(outglm, newdata=data.frame(age=70)),2)}}=\Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)} \nonumber
-\end{eqnarray}
-
-An oddsratio of \Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)} means that the odds of passing the exam is \Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)} to 1 (\Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)}:1). So out of $1 + \Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)}= \Sexpr{round(1+exp(predict.glm(outglm, newdata=data.frame(age=70))),2)}$ times, we expect \Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)} successes and 1 failure. The probability of success is therefore $\frac{\Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)}}{1+\Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70))),2)}} = \Sexpr{round(exp(predict.glm(outglm, newdata=data.frame(age=70)))/ (1+exp(predict.glm(outglm, newdata=data.frame(age=70)))),2)}$. Thus, based on this equation, the expected probability of passing the exam for a child of 70 months equals 0.42.
-
-
-\subsection{Exercises}
-
-From probability to logoddsratios:
-
-Given:
-In the Netherlands, 51\% of the inhabitants is female.
-\begin{enumerate}
-
-\item
-If we randomly pick someone from this Dutch population, what is the probability that that that person is female?
-
-
-\item
-If we randomly pick someone from this Dutch population, what are the odds that that that person is female?
-
-\item
-If we randomly pick someone from this Dutch population, what are the odds that that that person is male?
-
-\item
-What is the oddsratio of randomly picking an inhabitant that is female?
-
-\item
-What is the oddsratio of randomly picking an inhabitant that is male?
-
-
-\item
-What is the logoddsratio of randomly picking an inhabitant that is female?
-
-\item
-What is the logoddsratio of randomly picking an inhabitant that is male?
-
-
-\end{enumerate}
-
-Answers:
-
-\begin{enumerate}
-
-\item
-0.51
-
-
-\item
-51 to 49 (51:49).
-
-\item
-49:51.
-
-\item
-51/49=1.04
-
-\item
-49/51=0.96
-
-
-\item
-ln(51/49)= ln(1.04)=0.04
-
-\item
-ln(49/51)= ln(0.96)=-0.04
-
-
-\end{enumerate}
-
-From logoddsratios to probabilities:
-
-Given:
-In the Netherlands, 51\% of the inhabitants are female. Females tend to get older than males, so if we predict sex by age, we should expect a higher probability of a female for older ages. Suppose we have the following linear model for the relationship between age (in years) and the logoddsratio of being female:
-
-
-\begin{eqnarray}
-logoddsratio_{female}=-0.01 + 0.01 \times age, \nonumber
-\end{eqnarray}
-
-\begin{enumerate}
-
-\item
-What is the predicted logoddsratio of being female for a person of age 20?
-
-\item
-What is the predicted logoddsratio of being female for a person of age 90?
-
-\item
-What is the predicted oddsratio of being female for a person of age 20?
-
-\item
-What is the predicted oddsratio of being female for a person of age 90?
-
-\item
-What are the predicted odds of being female for a person of age 20?
-
-\item
-What are the predicted odds of being female for a person of age 90?
-
-\item
-What is the predicted probability of being female for a person of age 20?
-
-\item
-What is the predicted probability of being female for a person of age 90?
-
-\item
-What is the predicted probability of being MALE for a person of age 90?
-
-
-\end{enumerate}
-
-Answers:
-
-\begin{enumerate}
-
-\item
-$-0.01 + 0.01 \times 20 = 0.19$
-
-\item
-$-0.01 + 0.01 \times 90 = 0.89$
-
-\item
-$exp(0.19)=1.21$
-
-\item
-$exp(0.89)=2.44$
-
-\item
-1.21 to 1, or 1.21:1
-
-\item
-2.44 to 1, or 2.44:1
-
-\item
-1.21/ (1.21 + 1)= 0.55
-
-\item
-2.44 / (2.44 + 1)= 0.71
-
-\item
-1 - 0.71 = 0.29
-
-
-\end{enumerate}
-
-
-A big data analyst constructs a model that predicts whether an account on Twitter belongs to either a real person or organisation, or to a bot.
-
-\begin{enumerate}
-
-\item
-For one account, a user of this model finds an logoddsratio of 4.5 that the account belongs to a bot. What is the corresponding probability that the twitter account belongs to a bot? Give the calculation.
-
-\item
-For a short tweet with only a hyperlink, the probability that it comes from a bot is only 10\%. What is the logoddsratio that corresponds to this probability? Give the calculation.
-
-
-\end{enumerate}
-
-
-
-Answers:
-\begin{enumerate}
-
-\item The logoddsratio is 4.5, so the oddsratio is exp(4.5)=90.0.
-The odds ratio of being a bot is then 90:1.
-The probability of being a bot is 90/ (90+1)= 0.99
-
-\item
-Out of 100 tweets with only a hyperlink, 10 are by bots and 90 are by real persons or organisations. So the odds of coming from a bot are 10:90. The odds ratio is therefore 10/90 = 0.11. When we take the natural logarithm of this odds ratio, we get the logoddsratio: ln(0.11) = -2.21.
-
-\end{enumerate}
-
-
-
-\subsection{Link functions}
-
-In previous pages we have seen that logoddsratios have the nice property of having meaningful values between $-\infty$ and $+\infty$. This makes them suitable for linear models. In essence, our linear model for our exam data in children might then look like this:
-
-
-\begin{eqnarray}
-logoddsratio_{pass}= b_0 + b_1 age\\
-y \sim Bern(p_{pass})
-\end{eqnarray}
-
-Note that we can write the odds ratio as $p/(1-p)$. So the logoddsratio that corresponds to the probability of passing the exam, $p_{pass}$, can be written as $ln\frac{p_{pass}}{1- p_{pass}}$, so that we have
-
-
-\begin{eqnarray}
-ln\frac{p_{pass}}{1- p_{pass}}= b_0 + b_1 age \\
-y \sim Bern(p_{pass})
-\end{eqnarray}
-
-Note that we do not have a residual anymore: the randomness around the predicted values is no longer modelled using a residual $e$ that is normally distributed, but is now modelled by a $y$-variable with a Bernoulli distribution.
-Also note the strange relationship between the probability parameter $p_{pass}$ for the Bernoulli distribition, and the dependent variable for the linear equation $b_0+b_1 age$. The linear model predicts the logoddsratio, but for the Bernoulli distribution, we use the probability. But it turns out that this model is very flexible and useful in many real-life problems. This model is often called a \textit{logit} model: one often writes that the \textit{logit of the probability} is predicted by a linear model.
-
-\begin{eqnarray}
-logit(p_{pass}) = b_0 + b_1 age \\
-y \sim Bern(p_{pass})
-\end{eqnarray}
-
-In essence, the logit function transforms a $p$-value into a logoddsratio:
-
-\begin{equation}
-logit(p)= ln( \frac{p}{1-p} ) \nonumber
-\end{equation}
-
-So what does it look like, a linear model for logoddsratios (or logits of probabilities)?
-
-In Figure \ref{fig:gen_9} we show a hypothetical example of a linear model for the logit of probabilities of passing an exam. These logits or logoddsratios are predicted by age using a straight, linear regression line:
-
-
-<<gen_9, fig.height=4, echo=FALSE, fig.align='center', message=F,fig.cap='Example of a linear model for the logit of probabilities of passing an exam.'>>=
-age <- seq(0,200, 1)
-logoddsratio <- predict.glm(outglm, newdata=data.frame(age))
-data <- data.frame(age, logoddsratio)
-data %>% ggplot(aes(x=age, y=logoddsratio)) + geom_line() + ylab("logit(p)=logarithm of the odds ratio") + xlab("age in months") +
-        geom_label(  aes(x=125, y=0.2), col='black', label='intercept: -3.8, slope=0.05', show.legend = F)
-@
-
-When we take all these predicted logoddsratios and convert them back to probabilities, we obtain the plot in Figure \ref{fig:gen_10}. Note the change in the scale of the vertical axis, the rest of the plot is the same.
-
-<<gen_10, fig.height=4, echo=FALSE, fig.align='center', message=F,fig.cap='Example with logoddsratios transformed into probabilties (vertical axis).'>>=
-probs <- exp(logoddsratio)/(1+exp(logoddsratio))
-data <- data.frame(age, probs)
-data %>% ggplot(aes(x=age, y=probs)) + geom_line() + ylab("probability of passing the exam") + xlab("age in months")  
-@
-
-Here again we see the S-shape relationship between probabilities and the logoddsratios. Here we see that our model predicts probabilities close to 0 for very young ages, and probabilities close to 1 for very old ages. There is a clear positive effect of age on the probability of passing the exam. But note that the relationship is not linear on the scale of the probabilities: it is linear on the scale of the logit of the probabilities see Figure \ref{gen_9}!
-
-The curvilinear shape we see in Figure \ref{fig:gen_10} is called a \textit{logistic} curve. It is based on the logistic function: here $p$ is a logistic function of age:
-
-
-\begin{equation}
-p = logistic(b_0 + b_1 age) = \frac{exp(b_0 + b_1 age)}{1+exp(b_0+ b_1 age)} \nonumber
-\end{equation}
-
-If we go back to our data on the third-grade children that either passed or failed the exam, we see that this curve gives a description of our data, see Figure \ref{fig:gen_11}. The model predicts that around the age of 75 months, the probability of passing the exam is around 0.50. We indeed see that some children pass the exam (score=1) and some don't (score=0). On the basis of this analysis there seems to be a positive relationship between age in third-degree children and the probability of passing the exam, at least in this sample. 
-
-<<gen_11, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Transformed regression line and raw data points.'>>=
-data %>% ggplot( aes(x=age, y=probs)) + geom_line() + ylab("probability of passing the exam") + xlab("age in months")  +
-  geom_point(data=data.exam, aes(x=age, y=score)) +xlim(c(0, 200))
-@
-
-What we have done here is a \textit{logistic regression} of passing the exam on age. It is called logistic because the curve in Figure \ref{fig:gen_11} has a logistic shape. Logistic regression is one specific form of a \textit{generalized linear model}. Here we have applied a generalized linear model with a so-called \textit{logit link function}: instead of modelling dependent variable $y$ directly, we have modelled \textit{the logit of the probabilities of obtaining a $y$-value of 1}. There are many other link functions possible. One of them we will see in the section on generalized linear models for count data. But first, let's see how logistic regression can be performed in SPSS, and how we should interpret the output.
-
-\section{Logistic regression in SPSS}
-
-Imagine a data set on travellers from Amsterdam to Paris. From 1000 travellers, randomly sampled in 2017, we know whether they took the train to Paris, or whether they used other means of transportation. Of these travellers, we know their age, sex, yearly income, and whether they are travelling for business or not.
-
-Part of the data are displayed in Table \ref{tab:gen_12}. A score of 1 on the variable \textbf{train} means they took the train, a score of 0 means they did not.
-
-
-
-<<gen_12, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
-set.seed(123)
-age <- runif(1000, 17, 80)
-sex_male <- rbinom(1000, 1, 0.6)
-income <- exp (rnorm(1000, log(30000), log(4))) %>% round(0) 
-business <- rbinom(1000, 1, 0.6)
-logodds = 65.5  - 0.006 *income 
-probs = exp(logodds) /(1+exp(logodds))
-train <- rbinom(1000, 1, probs)
-data.train <- data.frame(train, age, sex_male, income, business )
-data.train %>% 
-        head() %>% 
-        xtable(caption="Taking the train to Paris data.", label="tab:gen_12") %>%
-        print(include.rownames=F, caption.placement = "top")
-# glm(train~ income + sex_male +sex_male*income, data=data.train, family="binomial") %>% summary()
-out.train <- glm(train~ income , data=data.train, family="binomial") 
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(data.train,
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sav',
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sps',
-              package = c("SPSS"))
-@
-
-
-Suppose we want to know what kind of people are more likely to take the train to Paris. We can use a logistic regression analysis to predict whether people take the train or not, on the basis of their age, sex, income, and main purpose of the trip. 
-
-Let's first see whether income predicts the probability of taking the train. The syntax for such a model is
-
-
-
-\begin{verbatim}
-GENLIN train (REFERENCE=FIRST) WITH income
-  /MODEL income 
- DISTRIBUTION=BINOMIAL LINK=LOGIT
-  /PRINT CPS DESCRIPTIVES   SOLUTION.
-\end{verbatim}
-
-
-Note the similary with the GLM and MIXED procedures: start with the dependent variable (\textbf{train} in this case) and then after the WITH word the variables that you'd like to treat quantitatively, here \textbf{income}. Under the MODEL subcommand we specify the model, here only a main effect of \textbf{income}. But further we have to specify that we want to use the Bernoulli distribution and a logit link function. So LINK=LOGIT, but why a binomial distribution? Well, a Bernoulli distribution (one coin flip) is only a special case of the Binomial distribution (the distribution of several coin flips). So here we use a binomial distribution for one coin flip, which is equivalent to a Bernoulli distribution. The last line indicates what type of output we want to see: case processing statistics, descriptives and the solution in terms of parameter estimates.
-
-One very important part of the syntax is the (REFERENCE = FIRST) statement for the dependent variable. The default SPSS syntax uses (REFERENCE = LAST), so that's what you get when you do not specify this part. (REFERENCE = LAST) means that the reference category of the train variable is the last value. Since there are only two values, 0 an 1, the last value is equal to 1. In that case, SPSS will derive a model that predicts the logoddsratios for NOT taking the train, since it estimates the effect of income on the dependent variable \textit{relative to taking the train}. In our case, it makes more sense to derive a model for the logoddsratios of taking the train. We want to predict logodddsratios for taking the train, so we need to specify that our first value, 0, is our reference category: (REFERENCE = FIRST).
-
-
-In Figure \ref{fig:train1} we see the parameter estimates from this generalized linear model run on the train data. 
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train1.pdf}
-    \end{center}
-     \caption{SPSS output of a generalized linear model for predicting taking the train from income.}
-    \label{fig:train1}
-\end{figure}
-
-
-The parameter estimates table looks very much like that of the ordinary linear model and the linear mixed model. The only difference is that we no longer see $t$-statistics, but Wald Chi-Square statistics. This is because with logistic models, the ratio $B/SE$ does not have a $t$-distribution. In ordinary linear models, the ratio $B/SE$ has a $t$-distribution because in linear models, the variance of the residuals, $\sigma^2_e$, has to be estimated. If the residual variance was known, $B/SE$ would have a standard normal distribution. In logistic models, there is no $\sigma^2_e$ that needs to be estimated, so the ratio $B/SE$ has a standard normal distribution\footnote{This is the reason why you see (scale) equal to constant 1 in the SPSS output, right under the parameter for \textbf{income}. In the logistic model, the variance (scale) is fixed (assumed known).}. One could therefore calculate a $Z$-statistic $Z=B/SE$ and see whether that value is smaller than 1.96 or larger than 1.96, if you want to test with a Type I error rate of 0.05. SPSS has chosen to not compute such a $Z$-statisic, but to compute a chi-square statistic $X^2= B^2/SE^2$. This chi-square or $X^2$-statistic has a $\chi^2$ distribution with 1 degree of freedom. Both approaches, computing $Z$ or $X^2$, are equivalent.
-\\
-\\
-The interpretation of the $B$-parameters is very similar to other linear models. Note that we have the following equation for the logistic model:
-
-
-
-\begin{eqnarray}
-logit(p_{train}) = b_0 + b_1 income \nonumber \\
-train \sim Bern(p_{train})
-\end{eqnarray}
-
-If we fill in the values from the SPSS output, we get
-
-
-\begin{eqnarray}
-logit(p_{train}) = 90.017 - 0.008 \times income \nonumber \\
-train \sim Bern(p_{train})
-\end{eqnarray}
-
-
-We can interpret these results by making some predictions. Imagine a traveller with a yearly income of 11,000 Euros. Then the predicted logoddsratio equals $90.017 - 0.008 \times 11000= \Sexpr{90.017 - 0.008 * 11000}$. When we transform this back to a probability, we get $\frac{exp(\Sexpr{90.017 - 0.008 * 11000}) } {1+ exp(\Sexpr{90.017 - 0.008 * 11000}) }= \Sexpr{round(predict(out.train, newdata=data.frame(income=11000), type="response"), 3) }  $. So this model predicts that for people with a yearly income of 11,000, about 52\% of them take the train (if they travel at all, that is!).
-
-Now imagine a traveller with a yearly income of 100,000. Then the predicted logoddsratio equals $6.752 - 0.001 \times 100000= \Sexpr{90.017 - 0.008 * 100000}$. When we transform this back to a probability, we get $\frac{exp(\Sexpr{90.017 - 0.008 * 100000}) } {1+ exp(\Sexpr{90.017 - 0.008 * 100000}) }= \Sexpr{round(predict(out.train, newdata=data.frame(income=100000), type="response"), 3)}$. So this model predicts that for people with a yearly income of 100,000, close to none of them take the train.
-Going from 11,000 to 100,000 is a big difference. But the change in probabilities is also huge: it goes down from 0.52 to 0.
-
-We found a difference in this sample of travellers, but is there also a difference in the entire population of travellers between Amsterdam and Paris? The SPSS table shows us that the effect of income, $- 0.008$, is statistically significant, $X^2(1)=7.541, p<0.01$. We can therefore reject the null-hypothesis that income is not related to whether people take the train or not.
-
-Note that similar to other linear models, the intercept can be interpreted as the predicted logoddsratio for people that have values 0 for all other variables in the model. Therefore, 90.017 means in this case that the predicted logoddsratio for people with zero income equals 90.017. This is equivalent to a probability of very close to 1.
-
-
-
-\subsection{Exercises}
-
-Using the train data, we try to predict whether people take the train or not by their purpose of their trip: business or not.
-
-
-\begin{enumerate}
-
-\item
-
-What does the SPSS syntax look like? Note the data in Table \ref{tab:gen_12}.
-
-
-\item
-Suppose the results look like those in Figure \ref{fig:train2}. What is the predicted probability of taking the train for people that travel for business? Provide the calculations.
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train2.pdf}
-    \end{center}
-     \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
-    \label{fig:train2}
-\end{figure}
-
-
-\item Suppose the results look like those in Figure \ref{fig:train2}. What is the predicted probability of taking the train for people that travel NOT for business? Provide the calculations.
-
-
-
-\item
-Suppose the results look like those in Figure \ref{fig:train3}. What is the predicted probability of taking the train for people that travel for business? Provide the calculations.
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train3.pdf}
-    \end{center}
-     \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
-    \label{fig:train3}
-\end{figure}
-
-
-\item Suppose the results look like those in Figure \ref{fig:train3}. What is the predicted probability of taking the train for people that travel NOT for business? Provide the calculations.
-
-
-\item On the basis of this SPSS output, do business travellers tend to take the train more or less often than non-business travellers? Motivate your answer.
-
-
-\item
-Suppose in SPSS output for logistic regression, you find an intercept value of 0.5 with a standard error of 0.1. There is a corresponding Wald chi-square value of $\Sexpr{0.5^2/0.1/0.1}$. Explain where this Wald chi-square value comes from.
-
-\item
-
-Suppose we have the data on coin flips in following table:
-
-<<nonparmixed_13, fig.height=4, echo=FALSE, fig.align='center'>>=
-set.seed(1234)
-ID <- seq(1:5)
-Heads <- rbinom(5, 1, 0.5)
-weight <- rchisq(5, df=3)
-type <- c("5cents", "10cents", "1Euro", "10cents","1Euro")
-data <- data.frame(ID, Heads, weight, type )
-data %>% kable()
-@
-
-If we want to predict the outcome of the coin flip, on the basis of the type of coin, should we use a linear model, a linear mixed model, or a generalized linear model? Motivate your answer.
-\\
-\\
-If we want to predict the weight of the coin, on the basis of the type of the coin, should we use a linear model, a linear mixed model, or a generalized linear model? Motivate your answer.
-
-
-\end{enumerate}
-
-
-Answers:
-\begin{enumerate}
-
-
-\item
-It could look like this (using WITH, treating the independent variable as quantitative):
-
-\begin{verbatim}
-GENLIN train (REFERENCE=FIRST) WITH business
-  /MODEL business
- DISTRIBUTION=BINOMIAL LINK=LOGIT
-  /PRINT CPS DESCRIPTIVES   SOLUTION.
-\end{verbatim}
-
-
-or like this (using BY, treating the independent variable as qualitative)
-
-\begin{verbatim}
-GENLIN train (REFERENCE=FIRST) BY business
-  /MODEL business
- DISTRIBUTION=BINOMIAL LINK=LOGIT
-  /PRINT CPS DESCRIPTIVES   SOLUTION.
-\end{verbatim}
-
-
-\item
-People that travel for business score 1 on the business variable. So the predicted logoddsratio for those people is $-1.155 - 0.050 \times 1 = -1.205$. The odds ratio is the $exp(-1.205)=\Sexpr{exp(-1.205)} $. So the odds of going by train are 0.30 to 1. This is equivalent to 3 to 10. So suppose we have 13 trips, 3 are by train and 10 are not by train. So the probability of a trip being by train equals $3/13=\Sexpr{round(3/13,2)}$.   
-
-\item
-People that travel NOT for business score 0 on the business variable. So the predicted logoddsratio for those people is $-1.155 - 0.050 \times 0 = -1.155$. The odds ratio is the $exp(-1.155)=\Sexpr{exp(-1.155)} $. So the odds of going by train are 0.32 to 1. This is equivalent to 32 to 100. So suppose we have 132 trips, 32 are by train and 100 are not by train. So the probability of a trip being by train equals $32/132=\Sexpr{round(32/132,2)}$.   
-
-\item
-
-
-\item
-
-\item
-
-
-If we want to predict the outcome of the coin flip, on the basis of the type of coin, we should use a generalized linear model, because the dependent variable is dichotomous (has only 2 values), so the residuals can never have a normal distribution. 
-\\
-\\
-If we want to predict the weight of the coin, on the basis of the type of the coin, we should use a linear model, because the dependent variable is continuous.
-
-
-\end{enumerate}
-
-
-
-
-
-\section{Linear models for count data}
-
-
-\section{Linear model as a special case of a generalized linear model}
-
-
+\Sexpr{knit_child('chapter_13.Rnw')} % generalized linear models: poisson models
 
 \end{document}

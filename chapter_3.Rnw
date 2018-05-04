@@ -1,0 +1,492 @@
+
+
+\chapter{Multivariate regression}
+
+
+\section{Explained and unexplained variance}
+
+In the previous chapter we have seen relationships between two variables: one dependent variable and one independent variable. The dependent variable we usually denote as $y$, and the indepedent variable we denote by $x$. The relationship was modelled by a linear equation: an equation with an intercept $b_0$ and a slope parameter $b_1$:
+
+
+\begin{equation}
+y = b_0 + b_1 x
+\end{equation}
+
+Further, we argued that in most cases, the relationship between $x$ and $y$ cannot be completely described by a straight line. Not all of the variation in $y$ can be explained by the variation in $x$. Therefore, we have \textit{residuals} $e$: the difference between the $y$-values that are predicted by the straight line, (denoted by $\hat{y}$), and the observed $y$-value:
+
+\begin{equation}
+e = \hat{y} - y
+\end{equation}
+
+Therefore, the relationship between $x$ and $y$ is denoted by a regression equation, where the relationship is approached by a linear equation, plus a residual part $e$:
+
+\begin{equation}
+y = b_0 + b_1 x + e
+\end{equation}
+
+The linear equation only gives us only the expected $y$-value, $\hat{y}$:
+
+
+\begin{equation}
+\hat{y} = b_0 + b_1 x
+\end{equation}
+
+
+We've also seen that the residual $e$ is assumed to have a normal distribution, with mean 0 and variance $\sigma^2$:
+
+
+\begin{equation}
+e \sim N(0,\sigma^2)
+\end{equation}
+
+Remember that linear models are used to explain (or predict) the variation in $y$: why are there both high values of $y$ and some low values? Where does the variance in $y$ come from? Well, the linear model tells us that the variation is in part explained by the variation in $x$. If $b_1$ is positive, we predict a relatively high value for $y$ for a high value of $x$, and we predict a relatively low value for $y$ if we have a low value for $x$. If $b_1$ is negative, it is of course in the opposite direction. Thus, the variance in $y$ is in part explained by the variance in $x$, and the rest of the variance can only be explained by the residuals $e$.
+
+
+
+\begin{equation}
+Var(y) = Var(\hat{y}) + Var(e) = Var(b_0 + b_1 x) + \sigma^2
+\end{equation}
+
+
+Because the residuals do not explain anything (we don't know where these residuals come from), we say that the \textit{explained} variance of $y$ is only that part of the variance that is explained by independent variable $x$: $Var(b_0 + b_1 x)$. The \textit{unexplained} variance of $y$ is the variance of the residuals, $\sigma^2$. The explained variance is often denoted by a ratio: the explained variance divided by the total variance of $y$:
+
+
+\begin{equation}
+Var_{explained} = \frac{Var(b_0+b_1 x)}{Var(y)} = \frac{Var(b_0+b_1 x)}{Var(b_0+b_1 x) + \sigma^2}
+\end{equation}
+
+From this equation we see that if the variance of the residuals is large, then the explained variance is small. If the variance of the residuals is small, the variance explained is large.
+
+
+\section{More than one predictor}
+
+In regression analysis, and in linear models in general, we try to make the explained variance as large as possible. In other words, we try to minimize the residual variance, $\sigma^2$.
+
+One way to do that is to use a second independent variable. If not all of the variance in $y$ is explained by $x$, then why not try an extra independent variable?
+
+
+Let's use an example with data on the weight of books, the size of books (area), and the volume of books. Let's try first to predict the weight of a book, $weight$, on the basis of the volume of the book, $volume$. Suppose we find the following regression equation and a value for $\sigma^2$:
+
+
+
+<<multi_1, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=F>>=
+set.seed(123456789)
+options(scipen = 999)
+
+
+# (Taken from Maindonald, 2007)
+outbooks <- lm(weight~ volume , data=allbacks)
+outbooks2 <- lm(weight~ volume + area , data=allbacks)
+
+attach(allbacks)
+
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(allbacks,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/multiple regression/books.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/multiple regression/books.sps',
+              package = c("SPSS"))
+
+# n_inhabitants <- runif(100, 1000, 1000000)
+# n_pools <- rnorm(100, 4, 200)
+# e <- rnorm(100, 0, 60000)
+# n_houses <- 10 + 0.25 * n_inhabitants + 0.001* n_pools + e
+# out <- lm(n_houses~ n_inhabitants, data.frame(n_inhabitants, n_pools, n_houses))
+# out2 <- lm(n_houses~ n_inhabitants+ n_pools, data.frame(n_inhabitants, n_pools, n_houses))
+#
+# plot(n_inhabitants, n_houses)
+# plot(n_pools, n_houses)
+# plot(n_pools, n_inhabitants)
+
+@
+
+
+\begin{eqnarray}
+weight = \Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],2)} \times  volume + e \\
+e \sim N(0, \Sexpr{round(summary(outbooks)$sigma^2,0)})
+\end{eqnarray}
+
+
+In the data set, we see that the variance of the weight, $Var(weight)$ is equal to \Sexpr{round(var(weight),0)}. Since we also know the variance of the residuals, we can solve for the variance explained by \textbf{volume}:
+
+
+\begin{eqnarray}
+Var(weight) =  \Sexpr{round(var(weight),0)}=   Var(\Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],1)} \times  volume) + \Sexpr{round(summary(outbooks)$sigma^2,0)} \nonumber\\
+Var(\Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],1)} \times  volume) = \Sexpr{round(var(weight),0)}- \Sexpr{round(summary(outbooks)$sigma^2,0)}= \Sexpr{round(var(weight),0)- round(summary(outbooks)$sigma^2,0)}\nonumber
+\end{eqnarray}
+
+So the proportion of explained variance is equal to $ \frac{\Sexpr{round(var(weight),0)- round(summary(outbooks)$sigma^2,0)}}{\Sexpr{round(var(weight),0)}}=\Sexpr{(round(var(weight),0)- round(summary(outbooks)$sigma^2,0))/round(var(weight),0)}$. This is quite a high proportion: nearly all of the variation in the number of houses per city is explained by how many inhabitants a city has.
+\\
+\\
+But let's see if we can explain even more variance if we add an extra independent variable. Suppose we know the area of each book. We expect that books with a large area weigh more. Our linear equation might look like this:
+
+
+\begin{eqnarray}
+weight = \Sexpr{round(outbooks2$coef[1],1)} + \Sexpr{round(outbooks2$coef[2],2)} \times volume + \Sexpr{round(outbooks2$coef[3],1)} \times  area + e \\
+e \sim N(0, \Sexpr{round(summary(outbooks2)$sigma^2,0)})
+\end{eqnarray}
+
+How much of the variance in weight does this equation explain? The proportion of explained variance is equal to $ \frac{\Sexpr{round(var(weight),0)- round(summary(outbooks2)$sigma^2,0)}}{\Sexpr{round(var(weight),0)}}=\Sexpr{(round(var(weight),0)- round(summary(outbooks2)$sigma^2,0))/round(var(weight),0)}$. So the proportion of explained variance has increased!
+
+Note that the variance of the residuals has decreased; this is the main reason why the proportion of explained variance has increased. By adding the extra independent variable, we can explain some of the variance that without this variable could not be explained! In summary, by adding independent variables to a regression equation, we can explain more of the variance of the dependent variable. A regression analysis with more than one independent variable we call \textit{multiple regression}. Regression with only one indendent variable is often called \textit{simple regression}.
+
+
+
+
+
+
+
+\section{R-squared}
+
+With regression analysis, we try to explain variance of the dependent variable. With multiple regression, we use more than one independent variable to try to explain this variance. In regression analysis, we use the term R-squared to refer to the proportion of explained variance, usually with the symbol $R^2$. The unexplained variance is of course the variance of the residuals, $Var(e)$, usually denoted as $\sigma_e^2$. So suppose the variance of dependent variable $y$ equals 100, and the residual variance in a regression equation equals say 80, then $R^2$ or the proportion of explained variance is $(100-80)/100=0.20$.
+
+\begin{eqnarray}
+R^2 = \sigma^2_{explained}/ \sigma^2_y = (1-\sigma^2_{unexplained})/\sigma^2_y = (1-\sigma^2_e)/\sigma^2_y
+\end{eqnarray}
+
+This is the defintion of R-squared at the population level, where we know the exact values of the variances. However, regression analysis is most often based on a random sample of the population, and we don't know the values exactly, we can only try to estimate them.
+
+For $\sigma_y^2$ we take as an adjusted estimate the variance of $y$ in our sample data, Var($y$), which is calculated by
+
+
+\begin{eqnarray}
+\widehat{\sigma_y^2} =  \frac{  \Sigma (y-\bar{y})^2  }{n-1}
+\end{eqnarray}
+
+where $n$ is sample size. We divide by $n-1$ and not by $n$, because we want to estimate the variance of $y$ in the population data.
+
+For $\sigma_e^2$ we take as an adjusted estimate the variance of the residuals $e$ in our sample data, Var($e$), which is calculated by
+
+
+\begin{eqnarray}
+\widehat{\sigma_e^2} =  \frac{  \Sigma e^2  }{n-1}
+\end{eqnarray}
+
+Here we do not have to subtract the mean of the residuals, because this is 0 by definition.
+
+So our estimate for $R^2$ in the population is then
+
+
+\begin{eqnarray}
+\widehat{R^2} &=&  \frac   { \frac{  \Sigma (y-\bar{y})^2  }{n-1}- \frac{  \Sigma e^2  }{n-1}}{\frac{  \Sigma (y-\bar{y})^2  }{n-1}} \nonumber\\
+&=& \frac{ \Sigma (y-\bar{y})^2 - \Sigma e^2}{\Sigma (y-\bar{y})^2} = 1 - \frac{SSE}{SST}
+\end{eqnarray}
+
+where SST refers to the total sum of squares.
+
+As we saw previously, in a regression analysis, the intercept and slope parameters are found by minimizing the sum of squares of the residuals, $SSE$. Since the variance of the residuals is based on this sum of squares, in any regression analysis, the variance of the residuals is always as small as possible. The values of the parameters for which the $SSE$ (and by consequence the variance) is smallest, are the least squares regression parameters. And if the variance of the residuals is always minimized in a regression analysis, the explained variance is always maximized!
+
+Because in any least squares regression analysis based on a sample of data, the explained variance is always maximized, we may overestimate the variance explained in the population data. Therefore very often in regression analysis we use an \textit{adjusted R-squared} that takes this possible overestimation (\textit{inflation}) into account. The adjustment is based on the number of independent variables and sample size.
+
+The formula is
+
+
+\begin{eqnarray}
+R^2_{adj}= 1 - (1-R^2)\frac{n-1}{n-p-1} \nonumber
+\end{eqnarray}
+
+where $n$ is sample size and $p$ is the number of independent variables. For example, if $R^2$ equals 0.10 and we have a sample size of 100 and 2 independent variables, the adjusted $R^2$ is equal to $1 - (1-0.10)\frac{100-1}{100-2-1}= 1 - (0.90)\frac{99}{97}=0.08$. Thus the estimated proportion of variance explained at population level equals 0.08. Remember that the adjusted R-squared is \textit{never larger} than the unadjusted R-squared.
+
+
+
+
+\section{Multicollinearity}
+
+In general, if you add independent variables to a regression equation, the proportion explained variance, $R^2$, increases. Suppose you have the following three regression equations:
+
+\begin{eqnarray}
+weight = b_0 + b_1 \times  volume + e \\
+weight = b_0 + b_1 \times  area + e \\
+weight = b_0 + b_1 \times  volume + b_1 \times  area + e
+\end{eqnarray}
+
+If we carry out these three analyses, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared} if we only use \textbf{volume} as predictor, and an $R^2$ of \Sexpr{summary(lm(weight~ area, allbacks))$r.squared} if we only use \textbf{area} as predictor. So perhaps you'd think that if we take both \textbf{volume} and \textbf{area} as predictors in the model, we would get an $R^2$ of $\Sexpr{summary(lm(weight~ volume, allbacks))$r.squared}+\Sexpr{summary(lm(weight~ area, allbacks))$r.squared}= \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared+summary(lm(weight~ area, allbacks))$r.squared}$. However, if we carry out the multiple regression with \textbf{volume} and \textbf{area}, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume + area, allbacks))$r.squared}, which is slightly less! This is not a rounding error, but the result of the fact that there is a correlation between the volume of a book and the area of a book. Here it is a tiny correlation of $round(cor(allbacks$area, allbacks$volume),3)$, but nevertheless it affects the proportion of variance explained when you use both these variables.
+
+
+Let's look at what happens when indendent variables are strongly correlated. Table \ref{tab:multi_2} shows measurements on a breed of seals (only measurements on the first 6 seals are shown). Often, the age of an animal is gaged from its weight: we assume that heavier seals are older than lighter seals. If we carry out a simple regression analysis, we get the following equation:
+
+
+<<multi_2, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+data(cfseal)
+head(cfseal)[,c(1,2,3)] %>%
+       xtable(caption="Part of Cape Fur Seal Data.", label="tab:multi_2") %>%
+        print(include.rownames=F, caption.placement = "top")
+out1 <- lm(age~ weight , data=cfseal)
+out2 <- lm(age~ heart , data=cfseal)
+out3 <- lm(age~ weight + heart , data=cfseal)
+@
+
+
+\begin{eqnarray}
+age = \Sexpr{round(out1$coef[1],1)} + \Sexpr{round(out1$coef[2],2)} \times  weight + e \\
+e \sim N(0, \Sexpr{round(summary(out1)$sigma^2,0)})
+\end{eqnarray}
+
+
+USE regression table instead of formula
+
+
+
+
+From the data we calculate the variance of age, and we find that it is \Sexpr{var(cfseal$age)}. The variance of the residuals is 200, so that the proportion of explained variance is $(\Sexpr{var(cfseal$age)}-200)/\Sexpr{var(cfseal$age)}  = \Sexpr{(var(cfseal$age)-200)/var(cfseal$age)}$.
+
+Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get:
+
+
+\begin{eqnarray}
+age = \Sexpr{round(out2$coef[1],1)} + \Sexpr{round(out2$coef[2],2)} \times  heart + e \\
+e \sim N(0, \Sexpr{round(summary(out2)$sigma^2,0)})
+\end{eqnarray}
+
+USE regression table instead of formula
+
+
+
+Here the variance of the residuals is 307, so the proportion of explained variance is $(\Sexpr{var(cfseal$age)}-370)/\Sexpr{var(cfseal$age)}  = \Sexpr{(var(cfseal$age)-370)/var(cfseal$age)}$.
+
+
+Now let's see what happens if we include both total weight and weight of the heart into the linear model. This results in the following model equation:
+
+
+\begin{eqnarray}
+age = \Sexpr{round(out3$coef[1],1)} + \Sexpr{round(out3$coef[2],2)} \times  weight  \Sexpr{round(out3$coef[3],2)} \times  heart + e \\
+e \sim N(0, \Sexpr{round(summary(out3)$sigma^2,0)})
+\end{eqnarray}
+
+
+USE regression table instead of formula
+
+
+Here we see that the regression parameter for total weight has increased from 0.82 to 0.99. At the same time, the regression parameter for the weight of the heart has decreased, has even become negative, from 0.11 to -0.03. From this equation we see that there is a strong relationship between the total weight and the age of a seal, but on top of that, for every unit increase in the weight of the heart, there is a very small decrease in the expected age. In fact, we find that the effect of \textbf{heart} is no longer significant, so we could say that on top of the effect of total weight, there is no remaining relationship between the weight of the heart and age. In other words, once we can use the total weight of a seal, there is no more information coming from the weight of the heart.
+
+This is because the total weight of a seal and the weight of its heart are strongly correlated: heavy seals have generally heavy hearts. Here the correlation turns out to be \Sexpr{cor(cfseal$weight, cfseal$heart)}, almost perfect! If you know the weight of seal, you practically know the weight of the heart. This is logical of course, since the total weight is a composite of all the weights of all the parts of the animal: the total weight variable \textit{includes} the weight of the heart.
+
+Here we have seen, that if we use multiple regression, we should be aware of how strongly the independent variables are correlated. Heavily correlated predictor variables do not add extra predictive power. Worse: they can cause problems in estimating regression parameters because it becomes hard to tell which variable is more important: if they are strongly correlated (positive or negative), than they measure almost the same thing!
+
+When two predictor variabels are perfectly correlated, either 1 or -1, estimation is no longer possible, the software stops and you get a warning. We call such a situation \textit{multiple collinearity}. But also if the correlation is close to 1 or -1, you should be very careful interpeting the regression parameters. You will then see there are very wide confidence intervals (very large standard errors). If this happens, try to find out what variables are highly correlated, and select the variable that makes most sense.
+
+In our seal data, there is a very high correlation between the variables \textbf{heart} and \textbf{weight} that results in estimation problems and very large standard errors (wide confidence intervals), so a lot of uncertaintly. The standard errors were about 3 times as large with the multiple regression than with simple regressions. It makes therefore more sense to use only the total weight variable, since when seals get older, \textit{all} their organs and limbs get larger, not just their heart.
+
+
+
+
+
+
+
+\section{Multiple regression in SPSS}
+
+Let's use the book data and run the multiple regression in SPSS. The syntax looks very similar to simple regression, except that we now specify two independent variables, volume and area, instead of one.
+
+\begin{verbatim}
+UNIANOVA weight WITH volume area
+  /DESIGN = volume area
+  /PRINT = PARAMETER R-Squared.
+\end{verbatim}
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 18cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/multiple" "regression/multi1.pdf}
+    \end{center}
+     \caption{SPSS output of a linear model (multiple regression) for predicting the weight of books.}
+    \label{fig:multi1}
+\end{figure}
+
+
+Figure \ref{fig:multi1} shows the output. There we see an intercept, a slope parameter for volume and a slope parameter for area. These numbers tell us that the expected or predicted weight of a book that has a volume of 0 and an area of 0 is 22.413. For every unit increase in volume, the predicted weight increases by 0.708, and for every unit increase in area, the predicted weight increases by 0.468.
+
+So the linear model looks like:
+
+
+\begin{eqnarray}
+weight =  22.413 + 0.708 \times volume + 0.468 \times area + e
+\end{eqnarray}
+
+Thus, the predicted weight of a book that has a volume of 10 and an area of 5, the expected weight is equal to $22.413 + 0.708 \times 10 + 0.468 \times 5 = \Sexpr{22.413 + 0.708 * 10 + 0.468 * 5}$.
+
+In the output, there is also another table, and there we see the R-squared and the Adjusted R-squared. In Figure \ref{fig:multi1} we see that the R squared is equal to 0.928. As seen earlier, this value can be computed from the sums of squares: $(SST-SSE)/SST$. From the table we see that the SST is 8502500 (corrected total sum of squares)\footnote{In SPSS, the total sum of squares reports the sum of the squared deviations from 0, whereas the \textit{corrected} total sum of squares reports the squared deviations from the mean of the dependent variable, $\bar{y}$}, and the SSE is 72372.626. If we do the math, we see that we get $(1011833-72372.626)/1011833= \Sexpr{round((1011833-72372.626)/1011833,3)}$.
+
+
+
+\section{Simpson's paradox}
+
+With muliple regression, you may uncover very surprising relationships between two variables, that can never be found using simple regression. Here's an example from Paul van der Laken\footnote{https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/}, who simulated a data set on the topic of Human Resources (HR).
+
+Assume you run a company of 1000 employees and you have asked all of them to fill out a Big Five personality survey. Per individual, you therefore have a score depicting his/her personality characteristic Neuroticism, which can run from 0 (not at all neurotic) to 7 (very neurotic). Now you are interested in the extent to which this \textbf{Neuroticism} of employees relates to their \textbf{salary} (measured in Euro’s per year).
+
+
+We carry out a simple regression, with salary as our dependent variable and Neuroticism as our independent variable. We then find the following regression equation:
+
+
+
+
+
+<<multi_3, fig.height=4, echo=FALSE, fig.align='center'>>=
+# options(scipen = 0)
+
+alpha = 0.5
+set.seed(123)
+n = 1000
+
+Neuroticism = rnorm(n)
+Performance = rnorm(n) + Neuroticism * 0.1
+
+Performance = rescale(Performance, to = c(0, 100))
+# summary(Performance)
+Neuroticism = rescale(Neuroticism, to = c(0, 7))
+# summary(Neuroticism)
+
+data <- data.frame(
+  Performance,
+  Neuroticism
+)
+
+options = c("Technical","Service")
+technical =
+  (data$Performance > mean(data$Performance) &
+     data$Neuroticism > mean(data$Neuroticism)) |
+  (data$Performance < mean(data$Performance) &
+     data$Neuroticism < mean(data$Neuroticism))
+
+data$Job[technical] <- sample(options, sum(technical), T, c(0.6, 0.2))
+data$Job[is.na(data$Job)] <- sample(options, sum(is.na(data$Job)), T, c(0.2, 0.8))
+
+# p <- data %>% ggplot(aes(Neuroticism, Performance))
+# p + geom_point(alpha = alpha) + geom_smooth(method = 'lm')
+set.seed(123)
+n = 1000
+
+Education = rbinom(n, 2, 0.5)
+Neuroticism = rnorm(n) + Education
+Salary = Education * 2 + rnorm(n) - Neuroticism * 0.3
+
+Salary = sample(10000:11000,1) + rescale(Salary, to = c(0, 100000))
+# summary(Salary)
+Neuroticism = rescale(Neuroticism, to = c(0, 7))
+# summary(Neuroticism)
+
+
+data <- data.frame(
+  Salary,
+  Neuroticism,
+  Education
+)
+
+out2 <- lm(Salary~ Neuroticism + Education, data)
+out1 <- lm(Salary~ Neuroticism , data)
+@
+
+\begin{equation}
+salary = \Sexpr{round(out1$coef[1],0)} + \Sexpr{round(out1$coef[2],0)} \times Neuroticism + e
+\end{equation}
+
+
+Figure \ref{fig:multi_4} shows the data and the regression line. From this visualizations it would look like Neuroticism relates significantly and \textit{positively} to their yearly salary: the more neurotic people earn more salary than less neurotic people.
+
+
+
+<<multi_4, fig.height=4, echo=FALSE, fig.align='center'>>=
+Education = factor(Education, labels = c("0", "1", "2"))
+data <- data.frame(
+  Salary,
+  Neuroticism,
+  Education
+)
+p <- data %>% ggplot(aes(Neuroticism, Salary))
+p + geom_point(alpha = alpha) + geom_smooth(method = 'lm', se=F)
+
+@
+
+Now we run a multiple regression analysis. We assume that one very important cause of how much people earn is their educational background. If we include both Education and Neuroticism as independent variables and run the analysis, we obtain the following regression equation:
+
+\begin{equation}
+salary = \Sexpr{round(out2$coef[1],0)}  \Sexpr{round(out2$coef[2],0)} \times Neuroticism + \Sexpr{round(out2$coef[3],0)} \times Education + e
+\end{equation}
+
+Note that we now find a \textit{negative} slope parameter for the effect of Neuroticism! This implies there is a relationship in the data where neurotic employees earn \textit{less} than their less neurotic colleagues! How can we reconcile this seeming paradox: which result should we trust: the one from the simple regression, or the one from the multiple regression?
+
+The answer is: neither. Or perhaps: both! Both analyses give us different information.
+
+Let's look at the last equation more closely. Suppose we make a prediction for a person with a low educational background (Education=0). Then the equation tells us that the expected salary of a person with neuroticism score of 0 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=0)),0)}, and of a person with a neuroticism score of 7 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=7)),0)}. So for employees with low education, the more neurotic employees earn less! If we do the same exercise for average ecudation and high education employees, we find exactly the same pattern: for each unit increase in neuroticism, the yearly salary drops by \Sexpr{round(-1*out2$coef[2],0)} Euros.
+
+
+It is true that in this company, the more neurotic persons generally earn a higher salary. But if we take into account educational background, the relationship flips around. This can be seen from Figure \ref{fig:multi_4}: looking only at the people with a low educational background (Education=0), then the more neurotic people earn less than they less neurotic colleagues with a similar educational background. And the same is true for people with an average education (Education=1) and a high education (Education=3). Only when you put all employees together in one group, you see a positive relationship between Neuroticism and salary.
+
+
+<<multi_5, fig.height=4, echo=FALSE, fig.align='center'>>=
+p +
+  geom_point(aes(col = Education), alpha = alpha) +
+  geom_smooth(aes(col = Education), method = 'lm', se=F) +
+  theme(legend.background = element_rect(fill = "transparent"),
+        legend.justification = c(0, 1),
+        legend.position = c(0, 1))
+@
+
+Simpson's paradox tells us that we should always be careful when interpreting positive and negative correlations between two variables: what might be true at the total group level, might not be true at the level of smaller subgroups. Multiple linear regression helps us investigate correlations more deeply and uncover exciting relationships between multiple variables.
+
+
+\section{Exercises}
+
+
+Two neighbours, Elsa and John, are chopping trees in the forest for their respective fireplaces. They pick their trees to chop down, based on the expected volume of wood they can get from that tree. However, Elsa and John disagree on what is the most important aspect of trees for selection. Elsa believes that the tallest tree will give the biggest volume of wood for the fireplace, but John believes that the tree with the largest girth gives the most volume of wood. Luckily there is a data set with three variables: Volume, Girth and Height.
+
+
+\begin{enumerate}
+\item What would the SPSS syntax look like to run a multiple regression, if you want to find out which predictor is most important for the volume of wood that comes from a tree?
+
+
+\begin{verbatim}
+UNIANOVA ....... WITH ........
+  /DESIGN = ........
+  /PRINT = PARAMETER R-Squared.
+\end{verbatim}
+
+
+\item Suppose you find the output in Table \ref{tab:multi_5}: what would your linear equation look like?
+
+\begin{equation}
+\dots \dots = \dots    \dots   \dots \dots \dots \dots+ e
+\end{equation}
+
+
+<<multi_6, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+data(trees)
+out <- lm(Volume~ Girth + Height, data=trees) %>%
+        xtable(caption="Regression table for predicting volume from height and girth.", label="tab:multi_5") %>%
+        print(include.rownames=T, caption.placement = "top")
+@
+
+
+
+
+\item On the basis of the output, what would be the predicted volume for a tree with a height of 10 and a girth of 5?
+
+\item On the basis of the output, what would be the predicted volume for a tree with a height of 5 and a girth of 10?
+
+\item For each unit increase of height, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+
+\item For each unit increase of girth, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+
+
+\item On the basis of the SPSS output, do you think Lisa is right in saying that height is an important predictor of volume? Explain your answer.
+
+\item On the basis of the SPSS output, do you think John is right in saying that girth is an important predictor of volume? Explain your answer.
+
+\item On the basis of the plots in Figures \ref{fig:multi_7} and \ref{fig:multi_8}, which do you think is the most reliable predictor for Volume: Height or Girth? Explain your answer.
+
+\item How large is the proportion of variance explained in volume, by girth and height?
+
+\item How would you summarize this multiple regression analysis in a research report?
+
+\end{enumerate}
+
+<<multi_7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between height and volume of a tree.' >>=
+trees %>% ggplot(aes(Height, Volume)) + geom_point()
+@
+
+<<multi_8, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between girth and volume of a tree.'>>=
+trees %>% ggplot(aes(Girth, Volume)) + geom_point()
+@
+
+
+
+
