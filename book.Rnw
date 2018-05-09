@@ -38,16 +38,16 @@ This book is intended to be of use to bachelor students in social sciences that 
 \tableofcontents
 
 
-% % \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
-% % 
-% % \chapter{Linear modelling: introduction FULYA}
-% % \section{Linear relationships}
-% % \section{Pearson correlation}
-% % \section{Simple regression with a continuous predictor}
-% % \section{Predicting the dependent variable}
-% % 
-% % 
-% % 
+\Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
+
+\chapter{Linear modelling: introduction FULYA}
+\section{Linear relationships}
+\section{Pearson correlation}
+\section{Simple regression with a continuous predictor}
+\section{Predicting the dependent variable}
+
+
+
 \Sexpr{knit_child('chapter_3.Rnw')} % multiple regression
 
 
@@ -380,9 +380,9 @@ This implies that any value within the range of $\Sexpr{qnorm(0.005)}$ standard 
 
 Thus, in our example of the 200 bottles, a sample slope of $\Sexpr{out.sample$coef[2]}$ and a standard error of $\Sexpr{se}$, the interval from $\Sexpr{out.sample$coef[2]- 2.32* se}$ to $\Sexpr{out.sample$coef[2]+ 2.32* se}$ contains reasonable values for the population mean. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between $\Sexpr{out.sample$coef[2]- 2.32* se}$ and $\Sexpr{out.sample$coef[2]+ 2.32* se}$, \textit{if we feel that 1\% is a small enough probability}.
 
-In data analysis, such an interval that contains reasonable values for the population value, if we only know the sample value, is called a \textit{confidence interval}. Here we've chosen to use $\Sexpr{qnorm(0.005)}$ standard deviations as our cut-off point, because we felt that 1\% would be a small enough probability to dismiss a population value as a reasonable candidate. Such a confidence interval based on this 1\% cut-off point is called a 99\% confidence interval, because in 99\% of the cases the population value will lie in the confidence interval.
+In data analysis, such an interval that contains reasonable values for the population value, if we only know the sample value, is called a \textit{confidence interval}. Here we've chosen to use $\Sexpr{qnorm(0.005)}$ standard deviations as our cut-off point, because we felt that 1\% would be a small enough probability to dismiss a population value as a reasonable candidate. Such a confidence interval based on this 1\% cut-off point is called a 99\% confidence interval.
 
-One often also sees 95\% confidence intervals, particularly in social and behavioural sciences. Those are intervals that contain the population value in 95\% of the cases. Because with the normal distribution, 5\% of the observations lie more than 1.96 standard deviations away from the mean, the 95\% confidence interval is constructed by subtracting/addding 1.96 standard errors from/to the sample value. Thus, in the case of our bottle sample, the 95\% confidence interval for the population slope is from $\Sexpr{out.sample$coef[2]}- 1.96* \Sexpr{se}$ to $\Sexpr{out.sample$coef[2]}+ 1.96* \Sexpr{se}$, so our population slope should be somewhere between $\Sexpr{out.sample$coef[2]- 1.96* se}$ and $\Sexpr{out.sample$coef[2]+ 1.96* se}$. Luckily, this corresponds to the truth, because we happen to know that the population slope is equal to \Sexpr{out.population$coef[2]}. In real life we don't know the population slope and of course it might happen that the true population value is not within the 95\% confidence interval, but the probability of such an error is rather low, only 5\%.
+One often also sees 95\% confidence intervals, particularly in social and behavioural sciences. Because with the normal distribution, 5\% of the observations lie more than 1.96 standard deviations away from the mean, the 95\% confidence interval is constructed by subtracting/addding 1.96 standard errors from/to the sample value. Thus, in the case of our bottle sample, the 95\% confidence interval for the population slope is from $\Sexpr{out.sample$coef[2]}- 1.96* \Sexpr{se}$ to $\Sexpr{out.sample$coef[2]}+ 1.96* \Sexpr{se}$, so reasonable values for the population slope are those values between $\Sexpr{out.sample$coef[2]- 1.96* se}$ and $\Sexpr{out.sample$coef[2]+ 1.96* se}$. Luckily, this corresponds to the truth, because we happen to know that the population slope is equal to \Sexpr{out.population$coef[2]}. In real life we don't know the population slope and of course it might happen that the true population value is not within the 95\% confidence interval. If you want to make the probability of this being the case smaller, then you can use a 99\% or even a 99.9\% or larger interval. 
 
 
 \section{Confidence intervals for smaller sample sizes}
@@ -548,7 +548,7 @@ Often data analysis is about finding an answer to the question whether there is 
 
 One common method to answer this question is to analyse a sample of data, apply a linear model, and look at the slope. However, one then knows the slope in the sample, but not the slope in the population. We have seen that the slope in the sample can be very different from the slope in the population. Suppose we find a slope of 1: does that mean there is a slope in the population or that there is no slope in the population?
 
-In inferential data analysis, one often works with two hypotheses: the null-hypothesis says that the population slope is equal to 0 and the alternative hypothesis says that there is a  slope that is different from 0. Remember that if the slope is equal to 0, that is saying that there is no linear relationship between $x$ and $y$. Therefore, the null-hypothesis states there is no linear relationship between $x$ and $y$ in the population. If there is a slope, whether positive or negative, is the same as saying there is a linear arelationship, so the alternative hypothesis states there that is a linear relationship between $x$ and $y$ in the population. The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_1$. In formula form, we have
+In inferential data analysis, one often works with two hypotheses: the null-hypothesis says that the population slope is equal to 0 and the alternative hypothesis says that there is a slope that is different from 0. Remember that if the slope is equal to 0, that is saying that there is no linear relationship between $x$ and $y$. Therefore, the null-hypothesis states there is no linear relationship between $x$ and $y$ in the population. If there is a slope, whether positive or negative, is the same as saying there is a linear arelationship, so the alternative hypothesis states there that is a linear relationship between $x$ and $y$ in the population. The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_1$. In formula form, we have
 
 
 \begin{eqnarray}
@@ -859,20 +859,20 @@ So, instead of asking research questions like Is there a linear relationship bet
 
 
 
-% \Sexpr{knit_child('chapter_5.Rnw')} % dummy variables and categorical predictors
-% \Sexpr{knit_child('chapter_6.Rnw')} % moderation
-% \Sexpr{knit_child('chapter_7.Rnw')} % assumptions
-% \Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
+\Sexpr{knit_child('chapter_5.Rnw')} % dummy variables and categorical predictors
+\Sexpr{knit_child('chapter_6.Rnw')} % moderation
+\Sexpr{knit_child('chapter_7.Rnw')} % assumptions
+\Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
 
 %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
 
-% \Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
+\Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
 \Sexpr{knit_child('chapter_10.Rnw')} % introduction linear mixed models
 \Sexpr{knit_child('chapter_11.Rnw')} % nonparametrics for within designs
 %
 
 \Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
-
+% 
 \Sexpr{knit_child('chapter_13.Rnw')} % generalized linear models: poisson models
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.10)  4 MAY 2018 10:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.10)  9 MAY 2018 10:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -188,25 +188,69 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 3.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 3.
- [1
 
-])
+Overfull \hbox (0.88959pt too wide) in paragraph at lines 6--6
+ [][] []\OT1/cmr/m/n/10 Qualitative and quan-ti-ta-tive treat-ment of vari-able
+s in data 
+ []
+
+[1
+
+] [2])
 \tf@toc=\write3
 \openout3 = `book.toc'.
 
- [2]
+ [3] [4]
 Chapter 1.
-[3
+[5
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 179--183
+Underfull \hbox (badness 10000) in paragraph at lines 95--110
 
  []
 
-[4] [5] [6] [7] [8]
+[6]
+Package color Info: Redefining color shadecolor on input line 152.
+ <figure/distr_1-1.pdf, id=35, 505.89pt x 289.08pt>
+File: figure/distr_1-1.pdf Graphic file (type pdf)
+
+<use figure/distr_1-1.pdf>
+Package pdftex.def Info: figure/distr_1-1.pdf used on input line 154.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [7]
+Package color Info: Redefining color shadecolor on input line 169.
+
+<figure/distr_2-1.pdf, id=39, 505.89pt x 289.08pt>
+File: figure/distr_2-1.pdf Graphic file (type pdf)
+ <use figure/distr_2-1.pdf>
+Package pdftex.def Info: figure/distr_2-1.pdf used on input line 171.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+Package color Info: Redefining color shadecolor on input line 187.
+
+<figure/distr_3-1.pdf, id=40, 505.89pt x 289.08pt>
+File: figure/distr_3-1.pdf Graphic file (type pdf)
+ <use figure/distr_3-1.pdf>
+Package pdftex.def Info: figure/distr_3-1.pdf used on input line 189.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+[8 <./figure/distr_1-1.pdf>] [9 <./figure/distr_2-1.pdf> <./figure/distr_3-1.pd
+f>] [10] [11] [12] [13]
+Chapter 2.
+[14
+
+]
+Chapter 3.
+[15
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 376--380
+
+ []
+
+[16] [17] [18] [19] [20]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "model/multiple" "regression/multi1.pdf, id=47, 597.23125pt
- x 845.1575pt>
+"examples" "linear" "model/multiple" "regression/multi1.pdf, id=103, 597.23125p
+t x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "model/multiple" "regression/multi1.pdf Graphic file (
 type pdf)
@@ -215,16 +259,16 @@ type pdf)
 ss" "examples" "linear" "model/multiple" "regression/multi1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "model/multiple" "regression/multi1
-.pdf used on input line 361.
+.pdf used on input line 558.
 (pdftex.def)             Requested size: 418.05902pt x 233.10394pt.
 
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 361--362
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 558--559
  [] 
  []
 
-[9 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss 
-examples linear model/multiple regression/multi1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 385--385
+[21 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
+ examples linear model/multiple regression/multi1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 582--582
 [][]\OT1/cmr/m/n/8 https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-
 hr-examples-with-r-
  []
@@ -233,208 +277,207 @@ Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ô in font cmr10!
 
-LaTeX Warning: Reference `fig:multi_4' on page 10 undefined on input line 403.
+LaTeX Warning: Reference `fig:multi_4' on page 22 undefined on input line 600.
 
-Package color Info: Redefining color shadecolor on input line 408.
-<figure/multi_4-1.pdf, id=57, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 605.
+<figure/multi_4-1.pdf, id=113, 505.89pt x 289.08pt>
 File: figure/multi_4-1.pdf Graphic file (type pdf)
  <use figure/multi_4-1.pdf>
-Package pdftex.def Info: figure/multi_4-1.pdf used on input line 410.
+Package pdftex.def Info: figure/multi_4-1.pdf used on input line 607.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[10]
+[22]
 
-LaTeX Warning: Reference `fig:multi_4' on page 11 undefined on input line 431.
+LaTeX Warning: Reference `fig:multi_4' on page 23 undefined on input line 628.
 
-[11 <./figure/multi_4-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 435.
+[23 <./figure/multi_4-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 632.
 
-<figure/multi_5-1.pdf, id=78, 505.89pt x 289.08pt>
+<figure/multi_5-1.pdf, id=134, 505.89pt x 289.08pt>
 File: figure/multi_5-1.pdf Graphic file (type pdf)
  <use figure/multi_5-1.pdf>
-Package pdftex.def Info: figure/multi_5-1.pdf used on input line 437.
+Package pdftex.def Info: figure/multi_5-1.pdf used on input line 634.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[12 <./figure/multi_5-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 515.
+[24 <./figure/multi_5-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 712.
 
-<figure/multi_7-1.pdf, id=91, 505.89pt x 289.08pt>
+<figure/multi_7-1.pdf, id=147, 505.89pt x 289.08pt>
 File: figure/multi_7-1.pdf Graphic file (type pdf)
  <use figure/multi_7-1.pdf>
-Package pdftex.def Info: figure/multi_7-1.pdf used on input line 517.
+Package pdftex.def Info: figure/multi_7-1.pdf used on input line 714.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 528.
+Package color Info: Redefining color shadecolor on input line 725.
 
-<figure/multi_8-1.pdf, id=92, 505.89pt x 289.08pt>
+<figure/multi_8-1.pdf, id=148, 505.89pt x 289.08pt>
 File: figure/multi_8-1.pdf Graphic file (type pdf)
  <use figure/multi_8-1.pdf>
-Package pdftex.def Info: figure/multi_8-1.pdf used on input line 530.
+Package pdftex.def Info: figure/multi_8-1.pdf used on input line 727.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[13] [14 <./figure/multi_7-1.pdf> <./figure/multi_8-1.pdf>]
-Chapter 2.
-Package color Info: Redefining color shadecolor on input line 550.
-<figure/inf_0-1.pdf, id=109, 505.89pt x 289.08pt>
+[25] [26 <./figure/multi_7-1.pdf> <./figure/multi_8-1.pdf>]
+Chapter 4.
+Package color Info: Redefining color shadecolor on input line 747.
+<figure/inf_0-1.pdf, id=165, 505.89pt x 289.08pt>
 File: figure/inf_0-1.pdf Graphic file (type pdf)
  <use figure/inf_0-1.pdf>
-Package pdftex.def Info: figure/inf_0-1.pdf used on input line 552.
+Package pdftex.def Info: figure/inf_0-1.pdf used on input line 749.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[15
+[27
 
 ]
-Package color Info: Redefining color shadecolor on input line 576.
- <figure/inf_1-1.pdf, id=113, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 773.
+ <figure/inf_1-1.pdf, id=169, 505.89pt x 289.08pt>
 File: figure/inf_1-1.pdf Graphic file (type pdf)
 
 <use figure/inf_1-1.pdf>
-Package pdftex.def Info: figure/inf_1-1.pdf used on input line 578.
+Package pdftex.def Info: figure/inf_1-1.pdf used on input line 775.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [16 <./figure/inf_0-1.pdf>] [17 <./figure/inf_1-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 618.
- <figure/inf_3-1.pdf, id=131, 505.89pt x 289.08pt>
+ [28 <./figure/inf_0-1.pdf>] [29 <./figure/inf_1-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 815.
+ <figure/inf_3-1.pdf, id=188, 505.89pt x 289.08pt>
 File: figure/inf_3-1.pdf Graphic file (type pdf)
  <use figure/inf_3-1.pdf>
-Package pdftex.def Info: figure/inf_3-1.pdf used on input line 620.
+Package pdftex.def Info: figure/inf_3-1.pdf used on input line 817.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 636.
+Package color Info: Redefining color shadecolor on input line 833.
 
-<figure/inf_5-1.pdf, id=132, 505.89pt x 289.08pt>
+<figure/inf_5-1.pdf, id=189, 505.89pt x 289.08pt>
 File: figure/inf_5-1.pdf Graphic file (type pdf)
  <use figure/inf_5-1.pdf>
-Package pdftex.def Info: figure/inf_5-1.pdf used on input line 638.
+Package pdftex.def Info: figure/inf_5-1.pdf used on input line 835.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[18 <./figure/inf_3-1.pdf>] [19 <./figure/inf_5-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 685.
+[30 <./figure/inf_3-1.pdf>] [31 <./figure/inf_5-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 882.
 
-<figure/inf_7-1.pdf, id=149, 505.89pt x 289.08pt>
+<figure/inf_7-1.pdf, id=206, 505.89pt x 289.08pt>
 File: figure/inf_7-1.pdf Graphic file (type pdf)
  <use figure/inf_7-1.pdf>
-Package pdftex.def Info: figure/inf_7-1.pdf used on input line 687.
+Package pdftex.def Info: figure/inf_7-1.pdf used on input line 884.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[20 <./figure/inf_7-1.pdf>]
+[32 <./figure/inf_7-1.pdf>]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 733.
-Package color Info: Redefining color shadecolor on input line 740.
- <figure/inf_8-1.pdf, id=158, 505.89pt x 289.08pt>
+(Font)              <14.4> on input line 930.
+Package color Info: Redefining color shadecolor on input line 937.
+ <figure/inf_8-1.pdf, id=215, 505.89pt x 289.08pt>
 File: figure/inf_8-1.pdf Graphic file (type pdf)
 
 <use figure/inf_8-1.pdf>
-Package pdftex.def Info: figure/inf_8-1.pdf used on input line 742.
+Package pdftex.def Info: figure/inf_8-1.pdf used on input line 939.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [21]
-Package color Info: Redefining color shadecolor on input line 765.
+ [33]
+Package color Info: Redefining color shadecolor on input line 962.
 
-<figure/inf_9-1.pdf, id=163, 505.89pt x 289.08pt>
+<figure/inf_9-1.pdf, id=220, 505.89pt x 289.08pt>
 File: figure/inf_9-1.pdf Graphic file (type pdf)
  <use figure/inf_9-1.pdf>
-Package pdftex.def Info: figure/inf_9-1.pdf used on input line 767.
+Package pdftex.def Info: figure/inf_9-1.pdf used on input line 964.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[22 <./figure/inf_8-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 812.
- <figure/inf_9b-1.pdf, id=172, 505.89pt x 289.08pt>
+[34 <./figure/inf_8-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1009.
+ <figure/inf_9b-1.pdf, id=229, 505.89pt x 289.08pt>
 File: figure/inf_9b-1.pdf Graphic file (type pdf)
 
 <use figure/inf_9b-1.pdf>
-Package pdftex.def Info: figure/inf_9b-1.pdf used on input line 814.
+Package pdftex.def Info: figure/inf_9b-1.pdf used on input line 1011.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [23 <./figure/inf_9-1.pdf>] [24 <./figure/inf_9b-1.pdf>] [25]
+ [35 <./figure/inf_9-1.pdf>] [36 <./figure/inf_9b-1.pdf>] [37]
 
-LaTeX Warning: Reference `tab:table_inf_1' on page 26 undefined on input line 9
-22.
+LaTeX Warning: Reference `tab:table_inf_1' on page 38 undefined on input line 1
+119.
 
-[26]
+[38]
 
-LaTeX Warning: Reference `tab:table_inf_1' on page 27 undefined on input line 9
-26.
+LaTeX Warning: Reference `tab:table_inf_1' on page 39 undefined on input line 1
+123.
 
-[27]
-Package color Info: Redefining color shadecolor on input line 934.
- <figure/inf_10-1.pdf, id=200, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 1131.
+<figure/inf_10-1.pdf, id=253, 505.89pt x 289.08pt>
 File: figure/inf_10-1.pdf Graphic file (type pdf)
-
-<use figure/inf_10-1.pdf>
-Package pdftex.def Info: figure/inf_10-1.pdf used on input line 936.
+ <use figure/inf_10-1.pdf>
+Package pdftex.def Info: figure/inf_10-1.pdf used on input line 1133.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
 
-LaTeX Warning: Reference `table_inf_1' on page 28 undefined on input line 954.
+LaTeX Warning: Reference `table_inf_1' on page 39 undefined on input line 1151.
 
-[28 <./figure/inf_10-1.pdf>]
+
+[39] [40 <./figure/inf_10-1.pdf>]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ú in font cmr10!
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ù in font cmr10!
-Package color Info: Redefining color shadecolor on input line 994.
+Package color Info: Redefining color shadecolor on input line 1191.
 
-<figure/inf_11-1.pdf, id=209, 505.89pt x 289.08pt>
+<figure/inf_11-1.pdf, id=265, 505.89pt x 289.08pt>
 File: figure/inf_11-1.pdf Graphic file (type pdf)
  <use figure/inf_11-1.pdf>
-Package pdftex.def Info: figure/inf_11-1.pdf used on input line 996.
+Package pdftex.def Info: figure/inf_11-1.pdf used on input line 1193.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 1013.
+Package color Info: Redefining color shadecolor on input line 1210.
 
-<figure/inf_12-1.pdf, id=210, 505.89pt x 289.08pt>
+<figure/inf_12-1.pdf, id=266, 505.89pt x 289.08pt>
 File: figure/inf_12-1.pdf Graphic file (type pdf)
  <use figure/inf_12-1.pdf>
-Package pdftex.def Info: figure/inf_12-1.pdf used on input line 1015.
+Package pdftex.def Info: figure/inf_12-1.pdf used on input line 1212.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[29] [30 <./figure/inf_11-1.pdf> <./figure/inf_12-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 1030.
+[41] [42 <./figure/inf_11-1.pdf> <./figure/inf_12-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1227.
 
-<figure/inf_13-1.pdf, id=228, 505.89pt x 289.08pt>
+<figure/inf_13-1.pdf, id=284, 505.89pt x 289.08pt>
 File: figure/inf_13-1.pdf Graphic file (type pdf)
  <use figure/inf_13-1.pdf>
-Package pdftex.def Info: figure/inf_13-1.pdf used on input line 1032.
+Package pdftex.def Info: figure/inf_13-1.pdf used on input line 1229.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[31 <./figure/inf_13-1.pdf>]
-Chapter 3.
+[43 <./figure/inf_13-1.pdf>]
+Chapter 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <24.88> on input line 1049.
+(Font)              <24.88> on input line 1246.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <20.74> on input line 1049.
+(Font)              <20.74> on input line 1246.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <17.28> on input line 1049.
-[32
+(Font)              <17.28> on input line 1246.
+[44
 
 ]
-Package color Info: Redefining color shadecolor on input line 1068.
- <figure/inf_14-1.pdf, id=240, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 1265.
+ <figure/inf_14-1.pdf, id=296, 505.89pt x 289.08pt>
 File: figure/inf_14-1.pdf Graphic file (type pdf)
 
 <use figure/inf_14-1.pdf>
-Package pdftex.def Info: figure/inf_14-1.pdf used on input line 1070.
+Package pdftex.def Info: figure/inf_14-1.pdf used on input line 1267.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [33 <./figure/inf_14-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 1149.
+ [45 <./figure/inf_14-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1346.
 
-<figure/inf_17-1.pdf, id=249, 505.89pt x 289.08pt>
+<figure/inf_17-1.pdf, id=305, 505.89pt x 289.08pt>
 File: figure/inf_17-1.pdf Graphic file (type pdf)
  <use figure/inf_17-1.pdf>
-Package pdftex.def Info: figure/inf_17-1.pdf used on input line 1151.
+Package pdftex.def Info: figure/inf_17-1.pdf used on input line 1348.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 1166.
+Package color Info: Redefining color shadecolor on input line 1363.
 
-<figure/inf_18-1.pdf, id=250, 505.89pt x 289.08pt>
+<figure/inf_18-1.pdf, id=306, 505.89pt x 289.08pt>
 File: figure/inf_18-1.pdf Graphic file (type pdf)
  <use figure/inf_18-1.pdf>
-Package pdftex.def Info: figure/inf_18-1.pdf used on input line 1168.
+Package pdftex.def Info: figure/inf_18-1.pdf used on input line 1365.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[34 <./figure/inf_17-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 1181.
+[46 <./figure/inf_17-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1378.
 
-<figure/inf_19-1.pdf, id=259, 505.89pt x 289.08pt>
+<figure/inf_19-1.pdf, id=315, 505.89pt x 289.08pt>
 File: figure/inf_19-1.pdf Graphic file (type pdf)
  <use figure/inf_19-1.pdf>
-Package pdftex.def Info: figure/inf_19-1.pdf used on input line 1183.
+Package pdftex.def Info: figure/inf_19-1.pdf used on input line 1380.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
@@ -443,121 +486,865 @@ Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ù in font cmr10!
 
-[35 <./figure/inf_18-1.pdf>] [36 <./figure/inf_19-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 1216.
+[47 <./figure/inf_18-1.pdf>] [48 <./figure/inf_19-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1413.
 
-<figure/inf_20-1.pdf, id=277, 505.89pt x 289.08pt>
+<figure/inf_20-1.pdf, id=334, 505.89pt x 289.08pt>
 File: figure/inf_20-1.pdf Graphic file (type pdf)
  <use figure/inf_20-1.pdf>
-Package pdftex.def Info: figure/inf_20-1.pdf used on input line 1218.
+Package pdftex.def Info: figure/inf_20-1.pdf used on input line 1415.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 1229.
+Package color Info: Redefining color shadecolor on input line 1426.
 
-<figure/inf_21-1.pdf, id=278, 505.89pt x 289.08pt>
+<figure/inf_21-1.pdf, id=335, 505.89pt x 289.08pt>
 File: figure/inf_21-1.pdf Graphic file (type pdf)
  <use figure/inf_21-1.pdf>
-Package pdftex.def Info: figure/inf_21-1.pdf used on input line 1231.
+Package pdftex.def Info: figure/inf_21-1.pdf used on input line 1428.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[37] [38 <./figure/inf_20-1.pdf> <./figure/inf_21-1.pdf>]
+[49] [50 <./figure/inf_20-1.pdf> <./figure/inf_21-1.pdf>]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ì in font cmr10!
- [39]
-Overfull \hbox (0.71616pt too wide) in paragraph at lines 1271--1271
+ [51]
+Overfull \hbox (0.71616pt too wide) in paragraph at lines 1468--1468
 []\OT1/cmr/bx/n/14.4 Relationship be-tween $\OML/cmm/m/it/14.4 p$\OT1/cmr/bx/n/
 14.4 -value and con-fi-dence
  []
 
-Package color Info: Redefining color shadecolor on input line 1278.
-<figure/inf_22-1.pdf, id=298, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 1475.
+<figure/inf_22-1.pdf, id=355, 505.89pt x 289.08pt>
 File: figure/inf_22-1.pdf Graphic file (type pdf)
  <use figure/inf_22-1.pdf>
-Package pdftex.def Info: figure/inf_22-1.pdf used on input line 1280.
+Package pdftex.def Info: figure/inf_22-1.pdf used on input line 1477.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 1292.
+Package color Info: Redefining color shadecolor on input line 1489.
 
-<figure/inf_23-1.pdf, id=299, 505.89pt x 289.08pt>
+<figure/inf_23-1.pdf, id=356, 505.89pt x 289.08pt>
 File: figure/inf_23-1.pdf Graphic file (type pdf)
  <use figure/inf_23-1.pdf>
-Package pdftex.def Info: figure/inf_23-1.pdf used on input line 1294.
+Package pdftex.def Info: figure/inf_23-1.pdf used on input line 1491.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[40 <./figure/inf_22-1.pdf>] [41 <./figure/inf_23-1.pdf>]
-Chapter 4.
+[52 <./figure/inf_22-1.pdf>] [53 <./figure/inf_23-1.pdf>]
+Chapter 6.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1348--1355
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1348--1355
-
- []
-
-[42
-
-] [43]
-Underfull \hbox (badness 10000) in paragraph at lines 1389--1393
-
- []
-
-[44]
-Underfull \hbox (badness 10000) in paragraph at lines 1421--1425
+Underfull \hbox (badness 10000) in paragraph at lines 1531--1546
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1433--1443
+Underfull \hbox (badness 10000) in paragraph at lines 1531--1546
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1433--1443
+Underfull \hbox (badness 10000) in paragraph at lines 1550--1565
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1433--1443
+Underfull \hbox (badness 10000) in paragraph at lines 1550--1565
 
  []
 
-[45]
-Underfull \hbox (badness 10000) in paragraph at lines 1449--1466
+[54
+
+]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "mixed" "linear" "model/oneway/onewayquant.png, id=377, 581.17125pt 
+x 459.7175pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "mixed" "linear" "model/oneway/onewayquant.png Graphic file (ty
+pe png)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "mixed" "linear" "model/oneway/onewayquant.png>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayquant.p
+ng used on input line 1594.
+(pdftex.def)             Requested size: 290.58492pt x 229.85818pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1599--1600
+
+ []
+
+[55]
+Underfull \hbox (badness 10000) in paragraph at lines 1601--1604
+
+ []
+
+[56 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
+ examples mixed linear model/oneway/onewayquant.png>]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "mixed" "linear" "model/oneway/onewayqual.png, id=386, 585.18625pt x
+ 422.57875pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "mixed" "linear" "model/oneway/onewayqual.png Graphic file (typ
+e png)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "mixed" "linear" "model/oneway/onewayqual.png>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayqual.pn
+g used on input line 1624.
+(pdftex.def)             Requested size: 292.5924pt x 211.28885pt.
+ [57 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples mixed linear model/oneway/onewayqual.png>] [58]
+Chapter 7.
+
+Overfull \hbox (7.46463pt too wide) in alignment at lines 1676--1679
+ [][][] []
+ []
+
+[59
+
+]
+
+LaTeX Warning: Reference `fig:summary_plot0' on page 60 undefined on input line
+ 1681.
+
+Package color Info: Redefining color shadecolor on input line 1685.
+<figure/summary_plot0-1.pdf, id=398, 505.89pt x 361.35pt>
+File: figure/summary_plot0-1.pdf Graphic file (type pdf)
+
+<use figure/summary_plot0-1.pdf>
+Package pdftex.def Info: figure/summary_plot0-1.pdf used on input line 1686.
+(pdftex.def)             Requested size: 345.0pt x 246.43153pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 1686--1687
+[][] 
+ []
+
+[60 <./figure/summary_plot0-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1731--1735
+
+ []
+
+[61]
+Package color Info: Redefining color shadecolor on input line 1764.
+ <figure/summary_plot-1.pdf, id=410, 505.89pt x 361.35pt>
+File: figure/summary_plot-1.pdf Graphic file (type pdf)
+
+<use figure/summary_plot-1.pdf>
+Package pdftex.def Info: figure/summary_plot-1.pdf used on input line 1765.
+(pdftex.def)             Requested size: 345.0pt x 246.43153pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 1765--1766
+[][] 
+ []
+
+[62 <./figure/summary_plot-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 1828.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1449--1466
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1449--1466
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1449--1466
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
 
  []
 
-[46]
-Package color Info: Redefining color shadecolor on input line 1469.
 
-Overfull \hbox (10.22272pt too wide) in paragraph at lines 1516--1517
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1806--1829
+
+ []
+
+[63] <figure/summary_plot1-1.pdf, id=422, 505.89pt x 289.08pt>
+File: figure/summary_plot1-1.pdf Graphic file (type pdf)
+
+<use figure/summary_plot1-1.pdf>
+Package pdftex.def Info: figure/summary_plot1-1.pdf used on input line 1830.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "mixed" "linear" "model/interaction/interactionheight.png, id=423, 6
+26.34pt x 561.09625pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "mixed" "linear" "model/interaction/interactionheight.png Graph
+ic file (type png)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "mixed" "linear" "model/interaction/interactionheight.png>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/interaction/interact
+ionheight.png used on input line 1851.
+(pdftex.def)             Requested size: 313.16922pt x 280.54744pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (46.20224pt too wide) in alignment at lines 1862--1864
+ [][][] []
+ []
+
+[64 <./figure/summary_plot1-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1884--1890
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1884--1890
+
+ []
+
+[65 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
+ examples mixed linear model/interaction/interactionheight.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1902--1904
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1906--1922
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1906--1922
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1906--1922
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1924--1940
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1924--1940
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1924--1940
+
+ []
+
+[66]
+Underfull \hbox (badness 10000) in paragraph at lines 1958--1960
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1962--1965
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1967--1969
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1971--1974
+
+ []
+
+[67]
+Underfull \hbox (badness 10000) in paragraph at lines 1975--1977
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2002--2004
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2026
+
+ []
+
+[68] [69]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "mixed" "linear" "model/interaction/interactionheight3groups.png, id
+=449, 620.3175pt x 697.60625pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "mixed" "linear" "model/interaction/interactionheight3groups.pn
+g Graphic file (type png)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "mixed" "linear" "model/interaction/interactionheight3groups.png
+>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/interaction/interact
+ionheight3groups.png used on input line 2046.
+(pdftex.def)             Requested size: 310.15799pt x 348.80226pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 2050--2052
+
+ []
+
+[70 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
+ examples mixed linear model/interaction/interactionheight3groups.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Overfull \hbox (75.11076pt too wide) in paragraph at lines 2055--2077
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2055--2077
+
+ []
+
+[71]
+Underfull \hbox (badness 10000) in paragraph at lines 2090--2091
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2091--2092
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2092--2093
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2093--2094
+
+ []
+
+[72]
+Chapter 8.
+Package color Info: Redefining color shadecolor on input line 2134.
+<figure/fig14-1.pdf, id=461, 505.89pt x 289.08pt>
+File: figure/fig14-1.pdf Graphic file (type pdf)
+ <use figure/fig14-1.pdf>
+Package pdftex.def Info: figure/fig14-1.pdf used on input line 2136.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+[73
+
+]
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## lm(formula = height ~ age + country + age * country, data
+ = data)[] 
+ []
+
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ##                        Estimate Std. Error t value       
+     Pr(>|t|)[] 
+ []
+
+
+Overfull \hbox (59.24648pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## (Intercept)           102.57196    0.53708 190.981 <0.000
+0000000000002 ***[] 
+ []
+
+
+Overfull \hbox (59.24648pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## age                     5.02598    0.06686  75.168 <0.000
+0000000000002 ***[] 
+ []
+
+
+Overfull \hbox (48.74657pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## countryVietnamese      -1.57419    0.75954  -2.073       
+       0.0409 *[] 
+ []
+
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## age:countryVietnamese  -0.01771    0.09456  -0.187       
+       0.8518[] 
+ []
+
+
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 2162--2162
+[]\OT1/cmtt/m/n/10 ## F-statistic:  3779 on 3 and 96 DF,  p-value: < 0.00000000
+000000022[] 
+ []
+
+Package color Info: Redefining color shadecolor on input line 2169.
+<figure/fig141-1.pdf, id=465, 505.89pt x 289.08pt>
+File: figure/fig141-1.pdf Graphic file (type pdf)
+ <use figure/fig141-1.pdf>
+Package pdftex.def Info: figure/fig141-1.pdf used on input line 2171.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+[74 <./figure/fig14-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 2191.
+
+<figure/fig18888-1.pdf, id=474, 505.89pt x 289.08pt>
+File: figure/fig18888-1.pdf Graphic file (type pdf)
+
+<use figure/fig18888-1.pdf>
+Package pdftex.def Info: figure/fig18888-1.pdf used on input line 2193.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [75 <./figure/fig141-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 2205.
+
+<figure/fig1413-1.pdf, id=483, 505.89pt x 289.08pt>
+File: figure/fig1413-1.pdf Graphic file (type pdf)
+ <use figure/fig1413-1.pdf>
+Package pdftex.def Info: figure/fig1413-1.pdf used on input line 2207.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+Package color Info: Redefining color shadecolor on input line 2219.
+
+<figure/fig1415-1.pdf, id=484, 505.89pt x 289.08pt>
+File: figure/fig1415-1.pdf Graphic file (type pdf)
+ <use figure/fig1415-1.pdf>
+Package pdftex.def Info: figure/fig1415-1.pdf used on input line 2221.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+<figure/fig1415-2.pdf, id=485, 505.89pt x 289.08pt> [76 <./figure/fig18888-1.pd
+f> <./figure/fig1413-1.pdf>]
+File: figure/fig1415-2.pdf Graphic file (type pdf)
+ <use figure/fig1415-2.pdf>
+Package pdftex.def Info: figure/fig1415-2.pdf used on input line 2228.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [77 <./figure/fig1415-1.pdf> <./figure/fig1415-2.pdf>]
+Package color Info: Redefining color shadecolor on input line 2266.
+
+<figure/nonpar1-1.pdf, id=514, 505.89pt x 289.08pt>
+File: figure/nonpar1-1.pdf Graphic file (type pdf)
+ <use figure/nonpar1-1.pdf>
+Package pdftex.def Info: figure/nonpar1-1.pdf used on input line 2268.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+[78]
+Package color Info: Redefining color shadecolor on input line 2284.
+ <figure/nonpar2-1.pdf, id=518, 505.89pt x 289.08pt>
+File: figure/nonpar2-1.pdf Graphic file (type pdf)
+
+<use figure/nonpar2-1.pdf>
+Package pdftex.def Info: figure/nonpar2-1.pdf used on input line 2286.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [79 <./figure/nonpar1-1.pdf> <./figure/nonpar2-1.pdf>]
+Chapter 9.
+
+Underfull \hbox (badness 10000) in paragraph at lines 2317--2330
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2317--2330
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2317--2330
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2317--2330
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2331--2337
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2331--2337
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2331--2337
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2338--2351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2338--2351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2338--2351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2338--2351
+
+ []
+
+[80
+
+]
+Package color Info: Redefining color shadecolor on input line 2354.
+ <figure/fig1416-1.pdf, id=535, 505.89pt x 289.08pt>
+File: figure/fig1416-1.pdf Graphic file (type pdf)
+
+<use figure/fig1416-1.pdf>
+Package pdftex.def Info: figure/fig1416-1.pdf used on input line 2356.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "linear" "model/planned" "comparisons/contrast1.pdf, id=536, 597.231
+25pt x 845.1575pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf Graphic fil
+e (type pdf)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/contra
+st1.pdf used on input line 2375.
+(pdftex.def)             Requested size: 537.50316pt x 709.42024pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (6.83351pt too wide) in paragraph at lines 2379--2380
+\OT1/cmr/m/n/10 three coun-tries have the same av-er-age height is re-jected, $
+\OML/cmm/m/it/10 F\OT1/cmr/m/n/10 (2\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 147) = 6
+\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 14\OML/cmm/m/it/10 ; MSE \OT1/cmr/m/n/10 =
+ []
+
+[81 <./figure/fig1416-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 2381--2396
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2381--2396
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2381--2396
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2381--2396
+
+ []
+
+[82 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
+ examples linear model/planned comparisons/contrast1.pdf>]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "linear" "model/planned" "comparisons/simplettest.png, id=555, 612.2
+875pt x 562.1pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "linear" "model/planned" "comparisons/simplettest.png Graphic f
+ile (type png)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "linear" "model/planned" "comparisons/simplettest.png>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/simple
+ttest.png used on input line 2412.
+(pdftex.def)             Requested size: 244.91066pt x 224.83601pt.
+ [83 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear model/planned comparisons/simplettest.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 2422--2431
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2422--2431
+
+ []
+
+[84] [85] [86] [87]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "linear" "model/posthoc" "comparisons/Ftest.pdf, id=573, 597.23125pt
+ x 845.1575pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "linear" "model/posthoc" "comparisons/Ftest.pdf Graphic file (t
+ype pdf)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "linear" "model/posthoc" "comparisons/Ftest.pdf>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Ftest.
+pdf used on input line 2544.
+(pdftex.def)             Requested size: 477.78564pt x 129.83328pt.
+ [88 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear model/posthoc comparisons/Ftest.pdf>]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "linear" "model/posthoc" "comparisons/Posthoctest.pdf, id=584, 597.2
+3125pt x 845.1575pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest.pdf Graphic f
+ile (type pdf)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest.pdf>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Postho
+ctest.pdf used on input line 2565.
+(pdftex.def)             Requested size: 477.78564pt x 175.35774pt.
+ [89 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear model/posthoc comparisons/Posthoctest.pdf>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 2588
+.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 2588.
+
+ [90]
+Underfull \hbox (badness 10000) in paragraph at lines 2652--2670
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2652--2670
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2652--2670
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2652--2670
+
+ []
+
+[91] [92]
+Chapter 10.
+Package color Info: Redefining color shadecolor on input line 2688.
+[93
+
+]
+Package color Info: Redefining color shadecolor on input line 2732.
+ <figure/fig101-1.pdf, id=608, 505.89pt x 289.08pt>
+File: figure/fig101-1.pdf Graphic file (type pdf)
+
+<use figure/fig101-1.pdf>
+Package pdftex.def Info: figure/fig101-1.pdf used on input line 2734.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+Package color Info: Redefining color shadecolor on input line 2745.
+ <figure/fig1114-1.pdf, id=609, 505.89pt x 289.08pt>
+File: figure/fig1114-1.pdf Graphic file (type pdf)
+
+<use figure/fig1114-1.pdf>
+Package pdftex.def Info: figure/fig1114-1.pdf used on input line 2747.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [94 <./figure/fig101-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 2763.
+Package color Info: Redefining color shadecolor on input line 2806.
+
+<figure/fig1121-1.pdf, id=618, 505.89pt x 289.08pt>
+File: figure/fig1121-1.pdf Graphic file (type pdf)
+ <use figure/fig1121-1.pdf>
+Package pdftex.def Info: figure/fig1121-1.pdf used on input line 2808.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+
+[95 <./figure/fig1114-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 2823.
+
+Overfull \hbox (21.0268pt too wide) in paragraph at lines 2826--2826
+[]\OT1/cmtt/m/it/10 ## `stat[]bin()` using `bins = 30`. Pick better value with 
+`binwidth`.[] 
+ []
+
+<figure/table1201-1.pdf, id=628, 505.89pt x 289.08pt>
+File: figure/table1201-1.pdf Graphic file (type pdf)
+
+<use figure/table1201-1.pdf>
+Package pdftex.def Info: figure/table1201-1.pdf used on input line 2828.
+(pdftex.def)             Requested size: 345.0pt x 197.14522pt.
+ [96 <./figure/fig1121-1.pdf> <./figure/table1201-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 2848.
+Package color Info: Redefining color shadecolor on input line 2884.
+ [97]
+Package color Info: Redefining color shadecolor on input line 2917.
+ [98]
+Package color Info: Redefining color shadecolor on input line 2982.
+Package color Info: Redefining color shadecolor on input line 3015.
+ [99] [100]
+Underfull \hbox (badness 10000) in paragraph at lines 3076--3105
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3076--3105
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3076--3105
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3076--3105
+
+ []
+
+[101]
+Overfull \hbox (22.4968pt too wide) in paragraph at lines 3109--3109
+[]  \OT1/cmtt/m/n/10 /INDEPENDENT TEST (size) GROUP (group) KRUSKAL_WALLIS(COMP
+ARE=NONE).[] 
+ []
+
+[102]
+Chapter 11.
+
+Underfull \hbox (badness 10000) in paragraph at lines 3130--3137
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3130--3137
+
+ []
+
+[103
+
+] [104]
+Underfull \hbox (badness 10000) in paragraph at lines 3171--3175
+
+ []
+
+[105]
+Underfull \hbox (badness 10000) in paragraph at lines 3203--3207
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3215--3225
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3215--3225
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3215--3225
+
+ []
+
+[106]
+Underfull \hbox (badness 10000) in paragraph at lines 3231--3248
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3231--3248
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3231--3248
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3231--3248
+
+ []
+
+[107]
+Package color Info: Redefining color shadecolor on input line 3251.
+
+Overfull \hbox (10.22272pt too wide) in paragraph at lines 3298--3299
 []\OT1/cmr/m/n/10 Here we ac-knowl-edge that there is re-ally only one de-pen-d
 ent mea-sure: headache
  []
 
-[47]
-Underfull \hbox (badness 10000) in paragraph at lines 1525--1529
+[108]
+Underfull \hbox (badness 10000) in paragraph at lines 3307--3311
 
  []
 
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/prepost/prepost.pdf, id=337, 597.23125pt x 8
+"examples" "linear" "mixed" "model/prepost/prepost.pdf, id=682, 597.23125pt x 8
 45.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/prepost/prepost.pdf Graphic file (type 
@@ -567,53 +1354,54 @@ pdf)
 ss" "examples" "linear" "mixed" "model/prepost/prepost.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepost.pdf 
-used on input line 1541.
+used on input line 3323.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 1541--1542
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3323--3324
  [] 
  []
 
-[48 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/prepost/prepost.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1551--1555
+[109 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/prepost/prepost.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 3333--3337
 
  []
 
-Package color Info: Redefining color shadecolor on input line 1567.
-<figure/resultsprepost1-1.pdf, id=346, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 3349.
+<figure/resultsprepost1-1.pdf, id=691, 505.89pt x 289.08pt>
 File: figure/resultsprepost1-1.pdf Graphic file (type pdf)
 
 <use figure/resultsprepost1-1.pdf>
-Package pdftex.def Info: figure/resultsprepost1-1.pdf used on input line 1569.
+Package pdftex.def Info: figure/resultsprepost1-1.pdf used on input line 3351.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [49]
-Package color Info: Redefining color shadecolor on input line 1585.
+ [110]
+Package color Info: Redefining color shadecolor on input line 3367.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1577--1586
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1577--1586
+Underfull \hbox (badness 10000) in paragraph at lines 3359--3368
 
  []
 
-<figure/resultsanalysisprepost2-1.pdf, id=350, 505.89pt x 289.08pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 3359--3368
+
+ []
+
+<figure/resultsanalysisprepost2-1.pdf, id=695, 505.89pt x 289.08pt>
 File: figure/resultsanalysisprepost2-1.pdf Graphic file (type pdf)
 
 <use figure/resultsanalysisprepost2-1.pdf>
 Package pdftex.def Info: figure/resultsanalysisprepost2-1.pdf used on input lin
-e 1587.
+e 3369.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1596--1600
+Underfull \hbox (badness 10000) in paragraph at lines 3378--3382
 
  []
 
-[50 <./figure/resultsprepost1-1.pdf> <./figure/resultsanalysisprepost2-1.pdf>]
+[111 <./figure/resultsprepost1-1.pdf> <./figure/resultsanalysisprepost2-1.pdf>]
+
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/prepost/prepostdepression.pdf, id=364, 597.2
+"examples" "linear" "mixed" "model/prepost/prepostdepression.pdf, id=709, 597.2
 3125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf Graphic f
@@ -623,78 +1411,70 @@ ile (type pdf)
 ss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostdepre
-ssion.pdf used on input line 1612.
+ssion.pdf used on input line 3394.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 1612--1613
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3394--3395
  [] 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 1620
-.
-(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1620.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1620--1621
+Underfull \hbox (badness 10000) in paragraph at lines 3402--3403
 
  []
 
-[51 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/prepost/prepostdepression.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1621--1622
+[112 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/prepost/prepostdepression.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 3403--3404
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1622--1623
+Underfull \hbox (badness 10000) in paragraph at lines 3404--3405
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1623--1624
+Underfull \hbox (badness 10000) in paragraph at lines 3405--3406
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1633--1634
+Underfull \hbox (badness 10000) in paragraph at lines 3415--3416
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1634--1635
+Underfull \hbox (badness 10000) in paragraph at lines 3416--3417
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1635--1636
+Underfull \hbox (badness 10000) in paragraph at lines 3417--3418
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1636--1637
+Underfull \hbox (badness 10000) in paragraph at lines 3418--3419
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1637--1638
+Underfull \hbox (badness 10000) in paragraph at lines 3419--3420
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1638--1639
+Underfull \hbox (badness 10000) in paragraph at lines 3420--3421
 
  []
 
-[52]
-Package color Info: Redefining color shadecolor on input line 1674.
-Package color Info: Redefining color shadecolor on input line 1710.
- [53]
+[113]
+Package color Info: Redefining color shadecolor on input line 3456.
+Package color Info: Redefining color shadecolor on input line 3492.
+ [114]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf, id=380, 597.2
+"examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf, id=725, 597.2
 3125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf Graphic f
@@ -704,10 +1484,10 @@ ile (type pdf)
 ss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostcreat
-ivity.pdf used on input line 1758.
+ivity.pdf used on input line 3540.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 1758--1759
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3540--3541
  [] 
  []
 
@@ -715,62 +1495,62 @@ Overfull \hbox (132.78564pt too wide) in paragraph at lines 1758--1759
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1772--1773
+Underfull \hbox (badness 10000) in paragraph at lines 3554--3555
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1773--1774
+Underfull \hbox (badness 10000) in paragraph at lines 3555--3556
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1774--1775
+Underfull \hbox (badness 10000) in paragraph at lines 3556--3557
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1775--1776
+Underfull \hbox (badness 10000) in paragraph at lines 3557--3558
 
  []
 
-[54]
-Underfull \hbox (badness 10000) in paragraph at lines 1787--1788
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1788--1790
+[115]
+Underfull \hbox (badness 10000) in paragraph at lines 3569--3570
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1790--1791
+Underfull \hbox (badness 10000) in paragraph at lines 3570--3572
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1792--1793
+Underfull \hbox (badness 10000) in paragraph at lines 3572--3573
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1794--1795
+Underfull \hbox (badness 10000) in paragraph at lines 3574--3575
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1796--1797
+Underfull \hbox (badness 10000) in paragraph at lines 3576--3577
 
  []
 
-[55 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/prepost/prepostcreativity.pdf>] [56]
-Package color Info: Redefining color shadecolor on input line 1834.
-Package color Info: Redefining color shadecolor on input line 1867.
+
+Underfull \hbox (badness 10000) in paragraph at lines 3578--3579
+
+ []
+
+[116 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/prepost/prepostcreativity.pdf>] [117]
+Package color Info: Redefining color shadecolor on input line 3616.
+Package color Info: Redefining color shadecolor on input line 3649.
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/premidpost/premidpostaspirin.pdf, id=395, 59
+"examples" "linear" "mixed" "model/premidpost/premidpostaspirin.pdf, id=740, 59
 7.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirin.pdf Graphi
@@ -780,73 +1560,73 @@ c file (type pdf)
 ss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirin.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpos
-taspirin.pdf used on input line 1911.
+taspirin.pdf used on input line 3693.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 1911--1912
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3693--3694
  [] 
  []
 
-[57]
-Underfull \hbox (badness 10000) in paragraph at lines 1927--1931
+[118]
+Underfull \hbox (badness 10000) in paragraph at lines 3709--3713
 
  []
 
-[58 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/premidpost/premidpostaspirin.pdf>]
-Package color Info: Redefining color shadecolor on input line 1934.
+[119 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/premidpost/premidpostaspirin.pdf>]
+Package color Info: Redefining color shadecolor on input line 3716.
 
-<figure/analysispremidpost3-1.pdf, id=407, 505.89pt x 289.08pt>
+<figure/analysispremidpost3-1.pdf, id=753, 505.89pt x 289.08pt>
 File: figure/analysispremidpost3-1.pdf Graphic file (type pdf)
 
 <use figure/analysispremidpost3-1.pdf>
-Package pdftex.def Info: figure/analysispremidpost3-1.pdf used on input line 19
-36.
+Package pdftex.def Info: figure/analysispremidpost3-1.pdf used on input line 37
+18.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1948--1952
+Underfull \hbox (badness 10000) in paragraph at lines 3730--3734
 
  []
 
-[59 <./figure/analysispremidpost3-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1962--1965
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1962--1965
+[120 <./figure/analysispremidpost3-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 3744--3747
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1969--1993
+Underfull \hbox (badness 10000) in paragraph at lines 3744--3747
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1969--1993
+Underfull \hbox (badness 10000) in paragraph at lines 3751--3775
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1969--1993
+Underfull \hbox (badness 10000) in paragraph at lines 3751--3775
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1995--1996
+Underfull \hbox (badness 10000) in paragraph at lines 3751--3775
 
  []
 
-[60]
-Underfull \hbox (badness 10000) in paragraph at lines 1997--1998
+
+Underfull \hbox (badness 10000) in paragraph at lines 3777--3778
+
+ []
+
+[121]
+Underfull \hbox (badness 10000) in paragraph at lines 3779--3780
 
  []
 
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
 "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.
-png, id=420, 414.54875pt x 194.7275pt>
+png, id=765, 414.54875pt x 194.7275pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correla
 tion.png Graphic file (type png)
@@ -856,30 +1636,35 @@ ss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlat
 ion.png>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "desig
-n/exercise2_correlation.png used on input line 2004.
+n/exercise2_correlation.png used on input line 3786.
 (pdftex.def)             Requested size: 207.27386pt x 97.3635pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2013--2015
+Underfull \hbox (badness 10000) in paragraph at lines 3795--3797
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2022--2023
+Underfull \hbox (badness 10000) in paragraph at lines 3804--3805
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2023--2024
+Underfull \hbox (badness 10000) in paragraph at lines 3805--3806
 
  []
 
-[61 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples mixed linear model/pre-mid-post design/exercise2_correlation.png>]
-Package color Info: Redefining color shadecolor on input line 2032.
+
+Overfull \hbox (2.02122pt too wide) in paragraph at lines 3810--3810
+[]\OT1/cmr/bx/n/14.4 Pre-mid-post in-ter-ven-tion de-sign: lin-ear ef-
+ []
+
+[122 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples mixed linear model/pre-mid-post design/exercise2_correlation.png>]
+Package color Info: Redefining color shadecolor on input line 3814.
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear.pdf, id=4
-26, 597.23125pt x 845.1575pt>
+"examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear.pdf, id=7
+70, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear.pdf 
 Graphic file (type pdf)
@@ -888,52 +1673,52 @@ Graphic file (type pdf)
 ss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpos
-taspirinlinear.pdf used on input line 2079.
+taspirinlinear.pdf used on input line 3861.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2079--2080
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3861--3862
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[62]
-Underfull \hbox (badness 10000) in paragraph at lines 2093--2100
+[123]
+Underfull \hbox (badness 10000) in paragraph at lines 3875--3882
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2093--2100
+Underfull \hbox (badness 10000) in paragraph at lines 3875--3882
 
  []
 
-Package color Info: Redefining color shadecolor on input line 2103.
-<figure/analysispremidpost5-1.pdf, id=430, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 3885.
+<figure/analysispremidpost5-1.pdf, id=774, 505.89pt x 289.08pt>
 File: figure/analysispremidpost5-1.pdf Graphic file (type pdf)
 
 <use figure/analysispremidpost5-1.pdf>
-Package pdftex.def Info: figure/analysispremidpost5-1.pdf used on input line 21
-05.
+Package pdftex.def Info: figure/analysispremidpost5-1.pdf used on input line 38
+87.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [63 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples linear mixed model/premidpost/premidpostaspirinlinear.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 2113--2117
+ [124 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sp
+ss examples linear mixed model/premidpost/premidpostaspirinlinear.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 3895--3899
 
  []
 
-Package color Info: Redefining color shadecolor on input line 2120.
-<figure/analysispremidpost6-1.pdf, id=439, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 3902.
+<figure/analysispremidpost6-1.pdf, id=783, 505.89pt x 289.08pt>
 File: figure/analysispremidpost6-1.pdf Graphic file (type pdf)
 
 <use figure/analysispremidpost6-1.pdf>
-Package pdftex.def Info: figure/analysispremidpost6-1.pdf used on input line 21
-22.
+Package pdftex.def Info: figure/analysispremidpost6-1.pdf used on input line 39
+04.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
 "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear2.pdf, id=
-440, 597.23125pt x 845.1575pt>
+784, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear2.pdf
  Graphic file (type pdf)
@@ -942,35 +1727,36 @@ pss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear2.pdf
 ss" "examples" "linear" "mixed" "model/premidpost/premidpostaspirinlinear2.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/premidpost/premidpos
-taspirinlinear2.pdf used on input line 2135.
+taspirinlinear2.pdf used on input line 3917.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2135--2136
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 3917--3918
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[64 <./figure/analysispremidpost5-1.pdf> <./figure/analysispremidpost6-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 2151--2177
+[125 <./figure/analysispremidpost5-1.pdf> <./figure/analysispremidpost6-1.pdf>]
+
+Underfull \hbox (badness 10000) in paragraph at lines 3933--3959
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2151--2177
+Underfull \hbox (badness 10000) in paragraph at lines 3933--3959
 
  []
 
-[65 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/premidpost/premidpostaspirinlinear2.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 2179--2180
+[126 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/premidpost/premidpostaspirinlinear2.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 3961--3962
 
  []
 
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png, id=463
+"examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png, id=807
 , 651.43375pt x 528.97626pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png Gr
@@ -980,93 +1766,93 @@ aphic file (type png)
 ss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "desig
-n/CEOexample.png used on input line 2183.
+n/CEOexample.png used on input line 3965.
 (pdftex.def)             Requested size: 325.71606pt x 264.48747pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package color Info: Redefining color shadecolor on input line 2192.
-<figure/analysispremidpost7-1.pdf, id=464, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 3974.
+<figure/analysispremidpost7-1.pdf, id=808, 505.89pt x 289.08pt>
 File: figure/analysispremidpost7-1.pdf Graphic file (type pdf)
 
 <use figure/analysispremidpost7-1.pdf>
-Package pdftex.def Info: figure/analysispremidpost7-1.pdf used on input line 21
-94.
+Package pdftex.def Info: figure/analysispremidpost7-1.pdf used on input line 39
+76.
 (pdftex.def)             Requested size: 319.99997pt x 182.85799pt.
- [66]
-Underfull \hbox (badness 10000) in paragraph at lines 2205--2206
+ [127]
+Underfull \hbox (badness 10000) in paragraph at lines 3987--3988
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2206--2207
+Underfull \hbox (badness 10000) in paragraph at lines 3988--3989
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2207--2208
+Underfull \hbox (badness 10000) in paragraph at lines 3989--3990
 
  []
 
-[67 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples mixed linear model/pre-mid-post design/CEOexample.png> <./figure/anal
-ysispremidpost7-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 2213.
+[128 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples mixed linear model/pre-mid-post design/CEOexample.png> <./figure/ana
+lysispremidpost7-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 3995.
 
-<figure/analysispremidpost8-1.pdf, id=477, 505.89pt x 289.08pt>
+<figure/analysispremidpost8-1.pdf, id=822, 505.89pt x 289.08pt>
 File: figure/analysispremidpost8-1.pdf Graphic file (type pdf)
 
 <use figure/analysispremidpost8-1.pdf>
-Package pdftex.def Info: figure/analysispremidpost8-1.pdf used on input line 22
-15.
+Package pdftex.def Info: figure/analysispremidpost8-1.pdf used on input line 39
+97.
 (pdftex.def)             Requested size: 319.99997pt x 182.85799pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2230--2231
+Underfull \hbox (badness 10000) in paragraph at lines 4012--4013
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2237--2238
+Underfull \hbox (badness 10000) in paragraph at lines 4019--4020
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2240--2241
+Underfull \hbox (badness 10000) in paragraph at lines 4022--4023
 
  []
 
-[68 <./figure/analysispremidpost8-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 2241--2242
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2242--2243
+[129 <./figure/analysispremidpost8-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 4023--4024
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2264--2270
+Underfull \hbox (badness 10000) in paragraph at lines 4024--4025
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2264--2270
+Underfull \hbox (badness 10000) in paragraph at lines 4046--4052
 
  []
 
-[69]
-Package color Info: Redefining color shadecolor on input line 2272.
-Package color Info: Redefining color shadecolor on input line 2299.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2324--2328
+Underfull \hbox (badness 10000) in paragraph at lines 4046--4052
 
  []
 
-[70]
+[130]
+Package color Info: Redefining color shadecolor on input line 4054.
+Package color Info: Redefining color shadecolor on input line 4081.
+
+Underfull \hbox (badness 10000) in paragraph at lines 4106--4110
+
+ []
+
+[131]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/mixedprepost/mixedprepostdummy.pdf, id=493, 
+"examples" "linear" "mixed" "model/mixedprepost/mixedprepostdummy.pdf, id=838, 
 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostdummy.pdf Grap
@@ -1076,43 +1862,43 @@ hic file (type pdf)
 ss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostdummy.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedpr
-epostdummy.pdf used on input line 2356.
+epostdummy.pdf used on input line 4138.
 (pdftex.def)             Requested size: 477.78564pt x 243.64445pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2356--2357
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4138--4139
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[71]
-Underfull \hbox (badness 10000) in paragraph at lines 2373--2386
+[132]
+Underfull \hbox (badness 10000) in paragraph at lines 4155--4168
 
  []
 
 
-Overfull \hbox (39.63919pt too wide) in paragraph at lines 2373--2386
+Overfull \hbox (39.63919pt too wide) in paragraph at lines 4155--4168
 [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2373--2386
+Underfull \hbox (badness 10000) in paragraph at lines 4155--4168
 
  []
 
-Package color Info: Redefining color shadecolor on input line 2388.
-<figure/analysisprepostmixed3-1.pdf, id=498, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 4170.
+<figure/analysisprepostmixed3-1.pdf, id=842, 505.89pt x 289.08pt>
 File: figure/analysisprepostmixed3-1.pdf Graphic file (type pdf)
 
 <use figure/analysisprepostmixed3-1.pdf>
 Package pdftex.def Info: figure/analysisprepostmixed3-1.pdf used on input line 
-2390.
+4172.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [72 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples linear mixed model/mixedprepost/mixedprepostdummy.pdf>]
+ [133 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sp
+ss examples linear mixed model/mixedprepost/mixedprepostdummy.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/mixedprepost/mixedprepostquali.pdf, id=507, 
+"examples" "linear" "mixed" "model/mixedprepost/mixedprepostquali.pdf, id=851, 
 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostquali.pdf Grap
@@ -1122,38 +1908,38 @@ hic file (type pdf)
 ss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostquali.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedpr
-epostquali.pdf used on input line 2416.
+epostquali.pdf used on input line 4198.
 (pdftex.def)             Requested size: 477.78564pt x 334.69339pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2416--2417
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4198--4199
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[73 <./figure/analysisprepostmixed3-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 2433.
+[134 <./figure/analysisprepostmixed3-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 4215.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2452--2472
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2452--2472
+Underfull \hbox (badness 10000) in paragraph at lines 4234--4254
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2452--2472
+Underfull \hbox (badness 10000) in paragraph at lines 4234--4254
 
  []
 
-[74 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/mixedprepost/mixedprepostquali.pdf>]
+
+Underfull \hbox (badness 10000) in paragraph at lines 4234--4254
+
+ []
+
+[135 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/mixedprepost/mixedprepostquali.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf, id=52
-4, 597.23125pt x 845.1575pt>
+"examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf, id=86
+8, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf G
 raphic file (type pdf)
@@ -1162,141 +1948,141 @@ raphic file (type pdf)
 ss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedpr
-epostemployee.pdf used on input line 2478.
+epostemployee.pdf used on input line 4260.
 (pdftex.def)             Requested size: 477.78564pt x 334.69339pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2478--2479
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4260--4261
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[75]
-Underfull \hbox (badness 10000) in paragraph at lines 2496--2498
+[136]
+Underfull \hbox (badness 10000) in paragraph at lines 4278--4280
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2499--2515
+Underfull \hbox (badness 10000) in paragraph at lines 4281--4297
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2499--2515
+Underfull \hbox (badness 10000) in paragraph at lines 4281--4297
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2499--2515
+Underfull \hbox (badness 10000) in paragraph at lines 4281--4297
 
  []
 
-[76 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/mixedprepost/mixedprepostemployee.pdf>] [77]
-[78]
-Underfull \hbox (badness 10000) in paragraph at lines 2588--2593
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2588--2593
+[137 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/mixedprepost/mixedprepostemployee.pdf>] [138]
+[139]
+Underfull \hbox (badness 10000) in paragraph at lines 4370--4375
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2593--2598
+Underfull \hbox (badness 10000) in paragraph at lines 4370--4375
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2593--2598
-
- []
-
-[79]
-Underfull \hbox (badness 10000) in paragraph at lines 2598--2617
+Underfull \hbox (badness 10000) in paragraph at lines 4375--4380
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2598--2617
+Underfull \hbox (badness 10000) in paragraph at lines 4375--4380
+
+ []
+
+[140]
+Underfull \hbox (badness 10000) in paragraph at lines 4380--4399
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2598--2617
+Underfull \hbox (badness 10000) in paragraph at lines 4380--4399
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2598--2617
+Underfull \hbox (badness 10000) in paragraph at lines 4380--4399
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2617--2635
+Underfull \hbox (badness 10000) in paragraph at lines 4380--4399
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2617--2635
+Underfull \hbox (badness 10000) in paragraph at lines 4399--4417
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2617--2635
+Underfull \hbox (badness 10000) in paragraph at lines 4399--4417
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2617--2635
+Underfull \hbox (badness 10000) in paragraph at lines 4399--4417
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2635--2652
+Underfull \hbox (badness 10000) in paragraph at lines 4399--4417
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2635--2652
+Underfull \hbox (badness 10000) in paragraph at lines 4417--4434
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2635--2652
+Underfull \hbox (badness 10000) in paragraph at lines 4417--4434
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2635--2652
-
- []
-
-[80]
-Underfull \hbox (badness 10000) in paragraph at lines 2652--2672
+Underfull \hbox (badness 10000) in paragraph at lines 4417--4434
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2652--2672
+Underfull \hbox (badness 10000) in paragraph at lines 4417--4434
+
+ []
+
+[141]
+Underfull \hbox (badness 10000) in paragraph at lines 4434--4454
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2652--2672
+Underfull \hbox (badness 10000) in paragraph at lines 4434--4454
 
  []
 
-[81]
-Overfull \hbox (0.89403pt too wide) in paragraph at lines 2691--2694
+
+Underfull \hbox (badness 10000) in paragraph at lines 4434--4454
+
+ []
+
+[142]
+Overfull \hbox (0.89403pt too wide) in paragraph at lines 4473--4476
 []\OT1/cmr/m/n/10 Each par-tic-i-pant is ei-ther Dutch or Ger-man. This is a be
 tween-participants
  []
 
 
-Overfull \hbox (0.89403pt too wide) in paragraph at lines 2697--2701
+Overfull \hbox (0.89403pt too wide) in paragraph at lines 4479--4483
 []\OT1/cmr/m/n/10 Each par-tic-i-pant is ei-ther Dutch or Ger-man. This is a be
 tween-participants
  []
@@ -1305,24 +2091,24 @@ Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ô in font cmr10!
 
-Overfull \hbox (8.54683pt too wide) in paragraph at lines 2703--2706
+Overfull \hbox (8.54683pt too wide) in paragraph at lines 4485--4488
 []\OT1/cmr/m/n/10 Each par-tic-i-pant has only one Mas-ters de-gree. This is a 
 between-participants
  []
 
-[82]
-Package color Info: Redefining color shadecolor on input line 2733.
-Package color Info: Redefining color shadecolor on input line 2760.
- <figure/analysismixed20_2-1.pdf, id=555, 505.89pt x 289.08pt>
+[143]
+Package color Info: Redefining color shadecolor on input line 4515.
+Package color Info: Redefining color shadecolor on input line 4542.
+ <figure/analysismixed20_2-1.pdf, id=900, 505.89pt x 289.08pt>
 File: figure/analysismixed20_2-1.pdf Graphic file (type pdf)
 
 <use figure/analysismixed20_2-1.pdf>
-Package pdftex.def Info: figure/analysismixed20_2-1.pdf used on input line 2762
+Package pdftex.def Info: figure/analysismixed20_2-1.pdf used on input line 4544
 .
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [83 <./figure/analysismixed20_2-1.pdf>]
+ [144 <./figure/analysismixed20_2-1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "linear" "mixed" "model/mixedprepost/mixed20.pdf, id=565, 597.23125p
+"examples" "linear" "mixed" "model/mixedprepost/mixed20.pdf, id=909, 597.23125p
 t x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "linear" "mixed" "model/mixedprepost/mixed20.pdf Graphic file (
@@ -1332,92 +2118,92 @@ type pdf)
 ss" "examples" "linear" "mixed" "model/mixedprepost/mixed20.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixed20
-.pdf used on input line 2786.
+.pdf used on input line 4568.
 (pdftex.def)             Requested size: 477.78564pt x 334.69339pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 2786--2787
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4568--4569
  [] 
  []
 
-[84 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples linear mixed model/mixedprepost/mixed20.pdf>]
-Package color Info: Redefining color shadecolor on input line 2827.
+[145 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples linear mixed model/mixedprepost/mixed20.pdf>]
+Package color Info: Redefining color shadecolor on input line 4609.
 
-<figure/analysismixed20_3-1.pdf, id=574, 505.89pt x 289.08pt>
+<figure/analysismixed20_3-1.pdf, id=918, 505.89pt x 289.08pt>
 File: figure/analysismixed20_3-1.pdf Graphic file (type pdf)
 
 <use figure/analysismixed20_3-1.pdf>
-Package pdftex.def Info: figure/analysismixed20_3-1.pdf used on input line 2829
+Package pdftex.def Info: figure/analysismixed20_3-1.pdf used on input line 4611
 .
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [85] [86 <./figure/analysismixed20_3-1.pdf>]
-Chapter 5.
+ [146] [147 <./figure/analysismixed20_3-1.pdf>]
+Chapter 12.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2859--2863
+Underfull \hbox (badness 10000) in paragraph at lines 4641--4645
 
  []
 
-[87
+[148
 
 ]
-Package color Info: Redefining color shadecolor on input line 2868.
- <figure/nonparmixed_1-1.pdf, id=589, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 4650.
+ <figure/nonparmixed_1-1.pdf, id=933, 505.89pt x 289.08pt>
 File: figure/nonparmixed_1-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_1-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_1-1.pdf used on input line 2870.
+Package pdftex.def Info: figure/nonparmixed_1-1.pdf used on input line 4652.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 2883.
+Package color Info: Redefining color shadecolor on input line 4665.
 
-<figure/nonparmixed_2-1.pdf, id=590, 505.89pt x 289.08pt>
+<figure/nonparmixed_2-1.pdf, id=934, 505.89pt x 289.08pt>
 File: figure/nonparmixed_2-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_2-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_2-1.pdf used on input line 2885.
+Package pdftex.def Info: figure/nonparmixed_2-1.pdf used on input line 4667.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 2901.
+Package color Info: Redefining color shadecolor on input line 4683.
 
-<figure/nonparmixed_3-1.pdf, id=591, 505.89pt x 289.08pt>
+<figure/nonparmixed_3-1.pdf, id=935, 505.89pt x 289.08pt>
 File: figure/nonparmixed_3-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_3-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_3-1.pdf used on input line 2903.
+Package pdftex.def Info: figure/nonparmixed_3-1.pdf used on input line 4685.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [88 <./figure/nonparmixed_1-1.pdf>] [89 <./figure/nonparmixed_2-1.pdf> <./figu
-re/nonparmixed_3-1.pdf>]
+ [149 <./figure/nonparmixed_1-1.pdf>] [150 <./figure/nonparmixed_2-1.pdf> <./fi
+gure/nonparmixed_3-1.pdf>]
 
-LaTeX Warning: Reference `fig:nonparmixed_4' on page 90 undefined on input line
- 2923.
+LaTeX Warning: Reference `fig:nonparmixed_4' on page 151 undefined on input lin
+e 4705.
 
-[90] [91]
-Package color Info: Redefining color shadecolor on input line 3041.
- <figure/nonparmixed_36-1.pdf, id=620, 505.89pt x 289.08pt>
+[151] [152]
+Package color Info: Redefining color shadecolor on input line 4823.
+ <figure/nonparmixed_36-1.pdf, id=964, 505.89pt x 289.08pt>
 File: figure/nonparmixed_36-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_36-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_36-1.pdf used on input line 3043.
+Package pdftex.def Info: figure/nonparmixed_36-1.pdf used on input line 4825.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [92]
-Package color Info: Redefining color shadecolor on input line 3061.
+ [153]
+Package color Info: Redefining color shadecolor on input line 4843.
 
-<figure/nonparmixed_46-1.pdf, id=624, 505.89pt x 289.08pt>
+<figure/nonparmixed_46-1.pdf, id=969, 505.89pt x 289.08pt>
 File: figure/nonparmixed_46-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_46-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_46-1.pdf used on input line 3063.
+Package pdftex.def Info: figure/nonparmixed_46-1.pdf used on input line 4845.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3076.
+Package color Info: Redefining color shadecolor on input line 4858.
 
-<figure/nonparmixed_56-1.pdf, id=625, 505.89pt x 289.08pt>
+<figure/nonparmixed_56-1.pdf, id=970, 505.89pt x 289.08pt>
 File: figure/nonparmixed_56-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_56-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_56-1.pdf used on input line 3078.
+Package pdftex.def Info: figure/nonparmixed_56-1.pdf used on input line 4860.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [93 <./figure/nonparmixed_36-1.pdf>] [94 <./figure/nonparmixed_46-1.pdf> <./fi
-gure/nonparmixed_56-1.pdf>] [95]
+ [154 <./figure/nonparmixed_36-1.pdf>]
+[155 <./figure/nonparmixed_46-1.pdf> <./figure/nonparmixed_56-1.pdf>] [156]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "nonparmixed/friedman1.pdf, id=652, 597.23125pt x 845.1575pt>
+"examples" "nonparmixed/friedman1.pdf, id=996, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "nonparmixed/friedman1.pdf Graphic file (type pdf)
 
@@ -1425,17 +2211,17 @@ pss" "examples" "nonparmixed/friedman1.pdf Graphic file (type pdf)
 ss" "examples" "nonparmixed/friedman1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "nonparmixed/friedman1.pdf used on input lin
-e 3171.
+e 4953.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 3171--3172
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4953--4954
  [] 
  []
 
-[96 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples nonparmixed/friedman1.pdf>]
+[157 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples nonparmixed/friedman1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "nonparmixed/friedman2.pdf, id=661, 597.23125pt x 845.1575pt>
+"examples" "nonparmixed/friedman2.pdf, id=1005, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "nonparmixed/friedman2.pdf Graphic file (type pdf)
 
@@ -1443,31 +2229,26 @@ pss" "examples" "nonparmixed/friedman2.pdf Graphic file (type pdf)
 ss" "examples" "nonparmixed/friedman2.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "nonparmixed/friedman2.pdf used on input lin
-e 3195.
+e 4977.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 3195--3196
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 4977--4978
  [] 
  []
 
 
-LaTeX Warning: Reference `nonparmixed_77' on page 97 undefined on input line 32
-11.
+LaTeX Warning: Reference `nonparmixed_77' on page 158 undefined on input line 4
+993.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3208--3212
+Underfull \hbox (badness 10000) in paragraph at lines 4990--4994
 
  []
 
-[97 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples nonparmixed/friedman2.pdf>] [98]
-Overfull \hbox (2.85971pt too wide) in paragraph at lines 3282--3282
-[]\OT1/cmr/bx/n/14.4 How to per-form Wilcoxon's signed ranks test
- []
-
-
+[158 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples nonparmixed/friedman2.pdf>] [159]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "nonparmixed/wilcoxon1.pdf, id=673, 597.23125pt x 845.1575pt>
+"examples" "nonparmixed/wilcoxon1.pdf, id=1017, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "nonparmixed/wilcoxon1.pdf Graphic file (type pdf)
 
@@ -1475,27 +2256,29 @@ pss" "examples" "nonparmixed/wilcoxon1.pdf Graphic file (type pdf)
 ss" "examples" "nonparmixed/wilcoxon1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "nonparmixed/wilcoxon1.pdf used on input lin
-e 3295.
+e 5077.
 (pdftex.def)             Requested size: 477.78564pt x 266.4067pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 3295--3296
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 5077--5078
  [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3301--3304
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5083--5086
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3301--3304
+Underfull \hbox (badness 10000) in paragraph at lines 5083--5086
 
  []
 
-[99 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss
- examples nonparmixed/wilcoxon1.pdf>]
+
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "nonparmixed/friedman3.pdf, id=682, 597.23125pt x 845.1575pt>
+"examples" "nonparmixed/friedman3.pdf, id=1018, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "nonparmixed/friedman3.pdf Graphic file (type pdf)
 
@@ -1503,54 +2286,59 @@ pss" "examples" "nonparmixed/friedman3.pdf Graphic file (type pdf)
 ss" "examples" "nonparmixed/friedman3.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "nonparmixed/friedman3.pdf used on input lin
-e 3319.
+e 5101.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 3319--3320
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 5101--5102
  [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3327--3331
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5109--5113
 
  []
 
-[100 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples nonparmixed/friedman3.pdf>] [101]
-Package color Info: Redefining color shadecolor on input line 3366.
+[160] [161 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analys
+is/spss examples nonparmixed/wilcoxon1.pdf>] [162 </Users/stephanievandenberg/D
+ropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/friedman3.p
+df>]
+Package color Info: Redefining color shadecolor on input line 5148.
 
-Underfull \hbox (badness 10000) in paragraph at lines 3402--3422
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 3402--3422
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 3402--3422
+Underfull \hbox (badness 10000) in paragraph at lines 5184--5204
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3422--3442
+Underfull \hbox (badness 10000) in paragraph at lines 5184--5204
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3422--3442
+Underfull \hbox (badness 10000) in paragraph at lines 5184--5204
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3422--3442
+Underfull \hbox (badness 10000) in paragraph at lines 5204--5224
 
  []
 
-[102]
+
+Underfull \hbox (badness 10000) in paragraph at lines 5204--5224
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5204--5224
+
+ []
+
+[163]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "nonparmixed/friedmanmood1.pdf, id=698, 597.23125pt x 845.1575pt>
+"examples" "nonparmixed/friedmanmood1.pdf, id=1042, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "nonparmixed/friedmanmood1.pdf Graphic file (type pdf)
 
@@ -1558,10 +2346,10 @@ pss" "examples" "nonparmixed/friedmanmood1.pdf Graphic file (type pdf)
 ss" "examples" "nonparmixed/friedmanmood1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "nonparmixed/friedmanmood1.pdf used on input
- line 3450.
+ line 5232.
 (pdftex.def)             Requested size: 477.78564pt x 220.8822pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 3450--3451
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 5232--5233
  [] 
  []
 
@@ -1569,275 +2357,271 @@ Overfull \hbox (132.78564pt too wide) in paragraph at lines 3450--3451
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `fig:nonparmixed_11a' on page 103 undefined on input l
-ine 3461.
+LaTeX Warning: Reference `fig:nonparmixed_11a' on page 164 undefined on input l
+ine 5243.
 
-Package color Info: Redefining color shadecolor on input line 3464.
-<figure/nonparmixed_11a-1.pdf, id=699, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 5246.
+<figure/nonparmixed_11a-1.pdf, id=1043, 505.89pt x 289.08pt>
 File: figure/nonparmixed_11a-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_11a-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_11a-1.pdf used on input line 3466.
+Package pdftex.def Info: figure/nonparmixed_11a-1.pdf used on input line 5248.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-<figure/nonparmixed_11a-2.pdf, id=700, 505.89pt x 289.08pt>
+<figure/nonparmixed_11a-2.pdf, id=1044, 505.89pt x 289.08pt>
 File: figure/nonparmixed_11a-2.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_11a-2.pdf>
-Package pdftex.def Info: figure/nonparmixed_11a-2.pdf used on input line 3475.
+Package pdftex.def Info: figure/nonparmixed_11a-2.pdf used on input line 5257.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3486.
+Package color Info: Redefining color shadecolor on input line 5268.
 
-<figure/nonparmixed_11b-1.pdf, id=701, 505.89pt x 289.08pt>
+<figure/nonparmixed_11b-1.pdf, id=1045, 505.89pt x 289.08pt>
 File: figure/nonparmixed_11b-1.pdf Graphic file (type pdf)
 
 <use figure/nonparmixed_11b-1.pdf>
-Package pdftex.def Info: figure/nonparmixed_11b-1.pdf used on input line 3488.
+Package pdftex.def Info: figure/nonparmixed_11b-1.pdf used on input line 5270.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3512.
-Package color Info: Redefining color shadecolor on input line 3533.
- [103] [104 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analy
-sis/spss examples nonparmixed/friedmanmood1.pdf>] [105 <./figure/nonparmixed_11
+Package color Info: Redefining color shadecolor on input line 5294.
+Package color Info: Redefining color shadecolor on input line 5315.
+ [164] [165 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analy
+sis/spss examples nonparmixed/friedmanmood1.pdf>] [166 <./figure/nonparmixed_11
 a-1.pdf> <./figure/nonparmixed_11a-2.pdf>]
-[106 <./figure/nonparmixed_11b-1.pdf>]
-Chapter 6.
-[107
+[167 <./figure/nonparmixed_11b-1.pdf>]
+Chapter 13.
+[168
 
 ]
-Package color Info: Redefining color shadecolor on input line 3621.
- <figure/gen_1-1.pdf, id=738, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 5403.
+ <figure/gen_1-1.pdf, id=1082, 505.89pt x 289.08pt>
 File: figure/gen_1-1.pdf Graphic file (type pdf)
 
 <use figure/gen_1-1.pdf>
-Package pdftex.def Info: figure/gen_1-1.pdf used on input line 3623.
+Package pdftex.def Info: figure/gen_1-1.pdf used on input line 5405.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3638.
- <figure/gen_2-1.pdf, id=739, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 5420.
+ <figure/gen_2-1.pdf, id=1083, 505.89pt x 289.08pt>
 File: figure/gen_2-1.pdf Graphic file (type pdf)
 
 <use figure/gen_2-1.pdf>
-Package pdftex.def Info: figure/gen_2-1.pdf used on input line 3640.
+Package pdftex.def Info: figure/gen_2-1.pdf used on input line 5422.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [108 <./figure/gen_1-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 3658.
+ [169 <./figure/gen_1-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 5440.
 
-<figure/gen_3-1.pdf, id=748, 505.89pt x 289.08pt>
+<figure/gen_3-1.pdf, id=1092, 505.89pt x 289.08pt>
 File: figure/gen_3-1.pdf Graphic file (type pdf)
  <use figure/gen_3-1.pdf>
-Package pdftex.def Info: figure/gen_3-1.pdf used on input line 3660.
+Package pdftex.def Info: figure/gen_3-1.pdf used on input line 5442.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3677.
+Package color Info: Redefining color shadecolor on input line 5459.
 
-<figure/gen_4-1.pdf, id=749, 505.89pt x 289.08pt>
+<figure/gen_4-1.pdf, id=1093, 505.89pt x 289.08pt>
 File: figure/gen_4-1.pdf Graphic file (type pdf)
  <use figure/gen_4-1.pdf>
-Package pdftex.def Info: figure/gen_4-1.pdf used on input line 3679.
+Package pdftex.def Info: figure/gen_4-1.pdf used on input line 5461.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[109 <./figure/gen_2-1.pdf>] [110 <./figure/gen_3-1.pdf> <./figure/gen_4-1.pdf>
+[170 <./figure/gen_2-1.pdf>] [171 <./figure/gen_3-1.pdf> <./figure/gen_4-1.pdf>
 ]
-Package color Info: Redefining color shadecolor on input line 3712.
- <figure/gen_5-1.pdf, id=771, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 5494.
+ <figure/gen_5-1.pdf, id=1115, 505.89pt x 289.08pt>
 File: figure/gen_5-1.pdf Graphic file (type pdf)
  <use figure/gen_5-1.pdf>
-Package pdftex.def Info: figure/gen_5-1.pdf used on input line 3714.
+Package pdftex.def Info: figure/gen_5-1.pdf used on input line 5496.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3726.
+Package color Info: Redefining color shadecolor on input line 5508.
 
-<figure/gen_6-1.pdf, id=772, 505.89pt x 289.08pt>
+<figure/gen_6-1.pdf, id=1116, 505.89pt x 289.08pt>
 File: figure/gen_6-1.pdf Graphic file (type pdf)
  <use figure/gen_6-1.pdf>
-Package pdftex.def Info: figure/gen_6-1.pdf used on input line 3728.
+Package pdftex.def Info: figure/gen_6-1.pdf used on input line 5510.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 3740.
+Package color Info: Redefining color shadecolor on input line 5522.
 
-<figure/gen_7-1.pdf, id=773, 505.89pt x 289.08pt>
+<figure/gen_7-1.pdf, id=1117, 505.89pt x 289.08pt>
 File: figure/gen_7-1.pdf Graphic file (type pdf)
  <use figure/gen_7-1.pdf>
-Package pdftex.def Info: figure/gen_7-1.pdf used on input line 3742.
+Package pdftex.def Info: figure/gen_7-1.pdf used on input line 5524.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[111 <./figure/gen_5-1.pdf>] [112 <./figure/gen_6-1.pdf> <./figure/gen_7-1.pdf>
-] [113]
-Underfull \hbox (badness 10000) in paragraph at lines 3797--3801
+[172 <./figure/gen_5-1.pdf>] [173 <./figure/gen_6-1.pdf> <./figure/gen_7-1.pdf>
+] [174]
+Underfull \hbox (badness 10000) in paragraph at lines 5580--5584
 
  []
 
-[114]
-Package color Info: Redefining color shadecolor on input line 3811.
- <figure/gen_8-1.pdf, id=803, 505.89pt x 289.08pt>
+[175]
+Package color Info: Redefining color shadecolor on input line 5594.
+ <figure/gen_8-1.pdf, id=1147, 505.89pt x 289.08pt>
 File: figure/gen_8-1.pdf Graphic file (type pdf)
 
 <use figure/gen_8-1.pdf>
-Package pdftex.def Info: figure/gen_8-1.pdf used on input line 3813.
+Package pdftex.def Info: figure/gen_8-1.pdf used on input line 5596.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 3823--3830
+Underfull \hbox (badness 10000) in paragraph at lines 5606--5613
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3823--3830
+Underfull \hbox (badness 10000) in paragraph at lines 5606--5613
 
  []
 
-[115] [116 <./figure/gen_8-1.pdf>]
-Overfull \hbox (7.11864pt too wide) in paragraph at lines 3854--3856
-[]\OT1/cmr/m/n/10 Thus, if you have a lo-goddsra-tio $\OML/cmm/m/it/10 x$ \OT1/
-cmr/m/n/10 of $\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/
-m/n/10 34$, the odds ra-tio equals $\OML/cmm/m/it/10 exp\OT1/cmr/m/n/10 (\OMS/c
-msy/m/n/10 ^^@\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 34) =
- []
+[176] [177 <./figure/gen_8-1.pdf>] [178] [179] [180]
+Package color Info: Redefining color shadecolor on input line 5849.
 
-[117] [118]
-Package color Info: Redefining color shadecolor on input line 4066.
- <figure/gen_9-1.pdf, id=824, 505.89pt x 289.08pt>
+<figure/gen_9-1.pdf, id=1173, 505.89pt x 289.08pt>
 File: figure/gen_9-1.pdf Graphic file (type pdf)
-
-<use figure/gen_9-1.pdf>
-Package pdftex.def Info: figure/gen_9-1.pdf used on input line 4068.
+ <use figure/gen_9-1.pdf>
+Package pdftex.def Info: figure/gen_9-1.pdf used on input line 5851.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [119]
-Package color Info: Redefining color shadecolor on input line 4081.
+Package color Info: Redefining color shadecolor on input line 5864.
 
-<figure/gen_10-1.pdf, id=830, 505.89pt x 289.08pt>
+<figure/gen_10-1.pdf, id=1174, 505.89pt x 289.08pt>
 File: figure/gen_10-1.pdf Graphic file (type pdf)
  <use figure/gen_10-1.pdf>
-Package pdftex.def Info: figure/gen_10-1.pdf used on input line 4083.
+Package pdftex.def Info: figure/gen_10-1.pdf used on input line 5866.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[120 <./figure/gen_9-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 4107.
+[181 <./figure/gen_9-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 5890.
 
-<figure/gen_11-1.pdf, id=839, 505.89pt x 289.08pt>
+<figure/gen_11-1.pdf, id=1183, 505.89pt x 289.08pt>
 File: figure/gen_11-1.pdf Graphic file (type pdf)
  <use figure/gen_11-1.pdf>
-Package pdftex.def Info: figure/gen_11-1.pdf used on input line 4109.
+Package pdftex.def Info: figure/gen_11-1.pdf used on input line 5892.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[121 <./figure/gen_10-1.pdf>] [122 <./figure/gen_11-1.pdf>]
+[182 <./figure/gen_10-1.pdf>] [183 <./figure/gen_11-1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "logistic/train1.pdf, id=856, 597.23125pt x 845.1575pt>
+"examples" "logistic/train1.pdf, id=1200, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "logistic/train1.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "logistic/train1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "logistic/train1.pdf used on input line 4175
+s/Data" "Analysis/spss" "examples" "logistic/train1.pdf used on input line 5958
 .
 (pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
 
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 4175--4176
- [] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 4182--4186
-
- []
-
-[123 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples logistic/train1.pdf>] [124]
-</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "logistic/train2.pdf, id=869, 597.23125pt x 845.1575pt>
-File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
-pss" "examples" "logistic/train2.pdf Graphic file (type pdf)
-
-<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
-ss" "examples" "logistic/train2.pdf>
-Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "logistic/train2.pdf used on input line 4232
-.
-(pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
-
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 4232--4233
- [] 
- []
-
-
-</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "logistic/train3.pdf, id=870, 597.23125pt x 845.1575pt>
-File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
-pss" "examples" "logistic/train3.pdf Graphic file (type pdf)
-
-<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
-ss" "examples" "logistic/train3.pdf>
-Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "logistic/train3.pdf used on input line 4249
-.
-(pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
-
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 4249--4250
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 5958--5959
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[125 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+
+Underfull \hbox (badness 10000) in paragraph at lines 5965--5969
+
+ []
+
+[184] [185 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analys
+is/spss examples logistic/train1.pdf>]
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "logistic/train2.pdf, id=1214, 597.23125pt x 845.1575pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "logistic/train2.pdf Graphic file (type pdf)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "logistic/train2.pdf>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "logistic/train2.pdf used on input line 6015
+.
+(pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
+
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 6015--6016
+ [] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+</Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
+"examples" "logistic/train3.pdf, id=1215, 597.23125pt x 845.1575pt>
+File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
+pss" "examples" "logistic/train3.pdf Graphic file (type pdf)
+
+<use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
+ss" "examples" "logistic/train3.pdf>
+Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
+s/Data" "Analysis/spss" "examples" "logistic/train3.pdf used on input line 6032
+.
+(pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
+
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 6032--6033
+ [] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+Package color Info: Redefining color shadecolor on input line 6053.
+[186]
+Underfull \hbox (badness 10000) in paragraph at lines 6073--6077
+
+ []
+
+[187 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples logistic/train2.pdf>]
-Package color Info: Redefining color shadecolor on input line 4270.
-
-Underfull \hbox (badness 10000) in paragraph at lines 4290--4294
+Underfull \hbox (badness 10000) in paragraph at lines 6121--6125
 
  []
 
-[126 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples logistic/train3.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 4338--4342
-
- []
-
-[127]
-Chapter 7.
-[128
+[188 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples logistic/train3.pdf>] [189]
+Chapter 14.
+[190
 
 ]
-Package color Info: Redefining color shadecolor on input line 4389.
- <figure/gen_15-1.pdf, id=894, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 6172.
+ <figure/gen_15-1.pdf, id=1241, 505.89pt x 289.08pt>
 File: figure/gen_15-1.pdf Graphic file (type pdf)
 
 <use figure/gen_15-1.pdf>
-Package pdftex.def Info: figure/gen_15-1.pdf used on input line 4391.
+Package pdftex.def Info: figure/gen_15-1.pdf used on input line 6174.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [129 <./figure/gen_15-1.pdf>]
-Package color Info: Redefining color shadecolor on input line 4436.
+ [191 <./figure/gen_15-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 6219.
 
-<figure/gen_16-1.pdf, id=903, 505.89pt x 289.08pt>
+<figure/gen_16-1.pdf, id=1251, 505.89pt x 289.08pt>
 File: figure/gen_16-1.pdf Graphic file (type pdf)
  <use figure/gen_16-1.pdf>
-Package pdftex.def Info: figure/gen_16-1.pdf used on input line 4438.
+Package pdftex.def Info: figure/gen_16-1.pdf used on input line 6221.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 4451.
+Package color Info: Redefining color shadecolor on input line 6234.
 
-<figure/gen_17-1.pdf, id=904, 505.89pt x 289.08pt>
+<figure/gen_17-1.pdf, id=1252, 505.89pt x 289.08pt>
 File: figure/gen_17-1.pdf Graphic file (type pdf)
  <use figure/gen_17-1.pdf>
-Package pdftex.def Info: figure/gen_17-1.pdf used on input line 4453.
+Package pdftex.def Info: figure/gen_17-1.pdf used on input line 6236.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
-Package color Info: Redefining color shadecolor on input line 4466.
+Package color Info: Redefining color shadecolor on input line 6249.
 
-<figure/gen_18-1.pdf, id=905, 505.89pt x 289.08pt>
+<figure/gen_18-1.pdf, id=1253, 505.89pt x 289.08pt>
 File: figure/gen_18-1.pdf Graphic file (type pdf)
  <use figure/gen_18-1.pdf>
-Package pdftex.def Info: figure/gen_18-1.pdf used on input line 4468.
+Package pdftex.def Info: figure/gen_18-1.pdf used on input line 6251.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
 
-LaTeX Warning: Reference `fig:19' on page 130 undefined on input line 4479.
+LaTeX Warning: Reference `fig:19' on page 192 undefined on input line 6262.
 
-Package color Info: Redefining color shadecolor on input line 4482.
-<figure/gen_19-1.pdf, id=906, 505.89pt x 289.08pt>
+Package color Info: Redefining color shadecolor on input line 6265.
+<figure/gen_19-1.pdf, id=1254, 505.89pt x 289.08pt>
 File: figure/gen_19-1.pdf Graphic file (type pdf)
  <use figure/gen_19-1.pdf>
-Package pdftex.def Info: figure/gen_19-1.pdf used on input line 4484.
+Package pdftex.def Info: figure/gen_19-1.pdf used on input line 6267.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[130] [131 <./figure/gen_16-1.pdf> <./figure/gen_17-1.pdf>] [132 <./figure/gen_
+[192] [193 <./figure/gen_16-1.pdf> <./figure/gen_17-1.pdf>] [194 <./figure/gen_
 18-1.pdf> <./figure/gen_19-1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/assignment1.pdf, id=937, 597.23125pt x 845.1575pt>
+"examples" "poisson/assignment1.pdf, id=1285, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/assignment1.pdf Graphic file (type pdf)
 
@@ -1845,17 +2629,17 @@ pss" "examples" "poisson/assignment1.pdf Graphic file (type pdf)
 ss" "examples" "poisson/assignment1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "poisson/assignment1.pdf used on input line 
-4515.
+6298.
 (pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
 
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 4515--4516
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 6298--6299
  [] 
  []
 
-[133 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+[195 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples poisson/assignment1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/assignment2.pdf, id=946, 597.23125pt x 845.1575pt>
+"examples" "poisson/assignment2.pdf, id=1294, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/assignment2.pdf Graphic file (type pdf)
 
@@ -1863,22 +2647,22 @@ pss" "examples" "poisson/assignment2.pdf Graphic file (type pdf)
 ss" "examples" "poisson/assignment2.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "poisson/assignment2.pdf used on input line 
-4548.
+6331.
 (pdftex.def)             Requested size: 418.05902pt x 153.43678pt.
 
-Overfull \hbox (73.05902pt too wide) in paragraph at lines 4548--4549
+Overfull \hbox (73.05902pt too wide) in paragraph at lines 6331--6332
  [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4555--4559
+Underfull \hbox (badness 10000) in paragraph at lines 6338--6342
 
  []
 
-[134 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+[196 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples poisson/assignment2.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/assignment3.pdf, id=956, 597.23125pt x 845.1575pt>
+"examples" "poisson/assignment3.pdf, id=1303, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/assignment3.pdf Graphic file (type pdf)
 
@@ -1886,46 +2670,46 @@ pss" "examples" "poisson/assignment3.pdf Graphic file (type pdf)
 ss" "examples" "poisson/assignment3.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
 s/Data" "Analysis/spss" "examples" "poisson/assignment3.pdf used on input line 
-4575.
+6358.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4575--4576
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6358--6359
  [] 
  []
 
-[135 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+[197 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples poisson/assignment3.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/titanic1.pdf, id=965, 597.23125pt x 845.1575pt>
+"examples" "poisson/titanic1.pdf, id=1313, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/titanic1.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "poisson/titanic1.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "poisson/titanic1.pdf used on input line 461
-9.
+s/Data" "Analysis/spss" "examples" "poisson/titanic1.pdf used on input line 640
+2.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4619--4620
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6402--6403
  [] 
  []
 
-[136 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+[198 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples poisson/titanic1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/titanic2.pdf, id=974, 597.23125pt x 845.1575pt>
+"examples" "poisson/titanic2.pdf, id=1322, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/titanic2.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "poisson/titanic2.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "poisson/titanic2.pdf used on input line 466
-5.
+s/Data" "Analysis/spss" "examples" "poisson/titanic2.pdf used on input line 644
+8.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4665--4666
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6448--6449
  [] 
  []
 
@@ -1933,84 +2717,88 @@ Overfull \hbox (132.78564pt too wide) in paragraph at lines 4665--4666
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `fig:gen_22' on page 137 undefined on input line 4674.
+LaTeX Warning: Reference `fig:gen_22' on page 199 undefined on input line 6457.
 
 
-[137] <figure/gen_22-1.pdf, id=979, 505.89pt x 289.08pt>
+[199] <figure/gen_22-1.pdf, id=1326, 505.89pt x 289.08pt>
 File: figure/gen_22-1.pdf Graphic file (type pdf)
 
 <use figure/gen_22-1.pdf>
-Package pdftex.def Info: figure/gen_22-1.pdf used on input line 4678.
+Package pdftex.def Info: figure/gen_22-1.pdf used on input line 6461.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
- [138 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sp
+ [200 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sp
 ss examples poisson/titanic2.pdf> <./figure/gen_22-1.pdf>]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/titanic3.pdf, id=993, 597.23125pt x 845.1575pt>
+"examples" "poisson/titanic3.pdf, id=1340, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/titanic3.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "poisson/titanic3.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "poisson/titanic3.pdf used on input line 470
-2.
+s/Data" "Analysis/spss" "examples" "poisson/titanic3.pdf used on input line 648
+5.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4702--4703
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6485--6486
  [] 
  []
 
 
-LaTeX Warning: Reference `fig:gen23' on page 139 undefined on input line 4710.
+LaTeX Warning: Reference `fig:gen23' on page 201 undefined on input line 6493.
 
-<figure/gen_23-1.pdf, id=994, 505.89pt x 289.08pt>
+<figure/gen_23-1.pdf, id=1341, 505.89pt x 289.08pt>
 File: figure/gen_23-1.pdf Graphic file (type pdf)
  <use figure/gen_23-1.pdf>
-Package pdftex.def Info: figure/gen_23-1.pdf used on input line 4714.
+Package pdftex.def Info: figure/gen_23-1.pdf used on input line 6497.
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-[139 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+[201 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
 s examples poisson/titanic3.pdf> <./figure/gen_23-1.pdf>]
+Overfull \hbox (2.0763pt too wide) in paragraph at lines 6507--6507
+[]\OT1/cmr/bx/n/14.4 Crosstabulation and the Pear-son chi-square
+ []
 
-LaTeX Warning: Reference `tab_gen26' on page 140 undefined on input line 4772.
 
-[140] [141]
-Overfull \hbox (28.77838pt too wide) in paragraph at lines 4871--4872
+LaTeX Warning: Reference `tab_gen26' on page 202 undefined on input line 6555.
+
+[202] [203]
+Overfull \hbox (28.77838pt too wide) in paragraph at lines 6654--6655
 []\OT1/cmr/m/n/10 The Wald chi-square statis-tic for the sex*survived in-ter-a-
 tion ef-fect was 368.9788928,
  []
 
-[142] [143]
+[204] [205]
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/titanic4.pdf, id=1021, 597.23125pt x 845.1575pt>
+"examples" "poisson/titanic4.pdf, id=1368, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/titanic4.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "poisson/titanic4.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "poisson/titanic4.pdf used on input line 493
-2.
+s/Data" "Analysis/spss" "examples" "poisson/titanic4.pdf used on input line 671
+5.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4932--4933
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6715--6716
  [] 
  []
 
 
 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" 
-"examples" "poisson/titanic5.pdf, id=1022, 597.23125pt x 845.1575pt>
+"examples" "poisson/titanic5.pdf, id=1369, 597.23125pt x 845.1575pt>
 File: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/s
 pss" "examples" "poisson/titanic5.pdf Graphic file (type pdf)
 
 <use /Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/sp
 ss" "examples" "poisson/titanic5.pdf>
 Package pdftex.def Info: /Users/stephanievandenberg/Dropbox/Statistiek_Onderwij
-s/Data" "Analysis/spss" "examples" "poisson/titanic5.pdf used on input line 495
-4.
+s/Data" "Analysis/spss" "examples" "poisson/titanic5.pdf used on input line 673
+7.
 (pdftex.def)             Requested size: 477.78564pt x 175.35776pt.
 
-Overfull \hbox (132.78564pt too wide) in paragraph at lines 4954--4955
+Overfull \hbox (132.78564pt too wide) in paragraph at lines 6737--6738
  [] 
  []
 
@@ -2018,12 +2806,12 @@ Overfull \hbox (132.78564pt too wide) in paragraph at lines 4954--4955
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4961--4965
+Underfull \hbox (badness 10000) in paragraph at lines 6744--6748
 
  []
 
-[144 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
-s examples poisson/titanic4.pdf>] [145 </Users/stephanievandenberg/Dropbox/Stat
+[206 </Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/sps
+s examples poisson/titanic4.pdf>] [207 </Users/stephanievandenberg/Dropbox/Stat
 istiek_Onderwijs/Data Analysis/spss examples poisson/titanic5.pdf>] (./book.aux
 )
 
@@ -2034,17 +2822,18 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2652 strings out of 493089
- 55017 string characters out of 6134841
- 105049 words of memory out of 5000000
- 6011 multiletter control sequences out of 15000+600000
- 12742 words of font info for 44 fonts, out of 8000000 for 9000
+ 2797 strings out of 493089
+ 62567 string characters out of 6134841
+ 105153 words of memory out of 5000000
+ 6124 multiletter control sequences out of 15000+600000
+ 12910 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,9n,23p,1761b,356s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,9n,23p,1775b,356s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></
 usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></u
 sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
 r/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/l
@@ -2065,10 +2854,10 @@ fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2015/texmf-dist/fo
 nts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2015/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2015/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on book.pdf (147 pages, 2482726 bytes).
+Output written on book.pdf (209 pages, 2937477 bytes).
 PDF statistics:
- 1120 PDF objects out of 1200 (max. 8388607)
- 759 compressed objects within 8 object streams
+ 1471 PDF objects out of 1728 (max. 8388607)
+ 988 compressed objects within 10 object streams
  0 named destinations out of 1000 (max. 500000)
- 451 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 604 words of extra memory for PDF output out of 10000 (max. 10000000)
 
