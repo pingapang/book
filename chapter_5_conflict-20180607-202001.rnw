@@ -1,0 +1,190 @@
+\chapter{Categorical predictor variables}
+
+
+
+\section{Dummy coding}
+As we have seen in Chapter 1, there are largely two different types of variables: quantitative variables and qualitative variables. Quantitative variables say something about how much of an attribute is in an object: for instance height (measured by inches) or heat (measured in degrees Kelvin). Qualitative variables say something about the quality of an attribute: for instance colour (red, green, yellow) or placement (aisle seat, window seat).
+
+In the chapters on simple and multiple regression we have seen that both the dependent and the independent variables were all quantitative. The linear model used in regression analysis always involves a quantitiative dependent variable. However, in such analyses it is possible to use qualitative independent variables. In this chapter we explain how to do that and how to interpret the results. 
+
+The basic trick that we need is \textit{dummy coding}. Dummy coding involves making one or more new variables, that reflect the different categories of a qualitative variable. First we focus on qualitative variables with only two variables. Later in this chapter, we will explain what to do with qualitative variables with more than two categories. 
+
+Suppose we have two different placements in a bus: aisle seats and window seats. Suppose we ask a number of people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows part of the anonymized data.
+
+<<dummy_1, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+set.seed(123)
+person <- c("001","002", "003", "004", "005")
+seat <- c('aisle', 'aisle', 'window', 'window', 'aisle')
+price <- rnorm(5, 60, 5) %>% round(0)
+data.bus <- data.frame(person, seat, price )
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_1") %>%
+        print(include.rownames=F, caption.placement = "top")
+
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+# write.foreign(data.train,
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sav',
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sps',
+#               package = c("SPSS"))
+@
+
+
+With dummy coding, we make a new variable that only has values 0 and 1, and that conveys the same information as the \textbf{seat} variable. The resulting variable is called a dummy variable. Let's call this dummy variable \textbf{aisle} and give it the value 1 for all persons that travelled in an aisle seat. We give the value 0 for all persons that travelled in a window seat. We can also call the new variable \textbf{aisle} a boolean variable with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
+
+<<dummy_2, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+aisle <- c(1,1,0,0,1)
+data.bus <- data.frame(person, seat, aisle, price )
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_2") %>%
+        print(include.rownames=F, caption.placement = "top")
+out.bus <- lm(price ~ aisle)
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+# write.foreign(data.train,
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sav',
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sps',
+#               package = c("SPSS"))
+@
+
+What we have done now is coding the old qualitative variable \textbf{seat} into a quantitative variable \textbf{aisle} with values 0 and 1. Let's see what happens if we use a linear model for the variables price (dependent variable) and aisle (independent variable). The linear model is:
+
+\begin{eqnarray}
+price = b_0 + b_1 aisle + e \\
+e \sim N(0,\sigma^2_e)
+\end{eqnarray}
+
+Let's use the bus trip data and determine the least squares regression line. We then find the following linear equation:
+
+
+\begin{equation}
+\hat{price} = \Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]} aisle
+\end{equation}
+
+If the variable \textbf{aisle} is 0, then the expected or predicted price of the bus ticket is, according to this equation, $\Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]}\times  0= \Sexpr{out.bus$coef[1]}$. What does this mean? Well, all tickets from persons with a window seat were coded as a 0. Therefore the expected price of a window seat equals \Sexpr{out.bus$coef[1]}. By the same token, the expected price of an aisle seat (aisle = 1) is $\Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]}\times 1= \Sexpr{out.bus$coef[1]+out.bus$coef[2]}$.
+
+
+
+\section{Predicting group means}
+
+
+\section{Dummy coding for more than two groups}
+
+
+% \section{Comparing more than two groups}
+% 
+% 
+% In previous sections we used dummy coding for categorical variables with two levels. Now we look into the situation where you have a categorical variable that has more than 2 levels. Take for instance the variable Country, where in your data set, there are three different values for this variable, for instance, Norway, Sweden and Finland, or perhaps Zimbabwe, Congo and South-Africa. Let's call these countries A, B and C. Here's a data example:
+%  \\
+%  \\
+%  \begin{tabular}{llr}
+%  ID & Country &  height\\ \hline
+%   001 &A & 120\\
+%   002 &A & 160\\
+%   003 &B & 121\\
+%   004 &B & 125\\
+%   005 &C & 140\\
+%   \dots & \dots & \dots\\
+%  \end{tabular}
+% \\
+% \\
+% In general, when we have 3 different values for a categorical variable, we can code this into two dummy variables in the following way.
+% 
+% 
+% 
+% 
+% Let's take country C as our reference category: that means we want to know whether observations from countries A and B differ from observations from country C. So we code one new dummy variable with 1s for country A and 0s for the other countries. We code a second new dummy variable with 1s for country B and 0s for the other countries. So we get the new data file:
+%  \\
+%  \\
+%  \begin{tabular}{llrrr}
+%  ID & Country &  height & CountryA & CountryB \\ \hline
+%   001 &A & 120 & 1 & 0\\
+%   002 &A & 160 & 1 & 0\\
+%   003 &B & 121 & 0 & 1\\
+%   004 &B & 125 & 0 & 1\\
+%   005 &C & 140 & 0 & 0\\
+%   \dots & \dots & \dots& \dots & \dots\\
+%  \end{tabular}
+% \\
+% \\
+% Note that a third dummy variable CountryC is not necessary. Remember that with two categories, you only need one dummy variable, where one level gets 1s and another category gets 0s. In this way both categories are uniquely identified. Here with three categories we also have unique codes for every category: 1 and 0 for country A, 0 and 1 for country B, and 0 and 0 for country C. Similarly, if you have 4 categories, you can code this with 3 dummy variables. In general, when you have a variable with $K$ categories, you can code them with $K-1$ dummy variables.
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% \subsection{Analyzing categorical predictor variables}
+% 
+% Suppose we have data on height based on a sample of thirty people ($N=30$) that come from three different countries. We want to know whether the average height is different for each country, or whether the average height is the same (null-hypothesis). We want to analyze this with a linear model in SPSS. Now there are two ways of doing this. First option is that you can use dummy coding first, and then treat these dummy variables in a quantitative way. The second option is that you let SPSS do the dummy coding for you, by indicating that you want to treat the original variable as qualitative. Let's start with the first option and then discuss the second option. Afterwards we will compare these two options.
+% 
+% \subsubsection{Treating dummy variables quantitatively}
+% 
+% 
+% First we create two new dummy variables, and then perform a linear model analysis using these. Note that we actually perform a multiple regression with two dummy variables.
+% 
+% 
+% \begin{verbatim}
+% RECODE Country ('A'=1) ('B'=0) ('C'=0) INTO CountryA.
+% RECODE Country ('A'=0) ('B'=1) ('C'=0) INTO CountryB.
+% EXECUTE.
+% UNIANOVA height WITH CountryA CountryB 
+% / design = CountryA CountryB
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayquant.png}
+%     \end{center}
+% \end{figure}
+% 
+% 
+% In the Parameter Estimates table, we see the effects of the two dummy variables. All observations with a 1 for variable CountryA get an extra predicted height of -2.4, and all observations with a 1 for variable CountryB get an extra predicted height of 10.1. So the expected height in country A equals $172.4 - 2.4 = 174.8$, and the expected height in country B equals $172.4+10.1=182.5 $. Observations in country C have a 0 for both variables CountryA and CountryB, so the expected height in country C equals the intercept 172.4.\\
+% 
+% In the Tests of between-subjects Effects table, we see other stuff going on. This is not regression output, but output based on a so-called Analysis Of VAriance, or ANOVA for short. First note that the significance levels for the two effects are exactly the same as those from the regression table. Second, note that the reported values of $F$ are the square of the $t$ values in the regression table: $-.799^2=.619$ and $3.364^2=11.317$. \\
+% ANOVA is a particular case of a linear model. The $F$-statistic is constructed on the basis of Sums of Squares. For instance, take a look at the row for the effect of CountryA. The sum of squares is equal to 28.80. If you divide this by the degrees of freedom for this effect, your get the Mean Square: $28.80/1=28.80$. Now look at the row for Error. The sum of squares equals 1216.90. Divided by the corresponding degrees of freedom you get the Mean Square: $12.16.90/27=45.07$. You obtain the $F$-statistic by dividing the CountryA Mean Square by the Error Mean Square: $F=28.80/45.07=0.639$. 
+% It is not a coincidence that this $F$-value is exactly equal to the square of the corresponding $t$-value: $F=t^2$. Remember that the $t$-value is equal to the $B$ parameter divided by the standard error: $t=-2.400/3.002=-.799=\sqrt{0.639}$. To obtain the regression coefficient we minimize the sums of squares of the residuals. So both the $F$-statistic and the $t$-statistic come from computing sums of squares and are thus based on the same general logic of the linear model.\\
+% 
+% Since ANOVA is a special case of the linear model, we believe that it is not necessary to understand ANOVA fully: if you understand the linear model, that is good enough. Just remember that sometimes you see ANOVAs reported in the literature. Be aware that what they are actually doing is running a linear model.
+% 
+% 
+% 
+% 
+% \subsubsection{Treating the original variable qualitatively}
+% 
+% In the alternative approach, we let SPSS do the dummy variable coding automatically. In that case we use the original variable Country with its three categories directly, and change the WITH into BY in the following way:
+% 
+% \begin{verbatim}
+% UNIANOVA height BY Country 
+% / design = Country
+% / print = parameter.
+% \end{verbatim}
+% 
+% All variables named after BY are treated as categorical variables and automatically coded into dummy variables. The output then looks like the following:
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayqual.png}
+%     \end{center}
+% \end{figure}
+% 
+% The Parameter Estimates table now looks slightly different: The intercept is the same, the dummy effects are presented in a slightly different way, and there is an extra row for country C where a regression coefficient $B$ of 0 is reported, with no other information. The values for the other effects are exactly the same as with the previous analysis. This means we can interpret these country=A and country=B effects as the effects of dummy variables: all observations start from an intercept of 172.40 and depending on whether the observation from country A or country B, you get an extra predicted height of -2.4 or 10.1, respectively. Observations from country C get an extra height of 0, so in effect nothing extra. (It seems that what SPSS is doing is creating an extra dummmy variable for country C, but because this is not necessary, the effect is fixed to 0).
+% \\
+% Also the Tests of Between-Subjects Effects table looks slightly different: instead of two separate effects for two dummy variables, we now see one row for the original variable Country. And in the column df (degrees of freedom), instead of 1 degree of freedom for a country effect, we see 2 degrees of freedom. So this suggests that the effects of the two dummy variables are now combined into one effect, with a particular $F$-value, and a p-value that is also different from those of the two separate dummy variable. This is actually the test for the null-hypothesis that all 3 means are equal. This is very differnt from the t-tests in the Parameter Estimates table. The $t$-test for the country=A effect specificically tests whether the average height in country A is different from the average height in counry C (the reference country). The $t$-test for the country=B effect specifically tests whether the average height in country B is different from the average height in country C (the reference country). Since these do not refer to our research question regarding overall differences across all three countries, we do not report these $t$-tests, but report the overal $F$-test from the Tests of Between-Subjects Effects table.
+% 
+% \subsubsection{Reporting one-way ANOVA}
+% In all cases where you have a categorical predictor variable with more than two categories, and where the null-hypothesis is about the equality of all means, you always report the $F$-statistic from the Tests of Between-Subjects Effects. You do that in the following way for this particular example:
+% 
+% \begin{quote}
+% ``The null-hypothesis that all 3 means were equal was tested with a linear model (one-way analysis of variance). The results showed that the means in the population are not equal, $F(2, 27)=9.76, MSE=45.07 , p < 0.05$.''
+% \end{quote}
+% 
+% Always check the degrees of freedom of for your $F$-statistic. The first number refers to the number of dummy variables that are tested at once: this is the number of categories minus 1. The second number refers to the error degrees of freedom: this is the number of observations minus the number of effects in your model. In this model you have 30 data points and you have three effects (parameters): one intercept, one effect for Country=A, and one effect for Country=B. So your error degrees of freedom is $30-3=27$. Note that this error degrees of freedom is equal to that of the $t$-statistic. 
+% 
+% 
+% 
+% \section{$F$-test for multiple group comparisons}
+% 

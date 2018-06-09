@@ -1,0 +1,38 @@
+\chapter{Categorical predictor variables}
+
+
+
+\section{Dummy coding}
+As we have seen in Chapter 1, there are largely two different types of variables: quantitative variables and qualitative variables. Quantitative variables say something about how much of an attribute is in an object: for instance height (measured by inches) or heat (measured in degrees Kelvin). Qualitative variables say something about the quality of an attribute: for instance colour (red, green, yellow) or placement (aisle seat, window seat).
+
+In the chapters on simple and multiple regression we have seen that both the dependent and the independent variables were all quantitative. The linear model used in regression analysis always involves a quantitiative dependent variable. However, in such analyses it is possible to use qualitative independent variables. In this chapter we explain how to do that and how to interpret the results. 
+
+The basic trick that we need is \textit{dummy coding}. Dummy coding involves making one or more new variables, that reflect the different categories of a qualitative variable. First we focus on qualitative variables with only two variables. Later in this chapter, we will explain what to do with qualitative variables with more than two categories. 
+
+Suppose we have two different placements in a bus: aisle seats and window seats. Suppose we ask 5 people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows part of the anonymized data.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(5, 60, 5) \%>\% round(0): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(person, seat, price): object 'price' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.bus \%>\% head() \%>\% xtable(caption = "{}Bus trips to Paris."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+With dummy coding, we make a new variable that only has values 0 and 1, and that conveys the same information as the \textbf{seat} variable. The resulting variable is called a dummy variable. Let's call this dummy variable \textbf{window} and give it the value 1 for all persons that travelled in a window seat. We give the value 0 for all persons that travelled in an aisle seat. We can also call the new variable \textbf{window} a boolean variable with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(person, seat, window, price): object 'price' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.bus \%>\% head() \%>\% xtable(caption = "{}Bus trips to Paris."{}, : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(predvars, data, env): object 'price' not found}}\end{kframe}
+
+
+
+
+

@@ -1,0 +1,100 @@
+
+
+\chapter{Multivariate regression}
+
+
+\section{Explained and unexplained variance}
+
+In the previous chapter we have seen relationships between two variables: one dependent variable and one independent variable. The dependent variable we usually denote as $y$, and the indepedent variable we denote by $x$. The relationship was modelled by a linear equation: an equation with an intercept $b_0$ and a slope parameter $b_1$:
+
+
+\begin{equation}
+y = b_0 + b_1 x
+\end{equation}
+
+Further, we argued that in most cases, the relationship between $x$ and $y$ cannot be completely described by a straight line. Not all of the variation in $y$ can be explained by the variation in $x$. Therefore, we have \textit{residuals} $e$: the difference between the $y$-values that are predicted by the straight line, (denoted by $\hat{y}$), and the observed $y$-value:
+
+\begin{equation}
+e = \hat{y} - y
+\end{equation}
+
+Therefore, the relationship between $x$ and $y$ is denoted by a regression equation, where the relationship is approached by a linear equation, plus a residual part $e$:
+
+\begin{equation}
+y = b_0 + b_1 x + e
+\end{equation}
+
+The linear equation only gives us only the expected $y$-value, $\hat{y}$:
+
+
+\begin{equation}
+\hat{y} = b_0 + b_1 x
+\end{equation}
+
+
+We've also seen that the residual $e$ is assumed to have a normal distribution, with mean 0 and variance $\sigma^2$:
+
+
+\begin{equation}
+e \sim N(0,\sigma^2)
+\end{equation}
+
+Remember that linear models are used to explain (or predict) the variation in $y$: why are there both high values of $y$ and some low values? Where does the variance in $y$ come from? Well, the linear model tells us that the variation is in part explained by the variation in $x$. If $b_1$ is positive, we predict a relatively high value for $y$ for a high value of $x$, and we predict a relatively low value for $y$ if we have a low value for $x$. If $b_1$ is negative, it is of course in the opposite direction. Thus, the variance in $y$ is in part explained by the variance in $x$, and the rest of the variance can only be explained by the residuals $e$.
+
+
+
+\begin{equation}
+Var(y) = Var(\hat{y}) + Var(e) = Var(b_0 + b_1 x) + \sigma^2
+\end{equation}
+
+
+Because the residuals do not explain anything (we don't know where these residuals come from), we say that the \textit{explained} variance of $y$ is only that part of the variance that is explained by independent variable $x$: $Var(b_0 + b_1 x)$. The \textit{unexplained} variance of $y$ is the variance of the residuals, $\sigma^2$. The explained variance is often denoted by a ratio: the explained variance divided by the total variance of $y$:
+
+
+\begin{equation}
+Var_{explained} = \frac{Var(b_0+b_1 x)}{Var(y)} = \frac{Var(b_0+b_1 x)}{Var(b_0+b_1 x) + \sigma^2}
+\end{equation}
+
+From this equation we see that if the variance of the residuals is large, then the explained variance is small. If the variance of the residuals is small, the variance explained is large.
+
+
+\section{More than one predictor}
+
+In regression analysis, and in linear models in general, we try to make the explained variance as large as possible. In other words, we try to minimize the residual variance, $\sigma^2$.
+
+One way to do that is to use a second independent variable. If not all of the variance in $y$ is explained by $x$, then why not try an extra independent variable?
+
+
+Let's use an example with data on the weight of books, the size of books (area), and the volume of books. Let's try first to predict the weight of a book, $weight$, on the basis of the volume of the book, $volume$. Suppose we find the following regression equation and a value for $\sigma^2$:
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.data.frame(data): object 'allbacks' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.data.frame(data): object 'allbacks' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in attach(allbacks): object 'allbacks' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in do.call(paste("{}writeForeign"{}, package, sep = "{}"{}), c(list(df = df, : object 'allbacks' not found}}\end{kframe}
+\end{knitrout}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
