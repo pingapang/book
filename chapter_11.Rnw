@@ -1,4 +1,4 @@
-\chapter{Non-parametric alternatives for linear mixed models}
+\chapter{Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
 
 
 \section{Checking assumptions}

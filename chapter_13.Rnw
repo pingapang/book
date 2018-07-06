@@ -1,7 +1,7 @@
 
 
 
-\chapter{Generalized linear models for count data: Poisson regression}
+\chapter{Generalized linear models for count data: Poisson regression}\label{chap:poisson}
 
 
 \section{Poisson regression}

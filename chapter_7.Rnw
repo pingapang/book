@@ -1,5 +1,70 @@
-\chapter{Assumptions of linear models RUYA}
-\subsection{Independence}
+\chapter{Assumptions of linear models}\label{chap:assumptions}
+
+
+\section{Introduction}
+Linear models are models. A model describes the relationship between two or more variables. A good model gives a valid summary of what the relationship between the variables looks like. Let's look at a very simple example of two variables: height and weight. In a sample of 100 children from a distant country, we find 100 combinations of height in cms and weight in kilograms that are depicted in the scatterplot in Figure \ref{}
+
+<<ass_1, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(12345)
+height <- rnorm(100, 130,10)
+weight <- height -100 + rnorm(100, 0, 4)
+data_frame(weight, height) %>% 
+        ggplot(aes(x=height, y=weight)) + geom_point() 
+out <- lm(weight~ height) %>% summary
+@
+
+We'd like to find a linear model for these data, so we determine the least squares regression line. We also determine the standard deviation of the residuals so that we have the following statistical model:
+
+\begin{eqnarray}
+weight = \Sexpr{out$coef[1]} + \Sexpr{out$coef[2]}* height + e \\
+e \sim N(0, \sigma = \Sexpr{out$sigma}) 
+\end{eqnarray}
+
+<<ass_2, fig.height=4, echo=FALSE, fig.align='center'>>=
+out <- lm(weight~ height)
+data_frame(weight, height) %>% 
+        ggplot(aes(x=height, y=weight)) + geom_smooth(se=F, method='lm') +
+        geom_point(aes(x=height, y=predict(out)+rnorm(100,0,summary(out)$sigma)))
+
+@
+
+
+This model, defined above, is depicted in Figure \ref{fig:ass_2}. The blue line is the regression line, and the dots are the result of simulating (inventing) independent normal residuals with standard deviation \Sexpr{out$sigma}. The figure shows how the data would like like if we don't have access to the data. 
+The actual data might have arisen from this model. The data is only different from the simulated data because of the randomness of the residuals. 
+
+A model should be a good model for two reasons. First, a good model is a summary of the data. Instead of describing all 100 data points on the children, we could summarize these data with the linear equation of the regression line and the standard deviation of the residuals. The second reason is that you would like to infer something about the relationship between height and weight in all children from that distant country. It turns out that the standard error, and hence the confidence intervals  and hypothesis testing, are only valid if the model describes the data well. This means that if the model is not a good description of your sample data, then you draw the wrong conclusions about the population.
+
+For a linear model to be a good model, there are four conditions that need to be fullfilled. First, the relationship between the variables can be described by a linear equation (linearity), second, the residuals are independent of eachother (independence), third, the residuals have equal variance (equal variance), and the distribution of the residuals is normal (normality). If these conditions (often called assumptions) are not met, the inference with the computed standard error is invalid. That is, if the assumptions are not met, the standard error should not be trusted, or should be computed using alternative methods. 
+
+Below we will discuss these four assumptions in turn briefly. For each assumption, we will show that the assumptions can be checked by looking at the residuals. We will see that if the residuals do not look right, one or more of the assumptions are violated. But what does it mean that the residuals look right?
+
+Well, the linear model says that the residuals have a \textit{normal distribution}. So for the height and weight data, let's compute the residuals for all 100 children and plot the distribution with a histogram, see Figure \ref{fig:ass_3}. The histogram shows a distribution with one peak and more or less symmetric. The symmetry is not perfect, bu you can well imagine that if we had measured more children, the distribution would more and more resemble a bell-shaped normal distribution. 
+
+<<ass_3, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(residuals=out$residuals) %>% ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 2)
+@
+
+<<ass_4, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=observation, y=residuals)) +
+        geom_point()
+@
+
+Another thing the model implies is that the residuals are \textit{random}: they are random draws from a normal distribution. This, if we would plot the residuals, we should see no systematic pattern in the residuals. The scatterplot in Figure \ref{fig:ass_4} plots the residuals in the order in which they appear in the data set. The figure seems to suggest a random scatter of dots, \textit{without any kind of system or logic}. We could also plot the residuals as a function of their predictor value. Figure \ref{fig:ass_4b} shows there is no systematic relationship between the height of a child and the residual.  
+
+<<ass_4b, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(height ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=height, y=residuals)) +
+        geom_point()
+@
+
+
+When it looks like this, it shows that the residuals are randomly chosen and independent of height. Taken together Figures \ref{fig:ass_3}, \ref{fig:ass_4} and \ref{fig_ass_4b} suggest that the assumptions of the linear model are met. 
+
+Let's have a look at the same kinds of residual plots when each of the assumptions of the linear model is not violated.
+
+\section{Independence}
 The assumption of independence is about the way in which observatins are similar and dissimilar. Take for instance the following regression equation for children's height predicted by their age:
 
 \begin{eqnarray}
@@ -31,7 +96,7 @@ data <- data.frame(age, country, height, res)
 ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('child')
 @
 
-As our model predicts random residuals, we expect a random scatter of residuals. However, what we see here is a systematic order in the residuals: they tend to be positive for the first 50 children and negative for the last 50 children. These turn out to be the Ethiopean and the Vietnamese children, respectively. This systematic order in the residuals is a violations of independence: the residuals should be random, and they are not. The residuals are dependent on country: positive for Ethiopeans, negative for Vietnamese children. Thus, there is more than just age that makes children similar. 
+As our model predicts random residuals, we expect a random scatter of residuals. However, what we see here is a systematic order in the residuals: they tend to be positive for the first 50 children and negative for the last 50 children. These turn out to be the Ethiopean and the Vietnamese children, respectively. This systematic order in the residuals is a violation of independence: the residuals should be random, and they are not. The residuals are dependent on country: positive for Ethiopeans, negative for Vietnamese children. Thus, there is more than just age that makes children similar. 
 If we use multiple regression, including both age and country, we get the following regression equation:
 
 <<fig1412, fig.height=4, echo=FALSE, fig.align='center'>>=
@@ -72,7 +137,7 @@ They come from an analysis of reaction times, done on 10 students where we also 
 
 <<fig1415, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
 ggplot(data, aes(x=1:100, y=res, col=student)) + geom_point() + xlab('trial') + ylab('residual') 
-ggplot(data, aes(x=student, y=res)) + geom_boxplot() + xlab('student') + ylab('residual') 
+# ggplot(data, aes(x=student, y=res)) + geom_boxplot() + xlab('student') + ylab('residual') 
 @
 
 We see that residuals that are close toghether come from the same student. So, reaction time are not only similar because of IQ, but also because they come from the same student: clearly something else other than IQ explains why reaction times are dissimilar across individuals. The residuals in this analysis are not independent given IQ, they are dependent on the student. Thus, the assumption of independently distributed residuals is violated. 
@@ -80,9 +145,139 @@ We see that residuals that are close toghether come from the same student. So, r
 
 
 
-\subsection{Linearity (additivity)}
-\subsection{Homogeneity of variance}
-\subsection{Residuals normally distributed}
+\section{Linearity}
+
+Suppose we gather data on height and weight in 100 children from a different distant country. Figure \ref{fig:ass_5} shows the data, together with the least squares regression line.
+
+<<ass_5, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(12345)
+height <- rnorm(100, 130,10)
+weight <-  (height*height -9900)/70 +rnorm(100, 0,1)
+data_frame(weight, height) %>% 
+        ggplot(aes(x=height, y=weight)) + geom_point()  +geom_smooth(method='lm')
+out <- lm(weight~ height) 
+@
+
+<<ass_6, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=observation, y=residuals)) +
+        geom_point()
+@
+
+Figure \ref{fig:ass_6} shows some regularity in the residuals: the positive residuals seem to be larger than the negative residuals. This is also reflected in the histogram in Figure \ref{fig:ass_7}, that does not look symmetrical at all. What might be the problem?
+
+<<ass_7, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 2)
+@
+
+
+Take another look at the data in Figure \ref{fig:ass_5}. We see that for small heights, the data points seem to be above the regression line, and the same pattern we see for large heights. For average heights, we see on the contrary most data points below the regression line. Somehow the data points do not suggest a completely linear relationship, but a curved one. 
+
+This problem of nonlinearity could be solved by not using height as the predictor variable, but the \textit{square} of height, that is, $height^2$. For each observed height we compute the square and use that in our regression model. If we then plot the data, we get Figure \ref{fig:ass_8}. There we see that the regression line goes straight through the points. We also see from the histogram (Figure \ref{fig:ass_8}) and the residuals plot (Figure \ref{fig:ass_9}) that the residuals are randomly drawn from a normal distribution and are not related to the square of height. 
+
+<<ass_7b, fig.height=4, echo=FALSE, fig.align='center'>>=
+height2=height*height
+data_frame(weight ,  height2) %>% 
+        ggplot(aes(x=height2, y=weight)) +
+        geom_point() + geom_smooth(method='lm') + xlab("Height squared")
+
+out<- lm(weight~height2 )
+@
+
+<<ass_8, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(residuals = out$residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 1) 
+@
+
+<<ass_9, fig.height=4, echo=FALSE, fig.align='center'>>=
+data_frame(height2,  residuals = out$residuals) %>% 
+        ggplot(aes(x=height2, y=residuals)) +
+        geom_point()  + xlab("Height squared")
+@
+
+
+
+\section{Equal variance}
+
+Suppose we measure reaction times in both young and older persons. Older persons tend to have longer reaction times than young adults. Figure \ref{fig:ass_10} shows a data set on 100 persons. Figure \ref{fig:ass_11} shows the residuals as a function of age, and shows something remarkable: it seems that the residuals are much more varied for older people than for young people. There is more variance at older ages than at younger ages. This is violation of the equal variance assumption. Remember that a linear model goes with a normal distribution with a certain variance (or standard deviation). If the data show that the variance changes for different types of individuals in the data set, then the standard errors of the regression coefficients cannot be trusted. 
+
+<<ass_10, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1236567)
+age <- runif(100, 20, 90)
+logrt <- rnorm(100, 0.015*age , .5)
+rt <- exp(logrt)
+data_frame(age ,  rt) %>% 
+        ggplot(aes(x=age, y=rt)) +
+        geom_point() + geom_smooth(method='lm') + xlab("Age in years") +
+        ylab("Reaction time in seconds")
+@
+
+
+<<ass_11, fig.height=4, echo=FALSE, fig.align='center'>>=
+out<- lm(rt~age)
+residuals = out$residuals
+data_frame(age ,  residuals) %>% 
+        ggplot(aes(x=age, y=residuals)) +
+        geom_point()  + xlab("Age in years")
+@
+
+We often see an equal variance violation in reaction times. The general way of getting rid of the problems is to work not with the reaction time, but the logarithm of the reaction time. Figure \ref{fig:ass_12} shows the data with the computed logarithms of reaction time, and Figure \ref{fig:ass_13} shows the residuals plot. You can see that the log-transformation of the reaction times resulted in a much better model. 
+
+<<ass_12, fig.height=4, echo=FALSE, fig.align='center'>>=
+logrt <- log(rt)
+data_frame(age ,  logrt) %>% 
+        ggplot(aes(x=age, y=logrt)) +
+        geom_point()  + xlab("Age in years") +ylab("Logarithm of reaction time") + geom_smooth(method='lm', se=F)
+@
+
+<<ass_13, fig.height=4, echo=FALSE, fig.align='center'>>=
+out<- lm(logrt~age)
+residuals = out$residuals
+data_frame(age ,  residuals) %>% 
+        ggplot(aes(x=age, y=residuals)) +
+        geom_point()  + xlab("Age in years")
+@
+
+
+\section{Residuals normally distributed}
+
+Let's look at the reaction time data again and see what the histogram of the residuals look like if we use reaction time as our dependent variable. Figure \ref{fig:ass_14} shows that in that case the distribution is not symmetric: it is clearly skewed. 
+
+<<ass_14, fig.height=4, echo=FALSE, fig.align='center'>>=
+out <- lm(rt~age)
+residuals = out$residuals
+data_frame(age ,  residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 1)  
+@
+
+After the logarithmic transformation of the reaction times, we get the histogram in Figure \ref{fig:ass_15}, which looks more symmetric. 
+
+<<ass_15, fig.height=4, echo=FALSE, fig.align='center'>>=
+out <- lm(logrt~age)
+residuals = out$residuals
+data_frame(age ,  residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 0.6)  
+@
+
+
+\section{General approach to testing assumptions}
+
+It is generally advise to always check the residuals. We advise to do this with three types of plots. The first is the histogram of the residuals: this shows if the residuals are more or less normally distributed. The histogram should show a more or less symmetric distribution. If the plot does not look assymetric at all, try to find a transformation of the dependent variable that makes the residuals more normal. An example of this is to log-transform reaction times. 
+
+The second type of plot that you should look at is a plot where the residuals are on the y-axis and the observation is on the x-axis. Such a plot can reveal systematic clustering of residuals, which is a violation of independence. 
+
+The third type of plot that you should study is a plot where the residuals are on the vertical axis and the predictor variable (or one of the predictor variables) is on the horizontal axis. Any systematic pattern in the data suggests that the residuals are not random, but are dependent on the predictor value (if there is a pattern, they can be predicted, and if things can be predicted they are not random). In this plot, you can also spot violations of the equal variance assumption. 
+
+
+
+
+
+
 
 \section{Testing assumptions}
 \subsection{Independence}

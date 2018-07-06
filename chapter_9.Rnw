@@ -1,4 +1,4 @@
-\chapter{When assumptions are not met: non-parametric alternatives}
+\chapter{When assumptions are not met: non-parametric alternatives}\label{chap:nonpar1}
 
 
 

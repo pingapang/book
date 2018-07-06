@@ -1,4 +1,4 @@
-\chapter{Linear modelling: introduction}
+\chapter{Linear modelling: introduction}\label{chap:simple}
 
 
 \section{Linear equations}

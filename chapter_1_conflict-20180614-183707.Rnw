@@ -1,0 +1,283 @@
+\chapter{Exploring your data}
+
+\section{Types of variables}
+Data analysis is about variables. In linear models there are different kinds of variables. One important distinction is between dependent variables and independent variables. The other important distinction is about the measurement level of the variable: continuous, ordinal or categorical. 
+
+
+\subsection{Numeric, ordinal, and categorical variables}
+
+\subsubsection{Numeric variables}
+
+A typical example of a numeric variable is age. We call it numeric because the variable measures the number of years, or days, since birth. It's a countable variable. 
+
+Other examples of numeric variables include height (measured in inches), temperature (in degrees Celcius), amount of education (years), or systolic bloodpressure (in millimeters of mercury). Note that in all these examples, \textit{quantities} (age, height, temperature) are expressed as the number of a particlar \textit{measurement unit} (years, inches, degrees). Therefore numeric variables are often called \textit{quantitative} variables. 
+
+Numeric variables are often interpreted as \textit{continuous} in the sense that they have an (almost) infinite number of possible values. For example, for two children born one minute a part, there could be a third child that was born just in between the other two. In practice of course, we measure age in days, and sometimes only in months or in years, but given there are many values, we usually treat such an age variable in years as continuous. Even though we have values like 34, 35, 36 etcetera, we still think it meaningful to have a theoretical value of 34.5. If you feel this is meaningful, then we think of this variable as continuous.
+
+There is a further distinction between interval and ratio variables; this distinction is treated in the research methods course in Module 1. However, for the types of data analyses discussed in this book, this distinction is not relevant. 
+
+\subsubsection{Ordinal variables}
+
+Ordinal variables are also about quantities. However, the important difference with numeric variables is that ordinal variables are not measured in units. An example would be a variable that would quantify size, by stating whether a T-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state EXACTLY how much of that quantity is available. 
+
+Even though ordinal variables are not measured in specific units, you can still have a meaningful order in the values of the variable. For instance, we know that a large T-shirt is larger than a medium T-shirt, and a medium T-shirt is larger than a small T-shirt.
+
+Similar for age, we could code a number of people as young, middle-aged or old, but on the basis of such a variable we could not state by \textit{how much} two individuals differ in age. As opposed to numeric variables that are often continuous, ordinal variables are usually \textit{discrete}: there are no infinite number of levels of the variable. If we have sizes small, medium and large, there are no meaningful other values in between these values. 
+
+\subsubsection{Categorical variables}
+
+Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. A typical example of a categorical variable would be the colour of pencils: they can be either green, blue, black, white, red, yellow, etcetera. Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour. In addition, there is usually no logical order in the values of such variables, something that we do see with ordinal variables. Other examples of categorical variables include nationality (French, Turkish, Indian, other) or sex (male, female, other). Categorical variables are often called nominal variables, or qualitative variables. In data analysis they are often referred to as \textit{factors}.
+
+\subsubsection{Exercises} 
+In the following, identify the type of variable in termes of numeric, ordinal, or categorical:
+\begin{enumerate}
+\item Age: \dots years
+\item Weight: \dots kilograms
+\item Size: \dots meters
+\item Size: small, medium, large
+\item Exercise intensity: low, moderate, high
+\item Agreement: not agree, somewhat agree, agree
+\item Agreement: totally not agree, somewhat not agree, neither disagree nor agree, somewhat agree, totally agree
+\item Pain: 1, 2.. ..... , 99, 100, with 1="total absence of pain" and 100="the words imaginable pain"
+\item Quality of life: 1=extremely low, \dots, \dots, 7=extremely high
+\item Colour: blue, green, yellow, other
+\item Nationality: Chinese, Korean, Australian, Dutch, other
+\item Gender: Female, Male, other 
+\item Gender: 0=Female, 1=Male
+\item Number of shoes: 
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+\item Numeric
+\item Numeric
+\item Numeric
+\item Ordinal
+\item Ordinal
+\item Ordinal
+\item Technically this is an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of the agreement. However, given the number of categories and the small differences in meaning across adjacent categories, such variables are sometimes treated as numeric by using numbers 1, 2, 3, 4, 5 for the respective categories.
+\item The numbers might trick you into thinking it is a numeric variable. However, again, this is technically an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of pain. However, given the large the number of categories, such variables are most often treated as numeric.
+\item The numbers might trick you into thinking it is a numeric variable. But technically it is still an ordinal variable because there is no measurement unit and there is only a meaningful order. But again, given the large number of categories, such variables are often treated as numeric.
+\item Categorical
+\item Categorical
+\item Categorical
+\item The numbers might trick you into thinking it is a numeric variable. However, it is conceptually still a categorical variable as there is no measurement unit and there is no ordering. 
+\item Numeric, because you count the number of shoes. It is a discrete variable, but one can also imagine that 2.5 shoes is a meaningful value.
+\end{enumerate}
+
+
+
+\subsection{Qualitative and quantitative treatment of variables in data analysis}
+There is a fundamental difference between continuous and ordinal variables, but it is possible to treat them the same way in data analysis. For data analysis with linear models, you have to decide for each variable whether you want to treat it as qualitative or quantitative. Continuous variables are always treated as quantitative. Categorical data are always treated as qualitative. The problem is with ordinal variables: you can either treat them as quantitative variables or as qualitative variables. The choice is usually based on common sense and whether the results are meaningful. For instance, if you have an ordinal variable with 8 levels, like a Likert scale, it usually does not make sense to treat it as qualitative. If the variable has only 3 levels, it is often meaningful to treat it as qualitative: assuming that the three levels can show qualitative differences. In the coming chapters, we will come back to this distinction. Remember, in the coming chapters we will only speak of quantitative and qualitative treatment of variables, and remember that continuous variables are always treated as quantitative and categorical data are always treated as qualitative.
+
+
+\subsection{Dependent and independent variables}
+So now that we have discussed the distinction between numeric, ordinal and categorical variables, let's turn to dependent and independent variables. Determining whether a variable is treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a father and that of his child, the more logical it would be to see the height of the child \textit{as a function} of the height of the father. This because we assume that the genes are transferred from the father to the child. The father comes first, and the height of the child is partly the \textit{result} of the genes that were transmitted during fertilisation. That which is the result is usually taken as the dependent variable. The theoretical cause or antecedent is usually taken as the independent variable. 
+
+The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}. Independent variables are also often called explanatory variables.
+
+The dependent variable is usually the most important variable. It is the variable that we'd like to understand better, or perhaps predict better. The independent variable is usually an explanatory variable: it explains why some people have high values for the dependent variable and other people have low values. For instance, we'd like to know why some people are healthier than others. Health may then our dependent variable. An explanatory variable might be age (older people tend to be less healthy), or perhaps occupation (being a dive instructor induces more health problems than being a university teacher). 
+
+Sometimes we're interested to see whehter we can predict longevity: age at death is then our dependent variable and our independent (predictor) variables might then be food pattern and genetic make-up. 
+
+Thus, we often see three types of relations:
+\begin{itemize}
+\item Variable A affects/influences another variable B.
+\item Variable A causes variable B.
+\item Variable A predicts variable B.
+\end{itemize}
+
+In all these three cases, Variable A is the independent variable and Variable B is the dependent variable.
+
+\subsubsection{Exercises}
+
+Below, variables are printed in \textbf{bold}. For each research statement, identify which variable is the dependent variable, and which variable is the independent variable.
+
+\begin{enumerate}
+
+\item The effect of \textbf{income} on \textbf{health}
+\item \textbf{Stock value} is affected by \textbf{inflation}
+\item \textbf{Size} is influenced by \textbf{weight}
+\item \textbf{Shoe size} is predicted by \textbf{sex}
+\item The less you \textbf{drink} the more \textbf{thirsty} you become 
+\item The more \textbf{calories} you eat, the more you \textbf{weigh}
+\item \textbf{Weight} is affected by \textbf{food intake} 
+\item \textbf{Weight} is affected by \textbf{exercise} 
+\item \textbf{Food intake} is predicted by \textbf{time of year}
+\item There is an effect of \textbf{exercise} on \textbf{heart rate} 
+\item \textbf{Inflation} leads to higher \textbf{wages} 
+\item \textbf{Unprotected sex} leads to \textbf{pregnancy}
+\item \textbf{HIV-infection} is caused by \textbf{unprotected sex}
+\item The effect of \textbf{alcohol intake} on \textbf{driving performance}
+\item \textbf{Sunshine} causes \textbf{growth}
+\item \textbf{Growth} causes \textbf{sunshine}
+
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+
+\item \textbf{income} independent, \textbf{health} dependent.
+\item \textbf{Stock value} dependent, \textbf{inflation} independent
+\item \textbf{Size} dependent, \textbf{weight} independent
+\item \textbf{Shoe size} dependent, \textbf{sex} independent
+\item \textbf{drink} independent, \textbf{thirsty} dependent
+\item \textbf{calories} independent, \textbf{weigh} dependent
+\item \textbf{Weight} dependent, \textbf{food intake} independent
+\item \textbf{Weight} dependent, \textbf{exercise} independent
+\item \textbf{Food intake} dependent, \textbf{time of year} independent
+\item \textbf{exercise} independent, \textbf{heart rate} dependent
+\item \textbf{Inflation} independent, \textbf{wages} dependent
+\item \textbf{Unprotected sex} independent, \textbf{pregnancy} dependent
+\item \textbf{HIV-infection} dependent, \textbf{unprotected sex} independent
+\item \textbf{alcohol intake} independent, \textbf{driving performance} dependent
+\item \textbf{Sunshine} independent, \textbf{growth} dependent
+\item \textbf{Growth} independent, \textbf{sunshine} dependent
+
+\end{enumerate}
+
+
+
+\section{Distributions}
+
+
+<<distr_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution' >>=
+set.seed(123)
+numbers <- runif(20, 1,10) %>%  round(0)
+data.frame(numbers) %>% 
+        ggplot(aes(numbers)) + geom_histogram(binwidth = 1, bins=10)  +
+        xlab('observed values') + ylab('frequency')+
+        scale_x_continuous(breaks=seq(1,10))
+@
+
+Variable have distributions. That means that if you put all the values you observed in order from low to high, you see a certain shape. For example, take the set of following numbers: \Sexpr{numbers}. If you plot these values on the horizontal axis, and how often they are observed (the frequency or count) on the y-axis you get the frequency plot in Figure \ref{fig:distr_1}. 
+
+Often a histogram is plotted. A histogram is very much like a frequency plot, except that its surface area adds up to one. For example, in Figure \ref{fig:distr_1}, the total area is equal to the total observed numbers, which is 20. If we divide all observed frequencies by 20, we get the plot in Figure \ref{fig:distr_2}.
+
+<<distr_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A histogram' >>=
+data.frame(numbers ) %>% 
+        ggplot(aes(numbers,..density..)) + geom_histogram(bins=10)  +
+        xlab('observed values') + ylab('density (proportion)') +
+        scale_x_continuous(breaks=seq(1,10))
+@
+
+This is called a histogram. We immediately see that 20\% of the observations is a value of 9, and values of 5 make up 15\% of the observations. 
+
+
+Figure \ref{fig:distr_2} shows a histogram with 11 bins. Figure \ref{fig:distr_3} we use the same data, but use only 5 bins: for the first bin, we take values of 1 and 2, for the second bin we take values 3 and 4 together, etcetera, until we take vales 9 and 10 for the fifth bin. For each bin, we compute how often we observe them and divide them by the total number of observations. Next we divide by the bin width. For example, we observe 4 nines and 2 tens, so 6 times a value of either 9 or 10. Dividing by the number of observations we get $6/20=0.3$. This proportion should be divided by 2, to get $0.33/0.15=$. The binwidth is here 2: all values between 8.5 and 10.5 are taken to lie in the 5th bin. The distiance between these values is $10.5-8.5=2$. We have to divide the proportion by the binwidth because we want the total aree to sum to 1. For each bin, we take the binwidth and multiply it with its height (density), and sum these together. 
+
+<<distr_3, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A histogram' >>=
+ data.frame(numbers ) %>% 
+        ggplot(aes(numbers,..density..)) + geom_histogram(binwidth = 2, center=1.5)  +
+        xlab('observed values') + ylab('density (proportion)') +        
+        scale_x_continuous(breaks=seq(1, 10))
+@
+
+
+When every observed value is unique, there is only one of it, then it's better to present a density: a line that shows how often values of more or less that value are observed, relative to other values.
+
+
+Frequencies versus density.
+
+uniform
+normal, 
+z-scores
+briefly mention as examples: Student's t, chi-square, poisson
+
+\section{Mean, median and mode}
+
+\subsection{The mean}
+The mean of set of values is the same as the average. Suppose we have the values 1, 2 and 3, then we compute the mean (or average) by first adding these numbers and then divide them by the number of values we have. In this case we have three values, so the mean is equal to $(1 + 2 + 3)/3 = 2$. In statistical formulas, the mean is indicated by a bar above the variable. So if our values of variable $y$ are 1, 2 and 3, then we denote the mean by $\bar{y}$ (pronounced as y-bar). For taking the sum of a set of values, statistical formulas show a $\Sigma$ (pronounced as sigma). So we often see the following formula for the mean of a set of $n$ values for variable $y$:
+
+\begin{equation}
+\bar{y} = \frac{\Sigma_i^n y_i}{n}
+\end{equation}
+
+In words, we take every value for $y$ from 1 to $n$ and sum them, and the result is divided by $n$.
+
+\subsection{The median}
+The mean is a measure of central tendency: if the mean is 100, it means the values tend to cluster around this value. A different measure of central tendency is the median. The median is nothing but the middle value. Suppose we have the values 45, 567, and 23. Then what value lies in the middle? Let's first order them from small to large to get a better look, then we get 23, 45 and 567. Then the value in the middle is of course 45. 
+
+Suppose we have the values 45, 45, 45, 65, and 23. What is the middle value? We first order them again and see what is in the middle: 23, 45, 45, 45 and 65. Obviously now 45 is the median. 
+
+What if we have two values in the middle? Suppose we have the values 46, 56, 45 and 34. If we order them we get 34, 45, 46 and 56. Now there are two values in the middle: 45 and 46. In that case, we take the average of these two middle values, so the median is 45.5.
+
+\subsection{The mode}
+A third measure of central tendency is the \textit{mode}. The mode is defined as the value that we see most frequently in a series of values. For example, if we have the series 4, 7, 5, 5, 6, 6, 6, 4, then the value observed most often is 6 (three times).  
+
+
+
+
+\section{Variance}
+
+Suppose we measure the height of 3 children and their heights (in cms) are \Sexpr{rep(120,3)}. There is no variation in height: all heights are the same. There are no differences. Then the average height is 120, the median height is 120, and the mode is 120. 
+
+Now suppose their heigths are \Sexpr{set.seed(1234);round(runif(3,119,120), 0)}. Now there are differences: one child is smaller than the other two, who have the same height. There is some variation now. We know how to quantify the mean, which is \Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}, we know how to quantify the median, which is 120, and we know how to quantify the mode, which is also 120. But how do we quantify the variation? Is there a lot of variation, or just a little, and how do we measure it? 
+
+One way you could think of is measuring the distance between the lowest value and the highest value. This we call the \textit{range}. The lowest value is 119, and the highest value is 120, so the range of the data is equal to $120-119=1$. As another example, suppose we have the values 20, 20, 21, 20, 19, 20 and 454. Then the range is equal to $454-19=435$. That's a large range, for a series of values that for the most part hardly differ from another. Another measure for spread is \textit{variance}, and variance is based on the \textit{sum of squares}. 
+
+\subsection{Sum of squares}
+
+What we call a sum of squares is actually a sum of squared deviations. But deviations from what? First we have to know whether we are interested in the variation around what value. For instance we could be interested in how far the values $\Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}$ deviate from 0. The first differs 119, and the second and third differ 120. All values differ in a positive sense from 0: all values are positive. The deviations from zero are then 119, 120 and 120. Squaring these, we get the squared deviations, $119^2$, $120^2$ and $120^2$ so $14161$, $ 14400$ and $ 14400$. Adding these squared deviations, we obtain 42961 as the sum of squares. 
+
+We could also be interested in how much the values $\Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}$ vary around the \textit{mean} of these values. The first value differs $119-\Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}= \Sexpr{set.seed(1234);119-mean(round(runif(3,119,120), 0))}$, the second value differs $120-\Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}= \Sexpr{set.seed(1234);120-(mean(round(runif(3,119,120), 0)))}$, and the third value also differs $120-\Sexpr{set.seed(1234);mean(round(runif(3,119,120), 0))}= \Sexpr{set.seed(1234);120-(mean(round(runif(3,119,120), 0)))}$.
+
+Always when we look at deviations from the mean, some deviations are positive and some deviations will be negative (except when there is no variation). If we want to measure variation, it should not matter whether deviations are positive or negative: any deviation should add to the total variation in a postive way. So that is why we should better make all deviations positive, and this is done by taking the square of the deviations. So for our three values 119, 120 and 120, we get the deviations -0.67, +0.33 and +0.33, and if we square these deviations, we get $-0.67^2$, $+0.33^2$ and $+0.33^2$, so \Sexpr{-0.67^2}, \Sexpr{0.33^2} and \Sexpr{0.33^2}. If we add these three squares, we obtain the sum $-0.67^2+0.33^2+0.33^2=\Sexpr{-0.67^2+0.33^2+0.33^2}$.   
+
+This is called the sum of squares, or $SS$. In most cases, the sum of squares refers to the sum of squared deviations from the mean. In brief, suppose you have $n$ values of a variable $y$, you first take the mean of those values (this is $\bar{y}$), you subtract this mean from each of these $n$ values ($y-\bar{y}$), then you take the squares of these deviations ($(y-\bar{y})^2$), and then add them toghether (take the sum of these squared deviations, $\Sigma (y-\bar{y})^2)$. In formula form, this process looks like:
+
+\begin{equation}
+SS = \Sigma_i^n (y_i-\bar{y})^2
+\end{equation}
+
+As an example, suppose you have the values 10, 11 and 12, then the average value is 11. Then the deviations from the mean are -1, 0 and 1. If you square them you get 1, 0 and 1, and if you add these three values, you get $SS=2$.
+
+As another example, suppose you have the values 8, 10 and 12, then the average value is 10. Then the deviations from 10 are -2. 0 and +2. Taking the squares, you get 4, 0 and 4 and if you add them you get $SS=8$.
+
+Oftentimes, you are not interested in the total variation, but you're interesed in the average variation: how much does the avarage value differ from the mean? Suppose we have the values 10, 11 and 24. The mean is then $45/3=15$. We have two values that are smaller than the average and one value that is larger than the average, so two negative deviations and one positive deviation. Squaring them makes them all positive. The squared deviations are 25, 16, and 81. The third value has a huge squared deviation (81) compared to the other two values. If we take the \textit{average} squared deviation, we get $(25+16+81)/3= \Sexpr{(25+16+81)/3}$. So the average squared deviation is equal to \Sexpr{(25+16+81)/3}. This value we call the \textit{variance}. So the variance of a bunch of values is nothing but the $SS$ divided by the number of values, $n$. The variance is \textit{the average squared deviation from the mean}. The symbol used for the variance is usually $\sigma^2$ (pronounced as "sigma squared").
+
+\begin{equation}
+\sigma^2 = \frac{SS}{n}= \frac{\Sigma_i^n (y_i-\bar{y})}{n}
+\end{equation}
+
+
+As an example, suppose you have the values 10, 11 and 12, then the average value is 11. Then the deviations are -1, 0 and 1. If you square them you get 1, 0 and 1, and if you add these three values, you get $SS=2$. If you divide this by 3, you get the variance: 0.67. Put differently, if the squared deviations are 1, 0 and 1, then the average squared deviation (i.e., the variance) is $\frac{1+0+1}{3}=0.67$.
+
+As another example, suppose you have the values 8, 10, 10 and 12, then the average value is 10. Then the deviations from 10 are -2, 0, 0 and +2. Taking the squares, you get 4, 0, 0 and 4 and if you add them you get $SS=8$. To get the variance, you divide this by 4: $8/4=2$. Put differently, if the squared deviations are 4, 0, 0 and 4, then the average squared deviation (i.e., the variance) is $\frac{4+0+0+4}{4}=2$.
+
+Often we also see another measure of variation: the \textit{standard deviation}. The standard deviation is the root of the variance and is therefore denoted as $\sigma$:
+
+\begin{equation}
+\sigma = \sqrt{\sigma^2}=\sqrt{  \frac{\Sigma_i^n (y_i-\bar{y})}{n}}
+\end{equation}
+
+
+\subsection{Exercises}
+
+\begin{enumerate}
+\item Suppose we have the values 9, 6, 5, and 66. What is the range?
+\item Suppose we have the values -9, 6, -5, and 66. What is the range?
+\item Suppose we have the values 9, 6, 5, and 4. What is the sum of squared deviations from 0?
+\item Suppose we have the values 9, 6, 5, and 4. What is the sum of squared deviations from the mean?
+\item Suppose we have the values -7, 6, -5, and 6. What is the sum of squared deviations from the mean?
+\item Suppose we have the values -7, 6, -5, and 6. What is the variance?
+\item Suppose we have the values 77, 76, and 78. What is the standard deviation?
+\end{enumerate}
+
+Answers:
+
+
+\begin{enumerate}
+\item Smallest value is 5, largest value is 66. The range is $66-5=61$.
+\item Smallest value is -9, largest value is 66. The range is $66-(-9)=75$.
+\item $9^2+6^2+5^2+4^2=81+36+25+16=\Sexpr{81+36+25+16}$
+\item The mean is $(9+6+5+4)/4=\Sexpr{(9+6+5+4)/4}$. So we have $(9-6)^2+(6-6)^2+(5-6)^2+(4-6)^2=9+0+1+4=14$.
+
+\item The mean is $(-7+6-5+6)/4=\Sexpr{(-7+6-5+6)/4}$. So we have $(-7)^2+6^2+(-5)^2+6^2=49+36+25+36=\Sexpr{49+36+25+36}$.
+\item The mean is 0. So the sums of squares equals $(-7)^2+6^2+(-5)^2+6^2=49+36+25+36=\Sexpr{49+36+25+36}$. Then the variance is $\Sexpr{49+36+25+36}/4=\Sexpr{(49+36+25+36)/4}$.
+% \item The average is $(77+76+78)/3=77$. The sum of squares is then $-1^2+0^2+1^2=2$. The variance is then $2/3=0.67$. The standard deviation is the root of the variance, so $\sqrt{0.67}=\Sexpr{\sqrt(0.67)}$.
+% 
+\end{enumerate}
+

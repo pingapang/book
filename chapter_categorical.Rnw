@@ -1,0 +1,537 @@
+\chapter{Categorical predictor variables}\label{chap:categorical}
+
+
+
+\section{Dummy coding}
+As we have seen in Chapter 1, there are largely two different types of variables: quantitative variables and qualitative variables. Quantitative variables say something about how much of an attribute is in an object: for instance height (measured by inches) or heat (measured in degrees Kelvin). Qualitative variables say something about the quality of an attribute: for instance colour (red, green, yellow) or seating (aisle seat, window seat). Qualitative variables are also known as categorical variables.
+
+In the chapters on simple and multiple regression we have seen that both the dependent and the independent variables were all quantitative (numeric). The linear model used in regression analysis always involves a quantitiative dependent variable. However, in such analyses it is possible to use categorical independent variables. In this chapter we explain how to do that and how to interpret the results. 
+
+The basic trick that we need is \textit{dummy coding}. Dummy coding involves making one or more new variables, that reflect the different categories of a categorical variable. First we focus on categorical variables with only two categories Later in this chapter, we will explain what to do with categorical variables with more than two categories. 
+
+Suppose we have two different seating in a bus: aisle seats and window seats. Suppose we ask 5 people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows the anonymized data.
+
+<<dummy_1, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+set.seed(123)
+person <- c("001","002", "003", "004", "005")
+seat <- c('aisle', 'aisle', 'window', 'window', 'aisle')
+price <- rnorm(5, 60, 5) %>% round(0)
+data.bus <- data.frame(person, seat, price )
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_1") %>%
+        print(include.rownames=F, caption.placement = "top")
+@
+
+
+With dummy coding, we make a new variable that only has values 0 and 1, and that conveys the same information as the \textbf{seat} variable. The resulting variable is called a \textit{dummy variable}. Let's call this dummy variable \textbf{window} and give it the value 1 for all persons that travelled in a window seat. We give the value 0 for all persons that travelled in an aisle seat. We can also call the new variable \textbf{window} a \textit{boolean variable} with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Another name that is sometimes used is an \textit{indicator variable}. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
+
+<<dummy_2, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+window <- c(0,0,1,1,0)
+data.bus <- data.frame(person, seat, window, price )
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_2") %>%
+        print(include.rownames=F, caption.placement = "top")
+out.bus <- lm(price ~ window)
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+# write.foreign(data.train,
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sav',
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples logistic/train.sps',
+#               package = c("SPSS"))
+@
+
+What we have done now is coding the old categorical variable \textbf{seat} into a variable \textbf{window} with values 0 and 1 that looks numeric. Let's see what happens if we use a linear model for the variables price (dependent variable) and window (independent variable). The linear model is:
+
+\begin{eqnarray}
+price &=& b_0 + b_1 window + e \\
+e &\sim& N(0,\sigma^2_e)
+\end{eqnarray}
+
+Let's use the bus trip data and determine the least squares regression line. We find the following linear equation:
+
+
+\begin{equation}
+\widehat{price} = \Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]} window
+\end{equation}
+
+If the variable \textbf{window} has the value 1, then the expected or predicted price of the bus ticket is, according to this equation, $\Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]}\times  1= \Sexpr{out.bus$coef[1]+out.bus$coef[2]}$. What does this mean? Well, all prices paid by persons with a window seat were coded as a 1 on the \textbf{window} variable. Therefore the expected price of a window seat equals \Sexpr{out.bus$coef[1]+out.bus$coef[2]}. By the same token, the expected price of an aisle seat (\textbf{window} = 0) is $\Sexpr{out.bus$coef[1]} + \Sexpr{out.bus$coef[2]}\times 0= \Sexpr{out.bus$coef[1]}$.
+
+You see that by coding a categorical variable into a numeric dummy variable, we can describe the 'linear' relationship between the type of seat and the price of the ticket. Figure \ref{fig:dummy_3} shows the relationship between the numeric variable \textbf{window} and the numeric variable \textbf{price}. 
+
+<<dummy_3,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Relation between dummy variable window and price.'>>=
+data.bus %>% ggplot(aes(x=window, y=price))+
+        geom_point() +
+        geom_smooth(se=F, method='lm')
+@
+
+
+Note that the blue regression line goes straight through the mean of the prices for window seats (\textbf{window}=1) and the mean of the prices for aisle seats (\textbf{window}=0). In other words, the dummy variable actually models the \textit{group means} of window and aisle seats.
+
+Figure \ref{fig:dummy_4} shows the same regression line but now for the original variable \textbf{seat}. Although the analysis was based on the dummy variable \textbf{window}, it is more readable for others to show the original categorical variable \textbf{seat}.
+
+<<dummy_4,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Relation between type of seat and price.'>>=
+data.bus %>% ggplot(aes(x=seat, y=price))+
+        geom_point() +
+        geom_abline(intercept=64-10, slope=5, col=4)+
+        scale_y_continuous(breaks=seq(50,90))
+@
+
+
+
+\section{Using regression to describe group means}
+
+In the previous section we saw that if we replace a categorical variable with a numeric dummy variable with values 0 and 1, we can use a linear model to describe the relationship between a categorical independent variable and a numeric dependent variable. We also saw that if we take the least squares regression line, this line goes straight through the averages, the group means. The line goes straight through the group means because then the sum of the squared residuals is then at its smallest value (the least squares principle).  Let's look at the bus trip data again and compute the residuals and the squared residuals, see Table \ref{tab:dummy_5}.
+
+<<dummy_5, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+data.bus <- data.frame(person, seat, window, price, e=price-predict(out.bus), e2=( price-predict(out.bus))^2)
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_5") %>%
+        print(include.rownames=F, caption.placement = "top")
+@
+
+
+
+<<dummy_6,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Relation between type of seat and price, with the regression line being not quite the least squares .'>>=
+data.bus %>% ggplot(aes(x=seat, y=price))+
+        geom_point() +
+        geom_abline(intercept=64.1-9.6, slope=4.8, col=4) +
+        scale_y_continuous(breaks=seq(50,90))
+@
+
+
+<<dummy_7, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+wrongpredict<- 59.1 + 4.8*window
+data.bus <- data.frame(person, seat, window, price, wrongpredict, e=price-wrongpredict, e2=( price-wrongpredict)^2)
+data.bus %>%
+        head() %>%
+        xtable(caption="Bus trips to Paris.", label="tab:dummy_7") %>%
+        print(include.rownames=F, caption.placement = "top")
+@
+
+If we take the sum of the squared residuals we obtain \Sexpr{sum(( price-predict(out.bus))^2)}. Now if we use a slightly different slope, so that we no longer go straight through the average prices for aisle and window seats (see Figure \ref{fig:dummy_6}) and we compute the predicted values, the residuals and the squared residuals (see Table \ref{tab:dummy_7}), we obtain a higher sum: \Sexpr{sum(( price-wrongpredict)^2)}. 
+
+Only the least squares regression line goes through the average seat prices of aisle and window seats. Thus, we can use the least squares regression equation to describe group means for categorical variables. 
+
+Conversely, when you know the group means, it is very easy to draw the regression line: the intercept is the mean for the category coded as 0, and the slope is equal to the mean of the category coded as 1 minus the mean of the category coded as 0 (i.e. the intercept). Check Figure \ref{fig:dummy_3} to verify this yourself. But we can also show this for a new data set.
+
+
+We look at results from an experiment to compare yields (as measured by dried weight of plants) obtained under a control and two different treatment condition. Let's plot the data first, where we only compare the two experimental conditions (see Figure \ref{fig:dummy_8}.
+
+<<dummy_8,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on yield under two experimental conditions: treatment 1 and treatment 2.'>>=
+data("PlantGrowth")
+data <- PlantGrowth %>% filter(group!="ctrl")
+PlantGrowth %>% filter(group!="ctrl") %>% 
+        ggplot(aes(x=group, y=weight))+
+        geom_point() 
+@
+
+With treatment 1, the average yield turns out to be \Sexpr{mean(data$weight[data$group=="trt1"])}, and with treatment 2, the average yield is \Sexpr{mean(data$weight[data$group=="trt2"])}. Suppose we make a new dummy variable \textbf{treatment2} that is 0 for treatment 1 and 1 for treatment 2. Then we have the linear equation:
+
+\begin{equation}
+\widehat{weight} = b_0 + b_1 \times treatment2
+\end{equation}
+
+If we fill in the dummy variable and the expected weights (the means!), then we have the linear equations:
+
+
+\begin{eqnarray}
+\Sexpr{mean(data$weight[data$group=="trt1"])} &=& b_0 + b_1 \times 0 = b_0 \\
+\Sexpr{mean(data$weight[data$group=="trt2"])} &=& b_0 + b_1 \times 1 = b_0 + b_1
+\end{eqnarray}
+
+So from this, we know that intercept $b_0 = \Sexpr{mean(data$weight[data$group=="trt1"])}$, and if we fill that in for the second equation above, we get slope $b_1 = \Sexpr{mean(data$weight[data$group=="trt2"])}-b_0= \Sexpr{mean(data$weight[data$group=="trt2"])} -\Sexpr{mean(data$weight[data$group=="trt1"])}= \Sexpr{mean(data$weight[data$group=="trt2"])-mean(data$weight[data$group=="trt1"])}$.
+
+Thus, we get the linear equation 
+
+\begin{equation}
+\label{weight}
+\widehat{weight} = \Sexpr{mean(data$weight[data$group=="trt1"])} + \Sexpr{mean(data$weight[data$group=="trt2"])-mean(data$weight[data$group=="trt1"])}\times treatment
+\end{equation}
+
+Since this regression line goes straight through the average yield for each treatment, we know that this is the least square regression equation. Therefore we could have obtained the exact same result with a regression analysis using SPSS. 
+
+The interesting thing about a dummy variable is that the slope of the regression line is exactly equal to the differences between the two averages. If we look at Equation \ref{weight}, we see that the slope coefficient is \Sexpr{mean(data$weight[data$group=="trt2"])-mean(data$weight[data$group=="trt1"])} and this is exactly equal to the difference in mean weight for treatment 1 and treatment 2. Thus, the slope coefficient for a dummy variable indicates how much the average of the treatment that is coded as 1 differs from the treatment that is coded as 0. Here the slope is positive so that we know that the treatment coded as 1 (trt2), leads to a higher average yield than the treatment coded as 0 (trt1). This makes it possible to test null-hypotheses about group means.
+
+\section{Testing hypotheses about group means}
+
+In the previous section we saw that the slope in a dummy regression is equal to the difference in group means. Suppose researchers are interested in the effects of different treatments on yield. They'd like to know what the difference is in yield between treatments 1 and 2, using a sample of 30 data points. Based on this sample, they'd like to generalize to the population of all yields based on treatments 1 and 2. They adopt a type I error rate of $\alpha=0.05$.
+
+
+<<dummy_9, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+PlantGrowth %>% 
+        filter(group!="ctrl") %>% 
+        lm(weight ~ group, .) %>% 
+        xtable(caption="Yield by treatment.", label="tab:dummy_9") %>%
+        print(include.rownames=T, caption.placement = "top")
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(PlantGrowth %>% 
+                filter(group!="ctrl"),
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples dummy/yield1.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples dummy/yield1.sps',
+              package = c("SPSS"))
+@
+
+The researchers analyze the data and they find the results as displayed in Table \ref{tab:dummy_9}. The 95\% confidence interval for the slope is from \Sexpr{round(confint(lm(weight ~ group, data))[2,1],2)} to \Sexpr{round(confint(lm(weight ~ group, data))[2,2],2)}. This means that reasonable values for the difference between the two treatments on yield lie within this interval. All these values are positive, so we reasonably believe that treatment 2 leads to higher yield. We know that it is treatment 2 that leads to higher yields, because the slope in the regression equation has been coded as 'grouptr2'. Thus, a dummy variable has been computed, \textbf{grouptrt2}, where trt2 has been coded as 1 (and trt1 consequently coded as 0). We could also have coded the dummy variable by hand first, and then use this variable in the linear regression. In the next section, we will see how to do that in SPSS.
+
+The 95\% confidence interval for the slope does not contain 0, so we can therefore reject the null-hypothesis that there is no difference in group means at an $\alpha$ of 5\%. The exact $p$-value can be read from Table \ref{tab:dummy_9} and is equal to \Sexpr{round(summary(lm(weight ~ group, data))$coef[2,4],4)}.
+
+Thus, based on this regression analysis the researchers can write in a report that there is a significant difference between the yield after treatment 1 and treatment 2, $p=\Sexpr{round(summary(lm(weight ~ group, data))$coef[2,4],2)}$. Treatment 2 leads to a higher yield of about \Sexpr{round(summary(lm(weight ~ group, data))$coef[2,1],2)} (SE=\Sexpr{round(summary(lm(weight ~ group, data))$coef[2,2],2)}) more than treatment 1 (95\% CI: \Sexpr{round(confint(lm(weight ~ group, data))[2,1],2)}, \Sexpr{round(confint(lm(weight ~ group, data))[2,2],2)}).
+
+\section{Regression analysis using a dummy variable in SPSS}
+
+In SPSS there are two ways in which you can use a linear model with a qualitative independent variable. The first and easiest way is to tell SPSS that your variable is to be treated qualitatively, and you do that by the keyword BY. For instance, for the data set on treatment 1 and 2 and yield, you get the following syntax:
+
+\begin{verbatim}
+UNIANOVA growth BY group 
+/DESIGN group
+/PRINT parameter.
+\end{verbatim}
+
+All variables after the BY keyword are automatically turned into dummy variables. SPSS chooses automatically what value of group is coded as 1 and what value of group is coded as 0. SPSS uses alphabetical and numerical order. Thus, if we have trt1 and trt2 as values, SPSS automatically picks trt1 as the one that is coded as 1, because that is first in the alphabetical-numerical order. 
+
+The output then looks like as displayed in Figure \ref{fig:}. Here, we see an intercept of ... , a slope of .... for dummy variable [group=trt1] and a slope of 0 for [group=trt2]. Of course we don't need this slope, therefore SPSS tells us it is redundant. So we have to read the SPSS output table like this: If group=trt1, then the expected weight differs from trt2 (the reference category) by .... . 
+
+We call trt2 as the \textit{reference category} since it is the category that we use for comparison. The reference category is the category that is coded 0. 
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 25cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "dummy/yield1.pdf}
+    \end{center}
+ \caption{SPSS output of a regression analysis of weight on treatment.}
+ \label{fig:dummy_10}
+\end{figure}
+
+Sometimes, the automatic choice by software is something you don't want. Suppose that you'd like to compare two treatments: the old treatment, and a new treatment, one that avoids all the insectides that are so bad for bees and bumblebees. Here, the most interesting question is how the new treatment differs from the old one. So you'd like to use the old treatment as the reference category (coded as 0) to which you want to compare the yield of the new treatment.
+In order to choose your own way of dummy coding, and thereby choosing your reference category you can use the syntax to create a new variable treatment2
+
+\begin{verbatim}
+RECODE group ('trt2'=1) (ELSE=0) INTO treatment2.
+EXECUTE.
+\end{verbatim}
+
+Then you use a slightly altered syntax. First, you now use the new variable treatment2. Second, you use the keyword WITH instead of BY.
+
+\begin{verbatim}
+UNIANOVA weight WITH treatment2 
+/DESIGN treatment2
+/PRINT parameter.
+\end{verbatim}
+
+With the keyword BY, SPSS chooses its own reference category. With the keyword WITH, you treat the new variable treatment2 as a quantitative variable. The result is the output in Figure \ref{fig:dummy_11}.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 26cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "dummy/yield2.pdf}
+    \end{center}
+ \caption{SPSS output of a regression analysis of weight on treatment.}
+ \label{fig:dummy_11}
+\end{figure}
+
+Because you now use your own dummy variable and use it as any quantitative variable, the output looks a bit simpler. You see an intercept of 4.661 and a slope of 0.865 for the treatment2 variable. Thus, if this treatment2 variable has value 0, the expected weight equals the intercept 4.661, and if this treatment2 variable has value 1, the expected weight equals the sum of the intercept and the slope, $4.661 + 0.865 = \Sexpr{4.661 + 0.865}$. Notice that by using a different reference category (now trt1), the sign of the slope has changed. The intercept has also changed, as the intercept is the expected weight for the reference category. 
+
+In general, we advise to use the BY keyword to indicate you'd like to have an automatically coded dummy variable. If however the output is very hard to interpret, think of the best way to code your own dummy variable. For experimental designs, it makes sense to code control conditions as 0, and experimental conditions as 1. For surveys, if you want to compare how a social minority scores relative to a social majority, it makes sense to code the minority group as 1 and the social majority as 0. In eduational studies, it makes sense to code an old teaching method as 0 and a new method as 1.  
+
+\subsection{Exercise}
+
+\begin{enumerate}
+
+\item Look at the output in Figure \ref{fig:dummy_12}. It describes the comparison between average height in males and females. Based on this output: what is the average height in females? And what is the average height in males?
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 25cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "dummy/height1.pdf}
+    \end{center}
+ \caption{SPSS output of a regression analysis of height on sex.}
+ \label{fig:dummy_12}
+\end{figure}
+
+\item Look at the output in Figure \ref{fig:dummy_13}. It describes the comparison between average height in Ethiopeans and Japanese people. A variable ethnicity was used that equals 1 for Ethiopeans and 0 for Japanese people. The analysis was run using the BY keyword, treating the ethnicity variable as qualitative. Based on this output: what is the average height in the Japanese in this data set? And what is the average height in the Ethiopeans?
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 25cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "dummy/height2.pdf}
+    \end{center}
+ \caption{SPSS output of a regression analysis of height on ethnicity.}
+ \label{fig:dummy_13}
+\end{figure}
+
+\item A study looks into the effects of drinking milk during childhood on adult height. A number of adults are categorized into those that that have been drinking less than 1 liter of milk per month during childhood (coded as milk=0) and into those that have been drinking at least 1 liter of milk per month during childhood (coded as milk=1). A regression analysis treating the milk variable as quantitative (using the WITH keyword) yields the output in Figure \ref{fig:dummy_14}.
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 26cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "dummy/height3.pdf}
+    \end{center}
+ \caption{SPSS output of a regression analysis of height on milk.}
+ \label{fig:dummy_14}
+\end{figure}
+
+What is the average height in people who drank less than 1 liter of milk per month during childhood? And what is the average height in people who drank at 1 liter of milk or more per month?
+
+
+\item A study looks into the effect of vitamin B2 (riboflavin) on the frequency of migraine attacks. It compares 100 patients who take a pill containing 50 mg of riboflavin per day for a month and 100 patients who take a pill containing 0 mg of riboflavin per day for a month. Suppose you want to code a dummy variable called \textbf{riboflavin} in order to perform a regression analysis. Which patients would you code as 1, and which patients as 0? Motivate your answer. 
+
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+\item The intercept equals 182.4. For sex=female, there is an extra effect of -12.067. For sex=male, the extra effect is fixed to 0. Therefore, the average height in females in this data set is 182.4-12.067=\Sexpr{182.4-12.067} and the average height in males equals 182.4. 
+
+\item 
+The intercept is 167.167. If ethnicity=0, then there is an extra height of 15.233. Since the 
+Japanese are coded as 0, the average height in the Japanese people in the data set equals $167.167+15.233= \Sexpr{167.167+15.233}$. The average height in the Ethiopeans in this data set equals 167.167. 
+
+\item The intercept equals 169.278 and the slope of milk is 10.482. That means that people who score 0 on milk, have an average height of $169.278 + 10.482 \times 0 = 169.278$. The ones that score 0 on the milk variable drank less than 1 liter of milk per month. The ones that score 1 on the milk variable drank at least 1 liter of milk per month, and their average is $169.278 + 10.482 \times 1 = \Sexpr{169.278+10.482}$.
+
+\item If you're interested in the effect of riboflavin, you'd like to compare the people who took 50 mg to those who took 0 mg. How much more or less frequent are the migraine attacks in people who took riboflavin relative to those that did not take extra riboflavin? Then the natural reference cateogory is the group with 0 mg riboflavin. If you then analyze the output, the effect of \textbf{riboflavin} is then the increase or decrease in migraine frequency in people who took riboflavin. 
+
+\end{enumerate}
+
+
+
+\section{Dummy coding for more than two groups}
+
+In the previous sections we saw how to code a qualitative variable with 2 categories into 1 dummy variable. In this section, we see how to code a qualitative variable with 3 categories into 2 dummy variables, and to code a qualitative variable with 4 categories into 3 dummy variables, etcetera. 
+
+Take for instance the variable Country, where in your data set, there are three different values for this variable, for instance, Norway, Sweden and Finland, or perhaps Zimbabwe, Congo and South-Africa. Let's call these countries A, B and C. Here's a data example:
+ \\
+ \\
+ \begin{tabular}{llr}
+ ID & Country &  height\\ \hline
+  001 &A & 120\\
+  002 &A & 160\\
+  003 &B & 121\\
+  004 &B & 125\\
+  005 &C & 140\\
+  \dots & \dots & \dots\\
+ \end{tabular}
+\\
+\\
+We can code this Country variable with three categories into two dummy variables in the following way. First we create a variable countryA. This is a dummy variable, or indicator variable, that indicates whether a person comes from country A or not. Those that do are coded 1, and those that don't are coded as 0. Next, we create a dummy variable countryB that indicates whether or not people come from country B. Again, those that do are coded 1 and those that don't are coded 0. The resulting variables are displayed in Table \ref{tab:dummy}
+ \\
+ \\
+ \begin{tabular}{llrrr}
+ ID & Country &  height & countryA & countryB \\ \hline
+  001 &A & 120 & 1 & 0\\
+  002 &A & 160 & 1 & 0\\
+  003 &B & 121 & 0 & 1\\
+  004 &B & 125 & 0 & 1\\
+  005 &C & 140 & 0 & 0\\
+  \dots & \dots & \dots& \dots & \dots\\
+  \label{tab:dummy}
+ \end{tabular}
+\\
+\\
+Note that we have now for every value of Country (A, B, or C) a unique combination of the variables countryA and countryB. All those from country A have a 1 for countryA and a 0 for countryB; all those from country B have a 0 for countryA and a 1 for countryB, and all those from country C have a 0 for countryA and a 0 for countryB. Therefore a third dummy variable countryC is not necessary. 
+
+Remember that with two categories, you only need one dummy variable, where one category gets 1s and another category gets 0s. In this way both categories are uniquely identified. Here with three categories we also have unique codes for every category. Similarly, if you have 4 categories, you can code this with 3 dummy variables. In general, when you have a variable with $K$ categories, you can code them with $K-1$ dummy variables.
+
+
+\subsection{Exercise}
+
+Below you see a table with data on the favorite colour of 10 children. The only colours mentioned are blue, pink, purple, red and green. 
+\\
+ \\
+ \begin{tabular}{llrrrrrr}
+ ID & Colour &   &&&&&\\ \hline
+  001 &purple & &&&&&\\
+  002 &green &  &&&&&\\
+  003 &red &  &&&&&\\
+  004 &blue &  &&&&&\\
+  005 &red &  &&&&&\\
+  006 &pink &  &&&&&\\
+  007 &pink &  &&&&&\\
+  008 &green &  &&&&&\\
+  009 &blue &  &&&&&\\
+  010 &red &  &&&&&\\
+ \end{tabular}
+\\
+\\
+How many dummy variables do you need in order to uniquely identify each colour? Construct the dummy variables by hand and add them to the table. Don't forget the variable names. You can start with any colour you'd like.
+
+
+Answer:
+You have 5 different colours, so you need 4 dummy variables.
+\\
+ \\
+ \begin{tabular}{llrrrrrr}
+ ID & Colour &  purple &green&red&blue&&\\ \hline
+  001 &purple & 1&0&0&0&\\
+  002 &green &  0&1&0&0&\\
+  003 &red & 0&0&1&0&\\
+  004 &blue &  0&0&0&1&\\
+  005 &red & 0&0&1&0&\\
+  006 &pink &  0&0&0&0&\\
+  007 &pink &  0&0&0&0&\\
+  008 &green &  0&1&0&0&\\
+  009 &blue &  0&0&0&1&\\
+  010 &red &  0&0&1&0&\\
+ \end{tabular}
+\\
+\\
+
+
+
+
+\section{Analyzing categorical predictor variables in SPSS}
+
+Suppose we have data on height based on a sample of thirty people ($N=30$) that come from three different countries. We want to know whether the average height is different for each country, or whether the average height is the same (null-hypothesis). Since we know that applying a linear model to a categorical independent variable is the same as modelling group means, we can test the null-hypothesis that all group means are equal in the population. Let $\mu_A$ be the mean height in the population of country A, $\mu_B$ be the mean height in the population of country B, and $\mu_C$ be the mean height in the population of country C. Then we can specify the null-hypothsis using symbols in the following way:
+
+\begin{equation}
+H_0: \mu_A= \mu_B=\mu_C
+\end{equation}
+
+In all group means are equal in the population, then all population intercepts would be 0. We want to test this null-hypothesis with a linear model in SPSS. Now there are two ways of doing this. First option is that you can use dummy coding first, and then treat these dummy variables in a quantitative way. The second option is that you let SPSS do the dummy coding for you, by indicating that you want to treat the original variable as qualitative. Let's start with the first option and then discuss the second option. Afterwards we will compare these two options.
+
+\subsection{Treating dummy variables quantitatively}
+
+
+First we create two new dummy variables, and then perform a linear model analysis using these. Note that we actually perform a multiple regression with two dummy variables. We use the keyword WITH to indicate that we want treat the dummy variables quantitatively.
+
+
+\begin{verbatim}
+RECODE Country ('A'=1) ('B'=0) ('C'=0) INTO CountryA.
+RECODE Country ('A'=0) ('B'=1) ('C'=0) INTO CountryB.
+EXECUTE.
+UNIANOVA height WITH CountryA CountryB
+/ design = CountryA CountryB
+/ print = parameter.
+\end{verbatim}
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayquant.png}
+    \end{center}
+    \caption{Output of a regression analysis on two dummy variables, using the keyword WITH.}
+    \label{tab:dummy_21}
+\end{figure}
+
+
+In the Parameter Estimates table in Table \ref{tab:dummy_21}, we see the effects of the two dummy variables. All observations with a 1 for variable CountryA get an extra predicted height of -2.4, and all observations with a 1 for variable CountryB get an extra predicted height of 10.1. So the expected height in country A equals $172.4 - 2.4 = 174.8$, and the expected height in country B equals $172.4+10.1=182.5 $. Observations in country C have a 0 for both variables CountryA and CountryB, so the expected height in country C equals the intercept 172.4.\\
+
+In the Tests of between-subjects Effects table, we see other stuff going on. This is not regression output, but output based on a so-called Analysis Of VAriance, or ANOVA for short. First note that the significance levels (the $p$-values) for the two effects are exactly the same as those from the regression table. Second, note that the reported values of $F$ are the square of the $t$ values in the regression table: $-.799^2=.619$ and $3.364^2=11.317$. \\
+ANOVA is a particular case of a linear model. The $F$-statistic is constructed on the basis of Sums of Squares. For instance, take a look at the row for the effect of CountryA. The sum of squares is equal to 28.80. If you divide this by the degrees of freedom for this effect, your get the Mean Square: $28.80/1=28.80$. Now look at the row for Error. The sum of squares equals 1216.90. Divided by the corresponding degrees of freedom you get the Mean Square: $12.16.90/27=45.07$. You obtain the $F$-statistic by dividing the CountryA Mean Square by the Error Mean Square: $F=28.80/45.07=0.639$.
+It is not a coincidence that this $F$-value is exactly equal to the square of the corresponding $t$-value: $F=t^2$. Remember that the $t$-value is equal to the $B$ parameter divided by the standard error: $t=-2.400/3.002=-.799=\sqrt{0.639}$. To obtain the regression coefficient we minimize the sums of squares of the residuals. So both the $F$-statistic and the $t$-statistic come from computing sums of squares and are thus based on the same general logic of the linear model.\\
+
+Since ANOVA is a special case of the linear model, we believe that it is not necessary to understand ANOVA fully: if you understand the linear model, that is good enough. Just remember that sometimes you see ANOVAs reported in the literature. Be aware that what they are actually doing is running a linear model.
+
+Returning back to our null-hypothesis that all group means are equal in the population: if the group means are equal in the population, then the slope parameters for countryA and countryB should consequently be 0 in the population. Looking at the 95\% confidence intervals, we see that 0 is a reasonable value for the difference between country C (the reference category) and country A, but 0 is \textit{not} a reasonable value for the difference between country C and country B. But how can we rigourously test the null-hypothesis that all three group means are the same? Now we have two $p$-values, one for countryA and countryB, but we need one $p$-value for the null-hypothesis of three equal means. Let's see if we can get one $p$-value if we try the second way to perform this analysis.
+
+
+\subsection{Treating the original variable qualitatively}
+
+In the second approach, we let SPSS do the dummy variable coding automatically. In that case we use the original variable Country with its three categories directly, and change the WITH keyword into BY in the following way:
+
+\begin{verbatim}
+UNIANOVA height BY Country
+/ design = Country
+/ print = parameter.
+\end{verbatim}
+
+All variables named after BY are treated as categorical variables and automatically coded into dummy variables. The output then looks like the following:
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/oneway/onewayqual.png}
+    \end{center}
+    \caption{Output of a regression analysis on the original variable, using the keyword BY.}
+    \label{fig:dummy_22}
+\end{figure}
+
+The Parameter Estimates table in Figure \ref{fig:dummy_22} now looks slightly different: The intercept is the same, the dummy effects are presented in a slightly different way, and there is an extra row for country C where a regression coefficient $B$ of 0 is reported, with no other information. The values for the other effects are exactly the same as with the previous analysis. This means we can interpret these country=A and country=B effects as the effects of dummy variables: all observations start from an intercept of 172.40 and depending on whether the observation from country A or country B, you get an extra predicted height of -2.4 or 10.1, respectively. Observations from country C get an extra height of 0, so in effect nothing extra. (SPSS creates an extra dummmy variable for country C, but because this is not necessary, the effect is fixed to 0).
+\\
+Also the Tests of Between-Subjects Effects table looks slightly different: instead of two separate effects for two dummy variables, we now see one row for the original variable Country. And in the column df (degrees of freedom), instead of 1 degree of freedom for a country effect, we see 2 degrees of freedom. So this suggests that \textit{the effects of the two dummy variables are now combined into one effect}, with one particular $F$-value, and one $p$-value that is also different from those of the two separate dummy variable. This is actually the $p$-value test for the null-hypothesis that all 3 means are equal. 
+
+\begin{equation}
+H_0: \mu_A= \mu_B=\mu_C
+\end{equation}
+
+This is very different from the $t$-tests in the Parameter Estimates table. The $t$-test for the country=A effect specificically tests whether the average height in country A is different from the average height in country C (the reference country). The $t$-test for the country=B effect specifically tests whether the average height in country B is different from the average height in country C (the reference country). Since these do not refer to our research question regarding \textit{overall} differences across all three countries, we do not report these $t$-tests, but report the overall $F$-test from the Tests of Between-Subjects Effects table.
+
+\subsection{Reporting ANOVA}
+In all cases where you have a categorical predictor variable with more than two categories, and where the null-hypothesis is about the equality of all means, you always report the $F$-statistic from the Tests of Between-Subjects Effects. You do that in the following way for this particular example:
+
+\begin{quote}
+``The null-hypothesis that all 3 population means were equal was tested with a linear model (analysis of variance). The results showed that the null-hypothesis can be reject: the means in the population are not equal, $F(2, 27)=9.76, MSE=45.07 , p = 0.001$.''
+\end{quote}
+
+Always check the degrees of freedom for your $F$-statistic. The first number refers to the number of dummy variables that are tested at once: this is the number of categories minus 1. This is also called the \textit{model degrees of freedom}. The second number refers to the error degrees of freedom: this is the number of observations minus the number of effects in your model. In this model you have 30 data points and you have three effects (parameters): one intercept, one effect for Country=A, and one effect for Country=B. So your error degrees of freedom is $30-3=27$. Note that this error degrees of freedom is equal to that of the $t$-statistic for multiple regression.
+
+
+
+\section{$F$-test for multiple group comparisons}
+
+Here we slightly elaborate on the $F$-test for testing null-hypotheses about group means. Remember that the $T$-statistic was based on the slope divided by its standard error. Above we saw that the $F$-statistic is based on the ratio of mean squared errors, that are in turn based on sums of squares. 
+
+If we go back to Chapter 2 on the inference about population slopes, we remember that given that the population slope is 0, and if one draws many random samples, the distribution of $T$-statistics shows a $t$-distribution with a certain degrees of freedom that depends on sample size. Similarly for inference about population group means, given a null-hypothesis that three group means are equal in the population, and if one draws many random samples from this population, the $F$-statistic shows an $F$-distribution with a certain model degrees of freedom of 2 and an error degrees of freedom that depends on the sample size.
+
+Figure \ref{fig:dummy_22} shows the $F$-distribution with 2 model degrees of freedom and 156 residual degrees of freedom. As an be seen, $F$-values are always positive. This is so because they are based on sums of squares, that are also always positive. The larger the $F$-value, the less likely it is to be the result of sampling error. Thus, if the $F$-value is very large, it is not likely that the population means are equal. When is an $F$-value large enough to think that the null-hypothesis is not true? Similar to $T$-statistics, we can choose an arbitrary level of significance, say $\alpha=0.05$, and reject the null-hypothesis when the $F$-value is beyond the critical value for the $\alpha$-level. For this particular $F$-distribution, the critical $F$-value for $\alpha=0.05$ is \Sexpr{round(qf(0.95,2,156),2)}. This number can be looked up in tables or is available in software packages like SPSS. Thus, if we find an $F$-value equal to or larger than \Sexpr{round(qf(0.95,2,156),2)}, we reject the null-hypothesis. If the $F$-value is less than \Sexpr{round(qf(0.95,2,156),2)}, we do not reject the null-hypothesis. 
+
+
+<<dummy_22,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The F-distribution with 2 model degrees of freedom and 156 error degrees of freedom. The shaded area is the upper 5 percent of the distribution. The critical F-value for alpha=0.05 is depicted by the vertical line.'>>=
+df = 156; ncp = 0; limits = c(0,8)
+lb=-20; ub=qf(0.95, df1=2,df2=df, ncp=ncp)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmax,8, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = df(areax, df1=2, df2=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = df(x, df1=2,df2=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
+     + scale_x_continuous(limits = limits, breaks=seq(-8,8,1))
+            + geom_vline(xintercept =qf(0.95, df1=2,df2=df, ncp=ncp) )  + xlab("F")
+            + ylab("density"))
+@
+
+
+We've also stated that the $t$-distribution and the $F$-distribution have much in common. Here we will illustrate this. Suppose that we test the null-hypothesis that a certain population slope is 0. We perform a regression analysis and obtain a $T$-statistic of -2.40. Suppose our sample size was 42, so that our residual degrees of freedom equals $42-2=40$. Figure \ref{fig:dummy_23} shows the theoretical $t$-distribution with 40 degrees of freedom. It also shows our value of -2.40. The shaded area represent the values for $T$ that would be significant at an $\alpha=0.05$.   
+
+
+<<dummy_23,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The vertical line represents a T-value of -2.40. The shaded area represents the extreme 5 percent of the possible T-values'>>=
+
+df = 38; ncp = 0; limits = c(-5,5)
+lb=-20; ub=qt(0.025,df=40)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmin, xmax, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = dt(areax, df=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = dt(x, df=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax), alpha=0.5)
+     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
+     + geom_area(data = area, mapping = aes(x = seq(qt(0.975,df=40), 5, length.out = 100),  y = dt(seq(qt(0.975,df=40), 5, length.out = 100), df=df, ncp=ncp)), alpha=0.5)
+            + geom_vline(xintercept = -2.40)  + xlab("T")  +ylab("density"))
+@
+
+
+
+
+<<dummy_24,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The F-distribution with 1 model degrees of freedom and 40 error degrees of freedom. The shaded area is the upper 5 percent of the distribution. The vertical line represents the the square of -2.40: 5.76'>>=
+df = 40; ncp = 0; limits = c(0.15,8)
+lb=0.15; ub=qf(0.95, df1=2,df2=df, ncp=ncp)
+    x <- seq(limits[1], limits[2], length.out = 100)
+    xmin <- max(lb, limits[1])
+    xmax <- min(ub, limits[2])
+    areax <- seq(xmax,8, length.out = 100)
+    area <- data.frame(x = areax, ymin = 0, ymax = df(areax, df1=1, df2=df, ncp=ncp))
+    (ggplot()
+     + geom_line(data.frame(x = x, y = df(x, df1=1,df2=df, ncp=ncp)),
+                 mapping = aes(x = x, y = y))
+     + geom_area(data = area, mapping = aes(x = x,  y = ymax), alpha=0.5)
+     + scale_x_continuous(limits = limits, breaks=seq(-8,8,1))
+            + geom_vline(xintercept =5.76 )  + xlab("F")
+            + ylab("density"))
+@
+
+
+Now if we take every possible $T$-value and square it, we can plot these and look at the distribution (see Figure \ref{fig:dummy_24}). It turns out that this is an $F$-distribution with 1 model degrees of freedom and 40 residuals degrees of freedom. If we square the $T$-value of -2.40, we obtain a value of 5.76. From online tables, we know that the proportion of $F$-values larger than 5.76 equals \Sexpr{1-pf(5.76,1,40)}. The proportion of $T$-values larger than 2.40 or smaller than -2.40 equals also \Sexpr{round(2*pt(-2.40,40),2)}. Thus, the two-sided $p$-value associated with a certain $T$-value, is equal to the $p$-value associated with an $F$-value that is the square of the $T$-value. 
+
+This means that if you see a $T$-statistic of say 3 reported with a residuals degrees of freedom of 50, $t(50)=3$, you can equally report this as an $F(1,50)=9$. Conversely, if you see a reported $F$-value of $F(1,67)=49$, you could without problems turn this into a $t(67)=7$. Note however that this only the case if the model degrees of freedom of the $F$-statistic is equal to 1. Next time you look at UNIANOVA output, watch the $t$-statistics and $F$-statistics carefully and check whether the $F$-statistic is the square of the $T$-statistic. Check for instance Figure \ref{tab:dummy_21} again.   
