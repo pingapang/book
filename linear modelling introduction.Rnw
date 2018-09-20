@@ -1,6 +1,75 @@
 \chapter{Linear modelling: introduction}\label{chap:simple}
 
 
+
+\section{Dependent and independent variables}
+So now that we have discussed the distinction between numeric, ordinal and categorical variables, let's turn to dependent and independent variables. Determining whether a variable is treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a father and that of his child, the more logical it would be to see the height of the child \textit{as a function} of the height of the father. This because we assume that the genes are transferred from the father to the child. The father comes first, and the height of the child is partly the \textit{result} of the father's genes that were transmitted during fertilisation. That which is the result is usually taken as the dependent variable. The theoretical cause or antecedent is usually taken as the independent variable. 
+
+The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}. Independent variables are also often called explanatory variables.
+
+The dependent variable is usually the most important variable. It is the variable that we'd like to understand better, or perhaps predict better. The independent variable is usually an explanatory variable: it explains why some people have high values for the dependent variable and other people have low values. For instance, we'd like to know why some people are healthier than others. Health may then be our dependent variable. An explanatory variable might be age (older people tend to be less healthy), or perhaps occupation (being a dive instructor induces more health problems than being a university teacher). 
+
+Sometimes we're interested to see whether we can predict longevity: age at death is then our dependent variable and our independent (predictor) variables might then be food pattern and genetic make-up. 
+
+Thus, we often see four types of relations:
+\begin{itemize}
+\item Variable A affects/influences another variable B.
+\item Variable A causes or explains variable B.
+\item Variable A predicts variable B.
+\end{itemize}
+
+In all these three cases, Variable A is the independent variable and Variable B is the dependent variable.
+
+\subsection{Exercises}
+
+Below, variables are printed in \textbf{bold}. For each research statement, identify which variable is the dependent variable, and which variable is the independent variable.
+
+\begin{enumerate}
+
+\item The effect of \textbf{income} on \textbf{health}
+\item \textbf{Stock value} is affected by \textbf{inflation}
+\item \textbf{Size} is influenced by \textbf{weight}
+\item \textbf{Shoe size} is predicted by \textbf{sex}
+\item The less you \textbf{drink} the more \textbf{thirsty} you become 
+\item The more \textbf{calories} you eat, the more you \textbf{weigh}
+\item \textbf{Weight} is affected by \textbf{food intake} 
+\item \textbf{Weight} is affected by \textbf{exercise} 
+\item \textbf{Food intake} is predicted by \textbf{time of year}
+\item There is an effect of \textbf{exercise} on \textbf{heart rate} 
+\item \textbf{Inflation} leads to higher \textbf{wages} 
+\item \textbf{Unprotected sex} leads to \textbf{pregnancy}
+\item \textbf{HIV-infection} is caused by \textbf{unprotected sex}
+\item The effect of \textbf{alcohol intake} on \textbf{driving performance}
+\item \textbf{Sunshine} causes \textbf{growth}
+\item \textbf{Growth} causes \textbf{sunshine}
+
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+
+\item \textbf{income} independent, \textbf{health} dependent.
+\item \textbf{Stock value} dependent, \textbf{inflation} independent
+\item \textbf{Size} dependent, \textbf{weight} independent
+\item \textbf{Shoe size} dependent, \textbf{sex} independent
+\item \textbf{drink} independent, \textbf{thirsty} dependent
+\item \textbf{calories} independent, \textbf{weigh} dependent
+\item \textbf{Weight} dependent, \textbf{food intake} independent
+\item \textbf{Weight} dependent, \textbf{exercise} independent
+\item \textbf{Food intake} dependent, \textbf{time of year} independent
+\item \textbf{exercise} independent, \textbf{heart rate} dependent
+\item \textbf{Inflation} independent, \textbf{wages} dependent
+\item \textbf{Unprotected sex} independent, \textbf{pregnancy} dependent
+\item \textbf{HIV-infection} dependent, \textbf{unprotected sex} independent
+\item \textbf{alcohol intake} independent, \textbf{driving performance} dependent
+\item \textbf{Sunshine} independent, \textbf{growth} dependent
+\item \textbf{Growth} independent, \textbf{sunshine} dependent
+
+\end{enumerate}
+
+
+
 \section{Linear equations}
 
 From secondary education you might remember linear equations. Suppose you have two quantities, $x$ and $y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}
@@ -182,7 +251,7 @@ In summary, data on two variables may not show a perfect linear relationship, bu
 
 Even though a straight line can be a good approximation of a data set, it is hardly ever perfect: there are always discrependencies between what the straight line describes and what the data actually tell us.
 
-For instance, in Figure \ref{fig:lm_9}, we see a women, Sandra Schmidt, who makes \Sexpr{1000*x[order(x)][99]} Euros a year and who spends \Sexpr{round(y[order(x)][99],2)} Euros on holidays. According to the linear equation that describes the straight line, a woman that earns \Sexpr{1000*x[order(x)][99]} Euros a year would spend $100 + 100 * \Sexpr{1000*x[order(x)][99]}= \Sexpr{round(100 + 10*x[order(x)][99],2)}$ Euros on holidays. The discrependy between the actual amount spent and the one described by the linear equation equals $\Sexpr{round(y[order(x)][99],2)}-\Sexpr{round(100 + 10*x[order(x)][99],2)}=\Sexpr{round(y[order(x)][99],2)-round(100 + 10*x[order(x)][99],2)}$ Euros. This difference is rather small and the same holds for all the other women in this data set.
+For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes \Sexpr{1000*x[order(x)][99]} Euros a year and who spends \Sexpr{round(y[order(x)][99],2)} Euros on holidays. According to the linear equation that describes the straight line, a woman that earns \Sexpr{1000*x[order(x)][99]} Euros a year would spend $100 + 100 * \Sexpr{1000*x[order(x)][99]}= \Sexpr{round(100 + 10*x[order(x)][99],2)}$ Euros on holidays. The discrependy between the actual amount spent and the one described by the linear equation equals $\Sexpr{round(y[order(x)][99],2)}-\Sexpr{round(100 + 10*x[order(x)][99],2)}=\Sexpr{round(y[order(x)][99],2)-round(100 + 10*x[order(x)][99],2)}$ Euros. This difference is rather small and the same holds for all the other women in this data set.
 
 Such descrepencies between the actual amount spent and the amount as described or predicted by the straight line are called \textit{residuals} or \textit{errors}. Using the linear equation, we could predict holiday spending even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
 

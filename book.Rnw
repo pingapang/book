@@ -3,7 +3,12 @@
 \usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage{fancyref}
-
+% \usepackage{xmpincl}
+% \usepackage[
+%     type={CC},
+%     modifier={by-nc-sa},
+%     version={3.0},
+% ]{doclicense}
 
 
 % Title Page
@@ -38,9 +43,9 @@ This book is intended to be of use to bachelor students in social sciences that 
 
 
 \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
-% 
+
 \Sexpr{knit_child('linear modelling introduction.Rnw')} % simple regression
-% 
+
 
 
 
@@ -77,7 +82,7 @@ This book is intended to be of use to bachelor students in social sciences that 
 %
 
 \Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
-% 
+%
 \Sexpr{knit_child('chapter_13.Rnw')} % generalized linear models: poisson models
 
 \end{document}
