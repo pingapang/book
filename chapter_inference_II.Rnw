@@ -8,12 +8,12 @@ One common method to answer this question is to analyse a sample of data, apply 
 
 In inferential data analysis, one often works with two hypotheses: the \textit{null-hypothesis} and the \textit{alternative hypothesis}. The null-hypothesis states that the population slope is equal to 0 and the alternative hypothesis states that there is a slope that is different from 0. Remember that if the population slope is equal to 0, that is saying that there is no linear relationship between $x$ and $y$ (that is, you cannot predict one variable on the basis of the other variable). Therefore, the null-hypothesis states there is no linear relationship between $x$ and $y$ in the population. If there is a slope, whether positive or negative, is the same as saying there is a linear relationship, so the alternative hypothesis states that there is a linear relationship between $x$ and $y$ in the population.
 
-The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_1$. In formula form, we have
+The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_A$. In formula form, we have
 
 
 \begin{eqnarray}
 H_0: \beta_{slope}=0 \\
-H_1: \beta_{slope} \neq 0
+H_A: \beta_{slope} \neq 0
 \end{eqnarray}
 
 The population slope, $\beta_{slope}$, is either 0 or it is not. Our data analysis is then aimed at determining which of these two hypotheses is true. Key is that we do a thought experiment on the null-hypothesis: we wonder what would happen if the population slope would be really 0. In our imagination we draw many samples of a certain size, say 40 data points, and then determine the slope for each sample. Earlier we learned that the many sample slopes would form a histogram in the shape of a $t$-distribution with $n-2=38$ degrees of freedom. For example, suppose we would draw 1000 samples of size 40, then the histogram of the 1000 slopes would be like depicted in Figure \ref{fig:inf_14}
@@ -102,7 +102,7 @@ In the previous section we saw that if the population slope is 0, and we drew 10
 
 This estimate of the $p$-value was based on 1000 randomly drawn samples of size 40 and then looking at the frequency of certain values in that data set. But there is a short-cut, for we know that the distribution of sample slopes has a $t$-distribution if we standardize the sample slopes. Therefore we do not have to take 1000 samples and estimate probabilities, but we can look at the $t$-distribution directly, using tables online or in statistical packages.
 
-Figure \ref{fig:inf_117} shows the $t$-distribution that is the theoretical distribution corresponding to the histogram in Figure \ref{fig:inf_14}. If the standard error is equal to 0.19, and the hypothetical population slope is 0, then the $T$-statistic associated with a slope of -1 is equal to $\frac{-1-0}{0.19}=-5.26$. With this value, we can look up in the tables, how often such a value of -5.26 or smaller occurs in a $t$-distribution with 38 degrees of freedom. In the tables we find that the probability that this occurs is 0.00000294. So, the fact that the $T$-statistic has a $t$-distribution gives us the opportunity to exactly determine certain probabilities, including the $p$-value.
+Figure \ref{fig:inf_117} shows the $t$-distribution that is the theoretical distribution corresponding to the histogram in Figure \ref{fig:inf_14}. If the standard error is equal to 0.19, and the hypothetical population slope is 0, then the $T$-statistic associated with a slope of -1 is equal to $\frac{-1-0}{0.19}=-5.26$. With this value, we can look up in the tables, how often such a value of -5.26 \textit{or smaller} occurs in a $t$-distribution with 38 degrees of freedom (see Chapter \ref{chap:confidence}). In the tables we find that the probability that this occurs is 0.00000294. So, the fact that the $T$-statistic has a $t$-distribution gives us the opportunity to exactly determine certain probabilities, including the $p$-value.
 
 <<inf_117,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The histogram of 1000 sample slopes and its corresponding theoretical t-distribution with 38 degrees of freedom. The vertical line represents the T-value of -5.56.'>>=
 
@@ -197,7 +197,7 @@ In the previous section, we found a one-sided $p$-value of 0.00000294 for a samp
 When should we think the $p$-value is small enough to conclude that the null-hypothesis can be rejected? When can we conclude that the hypothesis that the population slope is 0 is not supported by our sample data? This was a question posed to the founding father of statistical hypothesis testing, Sir Ronald Fischer. In his book \textit{Statistical Methods for Research Workers} (1925), Fisher proposed a probability of 5\%. He advocated 5\% as a standard level for concluding that there is evidence against the null-hypothesis. However, he did not see it as an absolute rule: "If P is between .1 and .9 there is certainly no reason to suspect the hypothesis tested. If it is below .02 it is strongly indicated that the hypothesis fails to account for the whole of the facts. We shall not often be astray if we draw a conventional line at .05...". So Fisher saw the $p$-value as an informal index to be used as a measure of discrepancy between the data and the null-hypothesis: The null-hypothesis is never proved, but is possibly disproved.
 
 
-Later, Jerzy Neyman and Egon Pearson saw the $p$-value as an instrument in decision making: is the null-hypothesis true, or is the alternative hypothesis true? You either reject the null-hypothesis or you don't, there is nothing in between. This view to data-analysis is still rather popular in the social and behavioural sciences, but also in particle physics. In order to make such a black-and-white decision, you decide before-hand, that is, before collecting data, what \textit{level of significance} you choose for your $p$-value to decide whether to reject the null-hypothesis. For example, as your significance level, you might want to choose 1\%. Let's call this chosen significance level $\alpha$. Then you collect your data, you apply your linear model to the data, and find that the $p$-value associated with the slope  equals $p$. If this $p$ is smaller than or equal to $\alpha$ you \textit{reject the null-hypothesis}, and if $p$ is larger than $\alpha$ then you \textit{do not reject the null-hypothesis}. A slope with a $p \leq \alpha$ is said to be \textit{significant}, and a slope with a $p > \alpha$ is said to be \textit{non-significant}. If the slope is significant, then one should reject the null-hypothesis and say there is a slope in the population different from zero. If the slope is not significant, then one should not reject the null-hypothesis and say there is no slope in the population (i.e., the slope is 0).
+Later, Jerzy Neyman and Egon Pearson saw the $p$-value as an instrument in decision making: is the null-hypothesis true, or is the alternative hypothesis true? You either reject the null-hypothesis or you don't, there is nothing in between. A slightly milder view is that you either decide that there is enough empirical evidence to reject the null-hypothesis, or there is not enough empirical evidence to reject the null-hypothesis (not necessarily accepting $H_0$ as true!). This view to data-analysis is rather popular in the social and behavioural sciences, but also in particle physics. In order to make such black-and-white decisions, you decide before-hand, that is, before collecting data, what \textit{level of significance} you choose for your $p$-value to decide whether to reject the null-hypothesis. For example, as your significance level, you might want to choose 1\%. Let's call this chosen significance level $\alpha$. Then you collect your data, you apply your linear model to the data, and find that the $p$-value associated with the slope equals $p$. If this $p$ is smaller than or equal to $\alpha$ you \textit{reject the null-hypothesis}, and if $p$ is larger than $\alpha$ then you \textit{do not reject the null-hypothesis}. A slope with a $p \leq \alpha$ is said to be \textit{significant}, and a slope with a $p > \alpha$ is said to be \textit{non-significant}. If the slope is significant, then one should reject the null-hypothesis and say there is a slope in the population different from zero. If the slope is not significant, then one should not reject the null-hypothesis and say there is no slope in the population (i.e., the slope is 0). Alternatively, one could say there is no empirical evidence for the existence of a slope (this leaves the possibility that there is a slope in the population but that our method of research failed to find one).
 
 
 
@@ -217,6 +217,8 @@ State the null-hypothesis.
 \item You set your significance level to 1\%, so $\alpha=0.01$. Next, you measure 52 planets and you find a sample slope of $b_1=6$, with a standard error of 2.24. Determine the $T$-statistic with which you test the null-hypothesis.
 
 \item Determine the two-sided $p$-value on the basis of Table \ref{tab:nonparmixed_4}.
+
+\item What does this $p$-value represent? 
 
 \item Do you reject or do you not reject the null-hypothesis? What does this mean?
 
@@ -239,7 +241,7 @@ State the null-hypothesis.
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
 
 \begin{enumerate}
 
@@ -256,6 +258,8 @@ H_0: \beta_1 = 0
 \item
 
 Degrees of freedom is $52-2=50$. From the table for a $t$-distribution with 50 degrees of freedom, we see that a $T$-value of 2.68 is the 0.995th quantile. Thus, half a percent of the $T$-values are larger than 2.68. Because of symmetry, half a percent of the $T$-values is smaller than -2.68. So in total, 1\% of the $T$-values are at least 2.68 away from the mean (both directions). Therefore, the two-sided $p$-value is 0.01.
+
+\item This is the probability that, given that the null-hypothesis is true, we find a sample slope of 6 or larger or a sample slope of -6 or smaller.
 
 \item Our $p$-value of 0.01 is equal to our $\alpha$ and we therefore reject the null-hypothesis. This means that we conclude that the slope coefficient in all planets in the universe is not 0. There is a relationship between the volume of a planet and its mass.
 
@@ -287,15 +291,58 @@ The $p$-value $\Sexpr{2*(1-pt(2/1.5,2))}$ is larger than her $\alpha$, so the ef
 \section{Type I and Type II errors in decision making}
 
 
-Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully accept the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error).
+Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully fail to reject the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error). Table \ref{fig:fig:typeIandII} gives an overview.
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Test conclusion}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & do not reject $H_0$ &  reject $H_0$\\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& $H_0$ true & OK &  Type~I Error \\
+\raisebox{1.5ex}{\textbf{Truth}} & $H_A$ true & Type~II Error & OK \\
+  \cline{2-4}
+\end{tabular}
+\caption{Four different scenarios for hypothesis tests.}
+\label{fig:typeIandII}
+\end{table}
 
 To illustrate the difference between type I and type II errors, let's recall the famous fable by Aesop about the boy who cried wolf. The tale concerns a shepherd boy who repeatedly tricks other people into thinking a wolf is attacking his flock of sheep. The first time he cries "There is a wolf!", the men working in an adjoining field come to help him. But when they repeatedly find there is no wolf to be seen, they realise they are being fooled by the boy. One day, when a wolf \textit{does} appear and the boy again calls for help, the men believe that it is another false alarm and the sheep are eaten by the wolf.
 
-In this fable, we can think of the null-hypothesis as the hypothesis that there is no wolf. The alternative hypothesis is that there is a wolf. Now, when the boy cries wolf the first time, there is in fact no wolf. The men from the adjoining field make a type I error: they think there is a wolf while there isn't. Later, when they are fed up with the annoying shepherd boy, they don't react when the boy cries "There is a wolf!". Now they make a type II error: they think there is no wolf, while there actually is a wolf.
+In this fable, we can think of the null-hypothesis as the hypothesis that there is no wolf. The alternative hypothesis is that there is a wolf. Now, when the boy cries wolf the first time, there is in fact no wolf. The men from the adjoining field make a type I error: they think there is a wolf while there isn't. Later, when they are fed up with the annoying shepherd boy, they don't react when the boy cries "There is a wolf!". Now they make a type II error: they think there is no wolf, while there actually is a wolf. See Table \ref{fig:Aesop} for the overview.
 
-Let's return to regression analysis. Suppose you want to determine the slope for the effect of age on height in children. Let the slope now stand for the slope: either there is no slope (no wolf, $H_0$) or there is a slope (wolf, $H_1$). The null-hypothesis is that the slope is 0 in the population of all children (a slope of 0 means there is no slope) and the alternative hypothesis that the slope is not 0, so there is a slope. You might study a sample of children and you might find a certain slope. You might decide that if the $p$-value is lower than a critical value you conclude that the null-hypothesis is not true. Suppose you think a probability of 10\% is small enough to reject the null-hypothesis as true. In other words, if $p \leq 0.10$ then we no longer think 0 is a reasonable value for the population slope. In this case, we have fixed our $\alpha$ or type I error rate to be $\alpha=0.10$. This means that if we study a random sample of children, we look at the slope and find a $p$-value of 0.11, then we do not reject the null-hypothesis. If we find a $p$-value of 0.10, then we reject the null-hypothesis.
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Men in the field}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & Think there is no wolf  &  Think there is a wolf \\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& There is no wolf & OK &  waste of time and energy \\
+\raisebox{1.5ex}{\textbf{Truth}} & There is a wolf & devoured sheep & OK \\
+  \cline{2-4}
+\end{tabular}
+\caption{Four different scenarios for wolves and men working in the field.}
+\label{fig:Aesop}
+\end{table}
+
+
+
+
+
+Let's return to regression analysis. Suppose you want to determine the slope for the effect of age on height in children. Let the slope now stand for the slope: either there is no slope (no wolf, $H_0$) or there is a slope (wolf, $H_A$). The null-hypothesis is that the slope is 0 in the population of all children (a slope of 0 means there is no slope) and the alternative hypothesis that the slope is not 0, so there is a slope. You might study a sample of children and you might find a certain slope. You might decide that if the $p$-value is lower than a critical value you conclude that the null-hypothesis is not true. Suppose you think a probability of 10\% is small enough to reject the null-hypothesis as true. In other words, if $p \leq 0.10$ then we no longer think 0 is a reasonable value for the population slope. In this case, we have fixed our $\alpha$ or type I error rate to be $\alpha=0.10$. This means that if we study a random sample of children, we look at the slope and find a $p$-value of 0.11, then we do not reject the null-hypothesis. If we find a $p$-value of 0.10, then we reject the null-hypothesis.
+
 
 Note that the probability of a type I error is the same as our $\alpha$ for the significance level. Suppose we set our $\alpha=0.05$. Then for any $p$-value equal or smaller than 0.05, we reject the null-hypothesis. Suppose the null-hypothesis is true, how often do we then find a $p$-value smaller than 0.05? We find a $p$-value smaller than 0.05 if we find a $T$-value that is above a certain threshold. For instance, for the $t$-distribution with 198 degrees of freedom, the critical value is $\pm 1.97$, \textit{because only in 5\% of the cases we find a $T$-value of $\pm 1.97$ or more if the null-hypothesis is true}! Thus, if the null-hypothesis is true, we see a $T$-value of at least $\pm 1.97$ in 5\% of the cases. Therefore, we see a signficicant $p$-value in 5\% of the cases if the null-hypothesis is true. This is exactly the definition of a Type I error: the probability that we reject the null-hypothesis (finding a significant $p$-value), given that the null-hypothesis is true. So we call our $\alpha$-value the type I error rate.
+
+
+
 
 Suppose 100 researchers are studying a particular slope. Unbeknownst to them, the population slope is exactly 0. They each draw a random sample from the population and test whether their sample slope is significantly different from 0. Suppose they all use different sample sizes, but they all use the same $\alpha$ of 0.05. Then we can expect that about 5 researchers will reject the null-hypothesis (finding a $p$-value less than or smaller than 0.05) and about 95 will not reject the null-hypothesis (finding a $p$-value of more than 0.05).
 
@@ -306,11 +353,11 @@ If $\alpha$ represents the probability of making a type I error, then we can use
 
 \begin{eqnarray}
 H_0: \beta_1 =0 \nonumber \\
-H_1: \beta_1 = 1\nonumber
+H_A: \beta_1 = 1\nonumber
 \end{eqnarray}
 
 
-Next, we determine the distribution of sample slopes under the assumption that the population slope is 1. We know that this distribution has a mean of 1 and a standard deviation equal to the standard error. We also know it has the shape of a $t$-distribution. Let sample size be equal to 102 and the standard error 2. If we standardize the slopes by dividing by the standard error, we get the two $t$-distributions in Figure \ref{fig:inf_20}: one distribution of $T$-values if the population slope is 0 (centered around T=0), and one distribution of $T$-values if the population slope is 1 (centered around $T=1/2=0.5$.
+Next, we determine the distribution of sample slopes under the assumption that the population slope is 1. We know that this distribution has a mean of 1 and a standard deviation equal to the standard error. We also know it has the shape of a $t$-distribution, see Chapter \ref{chap:confidence}. Let sample size be equal to 102 and the standard error 2. If we standardize the slopes by dividing by the standard error, we get the two $t$-distributions in Figure \ref{fig:inf_20}: one distribution of $T$-values if the population slope is 0 (centered around T=0), and one distribution of $T$-values if the population slope is 1 (centered around $T=1/2=0.5$.
 
 Let's fix $\alpha$ to 10\%. The shaded areas represent the area where $p \leq \alpha$: for all values of $T$ smaller than $\Sexpr{qt(0.05, df=df, ncp=0)}$ and larger than $\Sexpr{qt(0.95, df=df, ncp=0)}$, we reject the null-hypothesis. The probability that this happens, \textit{if the null-hypothesis is true}, is equal to $\alpha$ which is 0.10 in this example. The probability that this happens \textit{if the alternative hypothesis is true} (i.e., population slope is 1), is depicted in Figure \ref{fig:inf_21}.
 
@@ -366,7 +413,31 @@ In sum, in this example with an $\alpha$ of 0.10 and assuming a population slope
 
 Type I and II error rates $\alpha$ and $\beta$ are closely related. If we feel that a significance level of $\alpha=0.10$ is too high, we could choose a level of 0.01. This ensures that we are less likely to reject the null-hypothesis when it is true. The critical value for our $T$-statistic is then equal to $\pm  \Sexpr{qt(0.995,df=df,ncp=0)}$, see Figure \ref{fig:inf_22}. In Figure \ref{fig:inf_23} we see that if we change $\alpha$, we also get a different value for $1-\beta$, in this case $\Sexpr{1-pt(qt(0.995, df=df, ncp=0), df=100, ncp=0.5) + pt(qt(0.005, df=df, ncp=0),df=100,ncp=0.5)}$.
 
-Thus, if we use smaller values for $\alpha$, we get smaller values for $1-\beta$, so we get larger values for $\beta$. This means that if we lower the probability of rejecting the null-hypothesis given that it is true (type I error) by choosing a lower value for $\alpha$, we inadvertently increase the probability of failing to reject the null-hypothesis given that it is not true (type II error). One should therefore always strike a balance between the two types of errors. One should consider how bad it is to think that the slope is not 0 while it is, and how bad it is to think that the slope is 0, while it is not. If you feel that the first mistake is worse than the second one, then make sure $\alpha$ is really small, and if you feel that the second mistake is worse, then make $\alpha$ not too small. Another option, and a better one, to avoid type II errors, is to increase sample size, as we will see in the next section.
+Table \ref{fig:probs} gives an overview of how $\alpha$ and $\beta$ are related to type I and type II error rates. If a $p$-value for a statistical test is equal to or smaller than a pre-chosen significance level $\alpha$, the probability of a type I error equals $\alpha$. The probability of a type II error rate is equal to $\beta$. 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Statistical outcome}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & $p > \alpha$  &  $p \leq \alpha$ \\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& $H_0$ & $1-\alpha$ &  $\alpha$ \\
+\raisebox{1.5ex}{\textbf{Truth}} & $H_A$  & $\beta$ & $1-\beta$ \\
+  \cline{2-4}
+\end{tabular}
+\caption{The probabilities of a statistical outcome under the null-hypothesis and the alternative hypothesis.}
+\label{fig:probs}
+\end{table}
+
+
+Thus, if we use smaller values for $\alpha$, we get smaller values for $1-\beta$, so we get larger values for $\beta$. This means that if we lower the probability of rejecting the null-hypothesis given that it is true (type I error) by choosing a lower value for $\alpha$, we inadvertently increase the probability of failing to reject the null-hypothesis given that it is not true (type II error). 
+
+Think again about the problem of the sheep and the wolf. Instead of the boy, the men could choose to put a very nervous person on watch, someone very scared of wolves. With the faintest hint of a wolf's presence, the man will call out "Wolf!". However, this will lead to many false alarms (type I errors), but the men will be very sure that when there actually is a wolf, they will be warned. Alternatively, they could choose to put a man on watch that is very laid back, very relaxed, but perhaps prone to nod off. This will lower the risk of false alarms immensely (no more type I errors) but it will dramatically increase the risk of a type II error!
+
+One should therefore always strike a balance between the two types of errors. One should consider how bad it is to think that the slope is not 0 while it is, and how bad it is to think that the slope is 0, while it is not. If you feel that the first mistake is worse than the second one, then make sure $\alpha$ is really small, and if you feel that the second mistake is worse, then make $\alpha$ not too small. Another option, and a better one, to avoid type II errors, is to increase sample size, as we will see in the next section.
 
 <<inf_22,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different t-distributions of the sample slope if the population slope equals 0 (left curve), and if the population slope equals 1 (right curve). Grey area depicts the probability that we find a p-value value smaller than 0.01 if the population slope is 0.'>>=
 
@@ -602,7 +673,7 @@ ggplot( data.frame(age,height) , aes(age, height) ) +
 
 \section{Criticism on null-hypothesis testing and $p$-values}
 
-The practice of null-hypothesis significance testing (NHST) is widespread. However, from the beginning it has received much criticism. One of the first to critize the approach was the inventor of the $p$-value, Sir Ronald Fisher himself. Fisher explicitly contrasted the use of the $p$-value for statistical inference in science with the Neyman–Pearson approach, which he termed "Acceptance Procedures". Whereas in the Pearson-Neyman approach the only relevance of the $p$-value is whether it is smaller or larger than the fixed significance level $\alpha$, Fisher emphasized that the exact $p$-value should be reported to indicate the strength of evidence against the null-hypothesis. He emphasized that no single $p$-value can refute a hypothesis, since chance always allows for type I and type II errors. Conclusions can and will be revised with further experimentation; science requires more than one study to reach solid conclusions. Decision procedures with clear-cut decisions based on one study only hamper science and lead to tunnel-vision.
+The practice of null-hypothesis significance testing (NHST) is widespread. However, from the beginning it has received much criticism. One of the first to critize the approach was the inventor of the $p$-value, Sir Ronald Fisher himself. Fisher explicitly contrasted the use of the $p$-value for statistical inference in science with the Pearson-Neyman approach, which he termed "Acceptance Procedures". Whereas in the Pearson-Neyman approach the only relevance of the $p$-value is whether it is smaller or larger than the fixed significance level $\alpha$, Fisher emphasized that the exact $p$-value should be reported to indicate the strength of evidence against the null-hypothesis. He emphasized that no single $p$-value can refute a hypothesis, since chance always allows for type I and type II errors. Conclusions can and will be revised with further experimentation; science requires more than one study to reach solid conclusions. Decision procedures with clear-cut decisions based on one study only hamper science and lead to tunnel-vision.
 
 Apart from these science-theoretical considerations of the NHST, there are also practical reasons why pure NHST should be avoided. In at least a number of research fields, the $p$-value has become more than just the criterion for finding an effect or not: it has become the criterion of whether the research is publishable or not. Editors and reviewers of scientific journals have increasingly interpreted a study with a significant effect to be more interesting than a study with a non-significant effect. For that reason, in scientific journals you will find mostly studies reported with a significant effect. This has led to \textit{the file-drawer problem}: the literature reports significant effects for a particular phenomenon, but there can be many unpublished studies with non-significant effects for the same phenomenon. Theses unpublished studies remain unseen in file-drawers (or these days on hard-drives). So based on the literature there might seem to exist a particular phenomenon, but if you would put all the results together, including the unpublished studies, the effect might disappear completely.
 
@@ -639,7 +710,7 @@ Using confidence intervals also counters one fundamental problem of null-hypothe
 
 Sometimes a null-hypothesis doesn't make sense at all. Suppose we are interested to know what the relationship is between age and height in children. Nobody believes that the effect of age on height is 0. Why then test this hypothesis? More interesting would be to know \textit{how large} the population slope is. A confidence interval would then be much more informative than a simple rejection of the null-hypothesis.
 
-In some cases, a null-hypothesis can be slightly more meaningful: suppose you are interested in the effect of cognitive behavioural therapy on depression. You hope that the number of therapy sessions has a negative effect on the severity of the depression, but of course it is entirely possible that the effect is very close to nonexisting. Of course you can only look at a sample of patients and determine the sample slope. But think now about the population slope: think about all patients in the world with depression that theoretically could partake in the research. Some of them have 0 sessions, some have 1 session, and so on. Now imagine that there are 1 million of such people. How likely is it that in the population, the slope for the regression is exactly 0? Not 0.00000001, not -0.0000000002, but exactly 0.0000000000. Of course, this is extremely unlikely. The really interesting question in such research is whether there is a \textit{meaningful} effect of therapy. For instance, an effect of at least half a point decrease on the Hamilton depression scale for 5 sessions. Also in this case, a confidence interval for the effect of therapy on depression would be more helpful than a simple $p$-value. A confidence interval of -2.30 to -0.01 says that a small population effect of -0.01 might be there, but that an effect of -0.0001 or 0.0000 is rather unlikely. The $p$-value less than $\alpha$ only tells you only that a value of exactly 0.0000 is not realistic.
+In some cases, a null-hypothesis can be slightly more meaningful: suppose you are interested in the effect of cognitive behavioural therapy on depression. You hope that the number of therapy sessions has a negative effect on the severity of the depression, but it is entirely possible that the effect is very close to nonexisting. Of course you can only look at a sample of patients and determine the sample slope. But think now about the population slope: think about all patients in the world with depression that theoretically could partake in the research. Some of them have 0 sessions, some have 1 session, and so on. Now imagine that there are 1 million of such people. How likely is it that in the population, the slope for the regression is exactly 0? Not 0.00000001, not -0.0000000002, but exactly 0.0000000000. Of course, this is extremely unlikely. The really interesting question in such research is whether there is a \textit{meaningful} effect of therapy. For instance, an effect of at least half a point decrease on the Hamilton depression scale for 5 sessions. Also in this case, a confidence interval for the effect of therapy on depression would be more helpful than a simple $p$-value. A confidence interval of -2.30 to -0.01 says that a small population effect of -0.01 might be there, but that an effect of -0.0001 or 0.0000 is rather unlikely. The $p$-value less than $\alpha$ only tells you only that a value of exactly 0.0000 is not realistic.
 
 
 % In its turn, the $p$-value, as we have seen, depends on the $T$-statistic and the degrees of freedom. The degrees of freedom in turn depends on sample size. The $T$-statistic also depends on sample size, as it is partly based on the standard error.
@@ -767,7 +838,7 @@ Figure \ref{fig:inf_28} shows an example of a regression analysis on 102 datapoi
 
 
 
-<<inf_28,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Regression of y on x, with the population line in black and the sample line in blue. The grey area is the 95 percent confidence interval for the population line based on the sample line.'>>=
+<<inf_28,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Regression of y on x, with the population line in black and the sample line in blue.'>>=
 set.seed(112334)
 x <- runif(102, 0, 10)
 y <- rnorm(102, 0.2  *x , 0.6)

@@ -1,6 +1,6 @@
 
 
-\chapter{Multivariate regression}
+\chapter{Multiple regression}\label{chap:multip}
 
 
 \section{Explained and unexplained variance}

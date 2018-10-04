@@ -53,6 +53,7 @@
 \usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage{fancyref}
+\usepackage{hyperref}
 % \usepackage{xmpincl}
 % \usepackage[
 %     type={CC},
@@ -64,7 +65,7 @@
 % Title Page
 \title{Analyzing data using linear models}
 
-\author{St\'ephanie van den Berg}
+\author{St\'ephanie M. van den Berg}
 \date{Versie 0.1 \\ (\today)}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
@@ -74,7 +75,7 @@
 
 
 \begin{abstract}
-This book is intended to be of use to bachelor students in social sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple regression models, to linear mixed models, and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
+This book is intended to be of use to bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, to linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
 \end{abstract}
 
 
@@ -94,7 +95,7 @@ Data is the plural of datum, and datum is the Latin translation of 'given'. That
 In data analysis, we always put data in such a matrix format. In general, we put the objects of our study in rows, and their properties in columns. The objects of our study we call \textit{units}, and the properties we call \textit{variables}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with 7 units and 2 variables.} 
@@ -137,7 +138,7 @@ A unit is something we'd like to say something about. For example, I might want 
 If my interest is in schools, the data matrix in Table \ref{tab:data_3} might be useful, which shows a different row for each school with a couple of variables. Here again, we see a variable for grade on a course, but now averaged per school. In this case, school is my unit of analysis.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on schools.} 
@@ -167,7 +168,7 @@ In many instances, units of analysis are observed more than once. This means tha
 Suppose we measure depression levels in four men four times during cognitive behavioural therapy. Sometimes you see data presented in the way of Table \ref{tab:data_7}, where there are four separate variables for depression level, one for each measurement: \textbf{depression.1}, \textbf{depression.2}, \textbf{depression.3}, and \textbf{depression.4}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with depression levels in wide format.} 
@@ -194,7 +195,7 @@ An alternative way of looking at this problem of measuring depression four times
 Therefore, instead of adding columns, we could simply stick to one variable and only add rows. That way, the data matrix becomes longer, which is the reason that we call that format \textit{long format}. Table \ref{tab:data_8} shows the same data from Table \ref{tab:data_7}, but now in long format. Instead of four different variables, we have only one variable for depression level, and one extra variable \textbf{time} that indicates to which timepoint a particular depression measure refers to. Thus, both Tables \ref{tab:data_7} and \ref{tab:data_8} tell us that the second depression measure for client number 3 was 0.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with depression levels in long format.} 
@@ -239,7 +240,7 @@ Now let's look at a slightly more complex example, where the advantage of long f
 % @
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts.} 
@@ -268,7 +269,7 @@ Jan 1 & 3 & 2 & Dump \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:31 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts in wide format.} 
@@ -299,7 +300,7 @@ The second thing we can say about the difference in data in long and wide format
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:32 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts.} 
@@ -407,7 +408,7 @@ A fourth reason for preferring long format over wide format is the most practica
 \item In Table \ref{tab:taxes} you see data on two companies that paid taxes in 2016 and 2017. Are the data displayed in wide format or in long format? Explain.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:32 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Paid taxes in 2016 and 2017.} 
@@ -440,7 +441,7 @@ Answers:
 \item An example of the data displayed in long format is displayed in Table \ref{tab:taxeslong}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:32 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Paid taxes in 2016 and 2017.} 
@@ -500,7 +501,7 @@ Ordinal variables often involve subjective measurements. One example would be ha
 Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. They have values that describe 'what type' or 'to which category' a unit of belongs. For example, a school could either be publicly funded or not, or a person could either have the Swedish nationality or not. A variable that indicates such a dichotomy between publicly funded yes or no, or Swedish nationality yes or no, is called a \textit{dichotomous} variable, and is a subtype of a categorical variable. Another subtype of a categorical variable is a \textit{nominal} variable. Nominal comes from the Latin nomen, which means name. When you name the nationality of a person, you have a nominal variable. Table \ref{tab:data_9} shows an example of both an dichotomous variable (Swedish) that always has only two different values, and a nominal variable (Nationality), that can have as many different values as you want.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:32 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Nationalities.} 
@@ -589,7 +590,7 @@ In the coming chapters, we will come back to the important distinction between c
 Variables have different values. For example, age is a numeric variable: lots of people have different ages, between 0 days and 130 years. Suppose we measure age in years, then we have 131 different values, from 0 years to 120 years. For each observed age separately, we can compute how many observations we have. For instance, suppose we have an imaginary town with 1000 children. For each age, we can count the number of children who have that particular age. The results of the counting are in Table \ref{tab:frequency_1}. The number of observed children with a certain age, say 40, is called the \textit{frequency} of an age of 40. The table is therefore called a frequency table. Generally, in a frequency table values that are not observed are omitted (i.e., the frequency of children with age 16 is 0).
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:32 2018
+% Thu Oct  4 09:56:50 2018
 \begin{table}[ht]
 \centering
 \caption{Freqency table for age, with proportions and cumulative proportions.} 
@@ -731,7 +732,7 @@ The reason that quartiles, quantiles and percentiles are important is that they 
 \subsection{Exercises}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:33 2018
+% Thu Oct  4 09:56:51 2018
 \begin{table}[ht]
 \centering
 \caption{Freqency table for x, with proportions and cumulative proportions.} 
@@ -849,7 +850,7 @@ This might be even made more clear by the following example in Table \ref{tab:me
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:33 2018
+% Thu Oct  4 09:56:51 2018
 \begin{table}[ht]
 \centering
 \caption{Four series of values and their respective medians and means.} 
@@ -938,7 +939,7 @@ It is entirely possible to compute the mode for the variables University, Size, 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:33 2018
+% Thu Oct  4 09:56:52 2018
 \begin{table}[ht]
 \centering
 \caption{Study programs and their relative sizes (1=small, 2=medium, 3=large) for six different universities.} 
@@ -1166,7 +1167,7 @@ Z = \frac{x - \bar{x}}{\sigma}
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:38 2018
+% Thu Oct  4 09:56:56 2018
 \begin{table}[ht]
 \centering
 \caption{Standardizing scores.} 
@@ -1228,7 +1229,7 @@ We know that the two inflection points lie one standard deviation below and abov
 All quantiles for the standard normal distribution can be looked up online\footnote{see for example ....} or in books. Table \ref{tab:normal_4} gives a short list of quantiles. From this table, you see that 1\% of the $z$-values is lower than -2.33, and that 25\% of the $z$-values is lower than -0.67. We also see that half of all the $z$-values is lower than 0.00 and that 10\% of the $z$-values is larger than 1.28, and that the 1\% largest values are higher than 2.33.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:39 2018
+% Thu Oct  4 09:56:57 2018
 \begin{table}[ht]
 \centering
 \caption{Some quantiles for the standard normal distribution.} 
@@ -1326,7 +1327,7 @@ For example, suppose we are in a lecture hall with 456 students and we count the
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:39 2018
+% Thu Oct  4 09:56:57 2018
 \begin{table}[ht]
 \centering
 \caption{A frequency table of nationalities.} 
@@ -1398,7 +1399,7 @@ Ordinal variables are usually best visualized using bar charts. Figure \ref{fig:
 Variables are properties that vary: from person to person, or from location to location, or from time to time, of from object to object. Sometimes when you have two variables, you see that they co-vary: when one variable changes, the other variable changes too. For example, suppose I have 20 pencils. These pencils may vary in colour: twelve of them are red, and eight of them are blue. Therefore, colour is a variable with values "red" and "blue". The twenty pencils also vary in length: four are unused and therefore still long, and sixteen of them have been used many times so that they are short. Therefore, length is also a variable, with values "long" and "short". Note that these variables have been measured using the same pencils. In theory I could have long blue pencils, long red pencils, short blue pencils and short red pencils. Let's look at the pencils that I have: for each combination of lenght and colour, I count the number of pencils. The result I put in Table \ref{tab:crosstable_1}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:40 2018
+% Thu Oct  4 09:56:58 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of colour and length for twenty pencils.} 
@@ -1424,7 +1425,7 @@ Crosstables are nice visualization of how two categorical variables co-vary. But
 Suppose instead of determining length by values "short" and "long", I could measure the exact length of the pencils in centimeters. I put the results in Table \ref{tab:crosstable_2}. We see that the table is much larger than Table \ref{tab:crosstable_1}. We also see quite a few cells with zeros. In most cases, for every particular combination of length and colour we only see a count of 1 pencil. In general, you see that when one of the variables is numeric, the crosstable becomes very large and in addition it becomes sparse, that is, with many zeros. With such a large and sparse table, it is hard to get a quick impression of how two variables co-vary.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:40 2018
+% Thu Oct  4 09:56:58 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of colour and length for twenty pencils.} 
@@ -1472,7 +1473,7 @@ From a boxplot like this it is easy to spot differences in the distribution of a
 \subsection{Numeric by numeric: scatterplot}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:40 2018
+% Thu Oct  4 09:56:58 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of length (rows) and weight (columns) for twenty pencils.} 
@@ -1545,9 +1546,9 @@ You see that by visualizing two variables, important patterns may emerge that yo
 
 \section{Overview of the book}
 
-Chapter \ref{} will look at how we can use a straight line to summarize the relationship between two quantitative variables. A straight line that summarizes your data is a simple case of an \textit{linear model}. In Chapters \ref{} and \ref{} we will discuss how you can draw conclusions about data that you have not seen. For example, in the previous section we described the relationship between weight and height of twenty pencils. The question that you may have is whether this linear relationship also holds for \textit{all} pencils of the same make, that is, whether the same linear model holds for both the observed twenty pencils and the total collection of pencils.
+Chapter \ref{chap:simple} will look at how we can use a straight line to summarize the relationship between two numeric variables. A straight line that summarizes your data is a simple case of an \textit{linear model}. In Chapters \ref{chap:confidence} and \ref{chap:hypothesis} we will discuss how you can draw conclusions about data that you have not seen. For example, in the previous section we described the relationship between weight and height of twenty pencils. The question that you may have is whether this linear relationship also holds for \textit{all} pencils of the same make, that is, whether the same linear model holds for both the observed twenty pencils and the total collection of pencils.
 
-In Chapter \ref{} we describe how we can use straight lines (linear models) to summarize relationships between more than two quantitative variables, and in Chapter \ref{} we will show how we can use straight lines to summarize relationships with independent variables that we want to treat qualitatively. In Chapter \ref{} we extend the idea of studying more than two variables and look at more complicated relationships between two independent variables and one dependent variable. Chapter \ref{} shows how you can make elaborate statements about differences between groups of observations, in the case one of the variables is qualitative variable.
+In Chapter \ref{chap:multip} we describe how we can use straight lines (linear models) to summarize relationships between more than two numeric variables, and in Chapter \ref{chap:categorical} we will show how we can use straight lines to summarize relationships with independent variables that we want to treat as categorical. In Chapter \ref{} we extend the idea of studying more than two variables and look at more complicated relationships between two independent variables and one dependent variable. Chapter \ref{} shows how you can make elaborate statements about differences between groups of observations, in the case one of the variables is qualitative variable.
 
 Chapter \ref{} discusses when it is appropriate to use linear models to summarize your data, and when it is not. It shows methods that enable you to decide whether to trust a linear model or not. Chapter \ref{} then discussses alternative methods that you can use when linear models are not appropriate.
 
@@ -1573,7 +1574,7 @@ Chapter \ref{} then discusses \textit{generalized linear models}. These are mode
 
 
 \section{Dependent and independent variables}
-So now that we have discussed the distinction between numeric, ordinal and categorical variables, let's turn to dependent and independent variables. Determining whether a variable is treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a father and that of his child, the more logical it would be to see the height of the child \textit{as a function} of the height of the father. This because we assume that the genes are transferred from the father to the child. The father comes first, and the height of the child is partly the \textit{result} of the father's genes that were transmitted during fertilisation. That which is the result is usually taken as the dependent variable. The theoretical cause or antecedent is usually taken as the independent variable. 
+In the previous chapter we discussed the distinction between numeric, ordinal and categorical variables. In linear modelling, there is also another distinction between variables: \textit{dependent} and \textit{independent} variables. Dependency of a variable is not really a property of a variable but it is the result of a choice of the data analyst. Let's first think about relationships between two variables. Determining whether a variable is to be treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a mother and that of her child, the more logical it would be to see the height of the child \textit{as a function} of the height of the mother This because we assume that the genes are transferred from the mother to the child. The mother comes first, and the height of the child is partly the \textit{result} of the mother's genes that were transmitted during fertilisation. That which is the result is usually taken as the \textit{dependent} variable. The theoretical cause or antecedent is usually taken as the \textit{independent} variable. 
 
 The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}. Independent variables are also often called explanatory variables.
 
@@ -1584,11 +1585,14 @@ Sometimes we're interested to see whether we can predict longevity: age at death
 Thus, we often see four types of relations:
 \begin{itemize}
 \item Variable A affects/influences another variable B.
-\item Variable A causes or explains variable B.
+\item Variable A causes variable B.
+\item Variable A explains variable B.
 \item Variable A predicts variable B.
 \end{itemize}
 
-In all these three cases, Variable A is the independent variable and Variable B is the dependent variable.
+In all these four cases, Variable A is the independent variable and Variable B is the dependent variable.
+
+Note that in general, dependent variables can be either numeric, ordinal, or categorical. Also independent variables can be numeric, ordinal, or categorical. 
 
 \subsection{Exercises}
 
@@ -1642,7 +1646,6 @@ Answers:
 
 \section{Linear equations}
 
-From secondary education you might remember linear equations. Suppose you have two quantities, $x$ and $y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -1657,20 +1660,19 @@ From secondary education you might remember linear equations. Suppose you have t
 
 \end{knitrout}
 
-We see that for every value of $x$, there is only one value of $y$. Moreover, the larger the value of $x$, the larger the value of $y$. If we look more closely we see that for each increase of 1 in x, there is an increase of 2 in y. For instance, if x=1, we see a y value of 2, and if x=2 we see a y-value of 4. So if we move from x=1 to x=2 (a step of one on the x-axis), we move from 2 to 4 on the y-axis, which is an increase of 2.
 
-This increase of 2 for every step of 1 in x is the same for all values of x and y. For instance, if we move from 9 to 10 on the x-axis, we go from 18 to 20 on the y-axis: an increase of 2. This constant increase is typical of linear relationships. The increase in y for every unit increase in x is called the \textit{slope} of a straight line. In this figure, the slope is equal to 2.
+From secondary education you might remember linear equations. Suppose you have two quantities, $x$ and $y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}. We see that for every value of $x$, there is only one value of $y$. Moreover, the larger the value of $x$, the larger the value of $y$. If we look more closely, we see that for each increase of 1 unit in $x$, there is an increase of 2 units in $y$. For instance, if $x=1$, we see a $y$ value of 2, and if $x=2$ we see a $y$-value of 4. So if we move from $x=1$ to $x=2$ (a step of one on the $x$-axis), we move from 2 to 4 on the $y$-axis, which is an increase of 2 units. This increase of 2 units for every step of 1 unit in $x$ is the same for all values of $x$ and $y$. For instance, if we move from 9 to 10 on the $x$-axis, we go from 18 to 20 on the $y$-axis: an increase of 2 units. This constant increase is typical of linear relationships. The increase in $y$ for every unit increase in $x$ is called the \textit{slope} of a straight line. In this figure, the slope is equal to 2.
 
-The slope is one important characteristic of a straight line. The second important property of a straight line is the \textit{intercept}. The intercept is the value of y, if $x=0$. In Figure \ref{fig:lm_1} we see that if $x=0$, $y$ is 0, too. Therefore the intercept of this straight line is 0.
+The slope is one important characteristic of a straight line. The second important property of a straight line is the \textit{intercept}. The intercept is the value of $y$, if $x=0$. In Figure \ref{fig:lm_1} we see that if $x=0$, $y$ is 0, too. Therefore the intercept of this straight line is 0.
 
-With the intercept and the slope, we completely describe this straight line: no other information is necessary. Such a straight line describes a linear relationship between x and y. The linear relationship can be formalized using a linear equation. The general form of a linear equation for two variables x and y is the following:
+With the intercept and the slope, we completely describe this straight line: no other information is necessary. Such a straight line describes a linear relationship between $x$ and $y$. The linear relationship can be formalized using a linear equation. The general form of a linear equation for two variables $x$ and $y$ is the following:
 
 \begin{equation}
 y = intercept + slope \times x
 \end{equation}
 
 
-For the linear relationship between x and y in Figure \ref{fig:lm_1} the linear equation is therefore
+For the linear relationship between $x$ and $y$ in Figure \ref{fig:lm_1} the linear equation is therefore
 
 \begin{equation}
 y = 0 + 2 x
@@ -1683,9 +1685,13 @@ y =  2 x
 \end{equation}
 
 
-With this equation, we can find the y-value for all x-values. For instance, if we want to know the y-value for $x=3.14$, then using the linear equation we know that $y = 2 \times 3.14 = 6.28$. If we want to know the y value for $x=49876.6$, we use the equation to obtain $y=2\times 49876.6 = 99753.2$. In short, the linear equation is very helpful to quickly say what y-value is on the basis of the x-value, even if we don't have a graph of the relationship or if the graph does not extent to certain x-values.
+With this equation, we can find the $y$-value for all values of $x$. For instance, if we want to know the $y$-value for $x=3.14$, then using the linear equation we know that $y = 2 \times 3.14 = 6.28$. If we want to know the $y$ value for $x=49876.6$, we use the equation to obtain $y=2\times 49876.6 = 99753.2$. In short, the linear equation is very helpful to quickly say what $y$-value is on the basis of the $x$-value, even if we don't have a graph of the relationship or if the graph does not extent to certain $x$-values.
 
-Figure \ref{fig:lm_2} shows a different linear relationship between $x$ and $y$. First we look at the slope: we see that for every unit increase in $x$ (from 1 to 2, or from 4 to 5) we see an increase of 0.5 in $y$. Therefore the slope is equal to 0.5. Second we look at the intercept: we see that if $x=0$, $y$ has the value -2. So the intercept is -2. Again, we can describe the linear relationship by a linear equation, which is now:
+
+In the linear equation, we call $y$ the \textit{dependent} variable, and $x$ the \textit{independent} variable. This because the equation helps us determine our value of $y$ on the basis of what we know about the value of $x$. When we graph the line that the equation represents, such as in Figure \ref{fig:lm_1}, the common way is to put the dependent variable on the vertical axis, and the independent variable on the horizontal axis. 
+
+
+Figure \ref{fig:lm_2} shows a different linear relationship between $x$ and $y$. First we look at the slope: we see that for every unit increase in $x$ (from 1 to 2, or from 4 to 5) we see an increase of 0.5 in $y$. Therefore the slope is equal to 0.5. Second, we look at the intercept: we see that if $x=0$, $y$ has the value -2. So the intercept is -2. Again, we can describe the linear relationship by a linear equation, which is now:
 
 \begin{equation}
 y = -2 + 0.5 x
@@ -1707,7 +1713,7 @@ y = -2 + 0.5 x
 \end{knitrout}
 
 
-Linear relationships can also be negative, see Figure \ref{fig:lm_3}. There, we see that if we move from 0 to 1, we see a \textit{decrease} of 2 in y (we move from y=-2 to y=-4), so that is our slope value. Further, if x=0, we see a y-value of -2, and that is our intercept. The linear equation is therefore:
+Linear relationships can also be negative, see Figure \ref{fig:lm_3}. There, we see that if we move from 0 to 1, we see a \textit{decrease} of 2 in $y$ (we move from y=-2 to y=-4), so that is our slope value. Further, if $x=0$, we see a y-value of -2, and that is our intercept. The linear equation is therefore:
 
 \begin{equation}
 y = -2 - 2 x
@@ -1721,7 +1727,7 @@ y = -2 - 2 x
 
 }
 
-\caption[Straight line with intercept -2 and slope 0.5]{Straight line with intercept -2 and slope 0.5.}\label{fig:lm_3}
+\caption[Straight line with intercept -2 and slope -2]{Straight line with intercept -2 and slope -2.}\label{fig:lm_3}
 \end{figure}
 
 
@@ -1731,7 +1737,7 @@ y = -2 - 2 x
 
 \begin{enumerate}
 \item
-For Figures \ref{fig:lm_4}, \ref{fig:lm_5} and \ref{fig:lm_6}, give the linear equations for the relationship between x and y.
+For Figures \ref{fig:lm_4}, \ref{fig:lm_5} and \ref{fig:lm_6}, give the linear equations for the relationship between $x$ and $y$.
 
 
 \begin{knitrout}
@@ -1779,22 +1785,23 @@ Try to sketch the straight line for the equation $y=1 - 2x$
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
 
 The equations are
-
+\begin{enumerate}
+\item 
 \begin{equation}
 y = 3 - 1 x
 \end{equation}
-
+\item
 \begin{equation}
 y = 1.5 - 0.5 x
 \end{equation}
-
+\item
 \begin{equation}
 y = -2 + 0.33 x
 \end{equation}
-
+\item
 The straight line for $y=1 - 2x$ is presented in Figure \ref{fig:lm_7}.
 
 \begin{knitrout}
@@ -1809,12 +1816,12 @@ The straight line for $y=1 - 2x$ is presented in Figure \ref{fig:lm_7}.
 
 
 \end{knitrout}
-
+\end{enumerate}
 \section{Linear regression}
 
-In the previous section, we saw perfect linear relationships between quantities $x$ and $y$. For each x-value there was only 1 y-value, and the values are all desribed by a straight line. Such relationships we often see in physics, or in mathematics.
+In the previous section, we saw perfect linear relationships between quantities $x$ and $y$: for each $x$-value there was only one $y$-value, and the values are all described by a straight line. Such relationships we hope to see in physics, but mostly see only in mathematics.
 
-In social sciences we hardly ever see such perfectly linear relationships between quantities (variables). For instance, let us plot the relationship between yearly income and the amount of Euros spent on holidays. Yearly income is measured in thousands of Euros (kEuros), and money yearly spent on holidays is measured in Euros. We plot yearly income on the x-axis (horizontal axis) and holiday spendings on the y-axis (vertical axis). Suppose we find the following data from 100 women between 30 and 40 years of age, plotted in Figure \ref{fig:lm_8}.
+In social sciences we hardly ever see such perfectly linear relationships between quantities (variables). For instance, let us plot the relationship between yearly income and the amount of Euros spent on holidays. Yearly income is measured in thousands of Euros (kEuros), and money yearly spent on holidays is measured in Euros. Let us regard money spent on holidays as our dependent variable and yearly income as our independent variable (we assume money needs to be saved before it can be spent). We therefore plot yearly income on the $x$-axis (horizontal axis) and holiday spendings on the $y$-axis (vertical axis). Suppose we find the following data from 100 women between 30 and 40 years of age, plotted in Figure \ref{fig:lm_8}.
 
 
 \begin{knitrout}
@@ -1830,11 +1837,11 @@ In social sciences we hardly ever see such perfectly linear relationships betwee
 
 \end{knitrout}
 
-In the scatterplot, we see that one women has a yearly income of 100,000 Euros, and that she spends almost 1100 Euros per year on holidays. We also see a couple of women who earn less between 10,000 and 20,000 Euros a year and they spend between 200 and 300 Euros per year on holiday.
+In the scatterplot, we see that one woman has a yearly income of 100,000 Euros, and that she spends almost 1100 Euros per year on holidays. We also see a couple of women who earn less, between 10,000 and 20,000 Euros a year, and they spend between 200 and 300 Euros per year on holiday.
 
-The data obviously do not form a straight line. However, we tend to think that the relationship between yearly income and holiday spending is more or less linear: for every increase of 10,000 Euros in yearly income, we an increase of about 100 Euros.
+The data obviously do not form a straight line. However, we tend to think that the relationship between yearly income and holiday spending is more or less linear: there is a general linear trend such that that for every increase of 10,000 Euros in yearly income, there is an increase of about 100 Euros.
 
-Lets plot such a straight line with a slope of 100 straight through the data points. The result is seen in Figure \ref{fig:lm_9}. We see that the line with a slope of 100 is a nice approximation of the relationship between yearly income and holiday spendings. We also see that the intercept of the line is 100.
+Lets plot such a straight line that represents that general trend, with a slope of 100 straight through the data points. The result is seen in Figure \ref{fig:lm_9}. We see that the line with a slope of 100 is a nice approximation of the relationship between yearly income and holiday spendings. We also see that the intercept of the line is 100.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -1855,23 +1862,22 @@ Given the intercept and slope, the linear equation for the straight line approxi
 YearlyIncome = 100 + 100 \times HolidaySpendings
 \end{equation}
 
-In summary, data on two variables may not show a perfect linear relationship, but in many cases, a perfect straight line can be a very reasonable approximation of the data. Finding such a straight line to approximate the data points is called \textit{linear regression}. In linear regression we describe the behaviour of the dependent variable (the $y$-variable on the vertical axis) on the basis of the independent variable (the $x$-value on the horizontal axis) using a linear equation. We say that we regress variable y on variable x.
+In summary, data on two variables may not show a perfect linear relationship, but in many cases, a perfect straight line can be a very reasonable approximation of the data. Another word for a reasonable approximation of the data is a \textit{model}. Finding such a straight line to approximate the data points is called \textit{linear regression}. In this chapter we will see what method we can use to find a straight line. In linear regression we describe the behaviour of the dependent variable (the $y$-variable on the vertical axis) on the basis of the independent variable (the $x$-value on the horizontal axis) using a linear equation. We say that \textit{we regress variable $y$ on variable $x$}.
 
 
 
 
 \section{Residuals}
 
-Even though a straight line can be a good approximation of a data set, it is hardly ever perfect: there are always discrependencies between what the straight line describes and what the data actually tell us.
+Even though a straight line can be a good approximation of a data set consisting of two variables, it is hardly ever perfect: there are always discrepencies between what the straight line describes and what the data actually tell us.
 
-For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes 68584.9511949 Euros a year and who spends 808.78 Euros on holidays. According to the linear equation that describes the straight line, a woman that earns 68584.9511949 Euros a year would spend $100 + 100 * 68584.9511949= 785.85$ Euros on holidays. The discrependy between the actual amount spent and the one described by the linear equation equals $808.78-785.85=22.93$ Euros. This difference is rather small and the same holds for all the other women in this data set.
-
-Such descrepencies between the actual amount spent and the amount as described or predicted by the straight line are called \textit{residuals} or \textit{errors}. Using the linear equation, we could predict holiday spending even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
-
-The residual (or error) is the difference between a certain data point and what the linear equation predicts.
+For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes 69 kEuros a year and who spends 809 Euros on holidays. According to the linear equation that describes the straight line, a woman that earns 68.5849512 kEuros a year would spend $100 + 100 * 68.5849512= 786$ Euros on holidays. The discrepency between the actual amount spent and the amount prescribed by the linear equation equals $809-786=23$ Euros. This difference is rather small and the same holds for all the other women in this data set. Such discrepencies between the actual amount spent and the amount as prescribed or predicted by the straight line are called \textit{residuals} or \textit{errors}. The residual (or error) is the difference between a certain data point and what the linear equation predicts.
 
 
-Let us look at another fictitious data set where the residuals (errors) are a bit larger. Figure \ref{fig:lm_10} shows the relationship between variables x and y. The dots are the actual data points and the blue straight line is an approximation of the actual relationship. The residuals are also visualized: sometimes the observed $y$-value is greater than the predicted $y$-value (dots above the line) and sometimes the oberved $y$-value is smaller than the predicted $y$-value. Let's denote the predicted $y$-value (the value of $y$ predicted by the blue line) as $\hat{y}$ (pronounced as y-hat), then we can define a residual or error as the discrepency between the observed $y$ and $\hat{y}$:
+% Using the linear equation, we could predict holiday spendings even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
+
+
+Let us look at another fictitious data set where the residuals (errors) are a bit larger. Figure \ref{fig:lm_10} shows the relationship between variables $x$ and $y$. The dots are the actual data points and the blue straight line is an approximation of the actual relationship. The residuals are also visualized: sometimes the observed $y$-value is greater than the predicted $y$-value (dots above the line) and sometimes the oberved $y$-value is smaller than the predicted $y$-value (dots below the line). Let's denote the predicted $y$-value (the value of $y$ predicted by the blue line) as $\hat{y}$ (pronounced as y-hat), then we can define a residual or error as the discrepency between the observed $y$ and $\hat{y}$:
 
 \begin{equation}
 e = y - \hat{y}
@@ -1893,7 +1899,7 @@ where $e$ stands for the error (residual).
 
 \end{knitrout}
 
-If we compute residual $e$ for every $y$-value in the data set, we can plot them using a histogram, as displayed in Figure \ref{fig:lm_11}. We see that the residuals are on average 0, and that the histogram has the shape of the normal distribution, more or less. Such normally-shaped distributions of residuals we see often in research. Here, the residuals show a normal distribution with mean 0 and variance of 13336 (a standard deviation of 115).
+If we compute residual $e$ for every $y$-value in the data set, we can plot them using a histogram, as displayed in Figure \ref{fig:lm_11}. We see that the residuals are on average 0, and that the histogram has the shape of a normal distribution, more or less. Such normally-shaped distributions of residuals we see often in research. Here, the residuals show a normal distribution with mean 0 and variance of 13336 (a standard deviation of 115).
 
 
 \begin{knitrout}
@@ -1938,7 +1944,7 @@ However, the criterion that all residuals should sum to 0 is not sufficient. In 
 
 We therefore need a second criterion to find a nice straight line. We want the residuals to sum to 0, but also want the residuals to be as small as possible: the descrepencies between what the linear equation predicts (the $\hat{y}$-values) and the actual $y$-values should be as small as possible.
 
-So now we have two criteria: we want the sum of the residuals to be 0 (half of them negative, half of them positive), and we want the residuals to be as small as possible. We can achieve both of these when we use as our criterion the idea that the sum of the \textit{squared} residuals be as small as possible. If the sum of the squared residuals is as small as possible, we know that the residuals are as small as possible. But we also know that the residuals then sum to zero\footnote{For the proof of this, see ....}. Thus, as our criterion we can use the regression line for which the squared differences between predicted and observed $y$-values are as small as possible.
+So now we have two criteria: we want the sum of the residuals to be 0 (half of them negative, half of them positive), and we want the residuals to be as small as possible. We can achieve both of these when we use as our criterion the idea that the sum of the \textit{squared} residuals be as small as possible. Recall from Chapter 1 that the sum of the squared deviations from the mean is actually the variance. So if the sum of the squared residuals is as small as possible, we know that the variance of the residuals is as small as possible. Thus, as our criterion we can use the regression line for which the squared differences between predicted and observed $y$-values are as small as possible.
 
 Figure \ref{fig:lm_13} shows three different regression lines for the same data set. Figure \ref{fig:lm_14} shows the respective distributions of the residuals. For the first line, we see that the residuals sum to 0, for the residuals are on average 0 (the red vertical line). However, we see quite large residuals. The residuals for the second line are smaller: we see very small positive residuals, but the negative residuals are still quite large. We also see that the residuals do not sum to 0. For the third line, we see both criteria optimized: the sum of the residuals is zero and the residuals are all very small. We see that for regression line 3, the sum of squared residuals is at its minimum value.
 
@@ -1970,7 +1976,7 @@ Figure \ref{fig:lm_13} shows three different regression lines for the same data 
 
 \end{knitrout}
 
-In summary, when we want to have a straight line that describes our data best, we'd like a line such that the residuals are on average 0 (i.e, sum to 0), and where we see the smallest residuals possible. We reach these criteria when we use the line in such a way that we have the lowest value for the sum of the squared residuals possible. This line is therefore called the least squares or OLS regression line. It turns out that this optimal regression slope can be found by a relatively simple computation using matrix algebra. In daily life, we do not do this by hand but let computers compute it for us, with software like for instance SPSS.
+In summary, when we want to have a straight line that describes our data best, we'd like a line such that the residuals are on average 0 (i.e, sum to 0), and where we see the smallest residuals possible. We reach these criteria when we use the line in such a way that we have the lowest value for the sum of the squared residuals possible. This line is therefore called the least squares or OLS regression line. It turns out that this optimal regression slope can be found by a relatively simple computation using matrix algebra. In daily life, we do not do this by hand but let computers compute it for us, with software like for instance SPSS or R.
 
 
 \subsection{Exercises}
@@ -1980,7 +1986,7 @@ In summary, when we want to have a straight line that describes our data best, w
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:48 2018
+% Thu Oct  4 09:57:07 2018
 \begin{table}[ht]
 \centering
 \caption{Home prices.} 
@@ -2003,7 +2009,7 @@ Area & Price & PredictedPrice & Residual & SquaredResidual \\
 \item In Table \ref{tab:lm_15} you find a small data set on the price of homes with dependent variable price in kEuros and independent variable area in square meters. The least squares regression equation turns out to be $price = out.price$coef[1]+ out.price$coef[2]\times area$. Add a third column with the expected prices based on the regression equation ($\hat{y}$. Put the difference between the observed price and the expected price in the fourth column ($e$). Then compute the squared residuals and put those in the fifth column ($e^2)$. Take the sum of the squared residuals: How large is sum of the squared residuals?
 
 
-\item See website ....., try to find the Least Squares regression line for the given data set by changing both intercept and slope. How large is the sum of the squared residuals for that optimal regression line?
+\item See website \url{https://gallery.shinyapps.io/simple_regression/}, try to find the Least Squares regression line for the given data set by changing both intercept and slope. How large is the sum of the squared residuals for that optimal regression line?
 
 
 \item Do this exercice with one or more of your fellow students. Look at the data set plotted in Figure \ref{fig:lm_16}. Try to find the regression line with the lowest sum of squared residuals possible.
@@ -2024,13 +2030,15 @@ Area & Price & PredictedPrice & Residual & SquaredResidual \\
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
+
+
 \begin{enumerate}
 
 \item The predicted prices, the residuals and the squared residuals are displayed in Table \ref{tab:lm_17}. The sum of the squared residuals equals 2397.4189795.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:48 2018
+% Thu Oct  4 09:57:07 2018
 \begin{table}[ht]
 \centering
 \caption{Home prices.} 
@@ -2063,8 +2071,7 @@ Area & Price & PredictedPrice & Residual & SquaredResidual \\
 
 \section{Pearson correlation}
 
-For any set of two quantitative variables, we can determine the least squares regression line. However, it depends on the data set how well that regression line describes the data.
-Figure \ref{fig:lm_18} shows two different data sets on variables x and y. Both plots also show the least squares regression line, and they both turn out to be exactly the same: $y=100+10x$.
+For any set of two quantitative variables, we can determine the least squares regression line. However, it depends on the data set how well that regression line describes the data. Figure \ref{fig:lm_18} shows two different data sets on variables $x$ and $y$. Both plots also show the least squares regression line, and they both turn out to be exactly the same: $y=100+10x$.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -2080,11 +2087,11 @@ Figure \ref{fig:lm_18} shows two different data sets on variables x and y. Both 
 \end{knitrout}
 
 
-We see that the regression line describes data set very well (left panel): the observed dots are very close to the line, which means that the residuals are very small. The regression line does a worse job for the second data set (right panel) since there are quite large discrepencies between the observed $y$-values and the predicted $y$-values. Put differently, the regressin equation can be used to predict $y$-values in data set 1 very well, almost without error, whereas the regression line cannot be used to predict $y$-values very precisely. The regression line is also the least squares regression line for data set 2, so any improvement by choosing another slope or intercept is not possible.
+We see that the regression line describes data set A very well (left panel): the observed dots are very close to the line, which means that the residuals are very small. The regression line does a worse job for data set B (right panel) since there are quite large discrepencies between the observed $y$-values and the predicted $y$-values. Put differently, the regression equation can be used to predict $y$-values in data set A very well, almost without error, whereas the regression line cannot be used to predict $y$-values in data set B very precisely. The regression line is also the least squares regression line for data set B, so any improvement by choosing another slope or intercept is not possible.
 
 Francis Galton was the first to think about how to quantify this difference in the ability of a regression line to predict the dependent variable. Karl Pearson later worked on this measure so that it became to be called Pearson's correlation coefficient. It is a standardized measure, so that it can be used to compare different data sets.
 
-In order to get to Pearson's correlation coefficient, you first need to standardize both the independent variable, $x$, and the dependent variable, $y$. You standardize scores by taking their values, subtract the mean from them, and divide by the standard deviation. So, in order to obtain a standardized $x$-value we compute $Z_x$,
+In order to get to Pearson's correlation coefficient, you first need to standardize both the independent variable, $x$, and the dependent variable, $y$. You standardize scores by taking their values, subtract the mean from them, and divide by the standard deviation (see Chapter 1). So, in order to obtain a standardized $x$-value we compute $Z_x$,
 
 \begin{equation}
 Z_x = \frac{x- \bar{x}}{\sigma_x}
@@ -2111,7 +2118,7 @@ Z_y = \frac{y- \bar{y}}{\sigma_y}.
 
 \end{knitrout}
 
-Let's do this both for data set 1 and data set 2, and plot the standardized scores. see Figure \ref{fig:lm_19}. If we then plot the least squares regression lines for the standardized values, we obtain different equations. For both data sets, the intercept is 0 because by standardizing the scores, the means become 0. But the slopes are different: in data set 1, the slope is 0.997 and in data set 2, the slope is 0.699.
+Let's do this both for data set A and data set B, and plot the standardized scores, see Figure \ref{fig:lm_19}. If we then plot the least squares regression lines for the standardized values, we obtain different equations. For both data sets, the intercept is 0 because by standardizing the scores, the means become 0. But the slopes are different: in data set A, the slope is 0.997 and in data set B, the slope is 0.699.
 
 \begin{eqnarray}
 Z_y = 0 + 0.997Z_x=0.997Z_x \\
@@ -2119,7 +2126,7 @@ Z_y = 0 + 0.699Z_x=0.699Z_x
 \end{eqnarray}
 
 
-These two slopes, the slope for the regression of standardized $y$-values on standardized $x$-values, are the correlation coefficients for data sets 1 and 2, respectively. For obvious reasons, the correlation is sometimes also referred to as the \textit{standardized slope coefficient}.
+These two slopes, the slope for the regression of standardized $y$-values on standardized $x$-values, are the correlation coefficients for data sets A and B, respectively. For obvious reasons, the correlation is sometimes also referred to as the \textit{standardized slope coefficient}.
 
 Correlation stands for the \textit{co-relation} between two variables. It tells you how strongly one variable can be predicted from the other. The correlation is bi-directional: the correlation between $y$ and $x$ is the same as the correlation between $x$ and $y$. For instance in Figure \ref{fig:lm_19}, if we would have put the $Z_x$-variable on the $Z_y$-axis, and the $Z_y$-variable on the $Z_x$-axis, the slopes would be exactly the same. This is true because the variances of the $y$ and $x$-variables are equal after standardization (both variances equal to 1).
 
@@ -2156,7 +2163,7 @@ Cov(x,y)= Cor(x,y) \times \sigma_x \sigma_y
 
 For example, if the variance of $x$ equals 49 and the variance of $y$ equals 25, then the respective standard deviations are 7 and 5. If the correlation between $x$ and $y$ equals 0.5, then the covariance between $x$ and $y$ is equal to $0.5 \times 7 \times 5 = 17.5$.
 
-Similar to correlation, the covariance of two variables indicates by how much they co-vary. For instance, if the variance of $x$ is 3 and the variance of $y$ is 5, then a covariance of 2 indicates that $x$ and $y$ co-vary: if $x$ increases by a certain amount, $y$ also increases. If you want to know how many standard deviations $y$ increases if $x$ increases with one standard deviation, you can turn the covariance into a correlation my dividing the covariance by the respective standard deviations.
+Similar to correlation, the covariance of two variables indicates by how much they co-vary. For instance, if the variance of $x$ is 3 and the variance of $y$ is 5, then a covariance of 2 indicates that $x$ and $y$ co-vary: if $x$ increases by a certain amount, $y$ also increases. If you want to know how many standard deviations $y$ increases if $x$ increases with one standard deviation, you can turn the covariance into a correlation by dividing the covariance by the respective standard deviations.
 
 \begin{equation}
 Cor(x,y)= \frac{Cov(x,y)} { \sigma_x \sigma_y}= \frac{2} { \sqrt{3} \sqrt{5}}=0.52
@@ -2193,7 +2200,7 @@ Similar to correlations and slopes, covariances can also be negative.
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
 
 \begin{enumerate}
 
@@ -2230,7 +2237,7 @@ The correlation is 0.30, so if you increase intelligence by one standard deviati
 
 \section{Linear models}
 
-By performing a regression analysis of $y$ on $x$, we try to predict the $y$-value from a given $x$-value on the basis of a linear equation. We try to find an intercept and a slope for that linear equation such that our prediction is best. We define best as the linear equation for wich we see the lowest possible value for the sum of the squared residuals (least squares principle).
+By performing a regression analysis of $y$ on $x$, we try to predict the $y$-value from a given $x$-value on the basis of a linear equation. We try to find an intercept and a slope for that linear equation such that our prediction is 'best'. We define 'best' as the linear equation for wich we see the lowest possible value for the sum of the squared residuals (least squares principle).
 
 Thus, the predicted value of $y$ ($\hat{y}$) can be computed by the linear equation
 
@@ -2244,7 +2251,7 @@ In reality, the predicted values of $y$ always deviate from the observed values 
 y = \hat{y} + e = b_0 + b_1 x + e
 \end{equation}
 
-Typically, we assume that the residuals $e$ are on average 0 and have a normal distribution with a certain variance $\sigma^2_e$. Taking the linear equation and the normally distributed residuals together, we have \textit{a linear model} for the two variables $x$ and $y$.
+Typically, we assume that the residuals $e$ have a normal distribution with a mean of 0 and a variance of that is often unknown but that we denote by $\sigma^2_e$. Such a normal distribution is denoted by $N(\mu,\sigma^2)$. Taking the linear equation and the normally distributed residuals together, we have \textit{a linear model} for the two variables $x$ and $y$.
 
 
 \begin{eqnarray}
@@ -2252,7 +2259,8 @@ y = b_0 + b_1 x + e \\
 e \sim N(0,\sigma^2_e)
 \end{eqnarray}
 
-In the remainder of this book, we will see a great variety of linear models between 2 or more variables. They can all be seen as extensions and variations of this basic linear model. They all aim to predict as best as possible one dependent variable from a number of independent variables. % simple regression
+
+The linear model that we see here is generally known as the simple regression model: a linear model for one dependent variable, an intercept, only one slope for one (hence 'simple')  independent variable,  and normally distributed residuals. In the remainder of this book, we will see a great variety of linear models: with one or more independent variables, with numeric or with categorical independent variables, and with numeric or with categorical dependent variables. All these models can be seen as extensions of this basic linear regression model. They all aim to predict as best as possible one dependent variable from one or more independent variables. % simple regression
 
 
 
@@ -2260,7 +2268,7 @@ In the remainder of this book, we will see a great variety of linear models betw
 
 \chapter{Inference I: random samples, standard errors and confidence intervals}\label{chap:confidence}
 
-In the previous chapter on simple regression we saw how a linear equation can describe a data set: the linear equation describes the behaviour of one variable, the dependent variable, on the basis of one other variable, the independent variable. Sometimes we are indeed interested in the relationship between two variables in one given data set. For instance, a teacher wants to know whether her exam gradings in her class of last year predict how well her students do in a second course a year later.
+In Chapter \ref{chap:simple} on simple regression we saw how a linear equation can describe a data set: the linear equation describes the behaviour of one variable, the dependent variable, on the basis of one other variable, the independent variable. Sometimes we are indeed interested in the relationship between two variables in one given data set. For instance, a teacher wants to know whether her exam gradings in her class of last year predict how well her students do in a second course a year later.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -2276,7 +2284,7 @@ In the previous chapter on simple regression we saw how a linear equation can de
 \end{knitrout}
 
 
-But very often, researchers are not interested in the relationships between variables in one data set, but interested in the relationship between variables in general, not limited to only the observed data. For example, a researcher would like to know what the relationship is between the temperature in a brewery and the volume of beer that goes into one bottle. In order to study the effect of temperature on volume, the researcher measures the volume of beer in 200 bottles at 20 degrees Celsius and determines from log files the temperature in the factory during production for each measured bottle. The linear equation might be $volume = 31.72 -0.088 \times t + e$, see Figure \ref{fig:inf_0}. But the question is what the equation would be if the researcher had used information about \textit{all} bottles produced in the same factory.
+But very often, researchers are not interested in the relationships between variables in one data set, but interested in the relationship between variables in general, not limited to only the observed data. For example, a researcher would like to know what the relationship is between the temperature in a brewery and the volume of beer that goes into the beer bottles. In order to study the effect of temperature on volume, the researcher measures the volume of beer in a limited collection of 200 bottles at 20 degrees Celsius and determines from log files the temperature in the factory during production for each measured bottle. The linear equation might be $volume = 31.72 -0.088 \times temp + e$, see Figure \ref{fig:inf_0}. But the question is what the equation would be if the researcher had used information about \textit{all} bottles produced in the same factory.
 
 
 
@@ -2302,7 +2310,7 @@ In the beer bottle example above, the volume of beer was measured in a total of 
 \end{knitrout}
 
 
-In our thought experiment, we could determine the regression equation using all bottles that were produced: all 80,000 of them. We then find the blue regression line displayed in Figure \ref{fig:inf_1}. Its equation is $Volume = 29.98 + 0.001 \times t$.
+In our thought experiment, we could determine the regression equation using all bottles that were produced: all 80,000 of them. We then find the blue regression line displayed in Figure \ref{fig:inf_1}. Its equation is $Volume = 29.98 + 0.001 \times temp$.
 
 
 In the data example above, data was only collected on 200 bottles. These bottles were randomly selected\footnote{Random selection means that each of the 80,000 bottles had an equal probability to end up in this sample of 200 bottles.}: there were many more bottles but we could measure only a limited number of them. This explains why the regression equation based on the sample differed from the regression equation based on all bottles: we only see part of the data.
@@ -2312,11 +2320,11 @@ Here we see a discrepency between the regression equation based on the sample, a
 
 
 \begin{eqnarray}
-Population: Volume &=& 29.98 + 0.001 \times temperature  \nonumber\\
-Sample: Volume &=&  31.72  -0.088 \times temperature \nonumber
+Population: Volume &=& 29.98 + 0.001 \times temp  \nonumber\\
+Sample: Volume &=&  31.72  -0.088 \times temp \nonumber
 \end{eqnarray}
 
-The discrependency between the two equations is simply the result of chance: had we selected another sample of 200 bottles, we probably would have found a different sample equation with a different slope and a different intercept. The intercept and slope based on sample data, are the result of chance and therefore vary from sample to sample. The population intercept and slope (the true ones) are fixed, but unknown. If we want to know something about the population intercept and slope, we only have the sample equation to go on. Our best guess for the population equation is the sample equation, but how certain can we be about how close the sample intercept and slope are to the population intercept and slope?
+The discrepency between the two equations is simply the result of chance: had we selected another sample of 200 bottles, we probably would have found a different sample equation with a different slope and a different intercept. The intercept and slope based on sample data, are the result of chance and therefore vary from sample to sample. The population intercept and slope (the true ones) are fixed, but unknown. If we want to know something about the population intercept and slope, we only have the sample equation to go on. Our best guess for the population equation is the sample equation, but how certain can we be about how close the sample intercept and slope are to the population intercept and slope?
 
 
 \section{Random sampling and the standard error}
@@ -2326,13 +2334,13 @@ In order to know how close the intercept and slope in a sample are to their valu
 
 We put the 200 bottles that we selected earlier back into the population and we again blindly pick a new collection of 200 bottles. We then measure for each bottle the volume of beer it contains and we determine the temperature in the factory on the day of its production. We then apply a regression analysis and determine the intercept and the slope. Next, we put these bottles back into the population and draw a next random sample of 200 bottles.
 
-You can probably imagine that if we repeat this procedure of randomly picking 200 bottles from a large population of 80,000, each time we find a different intercept and a different slope. Let's carry out this procedure 100 times by a computer. Table \ref{tab:inf_3a} shows the first 10 regression equations, each based on a random sample of 200 bottles. If we then plot the histograms of all 100 sample intercepts and sample slopes we get Figure \ref{fig:inf_3b}. We see a large variation in the intercepts, and a smaller variation in the slopes (i.e., all values very close to another).
+You can probably imagine that if we repeat this procedure of randomly picking 200 bottles from a large population of 80,000, each time we find a different intercept and a different slope. Let's carry out this procedure 100 times by a computer. Table \ref{tab:inf_3a} shows the first 10 regression equations, each based on a random sample of 200 bottles. If we then plot the histograms of all 100 sample intercepts and sample slopes we get Figure \ref{fig:inf_3b}. We see a large variation in the intercepts, and a smaller variation in the slopes (i.e., all values very close to another). The distributions that we get for the intercept and the slope are called \textit{sampling distributions}. A sampling distribution is the distribution that we get when we repeatedly draw random samples from the same population and we determine a parameter (for instance the intercept). So in Figure \ref{fig:inf_3b} we see the sampling distribution for the intercept and the sampling distribution for the slope. 
 
 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:47:54 2018
+% Thu Oct  4 09:57:18 2018
 \begin{table}[ht]
 \centering
 \caption{Ten different sample equations based on ten different random samples from the population of bottles.} 
@@ -2424,9 +2432,60 @@ The standard error for a sample slope depends on many things, but the most impor
 
 Imagine that you draw only 2 bottles from the population of 80,000 bottles. Then there is quite some probability that by sheer luck you find one bottle with a low temperature and a small volume, and another bottle with a high temperature and a large volume. This would yield a sample slope that is quite large and positive. But there is an equally high probability that you get one bottle with a low temperature with a large volume, and another bottle with a high temperature and a small volume. Then based on these two other bottles, the sample slope will be large and negative. In case of a sample size of only 2, you see that there will be quite a lot of variation in the sample slope if we draw various random samples. This large variation in sample slopes is then captured by the standard error, that will be large. With only 2 bottles per sample, the uncertainty about the population slope will then also be large. The left panel of Figure \ref{fig:inf_7} shows the distribution of the sample slope where the sample size is 2. You see that for quite a number of samples, the slope is larger than 10, even if the population slope is 0.001.
 
-Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Because of this averaging effect, the slope based on 20 bottles will then be closer to the population slope. The standard error therefore decreases with increasing sample size. With a sample size of 20, most slopes are between -0.6 and 0.6.
+Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Take a look at Table \ref{tab:samplesize20}. There we see measurements on a random sample of 20 bottles. The first bottle shows a relatively low volume and a relatively low temperature measure. The second bottle shows the opposite: a relatively large volume and a relatively high temeperature. This is also depicted in Figure \ref{fig:fig_samplesize20}. Had our sample size been only 2, then on the basis of these two bottles we would have found a highly positive slope coefficient (a high correlation). However, since our sample size is 20, there are many other bottles in our sample, including bottles that have relatively high volumes but relatively low temperatures measures, and vice versa: bottles with relatively low volumes and relatively high volumes, see Figure \ref{fig:fig_samplesize20}. Combined with all the other bottles, we would not find a very strong positive slope coefficient, because in the population of 80,000 bottles there is no such strong slope. The fact that we found one with the two bottles was just sheer coincidence. With large numbers of observations, you are less prone to chance observations. With large sample sizes, your results from a regression analysis become less dependent on chance, become more stable, and therefore more reliable. 
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Thu Oct  4 09:57:21 2018
+\begin{table}[ht]
+\centering
+\caption{A random sample of 20 bottles with their beer volumes and their logged temperature.} 
+\label{tab:samplesize20}
+\begin{tabular}{rrr}
+  \hline
+bottle & volume & temperature \\ 
+  \hline
+ 1 & 28.0 & 18 \\ 
+   2 & 32.0 & 21 \\ 
+   3 & 29.2 & 20 \\ 
+   4 & 30.3 & 21 \\ 
+   5 & 30.2 & 20 \\ 
+   6 & 31.3 & 19 \\ 
+   7 & 28.9 & 19 \\ 
+   8 & 28.6 & 20 \\ 
+   9 & 30.0 & 19 \\ 
+  10 & 28.5 & 20 \\ 
+  11 & 30.4 & 21 \\ 
+  12 & 31.7 & 19 \\ 
+  13 & 31.5 & 20 \\ 
+  14 & 30.4 & 19 \\ 
+  15 & 27.9 & 20 \\ 
+  16 & 29.5 & 18 \\ 
+  17 & 29.9 & 19 \\ 
+  18 & 30.7 & 19 \\ 
+  19 & 30.9 & 18 \\ 
+  20 & 28.8 & 18 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/fig_samplesize20-1} 
+
+}
+
+\caption[The averaging effect of increasing sample size]{The averaging effect of increasing sample size. The figure shows the relationship between temperature and volume for a random sample of 20 bottles; the first two bottles are marked in red. The red line would be the sample slope based on the first two bottles, the blue line is the sample slope based on all 20 bottles, and the black line represents the population slope, based on all 80,000 bottles.}\label{fig:fig_samplesize20}
+\end{figure}
+
+
+
+
+Because of this averaging effect, the slope based on 20 bottles will then be closer to the population slope. The standard error therefore decreases with increasing sample size. With a sample size of 20, most slopes are between -0.6 and 0.6.
 
 In Figure \ref{fig:inf_7} we see the distributions of the sample slope where the sample size is either 2 (left panel) or 20 (right panel). We see quite a lot of variation in sample slopes with sample size equal to 2, and considerably less variation in sample slopes if sample size is 20. This shows that the larger the sample size, the smaller the standard error, the larger the certainty about the population slope. 
+
+
 
 
 \begin{knitrout}
@@ -2606,13 +2665,39 @@ Now let's ask Martha. She thinks a reasonable value for the population slope is 
 T = \frac{-0.088-0}{0.084}= -1.046
 \end{equation}
 
-In other words, if we believe Martha, our sample slope is only about 1 standard deviation away from her hypothesized value. That's not a very bad idea, since from the normal distribution we know that a value more than 1.05 standard deviations away from the mean (above or below) is $29.54$\%. In other words, if the population slope is truly 0, then our sample slope of $-0.088$ is quite a reasonable finding. If we reverse this line of reasoning: if our sample slope is $-0.088$, with a standard error of $0.084$, then a population slope of 0 is quite a reasonable guess! It is reasonable, since the difference between the sample slope and the hypothesised value is only $-1.046$ standard errors.
+In other words, if we believe Martha, our sample slope is only about 1 standard deviation away from her hypothesized value. That's not a very bad idea, since from the normal distribution we know that the probability of finding a value more than 1.05 standard deviations away from the mean (above or below) is $29.54$\% (you can see that more or less from Figure \ref{inf_9b}). In other words, if the population slope is truly 0, then our sample slope of $-0.088$ is quite a reasonable finding. If we reverse this line of reasoning: if our sample slope is $-0.088$, with a standard error of $0.084$, then a population slope of 0 is quite a reasonable guess! It is reasonable, since the difference between the sample slope and the hypothesised value is only $-1.046$ standard errors.
 
-So when do we no longer feel that a value for the population slope is reasonable? Perhaps if the probability of finding a sample slope of at least a certain size given a hypothesised population slope is so small that we no longer believe that the hypothesised value is reasonable. We might for example choose a small probability like 1\%. We know from the normal distribution that 1\% of the values lie at least $2.58$ standard deviations above and below the mean. So if our sample slope is more than $2.58$ standard errors away from the hypothesised population slope, then that population slope is \textit{not} a reasonable guess. In other words, if the \textit{distance} between the sample slope and the hypothesised population slope is more than 2.58 standard errors, then the hypothesised population slope is no longer reasonable.
+So when do we no longer feel that a value for the population slope is reasonable? Perhaps if the probability of finding a sample slope of at least a certain size given a hypothesised population slope is so small that we no longer believe that the hypothesised value is reasonable. We might for example choose a small probability like 1\%. We know from the normal distribution that 1\% of the values lie at least $2.58$ standard deviations above and below the mean. This is shown in Figure \ref{normal_2z}. So if our sample slope is more than $2.58$ standard errors away from the hypothesised population slope, then that population slope is \textit{not} a reasonable guess. In other words, if the \textit{distance} between the sample slope and the hypothesised population slope is more than 2.58 standard errors, then the hypothesised population slope is no longer reasonable.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/normal_2z-1} 
+
+}
+
+\caption[The standard normal distribution]{The standard normal distribution.}\label{fig:normal_2z}
+\end{figure}
+
+
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/normal_2z2-1} 
+
+}
+
+\caption[The standard normal distribution]{The standard normal distribution.}\label{fig:normal_2z2}
+\end{figure}
+
+
+\end{knitrout}
 
 This implies that \textit{any} value closer than $2.58$ standard errors from the sample slope is a collection of reasonable values for the population slope.
 
-Thus, in our example of the 200 bottles with a sample slope of $-0.088$ and a standard error of $0.084$, the interval from $-0.088- 2.58* 0.0840496$ to $-0.088+ 2.58* 0.084$ contains reasonable values for the population mean. If we do the calculation, we get the interval from $-0.3$ to $0.13$. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between -0.30 and $0.13$, \textit{if we feel that 1\% is a small enough probability}.
+Thus, in our example of the 200 bottles with a sample slope of $-0.088$ and a standard error of $0.084$, the interval from $-0.088- 2.58 \times 0.084$ to $-0.088+ 2.58 \times 0.084$ contains reasonable values for the population mean. If we do the calculation, we get the interval from $-0.3$ to $0.13$. This is plotted in Figure \ref{normal_2z2}. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between -0.30 and $0.13$, \textit{if we feel that 1\% is a small enough probability}.
 
 In data analysis, such an interval that contains reasonable values for the population value, if we only know the sample value, is called a \textit{confidence interval}. Here we've chosen to use $2.58$ standard errrors as our cut-off point, because we felt that 1\% would be a small enough probability to dismiss the real population value as a reasonable candidate. Such a confidence interval based on this 1\% cut-off point is called a 99\% confidence interval.
 
@@ -2658,7 +2743,7 @@ Because for every sample size, the middle region where 95\% of the observations 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:00 2018
+% Thu Oct  4 09:57:30 2018
 \begin{table}[ht]
 \centering
 \caption{Quantiles for the standard normal and several t-distributions.} 
@@ -2705,21 +2790,25 @@ In short, we can look up the cut-off points for 95\%, 99\% and other intervals f
 \begin{enumerate}
 
 
-\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{tab:nonparmixed_4}.
+\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. 
 
-\item What can we say about values within this constructed confidence interval?
+\subitem Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{tab:nonparmixed_4}.
 
-\item Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
+\subitem What can we say about values within this constructed confidence interval?
 
-
-\item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
-
-\item What can we say about values within this constructed confidence interval?
-
-\item Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
+\subitem Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
 
 
-\item TO DO: More items for practicing the use of Table 2.1
+\item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). 
+
+\subitem Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
+
+\subitem What can we say about values within this constructed confidence interval?
+
+\subitem Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
+
+
+
 
 \end{enumerate}
 
@@ -2730,19 +2819,19 @@ Answers:
 
 \item Sample size is 102, so degrees of freedom for the sample slope is 100. For a 95\% interval, 2.5\% of the observations should be on the left, and 2.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.025 and 0.975. These cut-off values for the $t$-distribution with 100 degrees of freedom are -1.98 and 1.98. Therefore the 95\% interval ranges from $0.010 - 1.98 \times 0.009$ to $0.010 + 1.98 \times 0.009$, so from -0.008 to 0.028.
 
-\item These values are all reasonable values for the slope in the population of University of Twente students.
+\subitem These values are all reasonable values for the slope in the population of University of Twente students.
 
-\item Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
+\subitem Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
 
 \item Sample size is 52, so degrees of freedom for the sample slope is 50. For a 99\% interval, 0.5\% of the observations should be on the left, and 0.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.005 and 0.995. The 99\% cut-off values for the $t$-distribution with 100 degrees of freedom are therefore -2.68 and 2.68. Thus, the 99\% interval ranges from $168 - 2.68 \times 0.07$ to $168 + 2.68 \times 0.07$, so from 167.8124 to 168.1876.
 
-\item These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
+\subitem These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
 
-\item No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
+\subitem No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
 
 
 \end{enumerate}
-%
+
 
 \section{Degrees of freedom}
 
@@ -2770,7 +2859,7 @@ Let's carry this example to regression analysis. Suppose I have four observation
 
 \end{knitrout}
 
-If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -3. Since we know that all residuals should sum to 0 in a regression analysis (see previous chapter), we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$) has to be 10, since then the residual is equal to $10-5=5$.
+Before we continue, you must know that if we talk about degrees of freedom in regression analysis, we generally talk about \textit{residual degrees of freedom}. We therefore look at residuals. If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -3. Since we know that all residuals should sum to 0 in a regression analysis (see previous chapter), we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$) has to be 10, since then the residual is equal to $10-5=5$.
 
 In short, when we do a regression analysis with only an intercept, the degrees of freedom is equal to the number of data points (combinations of $x$ and $y$) minus 1, or in short notation: $n-1$, where $n$ stans for sample size.
 
@@ -2808,7 +2897,7 @@ Figure \ref{fig:inf_13} shows a number of possibilities for the value of $y$ if 
 
 So, with 4 data points, we can never freely choose 3 residuals in order to satisfy the constraint that a particular regression equation holds. We have less then 3 degrees of freedom because it is impossible to think of a fitting fourth value. It turns out, that in this case we can only choose 2 residuals freely, and the remaining residuals are then already determined. To prove this requires matrix algebra, but the gist of it is that if you have a regression equation with both an intercept and a slope, the degrees of freedom is equal to the number of data points (sample size) minus 2: $n-2$.
 
-Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residuals degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residuals degrees of freedom.
+Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residual degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residual degrees of freedom.
 
 
 
@@ -2824,12 +2913,12 @@ One common method to answer this question is to analyse a sample of data, apply 
 
 In inferential data analysis, one often works with two hypotheses: the \textit{null-hypothesis} and the \textit{alternative hypothesis}. The null-hypothesis states that the population slope is equal to 0 and the alternative hypothesis states that there is a slope that is different from 0. Remember that if the population slope is equal to 0, that is saying that there is no linear relationship between $x$ and $y$ (that is, you cannot predict one variable on the basis of the other variable). Therefore, the null-hypothesis states there is no linear relationship between $x$ and $y$ in the population. If there is a slope, whether positive or negative, is the same as saying there is a linear relationship, so the alternative hypothesis states that there is a linear relationship between $x$ and $y$ in the population.
 
-The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_1$. In formula form, we have
+The null-hypothesis is often denoted as $H_0$ and the alternative hypothesis is often denoted as $H_A$. In formula form, we have
 
 
 \begin{eqnarray}
 H_0: \beta_{slope}=0 \\
-H_1: \beta_{slope} \neq 0
+H_A: \beta_{slope} \neq 0
 \end{eqnarray}
 
 The population slope, $\beta_{slope}$, is either 0 or it is not. Our data analysis is then aimed at determining which of these two hypotheses is true. Key is that we do a thought experiment on the null-hypothesis: we wonder what would happen if the population slope would be really 0. In our imagination we draw many samples of a certain size, say 40 data points, and then determine the slope for each sample. Earlier we learned that the many sample slopes would form a histogram in the shape of a $t$-distribution with $n-2=38$ degrees of freedom. For example, suppose we would draw 1000 samples of size 40, then the histogram of the 1000 slopes would be like depicted in Figure \ref{fig:inf_14}
@@ -2916,7 +3005,7 @@ In the previous section we saw that if the population slope is 0, and we drew 10
 
 This estimate of the $p$-value was based on 1000 randomly drawn samples of size 40 and then looking at the frequency of certain values in that data set. But there is a short-cut, for we know that the distribution of sample slopes has a $t$-distribution if we standardize the sample slopes. Therefore we do not have to take 1000 samples and estimate probabilities, but we can look at the $t$-distribution directly, using tables online or in statistical packages.
 
-Figure \ref{fig:inf_117} shows the $t$-distribution that is the theoretical distribution corresponding to the histogram in Figure \ref{fig:inf_14}. If the standard error is equal to 0.19, and the hypothetical population slope is 0, then the $T$-statistic associated with a slope of -1 is equal to $\frac{-1-0}{0.19}=-5.26$. With this value, we can look up in the tables, how often such a value of -5.26 or smaller occurs in a $t$-distribution with 38 degrees of freedom. In the tables we find that the probability that this occurs is 0.00000294. So, the fact that the $T$-statistic has a $t$-distribution gives us the opportunity to exactly determine certain probabilities, including the $p$-value.
+Figure \ref{fig:inf_117} shows the $t$-distribution that is the theoretical distribution corresponding to the histogram in Figure \ref{fig:inf_14}. If the standard error is equal to 0.19, and the hypothetical population slope is 0, then the $T$-statistic associated with a slope of -1 is equal to $\frac{-1-0}{0.19}=-5.26$. With this value, we can look up in the tables, how often such a value of -5.26 \textit{or smaller} occurs in a $t$-distribution with 38 degrees of freedom (see Chapter \ref{chap:confidence}). In the tables we find that the probability that this occurs is 0.00000294. So, the fact that the $T$-statistic has a $t$-distribution gives us the opportunity to exactly determine certain probabilities, including the $p$-value.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -2990,7 +3079,7 @@ In the previous section, we found a one-sided $p$-value of 0.00000294 for a samp
 When should we think the $p$-value is small enough to conclude that the null-hypothesis can be rejected? When can we conclude that the hypothesis that the population slope is 0 is not supported by our sample data? This was a question posed to the founding father of statistical hypothesis testing, Sir Ronald Fischer. In his book \textit{Statistical Methods for Research Workers} (1925), Fisher proposed a probability of 5\%. He advocated 5\% as a standard level for concluding that there is evidence against the null-hypothesis. However, he did not see it as an absolute rule: "If P is between .1 and .9 there is certainly no reason to suspect the hypothesis tested. If it is below .02 it is strongly indicated that the hypothesis fails to account for the whole of the facts. We shall not often be astray if we draw a conventional line at .05...". So Fisher saw the $p$-value as an informal index to be used as a measure of discrepancy between the data and the null-hypothesis: The null-hypothesis is never proved, but is possibly disproved.
 
 
-Later, Jerzy Neyman and Egon Pearson saw the $p$-value as an instrument in decision making: is the null-hypothesis true, or is the alternative hypothesis true? You either reject the null-hypothesis or you don't, there is nothing in between. This view to data-analysis is still rather popular in the social and behavioural sciences, but also in particle physics. In order to make such a black-and-white decision, you decide before-hand, that is, before collecting data, what \textit{level of significance} you choose for your $p$-value to decide whether to reject the null-hypothesis. For example, as your significance level, you might want to choose 1\%. Let's call this chosen significance level $\alpha$. Then you collect your data, you apply your linear model to the data, and find that the $p$-value associated with the slope  equals $p$. If this $p$ is smaller than or equal to $\alpha$ you \textit{reject the null-hypothesis}, and if $p$ is larger than $\alpha$ then you \textit{do not reject the null-hypothesis}. A slope with a $p \leq \alpha$ is said to be \textit{significant}, and a slope with a $p > \alpha$ is said to be \textit{non-significant}. If the slope is significant, then one should reject the null-hypothesis and say there is a slope in the population different from zero. If the slope is not significant, then one should not reject the null-hypothesis and say there is no slope in the population (i.e., the slope is 0).
+Later, Jerzy Neyman and Egon Pearson saw the $p$-value as an instrument in decision making: is the null-hypothesis true, or is the alternative hypothesis true? You either reject the null-hypothesis or you don't, there is nothing in between. A slightly milder view is that you either decide that there is enough empirical evidence to reject the null-hypothesis, or there is not enough empirical evidence to reject the null-hypothesis (not necessarily accepting $H_0$ as true!). This view to data-analysis is rather popular in the social and behavioural sciences, but also in particle physics. In order to make such black-and-white decisions, you decide before-hand, that is, before collecting data, what \textit{level of significance} you choose for your $p$-value to decide whether to reject the null-hypothesis. For example, as your significance level, you might want to choose 1\%. Let's call this chosen significance level $\alpha$. Then you collect your data, you apply your linear model to the data, and find that the $p$-value associated with the slope equals $p$. If this $p$ is smaller than or equal to $\alpha$ you \textit{reject the null-hypothesis}, and if $p$ is larger than $\alpha$ then you \textit{do not reject the null-hypothesis}. A slope with a $p \leq \alpha$ is said to be \textit{significant}, and a slope with a $p > \alpha$ is said to be \textit{non-significant}. If the slope is significant, then one should reject the null-hypothesis and say there is a slope in the population different from zero. If the slope is not significant, then one should not reject the null-hypothesis and say there is no slope in the population (i.e., the slope is 0). Alternatively, one could say there is no empirical evidence for the existence of a slope (this leaves the possibility that there is a slope in the population but that our method of research failed to find one).
 
 
 
@@ -3010,6 +3099,8 @@ State the null-hypothesis.
 \item You set your significance level to 1\%, so $\alpha=0.01$. Next, you measure 52 planets and you find a sample slope of $b_1=6$, with a standard error of 2.24. Determine the $T$-statistic with which you test the null-hypothesis.
 
 \item Determine the two-sided $p$-value on the basis of Table \ref{tab:nonparmixed_4}.
+
+\item What does this $p$-value represent? 
 
 \item Do you reject or do you not reject the null-hypothesis? What does this mean?
 
@@ -3032,7 +3123,7 @@ State the null-hypothesis.
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
 
 \begin{enumerate}
 
@@ -3049,6 +3140,8 @@ H_0: \beta_1 = 0
 \item
 
 Degrees of freedom is $52-2=50$. From the table for a $t$-distribution with 50 degrees of freedom, we see that a $T$-value of 2.68 is the 0.995th quantile. Thus, half a percent of the $T$-values are larger than 2.68. Because of symmetry, half a percent of the $T$-values is smaller than -2.68. So in total, 1\% of the $T$-values are at least 2.68 away from the mean (both directions). Therefore, the two-sided $p$-value is 0.01.
+
+\item This is the probability that, given that the null-hypothesis is true, we find a sample slope of 6 or larger or a sample slope of -6 or smaller.
 
 \item Our $p$-value of 0.01 is equal to our $\alpha$ and we therefore reject the null-hypothesis. This means that we conclude that the slope coefficient in all planets in the universe is not 0. There is a relationship between the volume of a planet and its mass.
 
@@ -3080,15 +3173,58 @@ The $p$-value $0.3140057$ is larger than her $\alpha$, so the effect of velocity
 \section{Type I and Type II errors in decision making}
 
 
-Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully accept the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error).
+Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully fail to reject the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error). Table \ref{fig:fig:typeIandII} gives an overview.
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Test conclusion}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & do not reject $H_0$ &  reject $H_0$\\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& $H_0$ true & OK &  Type~I Error \\
+\raisebox{1.5ex}{\textbf{Truth}} & $H_A$ true & Type~II Error & OK \\
+  \cline{2-4}
+\end{tabular}
+\caption{Four different scenarios for hypothesis tests.}
+\label{fig:typeIandII}
+\end{table}
 
 To illustrate the difference between type I and type II errors, let's recall the famous fable by Aesop about the boy who cried wolf. The tale concerns a shepherd boy who repeatedly tricks other people into thinking a wolf is attacking his flock of sheep. The first time he cries "There is a wolf!", the men working in an adjoining field come to help him. But when they repeatedly find there is no wolf to be seen, they realise they are being fooled by the boy. One day, when a wolf \textit{does} appear and the boy again calls for help, the men believe that it is another false alarm and the sheep are eaten by the wolf.
 
-In this fable, we can think of the null-hypothesis as the hypothesis that there is no wolf. The alternative hypothesis is that there is a wolf. Now, when the boy cries wolf the first time, there is in fact no wolf. The men from the adjoining field make a type I error: they think there is a wolf while there isn't. Later, when they are fed up with the annoying shepherd boy, they don't react when the boy cries "There is a wolf!". Now they make a type II error: they think there is no wolf, while there actually is a wolf.
+In this fable, we can think of the null-hypothesis as the hypothesis that there is no wolf. The alternative hypothesis is that there is a wolf. Now, when the boy cries wolf the first time, there is in fact no wolf. The men from the adjoining field make a type I error: they think there is a wolf while there isn't. Later, when they are fed up with the annoying shepherd boy, they don't react when the boy cries "There is a wolf!". Now they make a type II error: they think there is no wolf, while there actually is a wolf. See Table \ref{fig:Aesop} for the overview.
 
-Let's return to regression analysis. Suppose you want to determine the slope for the effect of age on height in children. Let the slope now stand for the slope: either there is no slope (no wolf, $H_0$) or there is a slope (wolf, $H_1$). The null-hypothesis is that the slope is 0 in the population of all children (a slope of 0 means there is no slope) and the alternative hypothesis that the slope is not 0, so there is a slope. You might study a sample of children and you might find a certain slope. You might decide that if the $p$-value is lower than a critical value you conclude that the null-hypothesis is not true. Suppose you think a probability of 10\% is small enough to reject the null-hypothesis as true. In other words, if $p \leq 0.10$ then we no longer think 0 is a reasonable value for the population slope. In this case, we have fixed our $\alpha$ or type I error rate to be $\alpha=0.10$. This means that if we study a random sample of children, we look at the slope and find a $p$-value of 0.11, then we do not reject the null-hypothesis. If we find a $p$-value of 0.10, then we reject the null-hypothesis.
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Men in the field}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & Think there is no wolf  &  Think there is a wolf \\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& There is no wolf & OK &  waste of time and energy \\
+\raisebox{1.5ex}{\textbf{Truth}} & There is a wolf & devoured sheep & OK \\
+  \cline{2-4}
+\end{tabular}
+\caption{Four different scenarios for wolves and men working in the field.}
+\label{fig:Aesop}
+\end{table}
+
+
+
+
+
+Let's return to regression analysis. Suppose you want to determine the slope for the effect of age on height in children. Let the slope now stand for the slope: either there is no slope (no wolf, $H_0$) or there is a slope (wolf, $H_A$). The null-hypothesis is that the slope is 0 in the population of all children (a slope of 0 means there is no slope) and the alternative hypothesis that the slope is not 0, so there is a slope. You might study a sample of children and you might find a certain slope. You might decide that if the $p$-value is lower than a critical value you conclude that the null-hypothesis is not true. Suppose you think a probability of 10\% is small enough to reject the null-hypothesis as true. In other words, if $p \leq 0.10$ then we no longer think 0 is a reasonable value for the population slope. In this case, we have fixed our $\alpha$ or type I error rate to be $\alpha=0.10$. This means that if we study a random sample of children, we look at the slope and find a $p$-value of 0.11, then we do not reject the null-hypothesis. If we find a $p$-value of 0.10, then we reject the null-hypothesis.
+
 
 Note that the probability of a type I error is the same as our $\alpha$ for the significance level. Suppose we set our $\alpha=0.05$. Then for any $p$-value equal or smaller than 0.05, we reject the null-hypothesis. Suppose the null-hypothesis is true, how often do we then find a $p$-value smaller than 0.05? We find a $p$-value smaller than 0.05 if we find a $T$-value that is above a certain threshold. For instance, for the $t$-distribution with 198 degrees of freedom, the critical value is $\pm 1.97$, \textit{because only in 5\% of the cases we find a $T$-value of $\pm 1.97$ or more if the null-hypothesis is true}! Thus, if the null-hypothesis is true, we see a $T$-value of at least $\pm 1.97$ in 5\% of the cases. Therefore, we see a signficicant $p$-value in 5\% of the cases if the null-hypothesis is true. This is exactly the definition of a Type I error: the probability that we reject the null-hypothesis (finding a significant $p$-value), given that the null-hypothesis is true. So we call our $\alpha$-value the type I error rate.
+
+
+
 
 Suppose 100 researchers are studying a particular slope. Unbeknownst to them, the population slope is exactly 0. They each draw a random sample from the population and test whether their sample slope is significantly different from 0. Suppose they all use different sample sizes, but they all use the same $\alpha$ of 0.05. Then we can expect that about 5 researchers will reject the null-hypothesis (finding a $p$-value less than or smaller than 0.05) and about 95 will not reject the null-hypothesis (finding a $p$-value of more than 0.05).
 
@@ -3099,11 +3235,11 @@ If $\alpha$ represents the probability of making a type I error, then we can use
 
 \begin{eqnarray}
 H_0: \beta_1 =0 \nonumber \\
-H_1: \beta_1 = 1\nonumber
+H_A: \beta_1 = 1\nonumber
 \end{eqnarray}
 
 
-Next, we determine the distribution of sample slopes under the assumption that the population slope is 1. We know that this distribution has a mean of 1 and a standard deviation equal to the standard error. We also know it has the shape of a $t$-distribution. Let sample size be equal to 102 and the standard error 2. If we standardize the slopes by dividing by the standard error, we get the two $t$-distributions in Figure \ref{fig:inf_20}: one distribution of $T$-values if the population slope is 0 (centered around T=0), and one distribution of $T$-values if the population slope is 1 (centered around $T=1/2=0.5$.
+Next, we determine the distribution of sample slopes under the assumption that the population slope is 1. We know that this distribution has a mean of 1 and a standard deviation equal to the standard error. We also know it has the shape of a $t$-distribution, see Chapter \ref{chap:confidence}. Let sample size be equal to 102 and the standard error 2. If we standardize the slopes by dividing by the standard error, we get the two $t$-distributions in Figure \ref{fig:inf_20}: one distribution of $T$-values if the population slope is 0 (centered around T=0), and one distribution of $T$-values if the population slope is 1 (centered around $T=1/2=0.5$.
 
 Let's fix $\alpha$ to 10\%. The shaded areas represent the area where $p \leq \alpha$: for all values of $T$ smaller than $-1.6859545$ and larger than $1.6859545$, we reject the null-hypothesis. The probability that this happens, \textit{if the null-hypothesis is true}, is equal to $\alpha$ which is 0.10 in this example. The probability that this happens \textit{if the alternative hypothesis is true} (i.e., population slope is 1), is depicted in Figure \ref{fig:inf_21}.
 
@@ -3140,7 +3276,31 @@ In sum, in this example with an $\alpha$ of 0.10 and assuming a population slope
 
 Type I and II error rates $\alpha$ and $\beta$ are closely related. If we feel that a significance level of $\alpha=0.10$ is too high, we could choose a level of 0.01. This ensures that we are less likely to reject the null-hypothesis when it is true. The critical value for our $T$-statistic is then equal to $\pm  2.6258905$, see Figure \ref{fig:inf_22}. In Figure \ref{fig:inf_23} we see that if we change $\alpha$, we also get a different value for $1-\beta$, in this case $0.0196567$.
 
-Thus, if we use smaller values for $\alpha$, we get smaller values for $1-\beta$, so we get larger values for $\beta$. This means that if we lower the probability of rejecting the null-hypothesis given that it is true (type I error) by choosing a lower value for $\alpha$, we inadvertently increase the probability of failing to reject the null-hypothesis given that it is not true (type II error). One should therefore always strike a balance between the two types of errors. One should consider how bad it is to think that the slope is not 0 while it is, and how bad it is to think that the slope is 0, while it is not. If you feel that the first mistake is worse than the second one, then make sure $\alpha$ is really small, and if you feel that the second mistake is worse, then make $\alpha$ not too small. Another option, and a better one, to avoid type II errors, is to increase sample size, as we will see in the next section.
+Table \ref{fig:probs} gives an overview of how $\alpha$ and $\beta$ are related to type I and type II error rates. If a $p$-value for a statistical test is equal to or smaller than a pre-chosen significance level $\alpha$, the probability of a type I error equals $\alpha$. The probability of a type II error rate is equal to $\beta$. 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l l c c}
+& & \multicolumn{2}{c}{\textbf{Statistical outcome}} \\
+  \cline{3-4}
+\vspace{-3.7mm} \\
+& & $p > \alpha$  &  $p \leq \alpha$ \\
+  \cline{2-4}
+\vspace{-3.7mm} \\
+& $H_0$ & $1-\alpha$ &  $\alpha$ \\
+\raisebox{1.5ex}{\textbf{Truth}} & $H_A$  & $\beta$ & $1-\beta$ \\
+  \cline{2-4}
+\end{tabular}
+\caption{The probabilities of a statistical outcome under the null-hypothesis and the alternative hypothesis.}
+\label{fig:probs}
+\end{table}
+
+
+Thus, if we use smaller values for $\alpha$, we get smaller values for $1-\beta$, so we get larger values for $\beta$. This means that if we lower the probability of rejecting the null-hypothesis given that it is true (type I error) by choosing a lower value for $\alpha$, we inadvertently increase the probability of failing to reject the null-hypothesis given that it is not true (type II error). 
+
+Think again about the problem of the sheep and the wolf. Instead of the boy, the men could choose to put a very nervous person on watch, someone very scared of wolves. With the faintest hint of a wolf's presence, the man will call out "Wolf!". However, this will lead to many false alarms (type I errors), but the men will be very sure that when there actually is a wolf, they will be warned. Alternatively, they could choose to put a man on watch that is very laid back, very relaxed, but perhaps prone to nod off. This will lower the risk of false alarms immensely (no more type I errors) but it will dramatically increase the risk of a type II error!
+
+One should therefore always strike a balance between the two types of errors. One should consider how bad it is to think that the slope is not 0 while it is, and how bad it is to think that the slope is 0, while it is not. If you feel that the first mistake is worse than the second one, then make sure $\alpha$ is really small, and if you feel that the second mistake is worse, then make $\alpha$ not too small. Another option, and a better one, to avoid type II errors, is to increase sample size, as we will see in the next section.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
@@ -3345,7 +3505,7 @@ Answers:
 
 \section{Criticism on null-hypothesis testing and $p$-values}
 
-The practice of null-hypothesis significance testing (NHST) is widespread. However, from the beginning it has received much criticism. One of the first to critize the approach was the inventor of the $p$-value, Sir Ronald Fisher himself. Fisher explicitly contrasted the use of the $p$-value for statistical inference in science with the Neyman–Pearson approach, which he termed "Acceptance Procedures". Whereas in the Pearson-Neyman approach the only relevance of the $p$-value is whether it is smaller or larger than the fixed significance level $\alpha$, Fisher emphasized that the exact $p$-value should be reported to indicate the strength of evidence against the null-hypothesis. He emphasized that no single $p$-value can refute a hypothesis, since chance always allows for type I and type II errors. Conclusions can and will be revised with further experimentation; science requires more than one study to reach solid conclusions. Decision procedures with clear-cut decisions based on one study only hamper science and lead to tunnel-vision.
+The practice of null-hypothesis significance testing (NHST) is widespread. However, from the beginning it has received much criticism. One of the first to critize the approach was the inventor of the $p$-value, Sir Ronald Fisher himself. Fisher explicitly contrasted the use of the $p$-value for statistical inference in science with the Pearson-Neyman approach, which he termed "Acceptance Procedures". Whereas in the Pearson-Neyman approach the only relevance of the $p$-value is whether it is smaller or larger than the fixed significance level $\alpha$, Fisher emphasized that the exact $p$-value should be reported to indicate the strength of evidence against the null-hypothesis. He emphasized that no single $p$-value can refute a hypothesis, since chance always allows for type I and type II errors. Conclusions can and will be revised with further experimentation; science requires more than one study to reach solid conclusions. Decision procedures with clear-cut decisions based on one study only hamper science and lead to tunnel-vision.
 
 Apart from these science-theoretical considerations of the NHST, there are also practical reasons why pure NHST should be avoided. In at least a number of research fields, the $p$-value has become more than just the criterion for finding an effect or not: it has become the criterion of whether the research is publishable or not. Editors and reviewers of scientific journals have increasingly interpreted a study with a significant effect to be more interesting than a study with a non-significant effect. For that reason, in scientific journals you will find mostly studies reported with a significant effect. This has led to \textit{the file-drawer problem}: the literature reports significant effects for a particular phenomenon, but there can be many unpublished studies with non-significant effects for the same phenomenon. Theses unpublished studies remain unseen in file-drawers (or these days on hard-drives). So based on the literature there might seem to exist a particular phenomenon, but if you would put all the results together, including the unpublished studies, the effect might disappear completely.
 
@@ -3382,7 +3542,7 @@ Using confidence intervals also counters one fundamental problem of null-hypothe
 
 Sometimes a null-hypothesis doesn't make sense at all. Suppose we are interested to know what the relationship is between age and height in children. Nobody believes that the effect of age on height is 0. Why then test this hypothesis? More interesting would be to know \textit{how large} the population slope is. A confidence interval would then be much more informative than a simple rejection of the null-hypothesis.
 
-In some cases, a null-hypothesis can be slightly more meaningful: suppose you are interested in the effect of cognitive behavioural therapy on depression. You hope that the number of therapy sessions has a negative effect on the severity of the depression, but of course it is entirely possible that the effect is very close to nonexisting. Of course you can only look at a sample of patients and determine the sample slope. But think now about the population slope: think about all patients in the world with depression that theoretically could partake in the research. Some of them have 0 sessions, some have 1 session, and so on. Now imagine that there are 1 million of such people. How likely is it that in the population, the slope for the regression is exactly 0? Not 0.00000001, not -0.0000000002, but exactly 0.0000000000. Of course, this is extremely unlikely. The really interesting question in such research is whether there is a \textit{meaningful} effect of therapy. For instance, an effect of at least half a point decrease on the Hamilton depression scale for 5 sessions. Also in this case, a confidence interval for the effect of therapy on depression would be more helpful than a simple $p$-value. A confidence interval of -2.30 to -0.01 says that a small population effect of -0.01 might be there, but that an effect of -0.0001 or 0.0000 is rather unlikely. The $p$-value less than $\alpha$ only tells you only that a value of exactly 0.0000 is not realistic.
+In some cases, a null-hypothesis can be slightly more meaningful: suppose you are interested in the effect of cognitive behavioural therapy on depression. You hope that the number of therapy sessions has a negative effect on the severity of the depression, but it is entirely possible that the effect is very close to nonexisting. Of course you can only look at a sample of patients and determine the sample slope. But think now about the population slope: think about all patients in the world with depression that theoretically could partake in the research. Some of them have 0 sessions, some have 1 session, and so on. Now imagine that there are 1 million of such people. How likely is it that in the population, the slope for the regression is exactly 0? Not 0.00000001, not -0.0000000002, but exactly 0.0000000000. Of course, this is extremely unlikely. The really interesting question in such research is whether there is a \textit{meaningful} effect of therapy. For instance, an effect of at least half a point decrease on the Hamilton depression scale for 5 sessions. Also in this case, a confidence interval for the effect of therapy on depression would be more helpful than a simple $p$-value. A confidence interval of -2.30 to -0.01 says that a small population effect of -0.01 might be there, but that an effect of -0.0001 or 0.0000 is rather unlikely. The $p$-value less than $\alpha$ only tells you only that a value of exactly 0.0000 is not realistic.
 
 
 % In its turn, the $p$-value, as we have seen, depends on the $T$-statistic and the degrees of freedom. The degrees of freedom in turn depends on sample size. The $T$-statistic also depends on sample size, as it is partly based on the standard error.
@@ -3517,7 +3677,7 @@ Figure \ref{fig:inf_28} shows an example of a regression analysis on 102 datapoi
 
 }
 
-\caption[Regression of y on x, with the population line in black and the sample line in blue]{Regression of y on x, with the population line in black and the sample line in blue. The grey area is the 95 percent confidence interval for the population line based on the sample line.}\label{fig:inf_28}
+\caption[Regression of y on x, with the population line in black and the sample line in blue]{Regression of y on x, with the population line in black and the sample line in blue.}\label{fig:inf_28}
 \end{figure}
 
 
@@ -3642,7 +3802,7 @@ UNIANOVA aggr WITH yearincome
 
 
 
-\chapter{Multivariate regression}\label{chap:multivariate}
+\chapter{Multiple regression}\label{chap:multip}
 
 
 \section{Explained and unexplained variance}
@@ -3820,7 +3980,7 @@ Let's look at what happens when indendent variables are strongly correlated. Tab
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:05 2018
+% Thu Oct  4 09:57:34 2018
 \begin{table}[ht]
 \centering
 \caption{Part of Cape Fur Seal Data.} 
@@ -3842,7 +4002,7 @@ age & weight & heart \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:05 2018
+% Thu Oct  4 09:57:34 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from height.} 
@@ -3877,7 +4037,7 @@ From the data we calculate the variance of age, and we find that it is 1090.8551
 Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get:
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:05 2018
+% Thu Oct  4 09:57:34 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from heart} 
@@ -3914,7 +4074,7 @@ e \sim N(0, 204)
 \end{eqnarray}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:05 2018
+% Thu Oct  4 09:57:34 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from heart and weight} 
@@ -4080,7 +4240,7 @@ UNIANOVA ....... WITH ........
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:05 2018
+% Thu Oct  4 09:57:35 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting volume from height and girth.} 
@@ -4166,7 +4326,7 @@ The basic trick that we need is \textit{dummy coding}. Dummy coding involves mak
 Suppose we have two different seating in a bus: aisle seats and window seats. Suppose we ask 5 people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows the anonymized data.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:06 2018
+% Thu Oct  4 09:57:36 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4189,7 +4349,7 @@ person & seat & price \\
 With dummy coding, we make a new variable that only has values 0 and 1, and that conveys the same information as the \textbf{seat} variable. The resulting variable is called a \textit{dummy variable}. Let's call this dummy variable \textbf{window} and give it the value 1 for all persons that travelled in a window seat. We give the value 0 for all persons that travelled in an aisle seat. We can also call the new variable \textbf{window} a \textit{boolean variable} with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Another name that is sometimes used is an \textit{indicator variable}. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:06 2018
+% Thu Oct  4 09:57:36 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4264,7 +4424,7 @@ Figure \ref{fig:dummy_4} shows the same regression line but now for the original
 In the previous section we saw that if we replace a categorical variable with a numeric dummy variable with values 0 and 1, we can use a linear model to describe the relationship between a categorical independent variable and a numeric dependent variable. We also saw that if we take the least squares regression line, this line goes straight through the averages, the group means. The line goes straight through the group means because then the sum of the squared residuals is then at its smallest value (the least squares principle).  Let's look at the bus trip data again and compute the residuals and the squared residuals, see Table \ref{tab:dummy_5}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:06 2018
+% Thu Oct  4 09:57:36 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4300,7 +4460,7 @@ person & seat & window & price & e & e2 \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:06 2018
+% Thu Oct  4 09:57:36 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4374,7 +4534,7 @@ In the previous section we saw that the slope in a dummy regression is equal to 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:06 2018
+% Thu Oct  4 09:57:37 2018
 \begin{table}[ht]
 \centering
 \caption{Yield by treatment.} 
@@ -5791,8 +5951,8 @@ answer: the supervisor has a clearcut hypothesis about height differences in the
 
  % advanced topics linear models
 % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
-
-
+% 
+% 
 
 \chapter{Assumptions of linear models}\label{chap:assumptions}
 
@@ -8267,7 +8427,7 @@ Similar to many other nonparametric tests for testing the equality of medians, F
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:23 2018
+% Thu Oct  4 09:57:57 2018
 \begin{table}[ht]
 \centering
 \caption{The speedskating data in wide format.} 
@@ -8297,7 +8457,7 @@ We rank all of these time measures by determining the fastest time, then the nex
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:23 2018
+% Thu Oct  4 09:57:57 2018
 \begin{table}[ht]
 \centering
 \caption{Row-wise ranks of the speedskating data.} 
@@ -8350,7 +8510,7 @@ F_r &=& \left[  \frac{12}{12 \times  3(3+1)} \times (31^2 + 26^2 + 15^2)      \r
 What can we tell from this $F_r$-statistic? In order to say something about significance, we have to know what values are to be expected under the null-hypothesis that there are no differences across the three groups of data. Suppose we randomly mixed up the data by taking all the speedskating times and randomly assigning them to the three contests and the twelve athletes, until we have a newly filled datamatrix in Table \ref{tab:nonparmixed_26}:
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:23 2018
+% Thu Oct  4 09:57:57 2018
 \begin{table}[ht]
 \centering
 \caption{The raw skating data in random order.} 
@@ -8436,7 +8596,7 @@ The line of the $\chi^2$-distribution with 2 degrees of freedom approaches the h
 First of all, you need data in wide format. If your data happens to be in long format, use the CASETOVARS procedure to get the data in wide format. CASETOVARS requires your data to be ordered, so use the SORT CASE BY procedure before CASETOVARS. Suppose your data is in long format, as in Table \ref{tab:nonparmixed_6}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:28 2018
+% Thu Oct  4 09:58:05 2018
 \begin{table}[ht]
 \centering
 \caption{The raw skating data in long data format.} 
@@ -8474,7 +8634,7 @@ This creates the wide format data matrix in Table \ref{tab:nonparmixed_7}:
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:28 2018
+% Thu Oct  4 09:58:05 2018
 \begin{table}[ht]
 \centering
 \caption{The raw skating data in wide data format after CASETOVARS} 
@@ -8554,7 +8714,7 @@ Friedman's test can be used for 2 measures, 3 measures or even 10 measures. As s
 For each athlete, we take the difference in skating times and call it $d$, see Table \ref{tab:nonparmixed_77}. Next we rank these $d$-values, irrespective of sign, and call these ranks $rank_d$. From the table \ref{nonparmixed_77} we see that athlete 12 shows the smallest difference in skating times ($d$= 0.06, rank = 1) and athlete 2 the largest difference.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:28 2018
+% Thu Oct  4 09:58:05 2018
 \begin{table}[ht]
 \centering
 \caption{The raw skating data and the computations for Wilcoxon signed ranks test} 
@@ -9471,7 +9631,7 @@ Part of the data are displayed in Table \ref{tab:gen_12}. A score of 1 on the va
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:33 2018
+% Thu Oct  4 09:58:10 2018
 \begin{table}[ht]
 \centering
 \caption{Taking the train to Paris data.} 
@@ -9707,7 +9867,7 @@ Table \ref{tab:gen_14} shows part of the data that were analysed. Similar to log
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:33 2018
+% Thu Oct  4 09:58:11 2018
 \begin{table}[ht]
 \centering
 \caption{Scores on an assignment.} 
@@ -9931,7 +10091,7 @@ In 1912, the ship Titanic sank after the collision with an iceberg. There we 220
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:35 2018
+% Thu Oct  4 09:58:12 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors on the Titanic.} 
@@ -9973,7 +10133,7 @@ The difference in these counts is very small. But does this tell us that women w
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:35 2018
+% Thu Oct  4 09:58:12 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adults on the Titanic.} 
@@ -10071,7 +10231,7 @@ The data on male and female survivors and non-nonsurvivors are often tabulated i
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:36 2018
+% Thu Oct  4 09:58:13 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -10094,7 +10254,7 @@ In the previous section these counts were analysed using a generalized linear mo
 First let's have a look at the overall survival rate. In total there we  654 people that survived and 1438 people that did not survive. Table \ref{tab:gen_25} shows these column totals.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:36 2018
+% Thu Oct  4 09:58:13 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -10117,7 +10277,7 @@ Table \ref{tab_gen26} shows the totals for men and women, as well as the overall
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:36 2018
+% Thu Oct  4 09:58:13 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -10151,7 +10311,7 @@ These numbers, after rounding, are displayed in Table \ref{tab:gen_27}.
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:36 2018
+% Thu Oct  4 09:58:13 2018
 \begin{table}[ht]
 \centering
 \caption{Expected numbers of adult survivors and non-survivors on the Titanic.} 
@@ -10241,7 +10401,7 @@ GENLIN survived (REFERENCE=FIRST) BY sex
 Note however that the data is the wrong format. For the Poisson regression, the data were there in the form of what we see in Table \ref{tab:gen_24}. However, for a logistic regression, we need the data in the format like in Table \ref{tab:gen_28}. For every person onboard the ship, we have to know their sex and their survival status.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Thu Sep 20 11:48:36 2018
+% Thu Oct  4 09:58:13 2018
 \begin{table}[ht]
 \centering
 \caption{Individual data of adult survivors and non-survivors on the Titanic.} 

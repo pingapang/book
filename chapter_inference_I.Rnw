@@ -1,6 +1,6 @@
 \chapter{Inference I: random samples, standard errors and confidence intervals}\label{chap:confidence}
 
-In the previous chapter on simple regression we saw how a linear equation can describe a data set: the linear equation describes the behaviour of one variable, the dependent variable, on the basis of one other variable, the independent variable. Sometimes we are indeed interested in the relationship between two variables in one given data set. For instance, a teacher wants to know whether her exam gradings in her class of last year predict how well her students do in a second course a year later.
+In Chapter \ref{chap:simple} on simple regression we saw how a linear equation can describe a data set: the linear equation describes the behaviour of one variable, the dependent variable, on the basis of one other variable, the independent variable. Sometimes we are indeed interested in the relationship between two variables in one given data set. For instance, a teacher wants to know whether her exam gradings in her class of last year predict how well her students do in a second course a year later.
 
 <<inf_0, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in a sample of 200 bottles.'>>=
 set.seed(1234)
@@ -15,7 +15,7 @@ bottles1  %>%  ggplot(aes(temperature, volume)) + geom_point() +xlim(c(17,22)) +
 @
 
 
-But very often, researchers are not interested in the relationships between variables in one data set, but interested in the relationship between variables in general, not limited to only the observed data. For example, a researcher would like to know what the relationship is between the temperature in a brewery and the volume of beer that goes into one bottle. In order to study the effect of temperature on volume, the researcher measures the volume of beer in 200 bottles at 20 degrees Celsius and determines from log files the temperature in the factory during production for each measured bottle. The linear equation might be $volume = \Sexpr{round(out.sample$coef[1],2)} \Sexpr{round(out.sample$coef[2],4)} \times t + e$, see Figure \ref{fig:inf_0}. But the question is what the equation would be if the researcher had used information about \textit{all} bottles produced in the same factory.
+But very often, researchers are not interested in the relationships between variables in one data set, but interested in the relationship between variables in general, not limited to only the observed data. For example, a researcher would like to know what the relationship is between the temperature in a brewery and the volume of beer that goes into the beer bottles. In order to study the effect of temperature on volume, the researcher measures the volume of beer in a limited collection of 200 bottles at 20 degrees Celsius and determines from log files the temperature in the factory during production for each measured bottle. The linear equation might be $volume = \Sexpr{round(out.sample$coef[1],2)} \Sexpr{round(out.sample$coef[2],4)} \times temp + e$, see Figure \ref{fig:inf_0}. But the question is what the equation would be if the researcher had used information about \textit{all} bottles produced in the same factory.
 
 
 
@@ -29,12 +29,18 @@ In the beer bottle example above, the volume of beer was measured in a total of 
 
 <<inf_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in all 80,000 bottles.'>>=
 out.population <- lm(volume~ temperature, bottles)
-bottles[sample(1:80000,18000),]  %>%  ggplot(aes(temperature, volume)) + geom_point() +xlim(c(17,22)) + geom_smooth(method = "lm" , se=F)+ xlab("Temperature in degrees Celsius") + ylab("Volume in centiliters")
+bottles[sample(1:80000,18000),]  %>%  
+        ggplot(aes(temperature, volume)) + 
+        geom_point() +
+        xlim(c(17,22)) + 
+        geom_smooth(method = "lm" , se=F)+ 
+        xlab("Temperature in degrees Celsius") + 
+        ylab("Volume in centiliters")
 
 @
 
 
-In our thought experiment, we could determine the regression equation using all bottles that were produced: all 80,000 of them. We then find the blue regression line displayed in Figure \ref{fig:inf_1}. Its equation is $Volume = \Sexpr{round(out.population$coef[1],2)} + \Sexpr{round(out.population$coef[2],3)} \times t$.
+In our thought experiment, we could determine the regression equation using all bottles that were produced: all 80,000 of them. We then find the blue regression line displayed in Figure \ref{fig:inf_1}. Its equation is $Volume = \Sexpr{round(out.population$coef[1],2)} + \Sexpr{round(out.population$coef[2],3)} \times temp$.
 
 
 In the data example above, data was only collected on 200 bottles. These bottles were randomly selected\footnote{Random selection means that each of the 80,000 bottles had an equal probability to end up in this sample of 200 bottles.}: there were many more bottles but we could measure only a limited number of them. This explains why the regression equation based on the sample differed from the regression equation based on all bottles: we only see part of the data.
@@ -44,11 +50,11 @@ Here we see a discrepency between the regression equation based on the sample, a
 
 
 \begin{eqnarray}
-Population: Volume &=& \Sexpr{round(out.population$coef[1],2)} + \Sexpr{round(out.population$coef[2],3)} \times temperature  \nonumber\\
-Sample: Volume &=&  \Sexpr{round(out.sample$coef[1],2)}  \Sexpr{round(out.sample$coef[2],4)} \times temperature \nonumber
+Population: Volume &=& \Sexpr{round(out.population$coef[1],2)} + \Sexpr{round(out.population$coef[2],3)} \times temp  \nonumber\\
+Sample: Volume &=&  \Sexpr{round(out.sample$coef[1],2)}  \Sexpr{round(out.sample$coef[2],4)} \times temp \nonumber
 \end{eqnarray}
 
-The discrependency between the two equations is simply the result of chance: had we selected another sample of 200 bottles, we probably would have found a different sample equation with a different slope and a different intercept. The intercept and slope based on sample data, are the result of chance and therefore vary from sample to sample. The population intercept and slope (the true ones) are fixed, but unknown. If we want to know something about the population intercept and slope, we only have the sample equation to go on. Our best guess for the population equation is the sample equation, but how certain can we be about how close the sample intercept and slope are to the population intercept and slope?
+The discrepency between the two equations is simply the result of chance: had we selected another sample of 200 bottles, we probably would have found a different sample equation with a different slope and a different intercept. The intercept and slope based on sample data, are the result of chance and therefore vary from sample to sample. The population intercept and slope (the true ones) are fixed, but unknown. If we want to know something about the population intercept and slope, we only have the sample equation to go on. Our best guess for the population equation is the sample equation, but how certain can we be about how close the sample intercept and slope are to the population intercept and slope?
 
 
 \section{Random sampling and the standard error}
@@ -58,7 +64,7 @@ In order to know how close the intercept and slope in a sample are to their valu
 
 We put the 200 bottles that we selected earlier back into the population and we again blindly pick a new collection of 200 bottles. We then measure for each bottle the volume of beer it contains and we determine the temperature in the factory on the day of its production. We then apply a regression analysis and determine the intercept and the slope. Next, we put these bottles back into the population and draw a next random sample of 200 bottles.
 
-You can probably imagine that if we repeat this procedure of randomly picking 200 bottles from a large population of 80,000, each time we find a different intercept and a different slope. Let's carry out this procedure 100 times by a computer. Table \ref{tab:inf_3a} shows the first 10 regression equations, each based on a random sample of 200 bottles. If we then plot the histograms of all 100 sample intercepts and sample slopes we get Figure \ref{fig:inf_3b}. We see a large variation in the intercepts, and a smaller variation in the slopes (i.e., all values very close to another).
+You can probably imagine that if we repeat this procedure of randomly picking 200 bottles from a large population of 80,000, each time we find a different intercept and a different slope. Let's carry out this procedure 100 times by a computer. Table \ref{tab:inf_3a} shows the first 10 regression equations, each based on a random sample of 200 bottles. If we then plot the histograms of all 100 sample intercepts and sample slopes we get Figure \ref{fig:inf_3b}. We see a large variation in the intercepts, and a smaller variation in the slopes (i.e., all values very close to another). The distributions that we get for the intercept and the slope are called \textit{sampling distributions}. A sampling distribution is the distribution that we get when we repeatedly draw random samples from the same population and we determine a parameter (for instance the intercept). So in Figure \ref{fig:inf_3b} we see the sampling distribution for the intercept and the sampling distribution for the slope. 
 
 
 
@@ -146,9 +152,43 @@ The standard error for a sample slope depends on many things, but the most impor
 
 Imagine that you draw only 2 bottles from the population of 80,000 bottles. Then there is quite some probability that by sheer luck you find one bottle with a low temperature and a small volume, and another bottle with a high temperature and a large volume. This would yield a sample slope that is quite large and positive. But there is an equally high probability that you get one bottle with a low temperature with a large volume, and another bottle with a high temperature and a small volume. Then based on these two other bottles, the sample slope will be large and negative. In case of a sample size of only 2, you see that there will be quite a lot of variation in the sample slope if we draw various random samples. This large variation in sample slopes is then captured by the standard error, that will be large. With only 2 bottles per sample, the uncertainty about the population slope will then also be large. The left panel of Figure \ref{fig:inf_7} shows the distribution of the sample slope where the sample size is 2. You see that for quite a number of samples, the slope is larger than 10, even if the population slope is \Sexpr{round(out.population$coef[2],3)}.
 
-Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Because of this averaging effect, the slope based on 20 bottles will then be closer to the population slope. The standard error therefore decreases with increasing sample size. With a sample size of 20, most slopes are between -0.6 and 0.6.
+Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Take a look at Table \ref{tab:samplesize20}. There we see measurements on a random sample of 20 bottles. The first bottle shows a relatively low volume and a relatively low temperature measure. The second bottle shows the opposite: a relatively large volume and a relatively high temeperature. This is also depicted in Figure \ref{fig:fig_samplesize20}. Had our sample size been only 2, then on the basis of these two bottles we would have found a highly positive slope coefficient (a high correlation). However, since our sample size is 20, there are many other bottles in our sample, including bottles that have relatively high volumes but relatively low temperatures measures, and vice versa: bottles with relatively low volumes and relatively high volumes, see Figure \ref{fig:fig_samplesize20}. Combined with all the other bottles, we would not find a very strong positive slope coefficient, because in the population of 80,000 bottles there is no such strong slope. The fact that we found one with the two bottles was just sheer coincidence. With large numbers of observations, you are less prone to chance observations. With large sample sizes, your results from a regression analysis become less dependent on chance, become more stable, and therefore more reliable. 
+
+<<samplesize20, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
+    sample  %>%
+        dplyr::select( volume, temperature) %>% slice(1:18) %>%
+        bind_rows(data_frame(volume=c(32.00,28.00)  , temperature=c(20.6, 18.5)   )) %>% 
+        slice(20:1) %>% 
+        mutate(bottle=seq(1:20)) %>% 
+        dplyr::select(bottle, volume, temperature) %>% 
+        xtable(caption="A random sample of 20 bottles with their beer volumes and their logged temperature.", 
+                label="tab:samplesize20", 
+                digits=c(0,1,1,0)) %>%
+        print(include.rownames=F, 
+              caption.placement = "top")
+ @
+
+<<fig_samplesize20, fig.height=4, echo=FALSE, fig.align='center',results='asis', fig.cap='The averaging effect of increasing sample size. The figure shows the relationship between temperature and volume for a random sample of 20 bottles; the first two bottles are marked in red. The red line would be the sample slope based on the first two bottles, the blue line is the sample slope based on all 20 bottles, and the black line represents the population slope, based on all 80,000 bottles.' >>=
+sample  %>%
+        dplyr::select( volume, temperature) %>% slice(1:18) %>%
+        bind_rows(data_frame(volume=c(32.00,28.00)  , temperature=c(20.6, 18.5)   )) %>% 
+        slice(20:1) %>% 
+        mutate(bottle=c(1,1,rep(2,18)) %>% factor ) %>% 
+        dplyr::select(bottle, volume, temperature) %>% 
+        ggplot(aes(temperature, volume, col=bottle)) + geom_point(size=5) +
+        theme(legend.position = "none") +
+        geom_abline(intercept=out.population$coefficients[1] , slope=out.population$coefficients[2] ) +
+        geom_segment(x= 20.6 ,y=32, xend=18.5, yend=28, col='red') +
+        geom_smooth(method='lm', se=F)
+
+@
+
+
+Because of this averaging effect, the slope based on 20 bottles will then be closer to the population slope. The standard error therefore decreases with increasing sample size. With a sample size of 20, most slopes are between -0.6 and 0.6.
 
 In Figure \ref{fig:inf_7} we see the distributions of the sample slope where the sample size is either 2 (left panel) or 20 (right panel). We see quite a lot of variation in sample slopes with sample size equal to 2, and considerably less variation in sample slopes if sample size is 20. This shows that the larger the sample size, the smaller the standard error, the larger the certainty about the population slope. 
+
+
 
 
 <<inf_7,fig.height=4, echo=FALSE, fig.align='center', warning=F, fig.cap='Distribution of the sample slope when sample size is 2 (left panel) and when sample size is 20 (right panel).'>>=
@@ -343,13 +383,44 @@ Now let's ask Martha. She thinks a reasonable value for the population slope is 
 T = \frac{\Sexpr{round(out.sample$coef[2],3)}-0}{\Sexpr{round(se,3)}}= \Sexpr{round((out.sample$coef[2])  / se,3) }
 \end{equation}
 
-In other words, if we believe Martha, our sample slope is only about 1 standard deviation away from her hypothesized value. That's not a very bad idea, since from the normal distribution we know that a value more than 1.05 standard deviations away from the mean (above or below) is $\Sexpr{100 *round(2*pnorm((out.sample$coef[2]-0)  / se), 4)}$\%. In other words, if the population slope is truly 0, then our sample slope of $\Sexpr{round(out.sample$coef[2],3)}$ is quite a reasonable finding. If we reverse this line of reasoning: if our sample slope is $\Sexpr{round(out.sample$coef[2],3)}$, with a standard error of $\Sexpr{round(se,3)}$, then a population slope of 0 is quite a reasonable guess! It is reasonable, since the difference between the sample slope and the hypothesised value is only $\Sexpr{round((out.sample$coef[2])  / se,3) }$ standard errors.
+In other words, if we believe Martha, our sample slope is only about 1 standard deviation away from her hypothesized value. That's not a very bad idea, since from the normal distribution we know that the probability of finding a value more than 1.05 standard deviations away from the mean (above or below) is $\Sexpr{100 *round(2*pnorm((out.sample$coef[2]-0)  / se), 4)}$\% (you can see that more or less from Figure \ref{inf_9b}). In other words, if the population slope is truly 0, then our sample slope of $\Sexpr{round(out.sample$coef[2],3)}$ is quite a reasonable finding. If we reverse this line of reasoning: if our sample slope is $\Sexpr{round(out.sample$coef[2],3)}$, with a standard error of $\Sexpr{round(se,3)}$, then a population slope of 0 is quite a reasonable guess! It is reasonable, since the difference between the sample slope and the hypothesised value is only $\Sexpr{round((out.sample$coef[2])  / se,3) }$ standard errors.
 
-So when do we no longer feel that a value for the population slope is reasonable? Perhaps if the probability of finding a sample slope of at least a certain size given a hypothesised population slope is so small that we no longer believe that the hypothesised value is reasonable. We might for example choose a small probability like 1\%. We know from the normal distribution that 1\% of the values lie at least $\Sexpr{round(qnorm(0.995),2)}$ standard deviations above and below the mean. So if our sample slope is more than $\Sexpr{round(qnorm(0.995),2)}$ standard errors away from the hypothesised population slope, then that population slope is \textit{not} a reasonable guess. In other words, if the \textit{distance} between the sample slope and the hypothesised population slope is more than 2.58 standard errors, then the hypothesised population slope is no longer reasonable.
+So when do we no longer feel that a value for the population slope is reasonable? Perhaps if the probability of finding a sample slope of at least a certain size given a hypothesised population slope is so small that we no longer believe that the hypothesised value is reasonable. We might for example choose a small probability like 1\%. We know from the normal distribution that 1\% of the values lie at least $\Sexpr{round(qnorm(0.995),2)}$ standard deviations above and below the mean. This is shown in Figure \ref{normal_2z}. So if our sample slope is more than $\Sexpr{round(qnorm(0.995),2)}$ standard errors away from the hypothesised population slope, then that population slope is \textit{not} a reasonable guess. In other words, if the \textit{distance} between the sample slope and the hypothesised population slope is more than 2.58 standard errors, then the hypothesised population slope is no longer reasonable.
+
+<<normal_2z, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The standard normal distribution.' >>=
+
+shadedleft <-  data_frame(x=seq(-5, 0-2.58 ,.1),y= dnorm(seq(-5, 0-2.58 ,.1), 0, 1))
+shadedright <-  data_frame(x=seq(0+2.58 , 5,  .1),y= dnorm(x=seq(0+2.58 , 5,  .1), 0, 1))
+  data_frame(z = seq(-5,5,0.1)) %>%
+        ggplot()+
+        geom_line(aes(x=z, y = dnorm(z, mean=0, sd=1))) +
+        scale_x_continuous(breaks=seq(-5, 5))+
+        geom_area(data=shadedleft, mapping=aes(x=seq(-5 , 0-2.58,  .1),y= dnorm(x=seq(-5 , 0-2.58,  .1), 0, 1) ), alpha=0.5)+
+        geom_area(data=shadedright, mapping=aes(x=seq(0+2.58 , 5,  .1),y= dnorm(x=seq(0+2.58 , 5,  .1), 0, 1) ), alpha=0.5)+
+        ylab("density") +
+          geom_text(x=-2.58, y=0.03, label="0.5 percent")+
+          geom_text(x=2.58, y=0.03, label="0.5 percent")
+@
+
+<<normal_2z2, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The standard normal distribution.' >>=
+mean <-round(out.sample$coef[2],3)
+sd<-  round(se,3)         
+shadedleft <-  data_frame(x=seq(-0.4, round(-2.58*sd+mean,2) ,.01),y= dnorm(x=seq(-0.4, round(mean-2.58*sd,2) ,.01), mean, sd))
+shadedright <-  data_frame(x=seq(round(mean+2.58*sd,2) , 0.4,  .01),y= dnorm(x=seq(round(mean+2.58*sd,2) , 0.4,  .01), mean, sd))
+  data_frame(z = seq(-0.4,0.4,0.01)) %>%
+        ggplot()+
+        scale_x_continuous(breaks=seq(-0.4, 0.4,0.1))+
+        geom_line(aes(x=z, y = dnorm(z, mean=mean, sd=sd))) +
+        geom_area(data=shadedleft, mapping=aes(x,y), alpha=0.5)  +
+        geom_area(data=shadedright, aes(x,y),alpha=0.5) +
+        ylab('density')+
+        xlab('sample slope')
+          
+@
 
 This implies that \textit{any} value closer than $\Sexpr{round(qnorm(0.995),2)}$ standard errors from the sample slope is a collection of reasonable values for the population slope.
 
-Thus, in our example of the 200 bottles with a sample slope of $\Sexpr{round(out.sample$coef[2],3)}$ and a standard error of $\Sexpr{round(se,3)}$, the interval from $\Sexpr{round(out.sample$coef[2],3)}- 2.58* \Sexpr{se}$ to $\Sexpr{round(out.sample$coef[2],3)}+ 2.58* \Sexpr{round(se,3)}$ contains reasonable values for the population mean. If we do the calculation, we get the interval from $\Sexpr{round(out.sample$coef[2]- 2.58* se,2)}$ to $\Sexpr{round(out.sample$coef[2]+ 2.58* se,2)}$. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between -0.30 and $\Sexpr{round(out.sample$coef[2]+ 2.58* se,2)}$, \textit{if we feel that 1\% is a small enough probability}.
+Thus, in our example of the 200 bottles with a sample slope of $\Sexpr{round(out.sample$coef[2],3)}$ and a standard error of $\Sexpr{round(se,3)}$, the interval from $\Sexpr{round(out.sample$coef[2],3)}- 2.58 \times \Sexpr{round(se,3)}$ to $\Sexpr{round(out.sample$coef[2],3)}+ 2.58 \times \Sexpr{round(se,3)}$ contains reasonable values for the population mean. If we do the calculation, we get the interval from $\Sexpr{round(round(out.sample$coef[2],3)- 2.58* round(se,3),2)}$ to $\Sexpr{round(round(out.sample$coef[2],3)+ 2.58* round(se,3),2)}$. This is plotted in Figure \ref{normal_2z2}. If we would have to guess the value for the population slope, our guess would be that it would lie somewhere between between -0.30 and $\Sexpr{round(out.sample$coef[2]+ 2.58* round(se,3),2)}$, \textit{if we feel that 1\% is a small enough probability}.
 
 In data analysis, such an interval that contains reasonable values for the population value, if we only know the sample value, is called a \textit{confidence interval}. Here we've chosen to use $\Sexpr{round(qnorm(0.995),2)}$ standard errrors as our cut-off point, because we felt that 1\% would be a small enough probability to dismiss the real population value as a reasonable candidate. Such a confidence interval based on this 1\% cut-off point is called a 99\% confidence interval.
 
@@ -426,21 +497,25 @@ In short, we can look up the cut-off points for 95\%, 99\% and other intervals f
 \begin{enumerate}
 
 
-\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{tab:nonparmixed_4}.
+\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. 
 
-\item What can we say about values within this constructed confidence interval?
+\subitem Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{tab:nonparmixed_4}.
 
-\item Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
+\subitem What can we say about values within this constructed confidence interval?
 
-
-\item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
-
-\item What can we say about values within this constructed confidence interval?
-
-\item Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
+\subitem Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
 
 
-\item TO DO: More items for practicing the use of Table 2.1
+\item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). 
+
+\subitem Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
+
+\subitem What can we say about values within this constructed confidence interval?
+
+\subitem Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
+
+
+
 
 \end{enumerate}
 
@@ -451,19 +526,19 @@ Answers:
 
 \item Sample size is 102, so degrees of freedom for the sample slope is 100. For a 95\% interval, 2.5\% of the observations should be on the left, and 2.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.025 and 0.975. These cut-off values for the $t$-distribution with 100 degrees of freedom are -1.98 and 1.98. Therefore the 95\% interval ranges from $0.010 - 1.98 \times 0.009$ to $0.010 + 1.98 \times 0.009$, so from -0.008 to 0.028.
 
-\item These values are all reasonable values for the slope in the population of University of Twente students.
+\subitem These values are all reasonable values for the slope in the population of University of Twente students.
 
-\item Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
+\subitem Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
 
 \item Sample size is 52, so degrees of freedom for the sample slope is 50. For a 99\% interval, 0.5\% of the observations should be on the left, and 0.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.005 and 0.995. The 99\% cut-off values for the $t$-distribution with 100 degrees of freedom are therefore -2.68 and 2.68. Thus, the 99\% interval ranges from $168 - 2.68 \times 0.07$ to $168 + 2.68 \times 0.07$, so from 167.8124 to 168.1876.
 
-\item These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
+\subitem These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
 
-\item No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
+\subitem No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
 
 
 \end{enumerate}
-%
+
 
 \section{Degrees of freedom}
 
@@ -485,7 +560,7 @@ y<- c(2, 6, 2 )
 data.frame(x, y) %>% ggplot(aes(x, y)) + geom_point() + geom_hline(yintercept=5)
 @
 
-If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -3. Since we know that all residuals should sum to 0 in a regression analysis (see previous chapter), we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$) has to be 10, since then the residual is equal to $10-5=5$.
+Before we continue, you must know that if we talk about degrees of freedom in regression analysis, we generally talk about \textit{residual degrees of freedom}. We therefore look at residuals. If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -3. Since we know that all residuals should sum to 0 in a regression analysis (see previous chapter), we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$) has to be 10, since then the residual is equal to $10-5=5$.
 
 In short, when we do a regression analysis with only an intercept, the degrees of freedom is equal to the number of data points (combinations of $x$ and $y$) minus 1, or in short notation: $n-1$, where $n$ stans for sample size.
 
@@ -520,6 +595,6 @@ data.frame(x, y,line) %>% ggplot(aes(x, y)) + geom_point(aes(col=line)) + geom_a
 
 So, with 4 data points, we can never freely choose 3 residuals in order to satisfy the constraint that a particular regression equation holds. We have less then 3 degrees of freedom because it is impossible to think of a fitting fourth value. It turns out, that in this case we can only choose 2 residuals freely, and the remaining residuals are then already determined. To prove this requires matrix algebra, but the gist of it is that if you have a regression equation with both an intercept and a slope, the degrees of freedom is equal to the number of data points (sample size) minus 2: $n-2$.
 
-Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residuals degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residuals degrees of freedom.
+Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residual degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residual degrees of freedom.
 
 

@@ -3,7 +3,7 @@
 
 
 \section{Dependent and independent variables}
-So now that we have discussed the distinction between numeric, ordinal and categorical variables, let's turn to dependent and independent variables. Determining whether a variable is treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a father and that of his child, the more logical it would be to see the height of the child \textit{as a function} of the height of the father. This because we assume that the genes are transferred from the father to the child. The father comes first, and the height of the child is partly the \textit{result} of the father's genes that were transmitted during fertilisation. That which is the result is usually taken as the dependent variable. The theoretical cause or antecedent is usually taken as the independent variable. 
+In the previous chapter we discussed the distinction between numeric, ordinal and categorical variables. In linear modelling, there is also another distinction between variables: \textit{dependent} and \textit{independent} variables. Dependency of a variable is not really a property of a variable but it is the result of a choice of the data analyst. Let's first think about relationships between two variables. Determining whether a variable is to be treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a mother and that of her child, the more logical it would be to see the height of the child \textit{as a function} of the height of the mother This because we assume that the genes are transferred from the mother to the child. The mother comes first, and the height of the child is partly the \textit{result} of the mother's genes that were transmitted during fertilisation. That which is the result is usually taken as the \textit{dependent} variable. The theoretical cause or antecedent is usually taken as the \textit{independent} variable. 
 
 The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}. Independent variables are also often called explanatory variables.
 
@@ -14,11 +14,14 @@ Sometimes we're interested to see whether we can predict longevity: age at death
 Thus, we often see four types of relations:
 \begin{itemize}
 \item Variable A affects/influences another variable B.
-\item Variable A causes or explains variable B.
+\item Variable A causes variable B.
+\item Variable A explains variable B.
 \item Variable A predicts variable B.
 \end{itemize}
 
-In all these three cases, Variable A is the independent variable and Variable B is the dependent variable.
+In all these four cases, Variable A is the independent variable and Variable B is the dependent variable.
+
+Note that in general, dependent variables can be either numeric, ordinal, or categorical. Also independent variables can be numeric, ordinal, or categorical. 
 
 \subsection{Exercises}
 
@@ -72,30 +75,28 @@ Answers:
 
 \section{Linear equations}
 
-From secondary education you might remember linear equations. Suppose you have two quantities, $x$ and $y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}
 
 <<lm_1,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept 0 and slope 2.'>>=
-x = seq(-1,10,0.01)
+x = seq(-1,5,0.01)
 y = 2*x
 data_frame(x, y) %>% ggplot(aes(x,y)) + geom_point()+
-        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
-scale_y_continuous(breaks=seq(-0,20,1), minor_breaks =seq(-0,20,1))
+        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,5,1), minor_breaks =seq(-1,5,1) ) +
+scale_y_continuous(breaks=seq(-2,10,1), minor_breaks =seq(-2,10,1))
 @
 
-We see that for every value of $x$, there is only one value of $y$. Moreover, the larger the value of $x$, the larger the value of $y$. If we look more closely we see that for each increase of 1 in x, there is an increase of 2 in y. For instance, if x=1, we see a y value of 2, and if x=2 we see a y-value of 4. So if we move from x=1 to x=2 (a step of one on the x-axis), we move from 2 to 4 on the y-axis, which is an increase of 2.
 
-This increase of 2 for every step of 1 in x is the same for all values of x and y. For instance, if we move from 9 to 10 on the x-axis, we go from 18 to 20 on the y-axis: an increase of 2. This constant increase is typical of linear relationships. The increase in y for every unit increase in x is called the \textit{slope} of a straight line. In this figure, the slope is equal to 2.
+From secondary education you might remember linear equations. Suppose you have two quantities, $x$ and $y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}. We see that for every value of $x$, there is only one value of $y$. Moreover, the larger the value of $x$, the larger the value of $y$. If we look more closely, we see that for each increase of 1 unit in $x$, there is an increase of 2 units in $y$. For instance, if $x=1$, we see a $y$ value of 2, and if $x=2$ we see a $y$-value of 4. So if we move from $x=1$ to $x=2$ (a step of one on the $x$-axis), we move from 2 to 4 on the $y$-axis, which is an increase of 2 units. This increase of 2 units for every step of 1 unit in $x$ is the same for all values of $x$ and $y$. For instance, if we move from 9 to 10 on the $x$-axis, we go from 18 to 20 on the $y$-axis: an increase of 2 units. This constant increase is typical of linear relationships. The increase in $y$ for every unit increase in $x$ is called the \textit{slope} of a straight line. In this figure, the slope is equal to 2.
 
-The slope is one important characteristic of a straight line. The second important property of a straight line is the \textit{intercept}. The intercept is the value of y, if $x=0$. In Figure \ref{fig:lm_1} we see that if $x=0$, $y$ is 0, too. Therefore the intercept of this straight line is 0.
+The slope is one important characteristic of a straight line. The second important property of a straight line is the \textit{intercept}. The intercept is the value of $y$, if $x=0$. In Figure \ref{fig:lm_1} we see that if $x=0$, $y$ is 0, too. Therefore the intercept of this straight line is 0.
 
-With the intercept and the slope, we completely describe this straight line: no other information is necessary. Such a straight line describes a linear relationship between x and y. The linear relationship can be formalized using a linear equation. The general form of a linear equation for two variables x and y is the following:
+With the intercept and the slope, we completely describe this straight line: no other information is necessary. Such a straight line describes a linear relationship between $x$ and $y$. The linear relationship can be formalized using a linear equation. The general form of a linear equation for two variables $x$ and $y$ is the following:
 
 \begin{equation}
 y = intercept + slope \times x
 \end{equation}
 
 
-For the linear relationship between x and y in Figure \ref{fig:lm_1} the linear equation is therefore
+For the linear relationship between $x$ and $y$ in Figure \ref{fig:lm_1} the linear equation is therefore
 
 \begin{equation}
 y = 0 + 2 x
@@ -108,9 +109,13 @@ y =  2 x
 \end{equation}
 
 
-With this equation, we can find the y-value for all x-values. For instance, if we want to know the y-value for $x=3.14$, then using the linear equation we know that $y = 2 \times 3.14 = 6.28$. If we want to know the y value for $x=49876.6$, we use the equation to obtain $y=2\times 49876.6 = 99753.2$. In short, the linear equation is very helpful to quickly say what y-value is on the basis of the x-value, even if we don't have a graph of the relationship or if the graph does not extent to certain x-values.
+With this equation, we can find the $y$-value for all values of $x$. For instance, if we want to know the $y$-value for $x=3.14$, then using the linear equation we know that $y = 2 \times 3.14 = 6.28$. If we want to know the $y$ value for $x=49876.6$, we use the equation to obtain $y=2\times 49876.6 = 99753.2$. In short, the linear equation is very helpful to quickly say what $y$-value is on the basis of the $x$-value, even if we don't have a graph of the relationship or if the graph does not extent to certain $x$-values.
 
-Figure \ref{fig:lm_2} shows a different linear relationship between $x$ and $y$. First we look at the slope: we see that for every unit increase in $x$ (from 1 to 2, or from 4 to 5) we see an increase of 0.5 in $y$. Therefore the slope is equal to 0.5. Second we look at the intercept: we see that if $x=0$, $y$ has the value -2. So the intercept is -2. Again, we can describe the linear relationship by a linear equation, which is now:
+
+In the linear equation, we call $y$ the \textit{dependent} variable, and $x$ the \textit{independent} variable. This because the equation helps us determine our value of $y$ on the basis of what we know about the value of $x$. When we graph the line that the equation represents, such as in Figure \ref{fig:lm_1}, the common way is to put the dependent variable on the vertical axis, and the independent variable on the horizontal axis. 
+
+
+Figure \ref{fig:lm_2} shows a different linear relationship between $x$ and $y$. First we look at the slope: we see that for every unit increase in $x$ (from 1 to 2, or from 4 to 5) we see an increase of 0.5 in $y$. Therefore the slope is equal to 0.5. Second, we look at the intercept: we see that if $x=0$, $y$ has the value -2. So the intercept is -2. Again, we can describe the linear relationship by a linear equation, which is now:
 
 \begin{equation}
 y = -2 + 0.5 x
@@ -119,22 +124,22 @@ y = -2 + 0.5 x
 
 
 <<lm_2,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept -2 and slope 0.5.'>>=
-x = seq(-1,10,0.01)
+x = seq(-1,6,0.01)
 y = -2+ 0.5*x
 data_frame(x, y) %>% ggplot(aes(x,y)) + geom_point()+
-        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
-scale_y_continuous(breaks=seq(-2,20,1), minor_breaks =seq(-2,20,1))
+        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,6,1), minor_breaks =seq(-1,6,1) ) +
+scale_y_continuous(breaks=seq(-2,10,1), minor_breaks =seq(-2,10,1))
 @
 
 
-Linear relationships can also be negative, see Figure \ref{fig:lm_3}. There, we see that if we move from 0 to 1, we see a \textit{decrease} of 2 in y (we move from y=-2 to y=-4), so that is our slope value. Further, if x=0, we see a y-value of -2, and that is our intercept. The linear equation is therefore:
+Linear relationships can also be negative, see Figure \ref{fig:lm_3}. There, we see that if we move from 0 to 1, we see a \textit{decrease} of 2 in $y$ (we move from y=-2 to y=-4), so that is our slope value. Further, if $x=0$, we see a y-value of -2, and that is our intercept. The linear equation is therefore:
 
 \begin{equation}
 y = -2 - 2 x
 \end{equation}
 
 
-<<lm_3,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept -2 and slope 0.5.'>>=
+<<lm_3,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept -2 and slope -2.'>>=
 x = seq(-1,10,0.01)
 y = -2 - 2*x
 data_frame(x, y) %>% ggplot(aes(x,y)) + geom_point()+
@@ -146,7 +151,7 @@ scale_y_continuous(breaks=seq(-60,0,1), minor_breaks =seq(-60,0,1))
 
 \begin{enumerate}
 \item
-For Figures \ref{fig:lm_4}, \ref{fig:lm_5} and \ref{fig:lm_6}, give the linear equations for the relationship between x and y.
+For Figures \ref{fig:lm_4}, \ref{fig:lm_5} and \ref{fig:lm_6}, give the linear equations for the relationship between $x$ and $y$.
 
 
 <<lm_4,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line example.'>>=
@@ -179,37 +184,38 @@ Try to sketch the straight line for the equation $y=1 - 2x$
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
 
 The equations are
-
+\begin{enumerate}
+\item 
 \begin{equation}
 y = 3 - 1 x
 \end{equation}
-
+\item
 \begin{equation}
 y = 1.5 - 0.5 x
 \end{equation}
-
+\item
 \begin{equation}
 y = -2 + 0.33 x
 \end{equation}
-
+\item
 The straight line for $y=1 - 2x$ is presented in Figure \ref{fig:lm_7}.
 
 <<lm_7,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with based on y=1-2x.'>>=
-x = seq(-1,10,0.01)
+x = seq(-1,5,0.01)
 y = 1 -2*x
 data_frame(x, y) %>% ggplot(aes(x,y)) + geom_point()+
-        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
-scale_y_continuous(breaks=seq(-60,20,1), minor_breaks =seq(-60,20,1))
+        geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,5,1), minor_breaks =seq(-1,5,1) ) +
+scale_y_continuous(breaks=seq(-10,20,1), minor_breaks =seq(-10,20,1))
 @
-
+\end{enumerate}
 \section{Linear regression}
 
-In the previous section, we saw perfect linear relationships between quantities $x$ and $y$. For each x-value there was only 1 y-value, and the values are all desribed by a straight line. Such relationships we often see in physics, or in mathematics.
+In the previous section, we saw perfect linear relationships between quantities $x$ and $y$: for each $x$-value there was only one $y$-value, and the values are all described by a straight line. Such relationships we hope to see in physics, but mostly see only in mathematics.
 
-In social sciences we hardly ever see such perfectly linear relationships between quantities (variables). For instance, let us plot the relationship between yearly income and the amount of Euros spent on holidays. Yearly income is measured in thousands of Euros (kEuros), and money yearly spent on holidays is measured in Euros. We plot yearly income on the x-axis (horizontal axis) and holiday spendings on the y-axis (vertical axis). Suppose we find the following data from 100 women between 30 and 40 years of age, plotted in Figure \ref{fig:lm_8}.
+In social sciences we hardly ever see such perfectly linear relationships between quantities (variables). For instance, let us plot the relationship between yearly income and the amount of Euros spent on holidays. Yearly income is measured in thousands of Euros (kEuros), and money yearly spent on holidays is measured in Euros. Let us regard money spent on holidays as our dependent variable and yearly income as our independent variable (we assume money needs to be saved before it can be spent). We therefore plot yearly income on the $x$-axis (horizontal axis) and holiday spendings on the $y$-axis (vertical axis). Suppose we find the following data from 100 women between 30 and 40 years of age, plotted in Figure \ref{fig:lm_8}.
 
 
 <<lm_8,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on holiday spending.'>>=
@@ -223,17 +229,18 @@ scale_y_continuous(breaks=seq(0,20000,100), minor_breaks =seq(0,20000,100)) +xla
 plot
 @
 
-In the scatterplot, we see that one women has a yearly income of 100,000 Euros, and that she spends almost 1100 Euros per year on holidays. We also see a couple of women who earn less between 10,000 and 20,000 Euros a year and they spend between 200 and 300 Euros per year on holiday.
+In the scatterplot, we see that one woman has a yearly income of 100,000 Euros, and that she spends almost 1100 Euros per year on holidays. We also see a couple of women who earn less, between 10,000 and 20,000 Euros a year, and they spend between 200 and 300 Euros per year on holiday.
 
-The data obviously do not form a straight line. However, we tend to think that the relationship between yearly income and holiday spending is more or less linear: for every increase of 10,000 Euros in yearly income, we an increase of about 100 Euros.
+The data obviously do not form a straight line. However, we tend to think that the relationship between yearly income and holiday spending is more or less linear: there is a general linear trend such that that for every increase of 10,000 Euros in yearly income, there is an increase of about 100 Euros.
 
-Lets plot such a straight line with a slope of 100 straight through the data points. The result is seen in Figure \ref{fig:lm_9}. We see that the line with a slope of 100 is a nice approximation of the relationship between yearly income and holiday spendings. We also see that the intercept of the line is 100.
+Lets plot such a straight line that represents that general trend, with a slope of 100 straight through the data points. The result is seen in Figure \ref{fig:lm_9}. We see that the line with a slope of 100 is a nice approximation of the relationship between yearly income and holiday spendings. We also see that the intercept of the line is 100.
 
 <<lm_9,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on holiday spending with an added straight line.'>>=
-plot + geom_abline(intercept=100, slope=10) +
+plot + geom_abline(intercept=100, slope=10, col='blue') +
         geom_segment(aes(x = x[order(x)][99]-25, y = 900, xend = 67, yend = 824),
                   arrow = arrow(length = unit(0.5, "cm")))+
         geom_label(x=x[order(x)][99]-25, y=900, label='Sandra Schmidt')
+options(scipen = 999)
 @
 
 Given the intercept and slope, the linear equation for the straight line approximating the relationship is
@@ -242,23 +249,22 @@ Given the intercept and slope, the linear equation for the straight line approxi
 YearlyIncome = 100 + 100 \times HolidaySpendings
 \end{equation}
 
-In summary, data on two variables may not show a perfect linear relationship, but in many cases, a perfect straight line can be a very reasonable approximation of the data. Finding such a straight line to approximate the data points is called \textit{linear regression}. In linear regression we describe the behaviour of the dependent variable (the $y$-variable on the vertical axis) on the basis of the independent variable (the $x$-value on the horizontal axis) using a linear equation. We say that we regress variable y on variable x.
+In summary, data on two variables may not show a perfect linear relationship, but in many cases, a perfect straight line can be a very reasonable approximation of the data. Another word for a reasonable approximation of the data is a \textit{model}. Finding such a straight line to approximate the data points is called \textit{linear regression}. In this chapter we will see what method we can use to find a straight line. In linear regression we describe the behaviour of the dependent variable (the $y$-variable on the vertical axis) on the basis of the independent variable (the $x$-value on the horizontal axis) using a linear equation. We say that \textit{we regress variable $y$ on variable $x$}.
 
 
 
 
 \section{Residuals}
 
-Even though a straight line can be a good approximation of a data set, it is hardly ever perfect: there are always discrependencies between what the straight line describes and what the data actually tell us.
+Even though a straight line can be a good approximation of a data set consisting of two variables, it is hardly ever perfect: there are always discrepencies between what the straight line describes and what the data actually tell us.
 
-For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes \Sexpr{1000*x[order(x)][99]} Euros a year and who spends \Sexpr{round(y[order(x)][99],2)} Euros on holidays. According to the linear equation that describes the straight line, a woman that earns \Sexpr{1000*x[order(x)][99]} Euros a year would spend $100 + 100 * \Sexpr{1000*x[order(x)][99]}= \Sexpr{round(100 + 10*x[order(x)][99],2)}$ Euros on holidays. The discrependy between the actual amount spent and the one described by the linear equation equals $\Sexpr{round(y[order(x)][99],2)}-\Sexpr{round(100 + 10*x[order(x)][99],2)}=\Sexpr{round(y[order(x)][99],2)-round(100 + 10*x[order(x)][99],2)}$ Euros. This difference is rather small and the same holds for all the other women in this data set.
-
-Such descrepencies between the actual amount spent and the amount as described or predicted by the straight line are called \textit{residuals} or \textit{errors}. Using the linear equation, we could predict holiday spending even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
-
-The residual (or error) is the difference between a certain data point and what the linear equation predicts.
+For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes \Sexpr{round(x[order(x)][99],0)} kEuros a year and who spends \Sexpr{round(y[order(x)][99],0)} Euros on holidays. According to the linear equation that describes the straight line, a woman that earns \Sexpr{x[order(x)][99]} kEuros a year would spend $100 + 100 * \Sexpr{x[order(x)][99]}= \Sexpr{round(100 + 10*x[order(x)][99],0)}$ Euros on holidays. The discrepency between the actual amount spent and the amount prescribed by the linear equation equals $\Sexpr{round(y[order(x)][99],0)}-\Sexpr{round(100 + 10*x[order(x)][99],0)}=\Sexpr{round(y[order(x)][99],0)-round(100 + 10*x[order(x)][99],0)}$ Euros. This difference is rather small and the same holds for all the other women in this data set. Such discrepencies between the actual amount spent and the amount as prescribed or predicted by the straight line are called \textit{residuals} or \textit{errors}. The residual (or error) is the difference between a certain data point and what the linear equation predicts.
 
 
-Let us look at another fictitious data set where the residuals (errors) are a bit larger. Figure \ref{fig:lm_10} shows the relationship between variables x and y. The dots are the actual data points and the blue straight line is an approximation of the actual relationship. The residuals are also visualized: sometimes the observed $y$-value is greater than the predicted $y$-value (dots above the line) and sometimes the oberved $y$-value is smaller than the predicted $y$-value. Let's denote the predicted $y$-value (the value of $y$ predicted by the blue line) as $\hat{y}$ (pronounced as y-hat), then we can define a residual or error as the discrepency between the observed $y$ and $\hat{y}$:
+% Using the linear equation, we could predict holiday spendings even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
+
+
+Let us look at another fictitious data set where the residuals (errors) are a bit larger. Figure \ref{fig:lm_10} shows the relationship between variables $x$ and $y$. The dots are the actual data points and the blue straight line is an approximation of the actual relationship. The residuals are also visualized: sometimes the observed $y$-value is greater than the predicted $y$-value (dots above the line) and sometimes the oberved $y$-value is smaller than the predicted $y$-value (dots below the line). Let's denote the predicted $y$-value (the value of $y$ predicted by the blue line) as $\hat{y}$ (pronounced as y-hat), then we can define a residual or error as the discrepency between the observed $y$ and $\hat{y}$:
 
 \begin{equation}
 e = y - \hat{y}
@@ -283,7 +289,7 @@ scale_y_continuous(breaks=seq(0,20000,500), minor_breaks =seq(0,20000,500))
 plot  + geom_segment(aes(xend = x, yend = predicted)) + geom_smooth(se=F, method='lm')
 @
 
-If we compute residual $e$ for every $y$-value in the data set, we can plot them using a histogram, as displayed in Figure \ref{fig:lm_11}. We see that the residuals are on average 0, and that the histogram has the shape of the normal distribution, more or less. Such normally-shaped distributions of residuals we see often in research. Here, the residuals show a normal distribution with mean 0 and variance of \Sexpr{round(var(residuals),0)} (a standard deviation of \Sexpr{round(sqrt(round(var(residuals),0)),0)}).
+If we compute residual $e$ for every $y$-value in the data set, we can plot them using a histogram, as displayed in Figure \ref{fig:lm_11}. We see that the residuals are on average 0, and that the histogram has the shape of a normal distribution, more or less. Such normally-shaped distributions of residuals we see often in research. Here, the residuals show a normal distribution with mean 0 and variance of \Sexpr{round(var(residuals),0)} (a standard deviation of \Sexpr{round(sqrt(round(var(residuals),0)),0)}).
 
 
 <<lm_11,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Histogram of the residuals (errors).'>>=
@@ -307,14 +313,12 @@ The most reasonable idea is to draw a straight line that is more or less in the 
 However, the criterion that all residuals should sum to 0 is not sufficient. In Figure \ref{fig:lm_12} we see a straight line with a slope of 0 where all residuals sum to 0. However, this regression line does not make intuitive sense: it does not describe the structure in the data very well. Moreover, we see that the residuals are much larger than in Figure \ref{fig:lm_10}.
 
 <<lm_12,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on variables x and y with an added straight line. The sum of the residuals equals 0.'>>=
-
-
 plot  + geom_segment(aes(xend = x, yend = mean(y))) + geom_abline(intercept=mean(y), slope=0)
 @
 
 We therefore need a second criterion to find a nice straight line. We want the residuals to sum to 0, but also want the residuals to be as small as possible: the descrepencies between what the linear equation predicts (the $\hat{y}$-values) and the actual $y$-values should be as small as possible.
 
-So now we have two criteria: we want the sum of the residuals to be 0 (half of them negative, half of them positive), and we want the residuals to be as small as possible. We can achieve both of these when we use as our criterion the idea that the sum of the \textit{squared} residuals be as small as possible. If the sum of the squared residuals is as small as possible, we know that the residuals are as small as possible. But we also know that the residuals then sum to zero\footnote{For the proof of this, see ....}. Thus, as our criterion we can use the regression line for which the squared differences between predicted and observed $y$-values are as small as possible.
+So now we have two criteria: we want the sum of the residuals to be 0 (half of them negative, half of them positive), and we want the residuals to be as small as possible. We can achieve both of these when we use as our criterion the idea that the sum of the \textit{squared} residuals be as small as possible. Recall from Chapter 1 that the sum of the squared deviations from the mean is actually the variance. So if the sum of the squared residuals is as small as possible, we know that the variance of the residuals is as small as possible. Thus, as our criterion we can use the regression line for which the squared differences between predicted and observed $y$-values are as small as possible.
 
 Figure \ref{fig:lm_13} shows three different regression lines for the same data set. Figure \ref{fig:lm_14} shows the respective distributions of the residuals. For the first line, we see that the residuals sum to 0, for the residuals are on average 0 (the red vertical line). However, we see quite large residuals. The residuals for the second line are smaller: we see very small positive residuals, but the negative residuals are still quite large. We also see that the residuals do not sum to 0. For the third line, we see both criteria optimized: the sum of the residuals is zero and the residuals are all very small. We see that for regression line 3, the sum of squared residuals is at its minimum value.
 
@@ -359,7 +363,7 @@ plot <- data.frame(residual, z=as.factor(rep(c(1,2,3), each=length(x)))) %>%
 plot
 @
 
-In summary, when we want to have a straight line that describes our data best, we'd like a line such that the residuals are on average 0 (i.e, sum to 0), and where we see the smallest residuals possible. We reach these criteria when we use the line in such a way that we have the lowest value for the sum of the squared residuals possible. This line is therefore called the least squares or OLS regression line. It turns out that this optimal regression slope can be found by a relatively simple computation using matrix algebra. In daily life, we do not do this by hand but let computers compute it for us, with software like for instance SPSS.
+In summary, when we want to have a straight line that describes our data best, we'd like a line such that the residuals are on average 0 (i.e, sum to 0), and where we see the smallest residuals possible. We reach these criteria when we use the line in such a way that we have the lowest value for the sum of the squared residuals possible. This line is therefore called the least squares or OLS regression line. It turns out that this optimal regression slope can be found by a relatively simple computation using matrix algebra. In daily life, we do not do this by hand but let computers compute it for us, with software like for instance SPSS or R.
 
 
 \subsection{Exercises}
@@ -384,7 +388,7 @@ out.price <- lm(price ~ area , data=data_frame(area, price))
 \item In Table \ref{tab:lm_15} you find a small data set on the price of homes with dependent variable price in kEuros and independent variable area in square meters. The least squares regression equation turns out to be $price = out.price$coef[1]+ out.price$coef[2]\times area$. Add a third column with the expected prices based on the regression equation ($\hat{y}$. Put the difference between the observed price and the expected price in the fourth column ($e$). Then compute the squared residuals and put those in the fifth column ($e^2)$. Take the sum of the squared residuals: How large is sum of the squared residuals?
 
 
-\item See website ....., try to find the Least Squares regression line for the given data set by changing both intercept and slope. How large is the sum of the squared residuals for that optimal regression line?
+\item See website \url{https://gallery.shinyapps.io/simple_regression/}, try to find the Least Squares regression line for the given data set by changing both intercept and slope. How large is the sum of the squared residuals for that optimal regression line?
 
 
 \item Do this exercice with one or more of your fellow students. Look at the data set plotted in Figure \ref{fig:lm_16}. Try to find the regression line with the lowest sum of squared residuals possible.
@@ -406,7 +410,9 @@ data_frame(x, y) %>%
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
+
+
 \begin{enumerate}
 
 \item The predicted prices, the residuals and the squared residuals are displayed in Table \ref{tab:lm_17}. The sum of the squared residuals equals \Sexpr{sum(out.price$residuals^2)}.
@@ -431,15 +437,14 @@ data_frame(Area=area, Price=price, PredictedPrice = predict(out.price), Residual
 
 \section{Pearson correlation}
 
-For any set of two quantitative variables, we can determine the least squares regression line. However, it depends on the data set how well that regression line describes the data.
-Figure \ref{fig:lm_18} shows two different data sets on variables x and y. Both plots also show the least squares regression line, and they both turn out to be exactly the same: $y=100+10x$.
+For any set of two quantitative variables, we can determine the least squares regression line. However, it depends on the data set how well that regression line describes the data. Figure \ref{fig:lm_18} shows two different data sets on variables $x$ and $y$. Both plots also show the least squares regression line, and they both turn out to be exactly the same: $y=100+10x$.
 
 <<lm_18,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Plot of housing data.'>>=
 set.seed(1234)
 x <- rep(seq(1,100,1),2)
 y <- rnorm(200, 100+x*10, 10)
 y[101:200] <- y[101:200]+rnorm(100,0,280)
-z<- rep(c(1,2), each=100) %>% as.factor()
+z<- rep(c("A","B"), each=100) %>% as.factor()
 
 data_frame(x, y, z) %>%
         ggplot(aes(x, y)) +
@@ -449,11 +454,11 @@ data_frame(x, y, z) %>%
 @
 
 
-We see that the regression line describes data set very well (left panel): the observed dots are very close to the line, which means that the residuals are very small. The regression line does a worse job for the second data set (right panel) since there are quite large discrepencies between the observed $y$-values and the predicted $y$-values. Put differently, the regressin equation can be used to predict $y$-values in data set 1 very well, almost without error, whereas the regression line cannot be used to predict $y$-values very precisely. The regression line is also the least squares regression line for data set 2, so any improvement by choosing another slope or intercept is not possible.
+We see that the regression line describes data set A very well (left panel): the observed dots are very close to the line, which means that the residuals are very small. The regression line does a worse job for data set B (right panel) since there are quite large discrepencies between the observed $y$-values and the predicted $y$-values. Put differently, the regression equation can be used to predict $y$-values in data set A very well, almost without error, whereas the regression line cannot be used to predict $y$-values in data set B very precisely. The regression line is also the least squares regression line for data set B, so any improvement by choosing another slope or intercept is not possible.
 
 Francis Galton was the first to think about how to quantify this difference in the ability of a regression line to predict the dependent variable. Karl Pearson later worked on this measure so that it became to be called Pearson's correlation coefficient. It is a standardized measure, so that it can be used to compare different data sets.
 
-In order to get to Pearson's correlation coefficient, you first need to standardize both the independent variable, $x$, and the dependent variable, $y$. You standardize scores by taking their values, subtract the mean from them, and divide by the standard deviation. So, in order to obtain a standardized $x$-value we compute $Z_x$,
+In order to get to Pearson's correlation coefficient, you first need to standardize both the independent variable, $x$, and the dependent variable, $y$. You standardize scores by taking their values, subtract the mean from them, and divide by the standard deviation (see Chapter 1). So, in order to obtain a standardized $x$-value we compute $Z_x$,
 
 \begin{equation}
 Z_x = \frac{x- \bar{x}}{\sigma_x}
@@ -481,7 +486,7 @@ data_frame(Z_x, Z_y, z) %>%
  out2 <- lm(Z_y[101:200]~Z_x[101:200])
 @
 
-Let's do this both for data set 1 and data set 2, and plot the standardized scores. see Figure \ref{fig:lm_19}. If we then plot the least squares regression lines for the standardized values, we obtain different equations. For both data sets, the intercept is 0 because by standardizing the scores, the means become 0. But the slopes are different: in data set 1, the slope is \Sexpr{round(out1$coef[2],3)} and in data set 2, the slope is \Sexpr{round(out2$coef[2],3)}.
+Let's do this both for data set A and data set B, and plot the standardized scores, see Figure \ref{fig:lm_19}. If we then plot the least squares regression lines for the standardized values, we obtain different equations. For both data sets, the intercept is 0 because by standardizing the scores, the means become 0. But the slopes are different: in data set A, the slope is \Sexpr{round(out1$coef[2],3)} and in data set B, the slope is \Sexpr{round(out2$coef[2],3)}.
 
 \begin{eqnarray}
 Z_y = 0 + \Sexpr{round(out1$coef[2],3)}Z_x=\Sexpr{round(out1$coef[2],3)}Z_x \\
@@ -489,7 +494,7 @@ Z_y = 0 + \Sexpr{round(out2$coef[2],3)}Z_x=\Sexpr{round(out2$coef[2],3)}Z_x
 \end{eqnarray}
 
 
-These two slopes, the slope for the regression of standardized $y$-values on standardized $x$-values, are the correlation coefficients for data sets 1 and 2, respectively. For obvious reasons, the correlation is sometimes also referred to as the \textit{standardized slope coefficient}.
+These two slopes, the slope for the regression of standardized $y$-values on standardized $x$-values, are the correlation coefficients for data sets A and B, respectively. For obvious reasons, the correlation is sometimes also referred to as the \textit{standardized slope coefficient}.
 
 Correlation stands for the \textit{co-relation} between two variables. It tells you how strongly one variable can be predicted from the other. The correlation is bi-directional: the correlation between $y$ and $x$ is the same as the correlation between $x$ and $y$. For instance in Figure \ref{fig:lm_19}, if we would have put the $Z_x$-variable on the $Z_y$-axis, and the $Z_y$-variable on the $Z_x$-axis, the slopes would be exactly the same. This is true because the variances of the $y$ and $x$-variables are equal after standardization (both variances equal to 1).
 
@@ -533,7 +538,7 @@ Cov(x,y)= Cor(x,y) \times \sigma_x \sigma_y
 
 For example, if the variance of $x$ equals 49 and the variance of $y$ equals 25, then the respective standard deviations are 7 and 5. If the correlation between $x$ and $y$ equals 0.5, then the covariance between $x$ and $y$ is equal to $0.5 \times 7 \times 5 = \Sexpr{0.5*7*5}$.
 
-Similar to correlation, the covariance of two variables indicates by how much they co-vary. For instance, if the variance of $x$ is 3 and the variance of $y$ is 5, then a covariance of 2 indicates that $x$ and $y$ co-vary: if $x$ increases by a certain amount, $y$ also increases. If you want to know how many standard deviations $y$ increases if $x$ increases with one standard deviation, you can turn the covariance into a correlation my dividing the covariance by the respective standard deviations.
+Similar to correlation, the covariance of two variables indicates by how much they co-vary. For instance, if the variance of $x$ is 3 and the variance of $y$ is 5, then a covariance of 2 indicates that $x$ and $y$ co-vary: if $x$ increases by a certain amount, $y$ also increases. If you want to know how many standard deviations $y$ increases if $x$ increases with one standard deviation, you can turn the covariance into a correlation by dividing the covariance by the respective standard deviations.
 
 \begin{equation}
 Cor(x,y)= \frac{Cov(x,y)} { \sigma_x \sigma_y}= \frac{2} { \sqrt{3} \sqrt{5}}=\Sexpr{round(2/(sqrt(3)*sqrt(5)),2)}
@@ -570,7 +575,7 @@ Similar to correlations and slopes, covariances can also be negative.
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
 
 \begin{enumerate}
 
@@ -607,7 +612,7 @@ The correlation is 0.30, so if you increase intelligence by one standard deviati
 
 \section{Linear models}
 
-By performing a regression analysis of $y$ on $x$, we try to predict the $y$-value from a given $x$-value on the basis of a linear equation. We try to find an intercept and a slope for that linear equation such that our prediction is best. We define best as the linear equation for wich we see the lowest possible value for the sum of the squared residuals (least squares principle).
+By performing a regression analysis of $y$ on $x$, we try to predict the $y$-value from a given $x$-value on the basis of a linear equation. We try to find an intercept and a slope for that linear equation such that our prediction is 'best'. We define 'best' as the linear equation for wich we see the lowest possible value for the sum of the squared residuals (least squares principle).
 
 Thus, the predicted value of $y$ ($\hat{y}$) can be computed by the linear equation
 
@@ -621,7 +626,7 @@ In reality, the predicted values of $y$ always deviate from the observed values 
 y = \hat{y} + e = b_0 + b_1 x + e
 \end{equation}
 
-Typically, we assume that the residuals $e$ are on average 0 and have a normal distribution with a certain variance $\sigma^2_e$. Taking the linear equation and the normally distributed residuals together, we have \textit{a linear model} for the two variables $x$ and $y$.
+Typically, we assume that the residuals $e$ have a normal distribution with a mean of 0 and a variance of that is often unknown but that we denote by $\sigma^2_e$. Such a normal distribution is denoted by $N(\mu,\sigma^2)$. Taking the linear equation and the normally distributed residuals together, we have \textit{a linear model} for the two variables $x$ and $y$.
 
 
 \begin{eqnarray}
@@ -629,4 +634,5 @@ y = b_0 + b_1 x + e \\
 e \sim N(0,\sigma^2_e)
 \end{eqnarray}
 
-In the remainder of this book, we will see a great variety of linear models between 2 or more variables. They can all be seen as extensions and variations of this basic linear model. They all aim to predict as best as possible one dependent variable from a number of independent variables.
+
+The linear model that we see here is generally known as the simple regression model: a linear model for one dependent variable, an intercept, only one slope for one (hence 'simple')  independent variable,  and normally distributed residuals. In the remainder of this book, we will see a great variety of linear models: with one or more independent variables, with numeric or with categorical independent variables, and with numeric or with categorical dependent variables. All these models can be seen as extensions of this basic linear regression model. They all aim to predict as best as possible one dependent variable from one or more independent variables.
