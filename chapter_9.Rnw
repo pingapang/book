@@ -1,15 +1,15 @@
 \chapter{When assumptions are not met: non-parametric alternatives}\label{chap:nonpar1}
 
 
+\section{Introduction}
 
-Linear models do not apply to every data set. As discussed before, sometimes the assumptions of linear modelling are not met. One of the assumptions is linearity or additivity. Additivity requires that one unit change in variable X leads to the same amount of change in Y, no matter what value X has. For bivariate relationships this leads to a linear shape. But sometimes you can only expect that Y will change in the same direction, but you don't believe that this amount is the same for all values of X. This is the case for example with ordinal dependent variable. Suppose we wish to model the relationship between age of the mother and an aggression score of her 7-year-old child. Suppose aggression is measured on a three-point ordinal scale: not aggressive, sometimes aggressive, often aggressive. Since we do not know the quantitative differences between these three levels there are many graphs we could draw for a given data set.
-
-
-Suppose we have the following data set:
+Linear models do not apply to every data set. As discussed in Chapter \ref{chap:assumptions}, sometimes the assumptions of linear models are not met. One of the assumptions is linearity or additivity. Additivity requires that one unit change in variable $x$ leads to the same amount of change in $y$, no matter what value $x$ has. For bivariate relationships this leads to a linear shape. But sometimes you can only expect that $y$ will change in the same direction, but you don't believe that this amount is the same for all values of $x$. This is the case for example with an ordinal dependent variable. Suppose we wish to model the relationship between the age of a mother and an aggression score in her 7-year-old child. Suppose aggression is measured on a three-point ordinal scale: 'not aggressive', 'sometimes aggressive', 'often aggressive'. Since we do not know the quantitative differences between these three levels there are many graphs we could draw for a given data set.
 
 
-<<table1, fig.height=4, echo=FALSE, fig.align='center'>>=
-library(xtable)
+Suppose we have the data set given in Table \ref{tab:nonpar_1}. If we want to make a scatter plot, we could arbitrarily choose the values 1, 2, and 3 for the three categories, respectively. We would then get the plot in Figure \ref{fig:fig101}. But since the aggression data are ordinal, we could also choose the arbitrary numeric values 0, 2, and 3, which would yield the plot in Figure \ref{fig:fig1114}. 
+
+
+<<nonpar_1, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
 set.seed(1234567)
 Aggression <- rmultinom(15, 3, prob=c(0.3, .3, .3)) +1
 Aggression <- Aggression[1,]
@@ -18,57 +18,50 @@ Aggression1=Aggression
 Aggression1 <-  replace(Aggression1, Aggression==1,  c('Not aggressive'))
 Aggression1 <-  replace(Aggression1, Aggression==2,  c('Sometimes aggressive'))
 Aggression1 <-  replace(Aggression1, Aggression==3,  c('Often aggressive'))
-data.frame(AgeMother=round(AgeMother,0), Aggression=Aggression1) %>% kable()
+data.frame(AgeMother=round(AgeMother,0), Aggression=Aggression1) %>% 
+                xtable(caption="Aggression in children and age of the mother.", label="tab:nonpar_1") %>%
+        print(include.rownames=F, caption.placement = "top")
 @
 
-If we want to make a scatter plot, we could choose the values 1, 2, and 3 for the three categories respectively. We would then get the following plot:
 
 
-<<fig101, fig.height=4, echo=FALSE, fig.align='center'>>=
-plot(AgeMother, Aggression, ylim=c(0,4))
+<<fig101, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Regression of the child's aggression score (1,2,3) on the mother's age.">>=
+data.frame(AgeMother, Aggression) %>% 
+        ggplot(aes(AgeMother, Aggression)) + geom_point() + ylab("Aggression") +geom_smooth(method="lm", se=F) + ylim(c(0,4))
 @
 
-But since the Aggression data are ordinal, we could also choose values 0, 2, and 3:
 
-<<fig1114, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<fig1114, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Regression of the child's aggression score (0,2,3) on the mother's age.">>=
 Aggression2=Aggression
 Aggression2 <-  replace(Aggression2, Aggression==1,  0)
-Aggression2 <-  replace(Aggression2, Aggression==2,  2)
-Aggression2 <-  replace(Aggression2, Aggression==3,  3)
-plot(AgeMother, Aggression2, ylab='Aggression' , ylim=c(0,4))
+data_frame(AgeMother, Aggression2) %>% 
+        ggplot(aes(AgeMother, Aggression2)) +geom_point() + geom_smooth(method="lm", se=F)+ ylim(c(0,4))
 @
 
-As we change the scale for the ordinal variable, we also see the best fitting regression line changing. 
-
-So with ordinal data, the assumption of additivity is often not met, since the values for a quantitative analysis are arbitrarily chosen. 
-
-In some case though, ordinal data could be modelled linearly. Look at the following example where we measured aggression with a 7-point Likert scale:
+As you can see from the least squares regression lines in Figures \ref{fig:fig101} and \ref{fig:fig1114}, when we change the way in which we code the ordinal variable into a numeric one, we also see the best fitting regression line changing. This does not mean though, that ordinal data cannot be modelled linearly. Look at the example data in Table \ref{tab:} where aggression with a 7-point Likert scale. Plotting these data in Figure \ref{fig:fig1121} using the values 1 through 7, we see a nice linear relationship. So even when the values 1 thru 7 are arbitrarily chosen, a linear model can be a good model for a given data set with one or more ordinal variables. Whether the interpretation makes sense is however up to the researcher. 
 
 
-<<table11241, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
-library(xtable)
+<<table11241, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, results='asis'>>=
 set.seed(1234567)
 Aggression <- rmultinom(15, 20, prob=rep(.1, 7)) +1
 Aggression <- Aggression[3,]
 AgeMother <- 29 + Aggression + rnorm(15, 0,1)
-data.frame(AgeMother=round(AgeMother,0), Aggression=Aggression) %>% kable()
+data.frame(AgeMother, Aggression=Aggression) %>% 
+        xtable(caption="Aggression in children on a 7-point Likert scale and age of the mother.", label="tab:nonpar_2",digits=c(0,1,0)) %>%
+        print(include.rownames=F, caption.placement = "top")
 @
 
-When we plot these data, using the values 1 through 7, we see a nice linear relationship. So even when the values are arbitrarily chosen, a linear model can be a good model for a given data set with ordinal variables. 
 
-<<fig1121, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
-plot(AgeMother, Aggression, ylab='Aggression' , ylim=c(0,8))
+<<fig1121, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap="Regression of the child's aggression 1 thru 7 Likert score on the mother's age.">>=
+ data_frame(AgeMother, Aggression ) %>% 
+ggplot(  aes(AgeMother, Aggression)          ) +geom_point() +  geom_smooth(method="lm", se=F  ) +ylim(c(0,8)) +xlim(c(28,38))
 @
 
-So with ordinal data, always check that your data indeed conform to a linear model, but realize at the same time that you're assuming a quantitative relationship between the variables that may or may not make sense. 
+So with ordinal data, always check that your data indeed conform to a linear model, but realize at the same time that you're assuming a \textit{quantitative} and additive relationship between the variables that may or may not make sense. If you believe that a quantitative analysis is meaningless then you may consider a nonparametric analysis that we discuss in this chapter. 
 
-If you believe that a quantitative analysis is meaningless then consider nonparametric analysis. 
+Another instance where we favour a nonparametric analysis over a linear model one, is when the assumption of normally distributed residuals is not tenable. For instance, look again at Figure \ref{figfig101} where we regressed aggression in the child on the age of its mother. Figure \ref{fig:fig1201} shows a histogram of the residuals. Because of the limited number of possible values in the dependent variable (1, 2 and 3), the number of possible values for the residuals is also very restricted, which leads to a very discrete distribution. The histogram looks therefore far removed from a continuous symmetric, bell-shaped distribution, a violation of the normality assumption. 
 
-Another case where we favour a nonparameteric analysis, is when the assumption of normally distributed residuals is not tenable. For instance look again at Figure ????. When we perform a regression analysis and plot a histogram of the residuals, we see the following:
-
-<<table1201, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE >>=
-library(ggplot2)
-library(tidyr)
+<<fig1201, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, message=F,fig.cap="Histogram of the residuals of the regression of a child's aggression score on the mother's age." >>=
 set.seed(1234567)
 Aggression <- rmultinom(15, 3, prob=c(0.3, .3, .3)) +1
 Aggression <- Aggression[1,]
@@ -80,49 +73,53 @@ Aggression1 <-  replace(Aggression1, Aggression==3,  c('Often aggressive'))
 data <- data.frame(AgeMother=round(AgeMother,0), Aggression=Aggression)
 out <- lm(Aggression ~ AgeMother, data=data) 
 resid <- out$residuals
-ggplot(data.frame(resid) ,aes(resid)) + geom_histogram()
+ggplot(data.frame(resid) ,aes(resid)) + geom_histogram() + xlab("residual")
 @
 
 Everytime we see a distribution of residuals that is either very skew, or has very few different values, we should consider a nonparametric analysis. Note that the shape of the distribution of the residuals is directly related to what scale values we choose for the ordinal categories. By changing the values we change the regression line, and that directly affects the relative sizes of the residuals. 
 
-First, we will discuss a nonparametric alternative for two quantitative variables. We will start with Spearman's rho, or Spearmams rank-order correlation coefficient $r_s$. Next we will discuss an alternative to $r_s$, Kendall's T. After that we will discuss categorical variables, when comparing group differences.
+First, we will discuss a nonparametric alternative for two numeric variables. We will start with Spearman's rho, or Spearmams rank-order correlation coefficient $r_s$. Next we will discuss an alternative to $r_s$, Kendall's $T$. After that we will discuss the combination of numeric and categorical variables, when comparing groups.
 
 \section{Spearman's rho}
 
+Suppose we have 10 students and we ask their teachers to rate them on their performance. One teachers rates them on geography and the other teacher rates them on history. We only ask them to give rankings: indicate the brightest student with a 1 and the dullest student with a 10. Then we might have the data set in Table \ref{tab:nonpar_3}.
 
-Suppose we have 10 students and we ask their teachers to rate them. One teachers rates them on geography and the other teachers on history. We only ask to give rankings: indicate the brightest student with a 1 and the dullest student with a 10. Then we might have the following data set:
-
-
-
-<<table10221, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+<<table10221, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, results='asis'>>=
+student <- 1:10
 rank.geography <- c( 5,4,6,7,8,9,10,2,1,3 )
 rank.history <- c( 4,5,7,8,6,9,10, 3,1,2)
-data.frame(rank.geography, rank.history) %>% kable()
+data.frame(student, rank.geography, rank.history) %>% 
+        xtable(caption="Student rankings on geography and history.", label="tab:nonpar_3",digits=c(0,0,0,0)) %>%
+        print(include.rownames=F, caption.placement = "top")
 @
 
-Now we acknowledge the ordinal nature of the data: we only have rankings: a person with rank 1 is brighter than a person with rank 2, but we do not how large the difference in brightness really is.  Now we want to establish whether there is a relationship between rankings on geography and the rankings on history: is it true that the higher the ranking on geography, the higher the ranking on history?
+Now we acknowledge the ordinal nature of the data by only having rankings: a person with rank 1 is brighter than a person with rank 2, but we do not how large the difference in brightness really is. Now we want to establish whether there is a relationship between rankings on geography and the rankings on history: is it true that the higher the ranking on geography, the higher the ranking on history?
 
+By eyeballing the data, we see that the brightest student in geography is also the brightest student in history (rank 1). We also see that the dullest student in history is the dullest student in geography (rank 10). Furthermore, we see relatively small differences between the rankings on the two subjects: high rankings on geography seem to go together with high rankings on history. Let's look at these differences between rankings more closely by computing them, see Table \ref{tab:nonpar_4}.
 
-By eyeballing the data, we see that the brightest student in geography is also the brightest student in history (rank 1). We also see that the dullest student in history is the dullest student in geography (rank 10). Furthermore, we see relatively small differences between the rankings on the two subjects: high rankings on geography seem to go together with high rankings on history. Let;s look at these differences between rankings more closely by computing them:
-
-<<table1601, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<table1601, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
+student <- 1:10
 rank.geography <- c( 5,4,6,7,8,9,10,2,1,3 )
 rank.history <- c( 4,5,7,8,6,9,10, 3,1,2)
 difference <- c(-1, +1, +1, +1,  -2 ,0, 0  , 1,0, -1)
-data.frame(rank.geography, rank.history, difference) %>% kable()
+data.frame(student , rank.geography, rank.history, difference) %>% 
+        xtable(caption="Student rankings on geography and history.", label="tab:nonpar_4",digits=c(0, 0,0,0,0)) %>%
+        print(include.rownames=F, caption.placement = "top")
 @
 
-So theoretically the difference could be as large as 9, but here we see a biggest difference of -2. So the average difference is the sum of these differences, divided by 10, so we get 0. This is because we plus and minus values. If we would take the square of the differences, we would get positive values:
+So theoretically the difference could be as large as 9, but here we see a biggest difference of -2. The average difference is the sum of these differences, divided by 10, so we get 0. This is because we plus and minus values. If we would take the square of the differences, we would get positive values, see Table \ref{tab:nonpar_5}.
 
-<<table1071555, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<table1071555, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
 rank.geography <- c( 5,4,6,7,8,9,10,2,1,3 )
 rank.history <- c( 4,5,7,8,6,9,10, 3,1,2)
 difference <- c(-1, +1, +1, +1,  -2 ,0, 0  , 1,0, -1)
 squared.difference <- c(1, 1, 1, 1,  4 ,0, 0  , 1,0, 1)
-data.frame(rank.geography, rank.history, difference, squared.difference) %>% kable()
+data.frame(rank.geography, rank.history, difference, squared.difference) %>% 
+        xtable(caption="Student rankings on geography and history.", label="tab:nonpar_5",digits=c(0, 0,0,0,0)) %>%
+        print(include.rownames=F, caption.placement = "top")
 @
 
-Now we can compute the average squared difference, which is equal to 10/10 = 1. Generally, the smaller this value, the closer the rankings are together, and the more correlation there is between the two subjects. 
+Now we can compute the average squared difference, which is equal to 10/10 = 1. Generally, the smaller this value, the closer the rankings of the two teachers are together, and the more correlation there is between the two subjects. 
 
 A clever mathematician like Spearman has shown that is even better to use a somewhat different measure for a correlation between ranks. He showed that it is wiser to compute the following statistic:
 
@@ -130,7 +127,7 @@ A clever mathematician like Spearman has shown that is even better to use a some
 r_s = 1 - \frac{6 \sum d^2 }{N^3-N}
 \end{eqnarray}
 
-because then you get a value between -1 and 1, just like a Pearson correlation. So in this case the sum of the squared difference is equal to 10, N is the number of students, so we get:
+because then you get a value between -1 and 1, just like a Pearson correlation. So in this case the sum of the squared difference is equal to 10, $N$ is the number of students, so we get:
 
 
 \begin{eqnarray}
@@ -138,14 +135,33 @@ r_s = 1 - \frac{6 \times 10  }{10^3-10} = 1 - 60 /990 = 0.94
 \end{eqnarray}
 
 
- This is called the Spearman rank-order correlation coefficient $r_s$. It can be used for any two variables of which one is at most ordinal. The trick is to convert the scale values into ranks, and then apply the formula above. For instance, if we have the variable Grade with the following values (C, B, D, A, F), we convert them into rankings by saying the A is the highest value (1), B is the second highest value (2), C is the third highest value (3), D is the fourth highest value (4) and F is the fifth highest value (5). So tranformed into rankings we get (3, 2, 4, 1, 5). We can also let SPSS do the computations for us. Suppose we have two variables shoe size and aggression, we use the syntax:
+This is called the Spearman rank-order correlation coefficient $r_s$. It can be used for any two variables of which at least one is ordinal. The trick is to convert the scale values into ranks, and then apply the formula above. For instance, if we have the variable Grade with the following values (C, B, D, A, F), we convert them into rankings by saying the A is the highest value (1), B is the second highest value (2), C is the third highest value (3), D is the fourth highest value (4) and F is the fifth highest value (5). So tranformed into rankings we get (3, 2, 4, 1, 5). Similarly, we could turn numeric variables into rankings. Table \ref{tab:nonpar_6} shows how the variables grade, shoe size and height are transformed into their respective ranked versions. 
+
+<<table10715557, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+student <- 1:4
+grade <- c("A", "D", "C" , "B")
+shoesize <- c(6,8,9,7)
+height <- c(1.70, 1.82, 1.92,1.88)
+rank.grade <- rank(grade)
+rank.shoesize <- rank(shoesize)
+rank.height<- rank(height)
+data.frame(student, grade, rank.grade, shoesize, rank.shoesize, height, rank.height) %>% 
+        xtable(
+        caption="Ordinal and numeric variables and their ranked transformations.",           label="tab:nonpar_6",
+        digits=c(0,0, 0,0,0,0,2,0)) %>%
+        print(include.rownames=F, caption.placement = "top")
+@
+
+
+When we let SPSS compute $r_2$ for us, it automatically ranks the data for us. Suppose we have two variables grade and height and we want to compute $r_2$, then we use the syntax:
+
  \begin{verbatim}
  NONPAR CORR 
-   /VARIABLES=shoesize aggression 
+   /VARIABLES=grade height 
   /PRINT=SPEARMAN .
  \end{verbatim}
   
-In the output you will see a correlation matrix very similar the one for a Pearson correlation. Spearman's rho is equal to the $r_2$ mentioned above. You will also see whether the correlation is significantly different from 0, indicated by a $p$-value. If the $p$-value is very small, you may concluded that on the basis of these data, the correlation in the population is not equal to 0, ergo, in the population there is a relationship between shoe size and aggression.   
+In the output you will see a correlation matrix very similar the one for a Pearson correlation. Spearman's rho is equal to the $r_2$ mentioned above. You will also see whether the correlation is significantly different from 0, indicated by a $p$-value. If the $p$-value is very small, you may conclude that on the basis of these data, the correlation in the population is not equal to 0, ergo, in the population there is a relationship between shoe size and aggression. Note that you can use this $p$-value if you want to test the hypothesis that the slope for the regression of height on grade is zero in the population (or, equivalently, for the regression of grade on height).  
   
 
 Below we discuss an alternative measure for a correlation for ordinal data, the Kendall rank-order correlation coefficient $T$. 
@@ -154,85 +170,79 @@ Below we discuss an alternative measure for a correlation for ordinal data, the 
 \section{Kendall rank-order correlation coefficient $T$}
 
 
-If you want to know if there is a relationship between two variables, of which one is at most ordinal, you can either use Spearman's rho or Kendall's T. However, if you have three variables, and you want to know whether there is a relationship between A and B, over and above the effect of C, you can use a extension of Kendall's T. Note that this is very similar to multiple regression: a coefficient for variable $X_1$ in multiple regression with two predictors is the effect of $X_1$ on Y over and above the effect of $X_2$ on Y. The logic of Kendall's T is also based on rank orderings, but it involves a different computation. Let's look at the student data again with the teacher's rankings of the students on two subjects:
-
-<<table16021, fig.height=4, echo=FALSE, fig.align='center'>>=
-student <- seq(1:10)
-rank.geography <- c( 5,4,6,7,8,9,10,2,1,3 )
-rank.history <- c( 4,5,7,8,6,9,10, 3,1,2)
-data.frame(student, rank.geography, rank.history) %>% kable()
-@
+If you want to know if there is a relationship between two variables, of which at least one is ordinal, you can either use Spearman's $r_s$ or Kendall's $T$. However, if you have three variables, and you want to know whether there is a relationship between variables A and B, over and above the effect of variable C, you can use an extension of Kendall's $T$. Note that this is very similar to the idea of multiple regression: a coefficient for variable $x_1$ in multiple regression with two predictors is the effect of $x_1$ on $y$ over and above the effect of $x_2$ on $y$. The logic of Kendall's $T$ is also based on rank orderings, but it involves a different computation. Let's look at the student data again with the teachers' rankings of ten students on two subjects in Table \ref{tab:nonpar_4}. 
 
 
-First we put the students in a new order, such that the brightest student in geography comes first, and the dullest last. This also changes the order in the variable history:
-<<table16022, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<table16022, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
  ord <- order(rank.geography)
  student <- ord
  rank.geography <- seq(1:10)
  rank.history <- rank.history[ord]
- data.frame(student, rank.geography, rank.history) %>% kable()
+ data.frame(student, rank.geography, rank.history) %>% 
+        xtable(
+        caption="Student rankings on geography and history, now ordered according to the ranking for geography.",   
+        label="tab:nonpar_7",
+        digits=c(0,0, 0,0)) %>%
+        print(include.rownames=F, caption.placement = "top") 
+ library(Kendall)
+ K = Kendall(rank.geography, rank.history)$tau[1]
+ dif= K*45
+# disagreements - agreements=  dif
+# disagreements= dif + agreements= dif + 45-disagreements
+# 2*disagreements= dif + 45
+disagreements = (dif + 45) / 2
+agreements = 45 - disagreements
  @
 
- From this we see that the history teacher agrees with the geography teacher that student 9 is brighter than student 8. They also agree that student 9 is brighter than sutduent 10. If we do this for all possible pairs of students, we can count the number of times that they agree and we can count the number of times that they disagree. The total number of possible pairs is equal to $10 \choose 2 $ $ = 90/2= 45$. So for example we might find for a data set on 10 students, that of all 45 pairs, the teachers agree 30 times, and disagree 15 times. Then we can compute Kendall's T as follows:
+From this table we see that the history teacher disagrees with the geography teacher that student 8 is brighter than student 10. She also disagrees with her colleague that student 1 is brighter than student 2. If we do this for all possible pairs of students, we can count the number of times that they agree and we can count the number of times they disagree. The total number of possible pairs is equal to $10 \choose 2 $ $ = 90/2= 45$. This is a rather tedious job to do, but it can be made simpler if we reshuffle the data a bit. We put the students in a new order, such that the brightest student in geography comes first, and the dullest last. This also changes the order in the variable history. We then get the data in Table \ref{tab:nonpar_7}. If we look at the column with the ranks for history, we can count the number of times a higher rank precedes a lower rank. This happens four times. Since the students are ordered according to the ranking of the geography teacher, any higher rank that precedes a lower rank is necessarily a disagreement between the two teachers. Thus, we find that the two teachers disagree \Sexpr{disagreements} times and therefore agree $45-8=37$ times. Then we can compute Kendall's $T$ as follows:
  
   \begin{eqnarray}
-  T= \frac { agreements - disagreements }{total number of pairs} = \frac{30-15 }{45} = 0.33
+  T= \frac { agreements - disagreements }{total number of pairs} = \frac{\Sexpr{agreements}-\Sexpr{agreements} }{45} = \Sexpr{round(K,2)}
   \end{eqnarray}
 
-This T statistic varies between -1 and 1 and can therefore be seen as a nonparametric analog of a Pearson correlation. Here, the teachers more often agree than disagree, so the correlation is positive. A negative correlation means that the teachers more often disagree than agree on the relative brightness of their students. 
-
-The computations are quite involving so we're very lucky that SPSS can do the tedious job for us, with the following syntax:
+This $T$ statistic varies between -1 and 1 and can therefore be seen as a nonparametric analog of a Pearson correlation. Here, the teachers more often agree than disagree, and therefore the correlation is positive. A negative correlation means that the teachers more often disagree than agree on the relative brightness of their students. 
+The computations are quite tedious for larger sample sizes so we're very lucky that SPSS can do this job for us, with the following syntax:
 
 
  \begin{verbatim}
  NONPAR CORR 
-   /VARIABLES=shoesize aggression 
+   /VARIABLES=grade aggression 
   /PRINT=KENDALL .
  \end{verbatim}
 
 
-As said, the advantage of Kendall's T over Spearman's r is that Kendall's T can be extended to cover the case that you wish to establish the strength of the relationships of two variables A and B, over and above the relationship with C. %Unfortunately there is no easy way to do this in SPSS. See http://www-01.ibm.com/support/docview.wss?uid=swg21474822 for how to do this. More on this can be read in Siegel & Castellan (1988).
+As said, the advantage of Kendall's $T$ over Spearman's $r_s$ is that Kendall's $T$ can be extended to cover the case that you wish to establish the strength of the relationships of two variables A and B, over and above the relationship with C. Unfortunately there is no easy way to do this in SPSS. See http://www-01.ibm.com/support/docview.wss?uid=swg21474822 for how to do this. More on this can be read in Siegel \& Castellan (1988).
 
         
-Now that we have discuss relationships between quantitative variables, let's have look at the case where we have categorical variables.
+Now that we have discussed relationships between ordinal and numeric variables, let's have look at the case where we also have categorical variables.
 
 
 \section{Kruskall-Wallis test for group comparisons}
 
 
-Suppose we have three groups of students that go on a field trip together: mathematicians, psychologists and engineers. Each can pick a rain coat, with five possible sizes: extra small, small, medium, large or extra large. We want to know if preferred size is different in the three populations, so that we can be better prepared in the future. Now we have information about size, but this knowledge is not quantitative: we do not know the difference in size between medium and large, only that large is larger than medium. We have ordinal data, so computing a mean is impossible here. Even we would assign values like 1= extra small, 2=small, 3= medium, etcetera, the mean would be rather meaningless as these values are arbitrary. So instead of focussing on means, we can focus on medians: the middle value. For instance, the median value for our sample of mathematicians could be medium, for our sample of psychologists small, and for our sample of engineers large. Our question might then be whether the median values in the populations are really different. 
+Suppose we have three groups of students that go on a field trip together: mathematicians, psychologists and engineers. Each can pick a rain coat, with five possible sizes: 'extra small', 'small', 'medium', 'large' or 'extra large'. We want to know if preferred size is different in the three populations, so that teachers can be better prepared in the future. Now we have information about size, but this knowledge is not numeric: we do not know the difference in size between 'medium' and 'large', only that 'large' is larger than 'medium.' We have ordinal data, so computing a mean is impossible here. Even we would assign values like 1= 'extra small', 2='small', 3= 'medium', etcetera, the mean would be rather meaningless as these values are arbitrary. So instead of focussing on means, we can focus on medians: the middle value. For instance, the median value for our sample of mathematicians could be 'medium', for our sample of psychologists 'small', and for our sample of engineers 'large.' Our question might then be whether the median values in the three populations are really different. 
 
-This can be assessed using the Kruskall-Wallis test. Similar to Spearman's r and Kendall's T, the data are transformed into ranks. This is done for all data at once, so for all students toghether.
+This can be assessed using the Kruskall-Wallis test. Similar to Spearman's $r_s$ and Kendall's $T$, the data are transformed into ranks. This is done for all data at once, so for all students together.
 
-For example, if we had the following data:
-\\
- \\
- \begin{tabular}{lll}
- student & group & size \\ \hline
- 001 & math & xs \\
- 002 & math & xl \\
- 003 & psych & m \\
- 004 & psych & s \\
- 005 & engineer & l \\
- \dots & \dots & \dots \\
- \end{tabular}
-\\
-\\
-We would transform it into ranks, from smallest to largest, like this:
-\\
- \\
+For example, if we had the data in Table \ref{tab:fieldtrip_1}, we could transform the variable \textbf{size} into ranks, from smallest to largest. Student 1 has size 'extra small' so he or she gets the rank 1. Next, both student 4 and student 6 have size 'small', so they should get ranks 2 and 3. However, because there is no reason to prefer one student over the other, we give them both the \textit{mean} of ranks 2 and 3, so they both get the rank 2.5. Next in line is student 3 with size 'medium' and (s)he gets rank 4. Next in line is student 5 with size 'large' (rank 5) and last in line is student 2 with size 'extra large' (rank 6).  
+
+
+\begin{table}
+\label{tab:fieldtrip_1}
+\caption{Fieldtrip data.}
  \begin{tabular}{lllr}
  student & group & size & rank\\ \hline
- 001 & math & xs & 1\\
- 002 & math & xl & 5\\
- 003 & psych & m & 3\\
- 004 & psych & s & 2\\
- 005 & engineer & l & 4 \\
- \dots & \dots & \dots & \dots \\
+ 001 & math & extra small & 1\\
+ 002 & math & extra large & 6\\
+ 003 & psych & medium & 4\\
+ 004 & psych & small & 2.5\\
+ 005 & engineer & large & 5 \\
+ 006 & math & small & 2.5 \\
  \end{tabular}
-\\
-\\
-Next, we could compute the average rank per group. The group with the smallest sizes would have the lowest average rank, etcetera. Under the null-hypothesis, if the distribution of size was the same in all three groups, the average ranks would be about the same. If they are very different, this is an indication that size is not distributed equally among the three groups. In order to have a proper statistical test, a rather complex formula is used to compute the so-called KW statistics. We know the distribution of this KW statistic under the null-hypothesis, so we know what extreme values are, and consequently can compute p-values. This tedious computation is also done by SPSS using the following syntax. 
+\end{table}
+
+
+Next, we could compute the average rank per group. The group with the smallest sizes would have the lowest average rank, etcetera. Under the null-hypothesis, if the distribution of size were the same in all three groups, the average ranks would be about the same. If the average rank is very different across groups, this is an indication that size is not distributed equally among the three groups. In order to have a proper statistical test, a rather complex formula is used to compute the so-called $KW$-statistic, see Castellan \& Siegel (1988). The distribution of this $KW$-statistic under the null-hypothesis is known, so we know what extreme values are, and consequently can compute $p$-values. This tedious computation is done by SPSS using the following syntax. 
 
 \begin{verbatim}
 NPTESTS 
@@ -240,7 +250,7 @@ NPTESTS
 \end{verbatim}
 
 
-The output gives you a significance level ($p$-value) of the test that size is distributed equally among psychology students, engineering students and mathematics students. If it is a very low number, you may conclude that in the population, students in psychology, mathematics in engineering have different preferences regarding the size of their rain coat on field trips. 
+The output gives you a significance level ($p$-value) of the test that size is distributed equally among psychology students, engineering students and mathematics students. If the $p$-value is smaller than your pre-set $\alpha$-level, you may conclude that in the population, students in psychology, mathematics and engineering have different preferences regarding the size of their rain coat on field trips. 
 
 
 

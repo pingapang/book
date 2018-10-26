@@ -7,9 +7,9 @@
 \section{Poisson regression}
 
 
-Count data are inherently discrete, and often when using linear models, we see non-normal distributions of residuals. Let's go back to the beginning of this chapter, where we discussed a data set on the scores that a group of students got for an assignment. There were four criteria, and the score consisted of the number of criteria that were met for each student's assignment. Figure \ref{fig:gen_3} showed that after an ordinary linear model analysis, the residuals did not look normal at all.
+Count data are inherently discrete, and often when using linear models, we see non-normal distributions of residuals. In Chapter \ref{chap:logistic} we discussed a data set on the scores that a group of students got for an assignment. There were four criteria, and the score consisted of the number of criteria that were met for each student's assignment. Figure \ref{fig:gen_3} showed that after an ordinary linear model analysis, the residuals did not look normal at all.
 
-Table \ref{tab:gen_14} shows part of the data that were analysed. Similar to logistic regression, perhaps we can find a distribution other than the normal distribution that is more suitable for this kind of data? For dichotomous data (1/0) we found the Bernoulli distribution very useful. For count data, the traditional distrbitution is the Poisson distribution.
+Table \ref{tab:gen_14} shows part of the data that were analysed. Similar to logistic regression, perhaps we can find a distribution other than the normal distribution that is more suitable for this kind of data? For dichotomous data (1/0) we found the Bernoulli distribution very useful. For count data, the traditional distribution is the Poisson distribution.
 
 
 <<gen_14, fig.height=4, echo=FALSE, fig.align='center', message=F, results='asis'>>=
@@ -39,7 +39,7 @@ data.frame(probability4) %>% ggplot(aes(x=seq(0,10), y=probability4) )+geom_bar(
         xlab("count") + ylab("probability")
 @
 
-What we see is that many values center around the tendency parameter value of 4 (therefore we call it a tendency parameter)! We see only discrete values, and no values below 0. We see a few values higher than 10. If we take the mean of the distribution, we will find a value of 4. If we would compute the variance of the distribution we would find also find 4! In general, if we have a Poisson distribution with a tendency parameter $\lambda=4$, we know that both the mean and the variance will be equal to $\lambda$.
+What we see is that many values center around the tendency parameter value of 4 (therefore we call it a tendency parameter)! We see only discrete values, and no values below 0. We see a few values higher than 10. If we take the mean of the distribution, we will find a value of 4. If we would compute the variance of the distribution we would also find 4! In general, if we have a Poisson distribution with a tendency parameter $\lambda=4$, we know that both the mean and the variance will be equal to $\lambda$.
 
 A Poisson model could be suitable for our data: a linear equation could predict the parameter $\lambda$ and then the actual data show a Poisson distribution.
 
@@ -49,7 +49,7 @@ A Poisson model could be suitable for our data: a linear equation could predict 
 y \sim Poisson(\lambda)
 \end{eqnarray}
 
-However, because of the additivity assumption, the equation $b_0 + b_1 X$ leads to negative values. A negative value for $\lambda$ is not logical, because we then have a tendency to observe data like -2 and -4 in our data, which is contrary to the having count data, which consists of non-negative integers. A Poisson distribution always shows integers of at least 0, so one or way or another we have to make sure that we always have a $lambda$ of at least 0.
+However, because of the additivity assumption, the equation $b_0 + b_1 X$ leads to negative values. A negative value for $\lambda$ is not logical, because we then have a tendency to observe data like -2 and -4 in our data, which is contrary to having count data, which consists of non-negative integers. A Poisson distribution always shows integers of at least 0, so one or way or another we have to make sure that we always have a $lambda$ of at least 0.
 
 Remember that we saw the reverse problem with logistic regression: there we wanted to have negative values for our dependent variable logoddsratio, so therefore we used the logarithm. Here we want to have positive values for our dependent variable, so we can use the inverse of the logarithm function: the exponential. Then we have the following model:
 

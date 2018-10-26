@@ -125,7 +125,7 @@ The standard deviation of the sample slopes is called the \textit{standard error
 The standard error for a sample slope represents the uncertainty about the population slope. If the standard error is large, it means that if we would draw many different random samples from the same population data, we would get very different sample slopes. If the standard error is small, it means that if we would draw many different random samples from the same population data, we would get sample slopes that are very close to one another, and very close to the population slope.\footnote{Because sample slopes cluster aournd the population slope, the sample slope is very close to the population slope when the standard error is small.}
 
 
-\subsection{Standard error and sample size}
+\subsection{Standard error and sample size}\label{sec:sampsizese}
 
 The standard error for a sample slope depends on many things, but the most important factor is the \textit{sample size}: how many bottles there are in each random sample. The larger the sample size, the smaller the standard error, the more certain we are about the population slope. In the above example, the sample size is 200 bottles.
 

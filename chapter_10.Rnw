@@ -1,5 +1,5 @@
 
-\chapter{Linear mixed modelling: introduction}
+\chapter{Linear mixed modelling: introduction}\label{chap:mixed}
 
 
 \section{Fixed effects and random effects}

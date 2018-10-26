@@ -26,6 +26,7 @@
 <<libraries, echo=FALSE,  warning=FALSE, message=F>>=
 library(ggplot2)
 library(foreign)
+library(haven)
 library(dplyr)
 library(lme4)
 library(tidyr)
@@ -59,31 +60,23 @@ This book is intended to be of use to bachelor students in social, behavioural a
 
 \Sexpr{knit_child('chapter_categorical.Rnw')}
 
-
-
-
-
-
-
-
-
 \Sexpr{knit_child('chapter_6.Rnw')} % moderation
 
 \Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
 % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
-% 
-% 
+%
+%
 \Sexpr{knit_child('chapter_7.Rnw')} % assumptions
 \Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
 
 %  MEDIATION ANALYSIS
 
-\Sexpr{knit_child('chapter_10.Rnw')} % introduction linear mixed models
-\Sexpr{knit_child('chapter_11.Rnw')} % nonparametrics for within designs
-%
+\Sexpr{knit_child('chapter_mixed.Rnw')} % introduction linear mixed models
+\Sexpr{knit_child('chapter_premidpostdesigns.Rnw')} % nonparametrics for within designs
+
 
 \Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
-%
+
 \Sexpr{knit_child('chapter_13.Rnw')} % generalized linear models: poisson models
 
 \end{document}

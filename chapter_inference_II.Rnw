@@ -531,15 +531,12 @@ Answers:
 
 Null-hypothesis testing only involves the null-hypothesis: we look at the sample slope, compute the $T$-statistic and then see how often such a $T$-value and larger values occur given that the population slope is 0. Then we look at the $p$-value and if that $p$-value is smaller than or equal to $\alpha$, we reject the null-hypothesis. Therefore, null-hypothesis testing does not involve testing the alternative hypothesis. We can decide what value we choose for our $\alpha$, but not our $\beta$. The $\beta$ is dependent on what the actual population slope is, and we simply don't know that.
 
-As stated in the previous section, we can compute $\beta$ only if we have a more specific idea of an alternative value for the population slope. We saw that we needed to think of a reasonable value for the population slope that we might be interested in. Suppose we have the intuition that a slope of 1 could well be the case. Then, we would like to find a $p$-value of less than $\alpha$ if indeed the slope were 1. We hope that the probability that this happens is very high: the conditional probability that we find a $T$-value large enough to reject the null-hypothesis, given that the population slope is 1. This probability is actually the \textit{complement} of $\beta$, $1-\beta$: the probability that we reject the null-hypothesis, given that the alternative hypothesis is true. This $1-\beta$ is often called the \textit{statistical power} of a null-hypothesis test. When we think again about the boy cried wolf: the power is the probability that the villagers come to the rescue if there is indeed a wolf attacking the sheep. The power of a test should always be high: if there is a population slope that is not 0, then of course you would like to detect it by finding a significant $T$-value!
+As stated in the previous section, we can compute $\beta$ only if we have a more specific idea of an alternative value for the population slope. We saw that we needed to think of a reasonable value for the population slope that we might be interested in. Suppose we have the intuition that a slope of 1 could well be the case. Then, we would like to find a $p$-value of less than $\alpha$ if indeed the slope were 1. We hope that the probability that this happens is very high: the conditional probability that we find a $T$-value large enough to reject the null-hypothesis, given that the population slope is 1. This probability is actually the \textit{complement} of $\beta$, $1-\beta$: the probability that we reject the null-hypothesis, given that the alternative hypothesis is true. This $1-\beta$ is often called the \textit{statistical power} of a null-hypothesis test. When we think again about the boy who cried wolf: the power is the probability that the men think there is a wolf if there is indeed a wolf. The power of a test should always be high: if there is a population slope that is not 0, then of course you would like to detect it by finding a significant $T$-value!
 
-In order to get a large value for $1-\beta$, we should have large $T$-values in our data-analysis. There are two ways in which we can increase the value of the $T$-statistic. Since with null-hypothesis testing $T=(b-0)/se=b/se$, we can get large values for $T$ if we have a small standard error, $se$. We get a small standard error if we have a large sample size, see Section \ref{}.
-
-If we go back to the example of the previous section where we had a sample size of 102 children and our alternative hypothesis was that the population slope was 1, we found that the $t$-distribution for the alternative hypothesis was centered around 0.5, because the standard error was 2. Suppose that we would increase sample size to 1200 children, then our standard error might be 0.2. Then our $t$-distribution for the alternative hypothesis is centerd at 5. This is shown in Figure \ref{fig:inf_24}.
+In order to get a large value for $1-\beta$, we should have large $T$-values in our data-analysis. There are two ways in which we can increase the value of the $T$-statistic. Since with null-hypothesis testing $T=(b-0)/se=b/se$, we can get large values for $T$ if 1) we have a small standard error, $se$, or 2) if we have a large value for $b$. 
 
 
-
-
+Let's first look at the first option: a small standard error. We get a small standard error if we have a large sample size, see Section \ref{sec:sampsizese}. If we go back to the example of the previous section where we had a sample size of 102 children and our alternative hypothesis was that the population slope was 1, we found that the $t$-distribution for the alternative hypothesis was centered around 0.5, because the standard error was 2. Suppose that we would increase sample size to 1200 children, then our standard error might be 0.2. Then our $t$-distribution for the alternative hypothesis is centerd at 5. This is shown in Figure \ref{fig:inf_24}.
 
 
 
@@ -570,8 +567,7 @@ lb=-20; ub=qt(0.005,df=df,ncp=0)
 
 We see from the shaded area that if the population slope is really 1, there is a very high chance that the $T$-value for the sample slope will be larger than 2.58, the cutoff point for an $\alpha$ of 0.01 and 1198 degrees of freedom. The probability of rejecting the null-hypothesis while it is not true, is therefore very large. This is our $1-\beta$ and we call this the power of the null-hypothesis test. We see that with increasing sample size, the power to find a significant $T$-value increases too.
 
-By the same token, the power also increases with increasing population slope. If the population slope were 10, and we only had a sample of 102 children (resulting in a standard error of 2), the $t$-distribution for the alternative hypothesis that the population slope is centered around $B/se=10/2=5$, resulting in the same plot as in Figure \ref{fig:inf_24}, with a large value for $1-\beta$.
-
+Now let us look at the second option, a large value of $b$. Sample slope $b$ depends of course on the population slope $\beta$. The power becomes larger when the population slope is further away from zero. If the population slope were 10, and we only had a sample of 102 children (resulting in a standard error of 2), the $t$-distribution for the alternative hypothesis that the population slope is centered around $B/se=10/2=5$, resulting in the same plot as in Figure \ref{fig:inf_24}, with a large value for $1-\beta$. Unfortunately, the population slope is beyond our control: the population slope is a given fact that we cannot change. The only thing we can change most of the times is sample size. 
 
 In sum: the statistical power of a test is the probability that the null-hypothesis is rejected, given that it is not true. This probability is equal to $1-\beta$. The statistical power of a test increases with sample size, and depends on the actual population slope. The further away the population slope is from 0 (positive or negative), the larger the statistical power. Earlier we also saw that $1-\beta$ decreases with increasing $\alpha$: the smaller $\alpha$, the lower the power.
 
@@ -605,9 +601,9 @@ Answers:
 Because of these relationships between statistical power, $\alpha$, sample size and the actual population slope, we can compute the statistical power for any combination of $\alpha$, sample size and hypothetical population slope.
 
 
-If you really care about the quality of your research, you carry out a \textit{power analysis} prior to collecting data. With such an analysis you can ind out how large your sample size should be. You can find many tools online that can help you with that.
+If you really care about the quality of your research, you carry out a \textit{power analysis} prior to collecting data. With such an analysis you can find out how large your sample size should be. You can find many tools online that can help you with that.
 
-Suppose you want to minimize the probability of a type I error, so you choose an $\alpha=0.01$. Next, you think of what kind of population slope you would like to find, if it indeed has that value. Suppose that you feel that if the population slope is 0.15, you would really like to find a significant $T$-value so that you can reject the null-hypothesis. Next, you have to specify how badly you want to reject the null-hypothesis if indeed the population slope is 0.15. If the population slope is really 0.15, then you would like to have a high probability to find a $T$-value large enough to reject the null-hypothesis. This is of course the power of the test, $1-\beta$. Let's say you want to have a power of 0.90. Now you have enough information to calculate how large your sample size should be.
+Suppose you want to minimize the probability of a type I error, so you choose an $\alpha=0.01$. Next, you think of what kind of population slope you would like to find, if it indeed has that value. You could perhaps base this expectation on earlier research. Suppose that you feel that if the population slope is 0.15, you would really like to find a significant $T$-value so that you can reject the null-hypothesis. Next, you have to specify how badly you want to reject the null-hypothesis if indeed the population slope is 0.15. If the population slope is really 0.15, then you would like to have a high probability to find a $T$-value large enough to reject the null-hypothesis. This is of course the power of the test, $1-\beta$. Let's say you want to have a power of 0.90. Now you have enough information to calculate how large your sample size should be.
 
 Let's look at G*power\footnote{http://www.gpower.hhu.de/}, an application that can be downloaded from the web. If we start the app, we can ask for the sample size required for a slope of 0.15, an $\alpha$ of 0.01, a power ($1-\beta$) of 0.90. Let the standard deviation of our dependent variable (y=height) be 3 and the standard deviation of our independent variable (x=age) be 2. Then we get the input as displayed in Figure \ref{fig:gpower}. Note that you should use two-sided $p$-values, so tails=two. From the output we see that the required sample size is 1477 children.
 
@@ -851,11 +847,12 @@ write.foreign(data.frame(x,y),
               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/simple regression/inference1.sps',
               package = c("SPSS"))
 options(scipen=999)
+options(digits=3)
 @
 
 \begin{eqnarray}
 Population: &y&= 0 + 0.2 \times x + \epsilon\\
-Sample: &y&= \Sexpr{out$coef[1]} + \Sexpr{out$coef[2]} + e
+Sample: &y&= \Sexpr{round(out$coef[1],3)} + \Sexpr{round(out$coef[2],3)}\times x + e
 \end{eqnarray}
 
 The syntax that we can use for these sampe data is
@@ -868,7 +865,7 @@ UNIANOVA y WITH x
 \end{verbatim}
 
 
-Note that we have set the significance level $\alpha$ to 0.01 with the statement \texttt{CRITERIA=ALPHA(0.01)}. Figure \ref{fig:inf_29} shows the SPSS output. Look at the Parameter Estimates table. It shows the intercept, with a standard error of \Sexpr{summary(out)$coef[1,2]}. The $t$-value in the output is the $T$-statistic for the null-hypothesis, and is equal to $(B-0)/SE=\Sexpr{round(out$coef[1],3)}/\Sexpr{round(summary(out)$coef[1,2],3)}=\Sexpr{round(out$coef[1]/summary(out)$coef[1,2],3)}$. We had 102 data points, so the degrees of freedom is equal to $102-2=100$. \footnote{Note that this is not shown in the Parameter Estimates table, but in the Tests of Between-Subjects Effects table in the row for Error (error is another word for residual). In that row we see the error degrees of freedom (df) of 100.} From online tables it is known that with 100 degrees of freedom, \Sexpr{round(pt(-1.355, 100),3)} of $t$-values are larger than 1.355 and \Sexpr{round(pt(-1.355, 100),3)} of $t$-values are smaller than -1.355. SPSS knows this and automatically calculates the two-sided $p$-value. Therefore, the two-sided $p$-value for a $T$-statistic of 1.355 with 100 degrees of freedom is equal to $2 \times \Sexpr{round(pt(-1.355, 100),3)} = \Sexpr{round(2*pt(-1.355, 100),3)}$. Since $p > 0.01$, we cannot reject the null-hypothesis that the intercept in the population data is equal to 0. SPSS also shows the 99\% confidence interval that runs from -0.141 to 0.441. All these values in this interval are reasonable values for the population intercept.
+Note that we have set the significance level $\alpha$ to 0.01 with the statement \texttt{CRITERIA=ALPHA(0.01)}. Figure \ref{fig:inf_29} shows the SPSS output. Look at the Parameter Estimates table. It shows the intercept, with a standard error of \Sexpr{round(summary(out)$coef[1,2],3)}. The $t$-value in the output is the $T$-statistic for the null-hypothesis, and is equal to $(B-0)/SE=\Sexpr{round(out$coef[1],3)}/\Sexpr{round(summary(out)$coef[1,2],3)}=\Sexpr{round(out$coef[1]/summary(out)$coef[1,2],3)}$. We had 102 data points, so the degrees of freedom is equal to $102-2=100$. \footnote{Note that this is not shown in the Parameter Estimates table, but in the Tests of Between-Subjects Effects table in the row for Error (error is another word for residual). In that row we see the error degrees of freedom (df) of 100.} From online tables it is known that with 100 degrees of freedom, \Sexpr{round(pt(-1.355, 100),3)} of $t$-values are larger than 1.355 and \Sexpr{round(pt(-1.355, 100),3)} of $t$-values are smaller than -1.355. SPSS knows this and automatically calculates the two-sided $p$-value. Therefore, the two-sided $p$-value for a $T$-statistic of 1.355 with 100 degrees of freedom is equal to $2 \times \Sexpr{round(pt(-1.355, 100),3)} = \Sexpr{round(2*pt(-1.355, 100),3)}$. Since $p > 0.01$, we cannot reject the null-hypothesis that the intercept in the population data is equal to 0. SPSS also shows the 99\% confidence interval that runs from -0.141 to 0.441. All these values in this interval are reasonable values for the population intercept.
 
 Let's now turn to the output for the effect of $x$. The table shows a slope of \Sexpr{round(summary(out)$coef[2,1],3)} with a standard error of \Sexpr{round(summary(out)$coef[2,2],3)}. Therefore, the $T$-value for the null-hypothesis equals $(\Sexpr{round(summary(out)$coef[2,1],3)}-0)/\Sexpr{round(summary(out)$coef[2,2],2)}=\Sexpr{round(summary(out)$coef[2,1]/summary(out)$coef[2,2],3)}$. With 100 degrees of freedom, a proportion of \Sexpr{pt(-9.515,100)} of the $t$-values is larger than 9.515 and \Sexpr{pt(-9.515,100)} of the $t$-values is smaller than -9.515. Therefore, the associated $p$-value is \Sexpr{2*pt(-9.515,100)}. Since $p \leq 0.01$, we reject the null-hypothesis that the population slope is 0. The 99\% confidence interval for the population slope is from 0.13 to 0.23.
 
@@ -903,6 +900,10 @@ lm(aggr~yearincome) %>% confint(2,0.95) %>% round(3)
 
 
 \item On the basis of this confidence interval, is there a significant effect of income on aggressiveness? Explain your answer.
+
+\item See if you can find the $T$-statistic and its $p$-value for the effect of yearly income on aggressiveness.
+
+\item What does this $p$-value represent?
 
 \item On the basis of the $T$-statistic and its $p$-value, is there a significant effect of income on aggressiveness? Explain your answer.
 
@@ -942,6 +943,10 @@ UNIANOVA aggr WITH yearincome
 
 
 \item The 95\% confidence interval for the slope does not contain 0, so we can reject the null-hypothesis. We therefore call the effect of income on aggressiveness significant.
+
+\item The $T$-statistic equals \Sexpr{round(summary(lm(aggr~yearincome))$coef[2,3],3)}, and its associated $p$-value equals \Sexpr{round(summary(lm(aggr~yearincome))$coef[2,3],4)}.
+
+\item This $p$-value represents the probability to find a slope of \Sexpr{round(summary(lm(aggr~yearincome))$coef[2,1],3)} or smaller, or a slope of \Sexpr{round(abs(summary(lm(aggr~yearincome))$coef[2,1]),3)} or larger, if in reality there is no effect relationship between aggressiveness and yearly income.
 
 \item The $p$-value associated with the $t$-value for the slope is smaller than 0.05. Therefore, we can reject the null-hypothesis. We  call the effect of income on aggressiveness significant.
 
