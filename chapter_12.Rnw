@@ -1,6 +1,6 @@
 
 
-\chapter{Generalized linear models part I: logistic regression}\label{chap:logistic}
+\chapter{Generalized linear models: logistic regression}\label{chap:logistic}
 
 \section{Introduction}
 In previous chapters we were introduced to the linear model, with its basic form

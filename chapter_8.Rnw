@@ -1,8 +1,8 @@
 
-\chapter{Linear modelling: more advanced topics}\label{chap:advanced}
+\chapter{Planned and post hoc comparisons}\label{chap:advanced}
 
 
-\subsection{Planned comparisons}
+\section{Planned comparisons}
 
 Suppose you have height data from three countries: Greece, Italy, and Norway. You might wish to know whether in these populations there is a difference in average height. If that is all you want to know, you can perform the SPSS UNIANOVA analysis described above. In that case, the null-hypothesis is
 \\
@@ -16,9 +16,9 @@ However, suppose your most important hypothesis is really much more specific: yo
 $H_0: \mu_{Greece}=\mu_{Italy}$
 \\
 \\
-In such cases, where the null-hypothesis is more specific than simply stating "there are differences among the groups", then you should perform \textit{planned comparisons}. Here you would like to make a comparison between the average heights of Greece and Italy You could also say you'd like to \textit{contrast} the average height of Greece with that of Italy. 
+In such cases, where the alternative hypothesis is more specific than simply stating "there are differences among the groups", then you should perform \textit{planned comparisons}. Here you would like to make a comparison between the average heights of Greece and Italy. You could also say you'd like to \textit{contrast} the average height of Greece with that of Italy. 
 
-We then have to define this contrast in such a way that SPSS knows what we want. So we could define our contrast in a similar vein as the null-hypothesis. Let's call the contrast $\gamma_1$.
+We then have to define this contrast in such a way that SPSS knows what we want. We could define our contrast in a similar vein as the null-hypothesis. Let's call the contrast $\gamma_1$.
 \\
 \\
 $\gamma_1: \mu_{Greece}=\mu_{Italy}$
@@ -37,10 +37,11 @@ This is the preferred way of specifying contrasts: having a zero on the right-ha
 $\gamma_1: (1)\times \mu_{Greece} + (-1) \times \mu_{Italy} + (0) \times \mu_{Norway} =0$
 \\
 \\
-So we could code this specific contrast with the numbers preceding the group means: A 1 for Italy, a -1 for Greece and a 0 for Norway. For SPSS therefore, to specify a contrast, we only need this coding. This can be done in the following way. Suppose you have the following data on height, summarized in a boxplot:
+So we could code this specific contrast with the numbers preceding the group means: A 1 for Italy, a -1 for Greece and a 0 for Norway. For SPSS therefore, to specify a contrast, we only need this coding. This can be done in the following way. Suppose you have data on height, summarized in the boxplot in Figure \ref{fig:fig1416}. Note that in this SPSS data set, the country variable is coded 1 for Greece, 2 for Italy and 3 for Norway. Then we could use the following syntax to ask for the specific comparison (or contrast) of the first and the second group, that is, Greece and Italy, respectively. So group 1 (=Greece) gets a 1, group 2 (=Italy) gets a -1, and group 3 (=Norway) gets a 0, so our coded contrast looks like $(1, -1, 0)$.
 
 
-<<fig1416, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+
+<<fig1416, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap="Data on height in three countries.">>=
 set.seed(1234)
 country <- rep(c('Italy', 'Greece', 'Norway'), 50)
 NorthernEurope <- country=='Norway'
@@ -55,7 +56,6 @@ write.foreign(data,
               package = c("SPSS"))
 @
 
-Note that in this SPSS data set, the country variable is coded 1 for Greece, 2 for Italy and 3 for Norway. Then we could use the following syntax to ask for the specific comparison (or contrast) of the first and the second group, that is, Greece and Italy, respectively. So group 1 (=Greece) gets a 1, group 2 (=Italy) gets a -1, and group 3 (=Norway) gets a 0, so our coded contrast looks like $(1, -1, 0)$.
 
 \begin{verbatim}
 UNIANOVA height BY country
@@ -63,14 +63,22 @@ UNIANOVA height BY country
 /CONTRAST(country)=SPECIAL(1  -1  0).
 \end{verbatim}
 
-Below we see the output:
+
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.9,trim={0cm 0cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf}
+       \includegraphics[scale=0.9,trim={0cm 11cm 0cm 0cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf}
     \end{center}
+    \caption{Output of the contrast analysis on height data from three countries.}
+    \label{fig:contrast1}
 \end{figure}
 
-From the output, we see first see that the general null-hypothesis that all three countries have the same average height is rejected, $F(2, 147)= 6.14, MSE=14.77, p = 0.003$. This test has 2 degrees of freedom, one for each of the two dummy variables that are needed to test this model. The error degrees of freedom equals 147: that is the number of data points (150) minus the number of parameters in the model: one for the intercept and two for the dummy variables, so $150-3=147$.
+
+
+In Figure \ref{fig:contrast1} we see the output. We see first that the general null-hypothesis that all three countries have the same average height is rejected, $F(2, 147)= 6.14, MSE=14.77, p = 0.003$. This test has 2 degrees of freedom, one for each of the two dummy variables that are needed to test this model. The error degrees of freedom equals 147: that is the number of data points (150) minus the number of parameters in the model: one for the intercept and two for the dummy variables, so $150-3=147$.
+
+
+
+
 
 Next, we see the results for our \textit{specific} null-hypothesis (the contrast): that the means for Greece and Italy are equal, irrespective of Norway. We see a Contrast Estimate of 1.008 and a significance level of $p=0.19$. So the contrast is positive: what does this mean? Well, let's put the 1.008 into our contrast above:
 \\
@@ -85,11 +93,13 @@ $\gamma_1:  \mu_{Greece} - \mu_{Italy}  =  1.008$
 \\
 \\
 So the 1.008 indicates that the average height in Italy is 1.008 cm shorter than in Greece, at least in our sample. The relatively high $p$-value indicates that the population means are however not different: we do not reject the null-hypothesis that the average heights are the same.
+
 We also see an $F$-test for this contrast, $F(1, 147)=1.721, MSE= 14.76, p=0.19$.
 Since the first degrees of freedom number is a 1, we know that $F$ is the same as a squared $t$, $t^2$, So, an equivalent presentation of the contrast effect would be $t(147)=2.96, p=0.19$
 
 Now perhaps you realize, why didn't we do a $t$-test in the first place? We might have taken the Greece and Italy data separately, used a dummy variable and then run an ordinary linear model. Well, let's see what would happen then.
-First we let SPSS select only the Greece and Italy data with the SELECT IF syntax, and next run an UNIANOVA, using the BY keyword for country to indicate that we treat it as a qualitative variable. We also let the selection be preceded by a TEMPORARY commmand, to indicate that the selection only applies to the analysis that follows.
+
+First we let SPSS select only the Greece and Italy data with the SELECT IF syntax, and next run an UNIANOVA, using the BY keyword for country to indicate that we treat it as a categorical variable. We also let the selection be preceded by a TEMPORARY commmand, to indicate that the selection only applies to the analysis that follows.
 
 \begin{verbatim}
 TEMPORARY.
@@ -100,14 +110,17 @@ UNIANOVA height BY country
 \end{verbatim}
 
 
-Below we see the output:
+In the output in Figure \ref{fig:simplettest} we see that now only the data from Greece and Italy are compared. From the Parameter Estimates table, we see that country 2 is the reference category, which is Italy. We also see that the average height in Greece is 1.008 cm taller than Italy. This effect is not significant, $t(98)=1.371,p=0.17$. We use 98 degrees of freedom because we have 100 people and loose 2 degrees of freedom, one for the intercept and once for the regression coefficient for country=1. Note that this number is also indicated in the Tests of Between-Subjects Effects table, as the df of the Error.
+
 \begin{figure}[h]
     \begin{center}
        \includegraphics[scale=0.4]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/simplettest.png}
     \end{center}
+    \caption{Output of an analysis after selecting only the data from Greece and Italy.}
+        \label{fig:simplettest}
 \end{figure}
 
-We see that now only the data from Greece and Italy are compared. From the Parameter Estimates table, we see that country 2 is the reference category, which is Italy. We also see that the average height in Greece is 1.008 cm taller than Italy. This effect is not significant, $t(98)=1.371,p=0.17$. We use 98 degrees of freedom because we have 100 people and loose 2 degrees of freedom, one for the intercept and once for the regression coefficient for country=1. Note that this number is also indicated in the Tests of Between-Subjects Effects table, as the df of the Error. 
+ 
 
 So what is different from the contrast effect? First of all, we see that the $p$-value is different: the $p$-value for the contrast effect analysis is somewhat larger than the one for the 'ordinary' $t$-test. Second, we see that the $t$-statistic is different: In the contrast analysis the $t$-value was 2.96 and in the ordinary analysis it was 1.371. So part of the reason that the $p$-value is different for the contrast is that the $t$-value is higher. Third, we see that the degrees of freedom has changed from 147 to 98. Well, we know that the significance level of a $t$-value depends on its size, the higher the $t$-value the lower the $p$-value, and we know that significance also depends on the degrees of freedom: the more degrees of freedom, the lower the $p$-value. 
 
@@ -121,7 +134,7 @@ Thus in summary: if we have a very specific hypothesis about the difference in m
 Note that here we saw a higher $p$-value for the contrast analysis, but still, in general it is wiser to use as much data as possible, so we prefer a contrast analysis over a simple analysis excluding other groups.
 \\
 \\
-The above example of comparing only the means of two groups, at the same time making use of the data in other groups, is called a \textit{simple contrast}. Now let's look at a \textit{complex contrast}. Suppose your hypothesis is that average height is different in Northern-European countries than in Southern-European countries, then you would like to know whether Italy AND Greece taken together differ regarding the average height from Norway. So we'd like to compare the average height in Norway to the average height in Greece and Italy together. We could write that null-hypothesis as follows:
+The above example of comparing only the means of two groups, at the same time making use of the data in other groups, is called a \textit{simple contrast}. Now let's look at a \textit{complex contrast}. Suppose your hypothesis is that average height is different in Northern-European countries than in Southern-European countries, then you would like to know whether Italy \textit{and} Greece taken together differ regarding the average height from Norway. So we'd like to compare the average height in Norway to the average height in Greece and Italy together. We could write that null-hypothesis as follows:
 
 \begin{eqnarray}
 H_0 : \frac{\mu_{Greece}+ \mu_{Italy}}{2} = \mu_{Norway}
@@ -162,11 +175,11 @@ UNIANOVA height WITH NrthrnEr
 
 From the contrast analysis we obtain $F(1,147)=10.56, MSE=14.77, p=0.001$, which is equivalent to $t(147)=3.25, p=0.001$. From the dummy variable analysis, we obtain $t(148)= 3.24, p=0.001$. So in this case, the results are very close: the degrees of freedom is larger for the dummy variable analysis, but the $t$-value is lower. All in all, we gain nothing much, and that is because in the dummy analysis we also use all of the data: we put the Greeks and Italians in one group (N=100), and the Norwegians in another group (N=50). The degrees of freedom therefore differs cause we only need to estimate 2 means in the dummy analysis, instead of 3 in the contrast analysis.
 
-In general: if you run a model where you compare various groups, AND you have very specific hypotheses that you'd like to test, it is generally advised to run a contrast analysis, including a small number of them, and then report only the tests and $p$-values of those contrast. Do not then also report the $p$-values of the parameters of your model. Actually, your contrasts are a respecification of your model: either report the contrasts or the parameters, but not both, since they contain the same information. If you report too many $p$-values, the probability that you make a Type I error (concluding that you have a significant difference while there is really no difference) becomes too large. That is also the reason why you should report not more contrasts than the number of your parameters for your variable. For example, if you compare 5 groups, you will have 4 parameters for these groups. In that case specify no more than 4 contrasts. SPSS has a number of prespecified sets of contrasts, like Helmert, Deviation, Difference, etcetera. Check out the SPSS manual for more details. If you want something more specific, use the SPECIAL option as indicated above. 
+In general: if you run a model where you compare various groups, AND you have very specific hypotheses that you'd like to test, it is generally advised to run a contrast analysis, including a small number of them, and then report only the tests and $p$-values of those contrasts. Do not then also report the $p$-values of the parameters of your model. Actually, your contrasts are a respecification of your model: either report the contrasts or the parameters, but not both, since they contain the same information. If you report too many $p$-values, the probability that you make a Type I error (concluding that you have a significant difference while there is really no difference) becomes too large. That is also the reason why you should report not more contrasts than the number of your parameters for your variable. For example, if you compare 5 groups, you will have 4 parameters for these groups. In that case specify no more than 4 contrasts. SPSS has a number of prespecified sets of contrasts, like Helmert, Deviation, Difference, etcetera. Check out the SPSS manual for more details. If you want something more specific, use the SPECIAL option as indicated above. 
 
-Also very important: only go for contrasts when the overall ANOVA is significant. If the group means are not significantly different from eachother in a general sense, it is generally not advised to test specific contrasts.
+% Also very important: only go for contrasts when the overall ANOVA is significant. If the group means are not significantly different from eachother in a general sense, it is generally not advised to test specific contrasts.
 
-\subsection{Testing more than one contrast}
+\section{Testing more than one contrast}
 
 In some cases you have a number of research hypotheses about group differences. For instance, you might have the a priori hypothesis that people in Northern countries are taller than in Southern countries, and another a priori hypothesis that people in Western countries are taller than in Eastern countries. So, a priori you have the hypothesis that the mean height in Norway is different from the mean heights in Greece and Italy combined. Second, you expect that the mean height in Italy is higher than in Greece.
 
@@ -220,10 +233,11 @@ This set of 4 contrasts is also completely orthogonal: all pairs of contrasts ar
 
 
 
-\subsection{Post-hoc comparisons}
+\section{Post-hoc comparisons}
 
 In some cases, you compare 3 or more groups, and you find some interesting differences. For instance, in the above example, when you look at the boxplot of the  differences between Greece, Italy and Norway, you might wonder whether there is a real difference in Italy and Greece. Or perhaps there is a difference between Norway and Italy, or even between Norway and Greece. There might be all kinds of interesting things to find out from these data.
-In this case note, we now formulate these hypotheses \textit{after} looking at the difference in our data. In this case, suppose that there was no specific hypothesis before collecting our data, and we merely wanted to find out whether there are differences between mean heights across these countries. So, our null-hypothesis before looking at the data was that there were no differences in mean height across Greek, Italian and Norwegian populations. To test this we perform a regular linear model analysis, with height as the dependent variable and a categorical variable country as independent variable. We want SPSS to make dummy variables automatically, so we use the following syntax using BY:
+
+In this case note, we now formulate these hypotheses \textit{after} looking at the differences in our data. In this case, suppose that there was no specific hypothesis before collecting our data, and we merely wanted to find out whether there are differences between mean heights across these countries. So, our null-hypothesis before looking at the data was that there were no differences in mean height across Greek, Italian and Norwegian populations. To test this, we perform a regular linear model analysis, with height as the dependent variable and a categorical variable country as independent variable. We want SPSS to make dummy variables automatically, so we use the following syntax using BY:
 
 \begin{verbatim}
 UNIANOVA height BY country
@@ -235,12 +249,14 @@ UNIANOVA height BY country
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.8,trim={0cm 22cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Ftest}
+       \includegraphics[scale=1,trim={0cm 22cm 0cm 0cm}, clip,width=0.9\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Ftest}
     \end{center}
+    \caption{Output of an regular linear model.}
+    \label{fig:Ftest}
 \end{figure}
 
 
-From the output we use the $F$-test to test the overall hypothesis about equality of means, and report a significant difference between the three means, $F(2, 147)=6.14 , MSE=14.77, p<0.05$. Now \textit{given} that we have this rejection of the null-hypothesis, we might be very interested where this significance comes from: is it that Norway is very different from the other two countries? Perhaps there are no differences between Greece and Italy? Perhaps there is only a real difference between Norway
+From the output in Figure \ref{fig:Ftest} we use the $F$-test to test the overall hypothesis about equality of means, and report a significant difference between the three means, $F(2, 147)=6.14 , MSE=14.77, p<0.05$. Now \textit{given} that we have this rejection of the null-hypothesis, we might be very interested where this significance comes from: is it that Norway is very different from the other two countries? Perhaps there are no differences between Greece and Italy? Perhaps there is only a real difference between Norway
 and Italy, but no real difference between Greece and Italy. And so on, and so forth. Note that here you could make 3 pair-wise simple comparisons: Greece vs Italy, Greece vs Norway and Italy vs Norway. You or anyone else intested in your research would like to know if these pair-wise differences are significant. In that case you can report so-called \textit{post hoc} pairwise comparisons. 
 
 Note that we do not perform planned comparisons using contrasts here. Planned comparisons are very powerful tools that are only allowed for hypotheses that are specificied \textit{a priori}, that is, \textit{before} doing any analysis, and preferably before any data collection. \textit{Post hoc} comparisons are done \textit{after} the fact: after testing the research hypothesis and after having looked at the data (seeing means or boxplots!), you can test extra hypotheses that are of secondary interest. First we will show you how to do it, and second we will explain why we do it like that. 
@@ -256,21 +272,23 @@ So we state that we wish to see posthoc comparisons for the variable \textit{cou
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.8,trim={0cm 20cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest}
+       \includegraphics[scale=0.8,trim={0cm 21cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest}
     \end{center}
+    \caption{Output of post hoc comparisons.}
+        \label{fig:posthoctest}
 \end{figure}
 
-From the figure we see that there are 6 comparisons, but by closer inspection we see that all three possible comparisons are reported twice. We see a significant difference between Italy and Norway, $p<0.002$, and that the other two comparisons are not significant. So average height in Greece is not different from the average height in Italy, $p>0.575$, nor from that in Norway, $p>0.097$.
+From Figure \ref{fig:posthoctest} we see that there are 6 comparisons, but by closer inspection we see that all three possible comparisons are reported twice. We see a significant difference between Italy and Norway, $p<0.002$, and that the other two comparisons are not significant. So average height in Greece is not different from the average height in Italy, $p>0.575$, nor from that in Norway, $p>0.097$.
 Now note the difference from the Planned comparisons analysis. There we found a $p$-value of 0.19 for the hypothesis that Greece has the same average height as Italy. This contrast had a somewhat higher $p$-value than a simple dummy analysis for Greece and Italy, ignoring the Norwegian data, $p=0.17$. And now we see a much higher $p$-value of 0.58. The reason is that a correction has been applied to the $p$-values. This correction is needed because otherwise we too easily conclude that there are true differences between Greece and Italy.
 
-Remember that the probability of a Type I error is very often chosen to be $5\%$. If we have one null-hypothesis that we want to test, the probability that we incorrectly conclude that there \textit{is} a difference in means (but there is really \textit{no} difference at population level!) is $5\%$. But suppose we have 10 hypotheses that we wish to test. Then what is the probability of finding at least 1 signficant result while there is no difference? Well, it could be that our first hypothesis is falsely rejected, or our second, or our third, or perhaps even both our second and fourth hypothesis, and so on and so forth. With 10 hypotheses to test, there will be a high probablity that \textit{at least} 1 will be falsely rejected. If \textit{each} hypothesis has a probability of a Type I error of 5\%, the probability that none of the hypotheses is falsely rejected equals $0.95^10=0.60$ (if we assume that all probablities are independent). So the probability that at least one is falsely rejected is the complement of that, so 0.40. If we carry out such research with 10 hypotheses, each using a significance level of $5\%$, we actually have a probability of 40\% of making at least one Type I error! That is awful, we don't want that. That's why in research, with a lot of hypotheses to be tested, we generally adjust the $p$-value in order to be more careful rejecting null-hypotheses. Theoretically, the $p$-value of our posthoc comparison of Greece and Italy should be equal to 0.19, corresponding to the simple dummy variable analysis ignoring Norway, but we report 0.575, because we also test two other hypotheses here. Actually, the $p$-value of the simple analysis of 0.19 is multiplied by the total number of tests, which is 3.
+Remember that the probability of a Type I error is very often chosen to be $5\%$. If we have one null-hypothesis that we want to test, the probability that we incorrectly conclude that there \textit{is} a difference in means (but there is really \textit{no} difference at population level!) is $5\%$. But suppose we have 10 hypotheses that we wish to test. Then what is the probability of finding at least 1 signficant result while there is no difference? Well, it could be that our first hypothesis is falsely rejected, or our second, or our third, or perhaps even both our second and fourth hypothesis, and so on and so forth. With 10 hypotheses to test, there will be a high probablity that \textit{at least} 1 will be falsely rejected. If \textit{each} hypothesis has a probability of a Type I error of 5\%, the probability that none of the hypotheses is falsely rejected equals $0.95^{10}=0.60$ (if we assume that all probablities are independent). So the probability that at least one is falsely rejected is the complement of that, so 0.40. If we carry out such research with 10 hypotheses, each using a significance level of $5\%$, we actually have a probability of 40\% of making at least one Type I error! That is awful, we don't want that. That's why in research, with a lot of hypotheses to be tested, we generally adjust the $p$-value in order to be more careful rejecting null-hypotheses. Theoretically, the $p$-value of our posthoc comparison of Greece and Italy should be equal to 0.19, corresponding to the simple dummy variable analysis ignoring Norway, but we report 0.575, because we also test two other hypotheses here. Actually, the $p$-value of the simple analysis of 0.19 is multiplied by the total number of tests, which is 3.
 
 
-\subsection{Posthoc tests for complex contrasts}
+% \subsection{Posthoc tests for complex contrasts}
 
 
 
-\subsection{Fishing expeditions}
+\section{Fishing expeditions}
 The practice of testing a lot of hypotheses is often described as a fishing expedition. Just set out with large nets, throw them out, and catch whatever you can. In some extreme cases, in genetics for example, researchers test thousands or even millions of hypotheses on the basis of only one data set. Imagine that you collect height data on 70 countries and you want to know what countries differ from what other countries. The total number of pairs of countries equals 70 over 2, which is equal to 2415. So with 2415 $p$-values, what is the a priori probablity of a significant result? If in reality there ARE no differences in means, and a fixed significance level of 0.05, 5\% of the $p$-values will be significant! So with such a data set, there will be at least $0.05 \times 2415 = 121$ significant $p$-values. At least, because there might be some true ones too. So in that scenario, it is impossible to know which $p$-values are too be trusted: many of them will involve false rejections.
 
 For this reason, always be very specific about the null-hypothesis that you want to test with your data. If you have a very specific hypothesis about the differences in means, following a specific pattern, then always use a planned contrasts analysis. If after your analysis, there are some secondary hypotheses that you'd like to check (but for which you had no specific expectation) then report posthoc tests. The Bonferroni post hoc test is a good choice, as it is very conservative: it is very unlikely that you will falsely reject a hypothesis. Alternatively, there are some other post hoc tests, for further reading see the SPSS manual.
@@ -291,7 +309,7 @@ Otherwise, do posthoc analyses, or better still, perform as few tests as possibl
 
 
 
-\subsubsection{Exercises}
+\section{Exercises}
 
 You compare 4 groups. You'd like to know whether the averages observed in groups 1 and 2 differ from the averages observed in groups 3 and 4. 
 

@@ -98,9 +98,9 @@ ggplot(data, aes (x=interval, y=density1), show.legend = F) + geom_line(show.leg
 
 
 
-So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
+So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3 hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
 
-If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the relevant chapter on how to perform planned comparisons and post hoc tests.
+If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the Chapter \ref{chap:advanced} on how to perform planned comparisons and post hoc tests.
 \\
 \\
 Now recall that we mentioned an intraclass correlation, or ICC. An intraclass correlation indicates how much clustering there is within the groups, in this case, clustering of headache scores within NY Times readers. How much are the three scores alike that come from the same patient? This correlation can be computed on the basis of the SPSS output, using the following formula:
@@ -163,7 +163,8 @@ Suppose you let a sample of students do a math test in three different rooms: on
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
+
 \begin{enumerate}
 \item 
 
@@ -242,7 +243,7 @@ datalongnew %>% ggplot( aes(x=time, y=headache) ) + geom_point() +xlab("time aft
 The line shown is the fitted line based on the SPSS output. It can be seen that the prediction for time=0 is too low, for time=2 too high, and for time=24 again too low. So for this particular data set on headache, it would be better to use a categorical predictor for the effect of time on headache, like we did in the previous section.
 \\
 \\
-As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like those in Figure \ref{fig:analysispremidpost6}. There we see a gradual increase of headache levels right after aspirin intake. Here, a numeric treatment of the time variable would be more appropriate. The SPSS output is given in Figure \ref{ffig:premidpostaspirinlinear2}. From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in Figure \ref{fig:analysispremidpost6}. 
+As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like those in Figure \ref{fig:analysispremidpost6}. There we see a gradual increase of headache levels right after aspirin intake. Here, a numeric treatment of the time variable would be more appropriate. The SPSS output is given in Figure \ref{fig:premidpostaspirinlinear2}. From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in Figure \ref{fig:analysispremidpost6}. 
 
 
 
@@ -344,7 +345,9 @@ data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
+
+
 \begin{enumerate}
 \item 
 \begin{verbatim}
@@ -499,7 +502,7 @@ Let's look at it in the different way, using a table with the dummy codes, see T
 
 The exact numbers are displayed in Figure \ref{fig:analysisprepostmixed3}. We see that the specific effect of aspirin in NYTimes readers is 0.6 smaller than the effect of aspirin in Wall Street Journal readers. This difference in the effect of aspirin between the groups was not significantly different from 0. The null-hypothesis that the effect is the same in the two populations of readers cannot be rejected. We therefore conclude that the effect that aspirin has on patients is the same for NY Times and Wall Street Journal readers.
 
-<<analysisprepostmixed3, fig.height=4 , echo=FALSE, fig.align='center', warning=F>>=
+<<analysisprepostmixed3, fig.height=4 , echo=FALSE, fig.align='center', warning=F, fig.cap= "Expected headache levels in NY Times readers and Wall Street Journal readers based on a linear mixed model with an interaction effect." >>=
 fun_mean <- function(x){
   return(data.frame(y=mean(x),label=mean(x,na.rm=T)  ) ) %>% round(1) }
 datalong %>% ggplot( aes(x=as.factor(group), y=headache)   ) + geom_bar(aes(fill=as.factor(measure)),position='dodge',stat = "summary", fun.y = "mean") +
@@ -610,8 +613,9 @@ What does the model predict regarding the number of employees in 2008 in the non
 \end{enumerate}
 
 
-Answers:
-\\
+
+\subsection{Answers}
+
 \begin{enumerate}
 \item It could look like this:
 \\
@@ -790,7 +794,7 @@ In this data set on average Math performance in schools, we see two variables, c
 \end{enumerate}
 
 
-Answers:
+\section{Answers}
 
 \begin{enumerate}
 

@@ -527,7 +527,9 @@ Would you prefer to stick to the Friedman's test for this data set, or would you
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
+
+
 \begin{enumerate}
 
 \item

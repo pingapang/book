@@ -1,5 +1,5 @@
 
-\documentclass[]{report}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[]{book}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -54,6 +54,8 @@
 \usepackage{graphicx}
 \usepackage{fancyref}
 \usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
 % \usepackage{xmpincl}
 % \usepackage[
 %     type={CC},
@@ -65,21 +67,65 @@
 % Title Page
 \title{Analyzing data using linear models}
 
+
 \author{St\'ephanie M. van den Berg}
-\date{Versie 0.1 \\ (\today)}
+\date{Version SPSS 1.0.0 \\ (\today)}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 \maketitle
 
+\pagestyle{empty}
+%% copyrightpage
+\begingroup
+\footnotesize
+\parindent 0pt
+\parskip \baselineskip
+
+
+Copyright \copyright \space 2018 by St\'ephanie M. van den Berg \\
+University of Twente\\
+Department of Research Methodology, Measurement and Data Analysis\\
+Licensed under Creative Commons, see https://creativecommons.org/licenses/\\
+For source code and updates: github.com/pingapang/book\\
+E-mail: stephanie.vandenberg@utwente.nl\\
+\ccbyncsa
+
+   
+
+ 
+
+\begin{center}
+\begin{tabular}{ll}
+First edition:  & October 2018 \\
+\end{tabular}
+\end{center}
 
 
 
-\begin{abstract}
+
+\endgroup
+\clearpage
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter*{Preface}
 This book is intended to be of use to bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, to linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
-\end{abstract}
+
 
 
 \tableofcontents
+
+
+
 
 
 
@@ -90,12 +136,12 @@ This book is intended to be of use to bachelor students in social, behavioural a
 
 
 
-Data is the plural of datum, and datum is the Latin translation of 'given'. That the world is round, is a given. That you are reading these lines, is a given, and that my dog's name is Philip is a given. Sometimes we have a bunch of given facts (data), for example the names of all students in a school, and their marks for a particular course. I could put these data in a table, like the one in Table \ref{tab:data_1}. There we see information about seven students. And of these seven students we know two things: their name and their grade. You see that the data are put in a matrix with seven rows and two columns. Each row stands for one student, and each column stands for one property.
+Data is the plural of datum, and datum is the Latin translation of 'given'. That the world is round, is a given. That you are reading these lines, is a given, and that my dog's name is Philip, is a given. Sometimes we have a bunch of given facts (data), for example the names of all students in a school, and their marks for a particular course. I could put these data in a table, like the one in Table \ref{tab:data_1}. There we see information about seven students. And of these seven students we know two things: their name and their grade. You see that the data are put in a matrix with seven (horizontal) rows and two (vertical) columns. Each row stands for one student, and each column stands for one property.
 
 In data analysis, we always put data in such a matrix format. In general, we put the objects of our study in rows, and their properties in columns. The objects of our study we call \textit{units}, and the properties we call \textit{variables}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:09 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with 7 units and 2 variables.} 
@@ -122,7 +168,7 @@ The second column represents the variable \textbf{grade}. Grade is here a variab
 
 What we see in Table \ref{tab:data_1} is called a \textit{data matrix}: it is a matrix (a collection of rows and columns) that contains information on units (in the rows) in the form of variables (in the columns).
 
-A unit is something we'd like to say something about. For example, I might want to say something about students and how they score on a course. In that case, student is my \textit{unit of analysis}.
+A unit is something we'd like to say something about. For example, I might want to say something about students and how they score on a course. In that case, students are my \textit{units of analysis}.
 
 % Alternatively, I might want to say something about different companies: how they differ in size and how they differ in how they deal with their taxes. In that case, company is my \textit{unit of analysis}. Research data on companies might look like the data matrix in Table \ref{tab:data_2} with a different row for each company.
 %
@@ -138,7 +184,7 @@ A unit is something we'd like to say something about. For example, I might want 
 If my interest is in schools, the data matrix in Table \ref{tab:data_3} might be useful, which shows a different row for each school with a couple of variables. Here again, we see a variable for grade on a course, but now averaged per school. In this case, school is my unit of analysis.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:09 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on schools.} 
@@ -168,7 +214,7 @@ In many instances, units of analysis are observed more than once. This means tha
 Suppose we measure depression levels in four men four times during cognitive behavioural therapy. Sometimes you see data presented in the way of Table \ref{tab:data_7}, where there are four separate variables for depression level, one for each measurement: \textbf{depression.1}, \textbf{depression.2}, \textbf{depression.3}, and \textbf{depression.4}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:09 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with depression levels in wide format.} 
@@ -186,16 +232,8 @@ client & depression.1 & depression.2 & depression.3 & depression.4 \\
 \end{table}
 
 
-This way of representing data on a variable that was measured more than once is called \textit{wide format}. We call it \textit{wide} because we simply add columns when we have more measurements, which increases the width of the data matrix. Each new observation of the same variable on the same unit of analysis leads to a new column in the data matrix.
-
-Note that this is only one way of looking at this problem of measuring depression four times. Here, you can say that there are really four depression variables: there is depression measured at timepoint 1, there is depression measured at timepoint 2, and so on, and these four variables vary only across units of analysis. This way of thinking leads to a wide format representation.
-
-An alternative way of looking at this problem of measuring depression four times, is that depression is really only one variable and that it varies across units of analysis (some people are more depressed than others) and that it \textit{also} varies across time (at times you feel more depressed than at other times).
-
-Therefore, instead of adding columns, we could simply stick to one variable and only add rows. That way, the data matrix becomes longer, which is the reason that we call that format \textit{long format}. Table \ref{tab:data_8} shows the same data from Table \ref{tab:data_7}, but now in long format. Instead of four different variables, we have only one variable for depression level, and one extra variable \textbf{time} that indicates to which timepoint a particular depression measure refers to. Thus, both Tables \ref{tab:data_7} and \ref{tab:data_8} tell us that the second depression measure for client number 3 was 0.
-
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:09 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix with depression levels in long format.} 
@@ -226,7 +264,15 @@ client & time & depression \\
 
 
 
-Now let's look at a slightly more complex example, where the advantage of long format becomes clear. Suppose we have data on weather forecasts for a number of specific days (day is the unit of analysis). We present the data in long format in Table \ref{tab:data_5}, and in wide format in Table \ref{tab:data_5b}.
+This way of representing data on a variable that was measured more than once is called \textit{wide format}. We call it \textit{wide} because we simply add columns when we have more measurements, which increases the width of the data matrix. Each new observation of the same variable on the same unit of analysis leads to a new column in the data matrix.
+
+Note that this is only one way of looking at this problem of measuring depression four times. Here, you can say that there are really four depression variables: there is depression measured at timepoint 1, there is depression measured at timepoint 2, and so on, and these four variables vary only across units of analysis. This way of thinking leads to a wide format representation.
+
+An alternative way of looking at this problem of measuring depression four times, is that depression is really only one variable and that it varies across units of analysis (some people are more depressed than others) and that it \textit{also} varies across time (at times you feel more depressed than at other times).
+
+Therefore, instead of adding columns, we could simply stick to one variable and only add rows. That way, the data matrix becomes longer, which is the reason that we call that format \textit{long format}. Table \ref{tab:data_8} shows the same data from Table \ref{tab:data_7}, but now in long format. Instead of four different variables, we have only one variable for depression level, and one extra variable \textbf{time} that indicates to which timepoint a particular depression measure refers to. Thus, both Tables \ref{tab:data_7} and \ref{tab:data_8} tell us that the second depression measure for client number 3 was 0.
+
+Now let's look at a slightly more complex example, where the advantage of long format becomes clear. Suppose we have data on weather forecasts for a number of specific days (days are our units of analysis). We present the data in long format in Table \ref{tab:data_5}, and in wide format in Table \ref{tab:data_5b}.
 
 % <<data_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
 % set.seed(12234)
@@ -240,7 +286,7 @@ Now let's look at a slightly more complex example, where the advantage of long f
 % @
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts.} 
@@ -269,7 +315,7 @@ Jan 1 & 3 & 2 & Dump \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts in wide format.} 
@@ -300,7 +346,7 @@ The second thing we can say about the difference in data in long and wide format
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Data matrix on weather forecasts.} 
@@ -408,7 +454,7 @@ A fourth reason for preferring long format over wide format is the most practica
 \item In Table \ref{tab:taxes} you see data on two companies that paid taxes in 2016 and 2017. Are the data displayed in wide format or in long format? Explain.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Paid taxes in 2016 and 2017.} 
@@ -424,24 +470,27 @@ Daisy's & 569875 & 8765447 \\
 \end{table}
 
 
-\item Put Table \ref{tab:taxes} in wide format if you think it is in long format, or in long format if it is in wide format. Hint: Look at the depression example for inspiration.
+\item Put the data in Table \ref{tab:taxes} in wide format if you think they are in long format, or in long format if they are in wide format. Hint: Look at the depression example for inspiration.
 
 
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
 
 \begin{enumerate}
 
 \item The data are in wide format. There is one variable, how much tax was paid, and that variable was observed twice for each unit of analysis.
 
 
-
 \item An example of the data displayed in long format is displayed in Table \ref{tab:taxeslong}.
 
+
+\end{enumerate}
+
+
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Paid taxes in 2016 and 2017.} 
@@ -459,15 +508,10 @@ Daisy's & 2016 & 569875 \\
 \end{table}
 
 
-\end{enumerate}
-
-
-
-
 \section{Measurement level}
 
 
-Data analysis is about variables. In essence, data analysis is about describing how different values in one variable go together with different values in one or more other variables. For example, if we have the variable age with values "young" and "old", and the variable happiness with values "happy" and "unhappy", we'd like to know whether "happy" mostly comes together with either "young" or "old". Therefore, data analysis is about variation and co-variation in variables.
+Data analysis is about variables an relationships among them. In essence, data analysis is about describing how different values in one variable go together with different values in one or more other variables (co-variation). For example, if we have the variable age with values 'young' and 'old', and the variable happiness with values 'happy' and 'unhappy', we'd like to know whether 'happy' mostly comes together with either 'young' or 'old'. Therefore, data analysis is about variation and co-variation in variables.
 
 Linear models are important tools when describing co-varying variables. When we want to use linear models, we need to distinguish between different kinds of variables. One important distinction is about the measurement level of the variable: numeric, ordinal or categorical.
 
@@ -476,9 +520,9 @@ Linear models are important tools when describing co-varying variables. When we 
 
 Numeric variables have values that describe a measurable quantity as a number, like 'how many' or 'how much'. A numeric variable can be a \textit{count variable}, for instance the number of children in a classroom. A count variable can only consist of discrete, natural numbers: 0, 1, 2, 3, etcetera. But a numeric variable can also be a \textit{continuous variable}. Continuous variables can take any value from the set of real numbers, for instance values like -200.765, -9.78, -2, 0.001, 4, and 7.8. The number of decimals can be as large as the instrument of measurement allows. Examples of continuous variables include height, time, age, blood pressure and temperature. Note that in all these examples, \textit{quantities} (age, height, temperature) are expressed as the number of a particular \textit{measurement unit} (years, inches, degrees).
 
-Whether a numeric variable is a count variable or a continuous variable, it is always expressing \textit{quantities}, and therefore numeric variables are sometimes called \textit{quantitative} variables.
+Whether a numeric variable is a count variable or a continuous variable, it is always expressing \textit{quantities}, and therefore numeric variables can be called \textit{quantitative} variables.
 
-There is a further distinction between \textit{interval variables} and \textit{ratio variables} that is rather technical. For both interval and ratio variables, the interval between measurements is the same, for example the interval between one kilogram and two kilograms is the same as the interval between three kilograms and four kilograms: in both cases the interval (the difference) is one kilogram. The difference between two buildings and three builidings, is the same as the difference between four buildings and five buildings: in both cases the difference is one building.
+There is a further distinction between \textit{interval variables} and \textit{ratio variables} that is rather technical. For both interval and ratio variables, the interval between measurements is the same, for example the interval between one kilogram and two kilograms is the same as the interval between three kilograms and four kilograms: in both cases the interval (the difference) is one kilogram. The difference between two buildings and three buildings, is the same as the difference between four buildings and five buildings: in both cases the difference is one building.
 
 The difference between interval and ratio variables is that for interval variables, the ratio between measurements is not known. A common case of this is temperature measured in degrees Fahrenheit or degrees Celcius. Suppose we measure the temperature of two classrooms: one is 10 degrees Celcius and the other is 20 degrees Celcius. The ratio of these two temperatures is $20/10=2$, but does that ratio convey meaningful information? Can we really say that the second classroom is twice as warm as the first classroom? The answer is no, and the reason is simple: had we expressed temperature in Fahrenheit we would have gotten a very different ratio. Temperatures of 10 and 20 degrees Celcius correspond to 50 and 68 degrees Fahrenheit, respectively. This corresponds to a ratio of 68/50=1.36. Based on the Fahrenheit metric, the second classroom would now be 1.36 times warmer than the first classroom. The reason why the ratios depend on the metric system, is because the Celcius and Fahrenheit systems have different meanings for the zero-point. They both have arbitrary zero-points. All such numeric variables for which ratios are meaningless are interval variables.
 
@@ -488,7 +532,7 @@ An example of a ratio variable is height. You could measure height in two person
 
 \subsection{Ordinal variables}
 
-Ordinal variables are also about quantities. However, the important difference with numeric variables is that ordinal variables are not measured in units. An example would be a variable that would quantify size, by stating whether a T-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state EXACTLY how much of that quantity is present in that T-shirt.
+Ordinal variables are also about quantities. However, the important difference with numeric variables is that ordinal variables are not measured in units. An example would be a variable that would quantify size, by stating whether a T-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state \textit{exactly} how much of that quantity is present in that T-shirt.
 
 Even though ordinal variables are not measured in specific units, you can still have a meaningful order in the values of the variable. For instance, we know that a large T-shirt is larger than a medium T-shirt, and a medium T-shirt is larger than a small T-shirt.
 
@@ -498,10 +542,12 @@ Ordinal variables often involve subjective measurements. One example would be ha
 
 \subsection{Categorical variables}
 
-Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. They have values that describe 'what type' or 'to which category' a unit of belongs. For example, a school could either be publicly funded or not, or a person could either have the Swedish nationality or not. A variable that indicates such a dichotomy between publicly funded yes or no, or Swedish nationality yes or no, is called a \textit{dichotomous} variable, and is a subtype of a categorical variable. Another subtype of a categorical variable is a \textit{nominal} variable. Nominal comes from the Latin nomen, which means name. When you name the nationality of a person, you have a nominal variable. Table \ref{tab:data_9} shows an example of both an dichotomous variable (Swedish) that always has only two different values, and a nominal variable (Nationality), that can have as many different values as you want.
+Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. They have values that describe 'what type' or 'to which category' a unit of belongs. For example, a school could either be publicly funded or not, or a person could either have the Swedish nationality or not. A variable that indicates such a dichotomy between publicly funded 'yes' or 'no', or Swedish nationality 'yes' or 'no', is called a \textit{dichotomous} variable, and is a subtype of a categorical variable. Another subtype of a categorical variable is a \textit{nominal} variable. Nominal comes from the Latin \textit{nomen}, which means name. When you name the nationality of a person, you have a nominal variable. Table \ref{tab:data_9} shows an example of both an dichotomous variable (Swedish) that always has only two different values, and a nominal variable (Nationality), that can have as many different values as you want (usually more than two).
+
+
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Nationalities.} 
@@ -523,16 +569,16 @@ ID & Swedish & Nationality \\
 \end{table}
 
 
-Another example of a nominal variable could be the answer to the question: name the colours of a number of pencils. Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour. In addition, there is usually no logical order in the values of such variables, something that we do see with ordinal variables.
+Another example of a nominal variable could be the answer to the question: "name the colours of a number of pencils". Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour. In addition, there is usually no logical order in the values of such variables, something that we do see with ordinal variables.
 
 \subsection{Exercises}
 In the following, identify the type of variable in termes of numeric, ordinal, or categorical:
 \begin{enumerate}
 \item Age: \dots years
-\item Weight: \dots kilograms
+\item Exercise intensity: low, moderate, high
 \item Size: \dots meters
 \item Size: small, medium, large
-\item Exercise intensity: low, moderate, high
+\item Weight: \dots kilograms
 \item Agreement: not agree, somewhat agree, agree
 \item Agreement: totally not agree, somewhat not agree, neither disagree nor agree, somewhat agree, totally agree
 \item Pain: 1, 2.. ..... , 99, 100, with 1="total absence of pain" and 100="the worst imaginable pain"
@@ -549,10 +595,10 @@ Answers:
 
 \begin{enumerate}
 \item Numeric
-\item Numeric
+\item Ordinal
 \item Numeric
 \item Ordinal
-\item Ordinal
+\item Numeric
 \item Ordinal
 \item Technically this is an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of the agreement. However, given the number of categories and the small differences in meaning across adjacent categories, such variables are sometimes treated as numeric by using numbers 1, 2, 3, 4, 5 for the respective categories.
 \item The numbers might trick you into thinking it is a numeric variable. However, again, this is technically an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of pain. However, given the large the number of categories, such variables are most often treated as numeric.
@@ -574,7 +620,7 @@ Categorical data should always be treated as categorical. However, the problem w
 
 The most difficult problem lies with ordinal variables: in linear models you can either treat them as numeric variables or as categorical variables. The choice is usually based on common sense and whether the results are meaningful. For instance, if you have an ordinal variable with 7 levels, like a Likert scale, the variable is often coded with numbers 1 through 7, with value labels 1="completely disagree", 2="mostly disagree", 3="somewhat disagree", 4="ambivalent", 5="somewhat agree", 6="mostly agree", and 7="completely agree". You could in this example choose to treat this variable like a categorical variable, recognizing that this is not a numeric variable as there is no measurement unit. However, if you feel this is akward, you could choose to treat the variable as numeric, but be aware that this implies that you feel that the difference between 1 and 2 is the same as the difference between 2 and 3. In general, with ordinal data like Likert scales or sizes like, Small, Medium and Large, one generally chooses to use categorical treatment for low numbers of categories, say 3 or 4 categories, and numerical treatment for variables with many categories, say 5 or more. However, this should not be used as a rule of thumb: first think about the meaning of your variable and the objective of your data analysis project, and only then take the most reasonable choice. Often, you can start with numerical treatment, and if the analysis shows peculiar results\footnote{For instance, you may find that the assumptions of your linear model are not met, see Chapter \ref{}.}, you can choose categorical treatment in secondary analyses.
 
-In the coming chapters, we will come back to the important distinction between categorical and numerical treatment (mostly in Chapter \ref{}). For now, remember that numeric variables are always treated as numeric variables and categorical variables are always treated as categorical variables.
+In the coming chapters, we will come back to the important distinction between categorical and numerical treatment (mostly in Chapter \ref{chap:categorical}). For now, remember that numeric variables are always treated as numeric variables and categorical variables are always treated as categorical variables.
 
 
 
@@ -587,10 +633,10 @@ In the coming chapters, we will come back to the important distinction between c
 
 \section{Frequency tables, frequency plots and histograms}
 
-Variables have different values. For example, age is a numeric variable: lots of people have different ages, between 0 days and 130 years. Suppose we measure age in years, then we have 131 different values, from 0 years to 120 years. For each observed age separately, we can compute how many observations we have. For instance, suppose we have an imaginary town with 1000 children. For each age, we can count the number of children who have that particular age. The results of the counting are in Table \ref{tab:frequency_1}. The number of observed children with a certain age, say 40, is called the \textit{frequency} of an age of 40. The table is therefore called a frequency table. Generally, in a frequency table values that are not observed are omitted (i.e., the frequency of children with age 16 is 0).
+Variables have different values. For example, age is a numeric variable: lots of people have different ages, between 0 days and 130 years. Suppose we measure age in years, then we have 131 different values, from 0 years to 120 years. For each observed age separately, we can compute how many observations we have. For instance, suppose we have an imaginary town with 1000 children. For each age, we can count the number of children who have that particular age. The results of the counting are in Table \ref{tab:frequency_1}. The number of observed children with a certain age, say 40, is called the \textit{frequency} of age 40. The table is therefore called a frequency table. Generally, in a frequency table values that are not observed are omitted (i.e., the frequency of children with age 16 is 0).
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:26 2018
+% Wed Oct 31 11:55:10 2018
 \begin{table}[ht]
 \centering
 \caption{Freqency table for age, with proportions and cumulative proportions.} 
@@ -634,7 +680,7 @@ age & frequency & proportion & cum.frequency & cum.proportion \\
 
 \end{knitrout}
 
-The data in the frequency table can also be represented using a frequency plot. Figure \ref{fig:distr_1} gives the same information, not in numbers but in a graphical way. On the horizontal axis we see several possible values for age in years, and on the vertical axis we see the number of children (the count) that were observed for each particular age. Both the frequency table and the frequency plot tell us something about the \textit{distribution} of age in this imaginary town with 1000 children. For example, both tell us that the oldest child is 17 years old. Furthermore, we see that there are quite a lot of children with ages between 5 and 8, but no so many children with ages below 3 or above 14. The advantage of the table over the graph is that we can get the exact number of children of a particular age very easily. But on the other hand, the graph makes it easier to get a quick idea about the shape of the distribution, which is hard to make out from the table.
+The data in the frequency table can also be represented using a frequency plot. Figure \ref{fig:distr_1} gives the same information, not in numbers but in a graphical way. On the horizontal axis we see several possible values for age in years, and on the vertical axis we see the number of children (the count) that were observed for each particular age. Both the frequency table and the frequency plot tell us something about the \textit{distribution} of age in this imaginary town with 1000 children. For example, both tell us that the oldest child is 17 years old. Furthermore, we see that there are quite a lot of children with ages between 5 and 8, but not so many children with ages below 3 or above 14. The advantage of the table over the graph is that we can get the exact number of children of a particular age very easily. But on the other hand, the graph makes it easier to get a quick idea about the shape of the distribution, which is hard to make out from the table.
 
 % <<distr_1, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='A frequency distribution' >>=
 % set.seed(123)
@@ -674,7 +720,7 @@ Histograms are very convenient for continuous data, for instance if we have valu
 \section{Frequencies, proportions and cumulative frequencies and proportions}
 
 
-When we have for each observed age the frequency, we can calculate the \textit{relative frequency} or \textit{proportion} of children that have that particular age. For example, in Table \ref{tab:frequency_1} we see that there are two children who have age 0. Given that there are in total 1000 children, we know that the \textit{proportion} of people with age 0 equals $2/1000=0.002$. Thus, the proportion is calculated by taking the frequency and dividing it by the total number of people.
+When we have for each observed age the frequency, we can calculate the \textit{relative frequency} or \textit{proportion} of children that have that particular age. For example, when we look again at the frequencies in Table \ref{tab:frequency_1} we see that there are two children who have age 0. Given that there are in total 1000 children, we know that the \textit{proportion} of people with age 0 equals $2/1000=0.002$. Thus, the proportion is calculated by taking the frequency and dividing it by the total number of people.
 
 
 We can also compute \textit{cumulative frequencies}. You get cumulative frequencies by accumulating (summing) frequencies. For instance, the cumulative frequency for the age of 3, is the frequency for age 3 plus all freqencies for younger ages. Thus, the cumulative frequency of age 3 equals 50 + 20 (for age 2) + 7 (for age 1) + 2 (for age 0) = 79. The cumulative frequencies for all ages are presented in Table \ref{tab:frequency_1}.
@@ -727,12 +773,12 @@ In order to find the age of this 250th child, and we look at Table \ref{tab:freq
 
 What we just did for quartiles, (i.e. 0.25, 0.50, 0.75) we can do for any proportion between 0 and 1. We then no longer call them quartiles, but \textit{quantiles}. A quantile is the value below which a given proportion of observations in a group of observations fall. From this table it is easy to see that a proportion of 0.606 of the children have an age of 7 or less. Thus, the 0.606 quantile is 7. One often also sees \textit{percentiles}. Percentiles are very much like quantiles, except that they refer to percentages rather than proportions. Thus, the 20th percentile is the same as the 0.20 quantile. And the 0.81 quantile is the same as the 81st percentile.
 
-The reason that quartiles, quantiles and percentiles are important is that they are very short ways of saying something about a distribution. Remember that the best way to represent a distribution is either a frequency table or a frequency plot. However, since they can take up quite a lot of space sometimes, one needs other ways to briefly summarize a distribution. Saying that "the third quartile is 454" a condensed way of saying that "75\% of the values is either 454 or lower". In the next sections, we look at other ways of summarizing information about distributions.
+The reason that quartiles, quantiles and percentiles are important is that they are very short ways of saying something about a distribution. Remember that the best way to represent a distribution is either a frequency table or a frequency plot. However, since they can take up quite a lot of space sometimes, one needs other ways to briefly summarize a distribution. Saying that "the third quartile is 454" is a condensed way of saying that "75\% of the values is either 454 or lower". In the next sections, we look at other ways of summarizing information about distributions.
 
 \subsection{Exercises}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:28 2018
+% Wed Oct 31 11:55:11 2018
 \begin{table}[ht]
 \centering
 \caption{Freqency table for x, with proportions and cumulative proportions.} 
@@ -772,7 +818,7 @@ x & frequency & proportion & cum.proportion \\
 
 \item Suppose we have the values {6,5,4,8,6,5,6,4,5,6,7,8}. Determine the third quartile.
 
-\item Suppose we have the values {4,4,4,8,6,4,6,4,5,6,7,8,9}. Determine the third quartile.
+\item Suppose we have the values {4,4,4,8,6,4,6,4,5,6,7,8}. Determine the third quartile.
 
 \item From Figure \ref{fig:quartile_3}, determine the 30th, 40th and 90th percentiles.
 
@@ -793,6 +839,39 @@ x & frequency & proportion & cum.proportion \\
 \end{enumerate}
 
 
+\subsection{Answers}
+
+\begin{enumerate}
+
+\item
+1
+\item
+6
+\item
+2
+\item
+3
+\item
+3
+\item
+4
+\item
+4
+\item
+ordered series: 445 556 666 788, last value of third quart: 6
+\item
+orderd series: 444 445 666 788, last value of third quart: 6
+
+\item
+2, 2 and 7
+
+\item
+
+Nine percent of my fellow students scored the same or lower than I did on the exam, so 91 percent did better. I did not do so well.
+
+\end{enumerate}
+
+
 
 
 
@@ -802,7 +881,7 @@ x & frequency & proportion & cum.proportion \\
 The mean, the median and the mode are three different measures that say something about the \textit{central tendency} of a distribution. If you have a series of values: around which value do they tend they tend to cluster?
 
 \subsection{The mean}
-The mean of a set of values is the same as the average. Suppose we have the values 1, 2 and 3, then we compute the mean (or average) by first adding these numbers and then divide them by the number of values we have. In this case we have three values, so the mean is equal to $(1 + 2 + 3)/3 = 2$. In statistical formulas, the mean is indicated by a bar above the variable. So if our values of variable $y$ are 1, 2 and 3, then we denote the mean by $\bar{y}$ (pronounced as y-bar). For taking the sum of a set of values, statistical formulas show a $\Sigma$ (pronounced as sigma). So we often see the following formula for the mean of a set of $n$ values for variable $y$:
+Suppose we have the values 1, 2 and 3, then we compute the mean (or average) by first adding these numbers and then divide them by the number of values we have. In this case we have three values, so the mean is equal to $(1 + 2 + 3)/3 = 2$. In statistical formulas, the mean is indicated by a bar above the variable. So if our values of variable $y$ are 1, 2 and 3, then we denote the mean by $\bar{y}$ (pronounced as y-bar). For taking the sum of a set of values, statistical formulas show a $\Sigma$ (pronounced as sigma). So we often see the following formula for the mean of a set of $n$ values for variable $y$:
 
 \begin{equation}
 \bar{y} = \frac{\Sigma_i^n y_i}{n}
@@ -810,10 +889,10 @@ The mean of a set of values is the same as the average. Suppose we have the valu
 
 In words, we take every value for $y$ from 1 to $n$ and sum them, and the result is divided by $n$.
 
-If we take another example, suppose we have variable $x$ with the values {6, -3, and 21}, then the mean of $x$, $\bar{x}$, equals:
+If we take another example, suppose we have variable $y$ with the values {6, -3, and 21}, then the mean of $y$, $\bar{y}$, equals:
 
 \begin{equation}
-\bar{x} = \frac {  \Sigma x_i^n} {n} =    \frac{x_1 + x_2 + x_3}{n} = \frac{6 + (-3) + 21}{3} = \frac{24}{3} = 8
+\bar{y} = \frac {  \Sigma y_i^n} {n} =    \frac{y_1 + y_2 + y_3}{n} = \frac{6 + (-3) + 21}{3} = \frac{24}{3} = 8
 \end{equation}
 
 
@@ -827,7 +906,9 @@ The mean is only one measure of central tendency: if the mean is 100, it says th
 
 Suppose we have the values 45, 45, 45, 65, and 23. What is the middle value? We first order them again and see what value is in the middle: 23, 45, 45, 45 and 65. Obviously now 45 is the median. You can also see that half of the values is equal or smaller than this value, and half of the values is equal or larger than this value. The median therefore is the same as the second quartile.
 
-What if we have two values in the middle? Suppose we have the values 46, 56, 45 and 34. If we order them we get 34, 45, 46 and 56. Now there are two values in the middle: 45 and 46. In that case, we take the average of these two middle values, so the median is 45.5. For numeric variables that have a more or less symmetric distribution (i.e., a frequency plot that is more or less symmetric), the mean is best used. For numeric variables that do not have a symmetric distribution, it is usually more informative to use the median. An example of such a situation is income. Figure \ref{fig:median} shows a typical distribution of yearly income. The distribution is highly asymmetric, it is severely skewed to the right. The bulk of the values are between 20,000 and 40,000, with only a very few extreme values on the high end. Even though there are only a few people with a very high income, the few high values have a huge effect on the mean.
+What if we have two values in the middle? Suppose we have the values 46, 56, 45 and 34. If we order them we get 34, 45, 46 and 56. Now there are two values in the middle: 45 and 46. In that case, we take the mean of these two middle values, so the median is 45.5. 
+
+When do you use a median and when do you use a mean? For numeric variables that have a more or less symmetric distribution (i.e., a frequency plot that is more or less symmetric), the mean is best used. For numeric variables that do not have a symmetric distribution, it is usually more informative to use the median. An example of such a situation is income. Figure \ref{fig:median} shows a typical distribution of yearly income. The distribution is highly asymmetric, it is severely skewed to the right. The bulk of the values are between 20,000 and 40,000, with only a very few extreme values on the high end. Even though there are only a few people with a very high income, the few high values have a huge effect on the mean.
 
 \begin{figure}
 
@@ -850,7 +931,7 @@ This might be even made more clear by the following example in Table \ref{tab:me
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:28 2018
+% Wed Oct 31 11:55:12 2018
 \begin{table}[ht]
 \centering
 \caption{Four series of values and their respective medians and means.} 
@@ -873,7 +954,7 @@ X1 & X2 & X3 & median & mean \\
 \subsection{The mode}
 A third measure of central tendency is the \textit{mode}. The mode is defined as the value that we see most frequently in a series of values. For example, if we have the series 4, 7, 5, 5, 6, 6, 6, 4, then the value observed most often is 6 (three times). Modes are easily inferred from frequency tables: the value with the largest frequency is the mode. They are also easily inferred from frequency plots: the value on the horizontal axis for which we see the highest count (on the vertical axis).
 
-The mode can also be determined for categorical variables. If we have the observed values "Dutch", "Danish", "Dutch", and "Chinese", the mode is "Dutch" because that is the value that is most often observed.
+The mode can also be determined for categorical variables. If we have the observed values  'Dutch', 'Danish', 'Dutch', and 'Chinese', the mode is 'Dutch' because that is the value that is observed most often.
 
 If we look back at the distribution in Figure \ref{fig:median}, we see that the peak of the distribution is around the value of 19,000. However, whether this is the mode, we cannot say. Because income is a more or less continuous variable, every value observed in the Figure occurs only once: there is no value of income with a frequency more than 1. So technically, there is no mode. However, if we split the values into 20 bins, like we did for the histogram in Figure \ref{fig:median}, we see that the fifth bin has the highest frequency. In this bin there are values between 17000 and 21000, so our mode could be around there. If we really want a specific value, we could decide to taken the average value in the fifth bin. There are many other statistical tricks to find a value for the mode, where technically there is none. The point is that for the mode, we're looking for the value or the range of values that are most frequent. Graphically, it is the value under the peak of the distribution. Similar to the median, the mode is also quite stable: it is not much affected by extreme values and is therefore to be preferred over the mean in the case of assymetric distributions.
 
@@ -922,6 +1003,19 @@ If we look back at the distribution in Figure \ref{fig:median}, we see that the 
 \end{enumerate}
 
 
+\subsection{Answers}
+
+\begin{enumerate}
+\item 50.5
+\item 50.5
+\item  23
+\item 140
+\item 3
+\item The median. Because the distribution is very skew and in that case the mean would be relatively high, because it is influenced by a few households with very many bicycles. The mode would not say very much other than that 0 bicycles is the most common observation. But saying that half the households have at least 1 bicycle would be more informative than that. 
+
+\end{enumerate}
+
+
 \section{Relationship between measures of tendency and measurement level}
 
 There is a close relationship between measures of tendency and measurement level. For numeric variables, all three measures of tendency are meaningful. Suppose you have the numeric variable age measured in years, with the values 56, 68, 68, 99 and 100. Then it is meaningful to say that the average age is 78.2 years, that the median age is 68 years, and that the mode is 68 years.
@@ -939,7 +1033,7 @@ It is entirely possible to compute the mode for the variables University, Size, 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:29 2018
+% Wed Oct 31 11:55:12 2018
 \begin{table}[ht]
 \centering
 \caption{Study programs and their relative sizes (1=small, 2=medium, 3=large) for six different universities.} 
@@ -1167,7 +1261,7 @@ Z = \frac{x - \bar{x}}{\sigma}
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:35 2018
+% Wed Oct 31 11:55:16 2018
 \begin{table}[ht]
 \centering
 \caption{Standardizing scores.} 
@@ -1229,7 +1323,7 @@ We know that the two inflection points lie one standard deviation below and abov
 All quantiles for the standard normal distribution can be looked up online\footnote{see for example ....} or in books. Table \ref{tab:normal_4} gives a short list of quantiles. From this table, you see that 1\% of the $z$-values is lower than -2.33, and that 25\% of the $z$-values is lower than -0.67. We also see that half of all the $z$-values is lower than 0.00 and that 10\% of the $z$-values is larger than 1.28, and that the 1\% largest values are higher than 2.33.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:35 2018
+% Wed Oct 31 11:55:17 2018
 \begin{table}[ht]
 \centering
 \caption{Some quantiles for the standard normal distribution.} 
@@ -1327,7 +1421,7 @@ For example, suppose we are in a lecture hall with 456 students and we count the
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:35 2018
+% Wed Oct 31 11:55:17 2018
 \begin{table}[ht]
 \centering
 \caption{A frequency table of nationalities.} 
@@ -1399,7 +1493,7 @@ Ordinal variables are usually best visualized using bar charts. Figure \ref{fig:
 Variables are properties that vary: from person to person, or from location to location, or from time to time, of from object to object. Sometimes when you have two variables, you see that they co-vary: when one variable changes, the other variable changes too. For example, suppose I have 20 pencils. These pencils may vary in colour: twelve of them are red, and eight of them are blue. Therefore, colour is a variable with values "red" and "blue". The twenty pencils also vary in length: four are unused and therefore still long, and sixteen of them have been used many times so that they are short. Therefore, length is also a variable, with values "long" and "short". Note that these variables have been measured using the same pencils. In theory I could have long blue pencils, long red pencils, short blue pencils and short red pencils. Let's look at the pencils that I have: for each combination of lenght and colour, I count the number of pencils. The result I put in Table \ref{tab:crosstable_1}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:36 2018
+% Wed Oct 31 11:55:18 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of colour and length for twenty pencils.} 
@@ -1425,7 +1519,7 @@ Crosstables are nice visualization of how two categorical variables co-vary. But
 Suppose instead of determining length by values "short" and "long", I could measure the exact length of the pencils in centimeters. I put the results in Table \ref{tab:crosstable_2}. We see that the table is much larger than Table \ref{tab:crosstable_1}. We also see quite a few cells with zeros. In most cases, for every particular combination of length and colour we only see a count of 1 pencil. In general, you see that when one of the variables is numeric, the crosstable becomes very large and in addition it becomes sparse, that is, with many zeros. With such a large and sparse table, it is hard to get a quick impression of how two variables co-vary.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:36 2018
+% Wed Oct 31 11:55:18 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of colour and length for twenty pencils.} 
@@ -1473,7 +1567,7 @@ From a boxplot like this it is easy to spot differences in the distribution of a
 \subsection{Numeric by numeric: scatterplot}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:36 2018
+% Wed Oct 31 11:55:18 2018
 \begin{table}[ht]
 \centering
 \caption{Crosstabulation of length (rows) and weight (columns) for twenty pencils.} 
@@ -1986,7 +2080,7 @@ In summary, when we want to have a straight line that describes our data best, w
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:46 2018
+% Wed Oct 31 11:55:26 2018
 \begin{table}[ht]
 \centering
 \caption{Home prices.} 
@@ -2038,7 +2132,7 @@ Area & Price & PredictedPrice & Residual & SquaredResidual \\
 \item The predicted prices, the residuals and the squared residuals are displayed in Table \ref{tab:lm_17}. The sum of the squared residuals equals 2397.4189795.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:46 2018
+% Wed Oct 31 11:55:26 2018
 \begin{table}[ht]
 \centering
 \caption{Home prices.} 
@@ -2340,7 +2434,7 @@ You can probably imagine that if we repeat this procedure of randomly picking 20
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:54 2018
+% Wed Oct 31 11:55:33 2018
 \begin{table}[ht]
 \centering
 \caption{Ten different sample equations based on ten different random samples from the population of bottles.} 
@@ -2435,7 +2529,7 @@ Imagine that you draw only 2 bottles from the population of 80,000 bottles. Then
 Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Take a look at Table \ref{tab:samplesize20}. There we see measurements on a random sample of 20 bottles. The first bottle shows a relatively low volume and a relatively low temperature measure. The second bottle shows the opposite: a relatively large volume and a relatively high temeperature. This is also depicted in Figure \ref{fig:fig_samplesize20}. Had our sample size been only 2, then on the basis of these two bottles we would have found a highly positive slope coefficient (a high correlation). However, since our sample size is 20, there are many other bottles in our sample, including bottles that have relatively high volumes but relatively low temperatures measures, and vice versa: bottles with relatively low volumes and relatively high volumes, see Figure \ref{fig:fig_samplesize20}. Combined with all the other bottles, we would not find a very strong positive slope coefficient, because in the population of 80,000 bottles there is no such strong slope. The fact that we found one with the two bottles was just sheer coincidence. With large numbers of observations, you are less prone to chance observations. With large sample sizes, your results from a regression analysis become less dependent on chance, become more stable, and therefore more reliable. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:49:56 2018
+% Wed Oct 31 11:55:34 2018
 \begin{table}[ht]
 \centering
 \caption{A random sample of 20 bottles with their beer volumes and their logged temperature.} 
@@ -2743,7 +2837,7 @@ Because for every sample size, the middle region where 95\% of the observations 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:00 2018
+% Wed Oct 31 11:55:38 2018
 \begin{table}[ht]
 \centering
 \caption{Quantiles for the standard normal and several t-distributions.} 
@@ -2898,7 +2992,6 @@ Figure \ref{fig:inf_13} shows a number of possibilities for the value of $y$ if 
 So, with 4 data points, we can never freely choose 3 residuals in order to satisfy the constraint that a particular regression equation holds. We have less then 3 degrees of freedom because it is impossible to think of a fitting fourth value. It turns out, that in this case we can only choose 2 residuals freely, and the remaining residuals are then already determined. To prove this requires matrix algebra, but the gist of it is that if you have a regression equation with both an intercept and a slope, the degrees of freedom is equal to the number of data points (sample size) minus 2: $n-2$.
 
 Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residual degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residual degrees of freedom.
-
 
 
 
@@ -3984,7 +4077,7 @@ Let's look at what happens when indendent variables are strongly correlated. Tab
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:06 2018
+% Wed Oct 31 11:55:43 2018
 \begin{table}[ht]
 \centering
 \caption{Part of Cape Fur Seal Data.} 
@@ -4006,7 +4099,7 @@ age & weight & heart \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:06 2018
+% Wed Oct 31 11:55:43 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from height.} 
@@ -4041,7 +4134,7 @@ From the data we calculate the variance of age, and we find that it is 1090.855.
 Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get:
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:06 2018
+% Wed Oct 31 11:55:43 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from heart} 
@@ -4078,7 +4171,7 @@ e \sim N(0, 204)
 \end{eqnarray}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:06 2018
+% Wed Oct 31 11:55:43 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting age from heart and weight} 
@@ -4244,7 +4337,7 @@ UNIANOVA ....... WITH ........
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:06 2018
+% Wed Oct 31 11:55:44 2018
 \begin{table}[ht]
 \centering
 \caption{Regression table for predicting volume from height and girth.} 
@@ -4330,7 +4423,7 @@ The basic trick that we need is \textit{dummy coding}. Dummy coding involves mak
 Imagine we study bus companies and there are two different seatings in buses: aisle seats and window seats. Suppose we ask 5 people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows the anonymized data.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:07 2018
+% Wed Oct 31 11:55:45 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4353,7 +4446,7 @@ person & seat & price \\
 With dummy coding, we make a new variable that only has values 0 and 1, and that conveys the same information as the \textbf{seat} variable. The resulting variable is called a \textit{dummy variable}. Let's call this dummy variable \textbf{window} and give it the value 1 for all persons that travelled in a window seat. We give the value 0 for all persons that travelled in an aisle seat. We can also call the new variable \textbf{window} a \textit{boolean variable} with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Another name that is sometimes used is an \textit{indicator variable}. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:07 2018
+% Wed Oct 31 11:55:45 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4428,7 +4521,7 @@ Figure \ref{fig:dummy_4} shows the same regression line but now for the original
 In the previous section we saw that if we replace a categorical variable with a numeric dummy variable with values 0 and 1, we can use a linear model to describe the relationship between a categorical independent variable and a numeric dependent variable. We also saw that if we take the least squares regression line, this line goes straight through the averages, the group means. The line goes straight through the group means because then the sum of the squared residuals is then at its smallest value (the least squares principle).  Let's look at the bus trip data again and compute the residuals and the squared residuals, see Table \ref{tab:dummy_5}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:07 2018
+% Wed Oct 31 11:55:45 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4464,7 +4557,7 @@ person & seat & window & price & e & e\_squared \\
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:07 2018
+% Wed Oct 31 11:55:45 2018
 \begin{table}[ht]
 \centering
 \caption{Bus trips to Paris.} 
@@ -4542,7 +4635,7 @@ In the previous section we saw that the slope in a dummy regression is equal to 
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:08 2018
+% Wed Oct 31 11:55:45 2018
 \begin{table}[ht]
 \centering
 \caption{Yield by treatment.} 
@@ -4978,7 +5071,7 @@ This means that if you see a $T$-statistic of say -2.40 reported with a residual
 \item In Table \ref{tab:anova_1} you see an Analysis of Variance table. It reports the results of a test of the null-hypothesis that the average yield based on three different treatments are the same: the control condition, treatment 1 and treament 2. See if you can plug in the missing values, based on Equations \ref{eq:MSgroup},\ref{eq:MSerror} and \ref{eq:F}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:09 2018
+% Wed Oct 31 11:55:46 2018
 \begin{table}[ht]
 \centering
 \caption{Analysis of Variance table.} 
@@ -5011,7 +5104,7 @@ group &   2 & 3.77 & ? & ? & 0.0159 \\
 Table \ref{tab:anova_1} shows the missing Mean Squares for Group and Error (Residual), as well as the F-statistic which is the ratio of the two the Mean Squares. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:09 2018
+% Wed Oct 31 11:55:46 2018
 \begin{table}[ht]
 \centering
 \caption{Analysis of Variance table.} 
@@ -5712,7 +5805,7 @@ Figure \ref{fig:} shows the expected means based on main effects only. The actua
 \end{knitrout}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:10 2018
+% Wed Oct 31 11:55:48 2018
 \begin{table}[ht]
 \centering
 \caption{Observed and predicted average height and the differences.} 
@@ -5858,10 +5951,10 @@ From the output, we also see that the interaction effect has a very small $p$-va
 
 
 
-\chapter{Linear modelling: more advanced topics}\label{chap:advanced}
+\chapter{Planned and post hoc comparisons}\label{chap:advanced}
 
 
-\subsection{Planned comparisons}
+\section{Planned comparisons}
 
 Suppose you have height data from three countries: Greece, Italy, and Norway. You might wish to know whether in these populations there is a difference in average height. If that is all you want to know, you can perform the SPSS UNIANOVA analysis described above. In that case, the null-hypothesis is
 \\
@@ -5875,9 +5968,9 @@ However, suppose your most important hypothesis is really much more specific: yo
 $H_0: \mu_{Greece}=\mu_{Italy}$
 \\
 \\
-In such cases, where the null-hypothesis is more specific than simply stating "there are differences among the groups", then you should perform \textit{planned comparisons}. Here you would like to make a comparison between the average heights of Greece and Italy You could also say you'd like to \textit{contrast} the average height of Greece with that of Italy. 
+In such cases, where the alternative hypothesis is more specific than simply stating "there are differences among the groups", then you should perform \textit{planned comparisons}. Here you would like to make a comparison between the average heights of Greece and Italy. You could also say you'd like to \textit{contrast} the average height of Greece with that of Italy. 
 
-We then have to define this contrast in such a way that SPSS knows what we want. So we could define our contrast in a similar vein as the null-hypothesis. Let's call the contrast $\gamma_1$.
+We then have to define this contrast in such a way that SPSS knows what we want. We could define our contrast in a similar vein as the null-hypothesis. Let's call the contrast $\gamma_1$.
 \\
 \\
 $\gamma_1: \mu_{Greece}=\mu_{Italy}$
@@ -5896,21 +5989,23 @@ This is the preferred way of specifying contrasts: having a zero on the right-ha
 $\gamma_1: (1)\times \mu_{Greece} + (-1) \times \mu_{Italy} + (0) \times \mu_{Norway} =0$
 \\
 \\
-So we could code this specific contrast with the numbers preceding the group means: A 1 for Italy, a -1 for Greece and a 0 for Norway. For SPSS therefore, to specify a contrast, we only need this coding. This can be done in the following way. Suppose you have the following data on height, summarized in a boxplot:
+So we could code this specific contrast with the numbers preceding the group means: A 1 for Italy, a -1 for Greece and a 0 for Norway. For SPSS therefore, to specify a contrast, we only need this coding. This can be done in the following way. Suppose you have data on height, summarized in the boxplot in Figure \ref{fig:fig1416}. Note that in this SPSS data set, the country variable is coded 1 for Greece, 2 for Italy and 3 for Norway. Then we could use the following syntax to ask for the specific comparison (or contrast) of the first and the second group, that is, Greece and Italy, respectively. So group 1 (=Greece) gets a 1, group 2 (=Italy) gets a -1, and group 3 (=Norway) gets a 0, so our coded contrast looks like $(1, -1, 0)$.
+
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
 
 {\centering \includegraphics[width=\maxwidth]{figure/fig1416-1} 
 
 }
 
+\caption[Data on height in three countries]{Data on height in three countries.}\label{fig:fig1416}
+\end{figure}
 
 
 \end{knitrout}
 
-Note that in this SPSS data set, the country variable is coded 1 for Greece, 2 for Italy and 3 for Norway. Then we could use the following syntax to ask for the specific comparison (or contrast) of the first and the second group, that is, Greece and Italy, respectively. So group 1 (=Greece) gets a 1, group 2 (=Italy) gets a -1, and group 3 (=Norway) gets a 0, so our coded contrast looks like $(1, -1, 0)$.
 
 \begin{verbatim}
 UNIANOVA height BY country
@@ -5918,14 +6013,22 @@ UNIANOVA height BY country
 /CONTRAST(country)=SPECIAL(1  -1  0).
 \end{verbatim}
 
-Below we see the output:
+
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.9,trim={0cm 0cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf}
+       \includegraphics[scale=0.9,trim={0cm 11cm 0cm 0cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/contrast1.pdf}
     \end{center}
+    \caption{Output of the contrast analysis on height data from three countries.}
+    \label{fig:contrast1}
 \end{figure}
 
-From the output, we see first see that the general null-hypothesis that all three countries have the same average height is rejected, $F(2, 147)= 6.14, MSE=14.77, p = 0.003$. This test has 2 degrees of freedom, one for each of the two dummy variables that are needed to test this model. The error degrees of freedom equals 147: that is the number of data points (150) minus the number of parameters in the model: one for the intercept and two for the dummy variables, so $150-3=147$.
+
+
+In Figure \ref{fig:contrast1} we see the output. We see first that the general null-hypothesis that all three countries have the same average height is rejected, $F(2, 147)= 6.14, MSE=14.77, p = 0.003$. This test has 2 degrees of freedom, one for each of the two dummy variables that are needed to test this model. The error degrees of freedom equals 147: that is the number of data points (150) minus the number of parameters in the model: one for the intercept and two for the dummy variables, so $150-3=147$.
+
+
+
+
 
 Next, we see the results for our \textit{specific} null-hypothesis (the contrast): that the means for Greece and Italy are equal, irrespective of Norway. We see a Contrast Estimate of 1.008 and a significance level of $p=0.19$. So the contrast is positive: what does this mean? Well, let's put the 1.008 into our contrast above:
 \\
@@ -5940,11 +6043,13 @@ $\gamma_1:  \mu_{Greece} - \mu_{Italy}  =  1.008$
 \\
 \\
 So the 1.008 indicates that the average height in Italy is 1.008 cm shorter than in Greece, at least in our sample. The relatively high $p$-value indicates that the population means are however not different: we do not reject the null-hypothesis that the average heights are the same.
+
 We also see an $F$-test for this contrast, $F(1, 147)=1.721, MSE= 14.76, p=0.19$.
 Since the first degrees of freedom number is a 1, we know that $F$ is the same as a squared $t$, $t^2$, So, an equivalent presentation of the contrast effect would be $t(147)=2.96, p=0.19$
 
 Now perhaps you realize, why didn't we do a $t$-test in the first place? We might have taken the Greece and Italy data separately, used a dummy variable and then run an ordinary linear model. Well, let's see what would happen then.
-First we let SPSS select only the Greece and Italy data with the SELECT IF syntax, and next run an UNIANOVA, using the BY keyword for country to indicate that we treat it as a qualitative variable. We also let the selection be preceded by a TEMPORARY commmand, to indicate that the selection only applies to the analysis that follows.
+
+First we let SPSS select only the Greece and Italy data with the SELECT IF syntax, and next run an UNIANOVA, using the BY keyword for country to indicate that we treat it as a categorical variable. We also let the selection be preceded by a TEMPORARY commmand, to indicate that the selection only applies to the analysis that follows.
 
 \begin{verbatim}
 TEMPORARY.
@@ -5955,14 +6060,17 @@ UNIANOVA height BY country
 \end{verbatim}
 
 
-Below we see the output:
+In the output in Figure \ref{fig:simplettest} we see that now only the data from Greece and Italy are compared. From the Parameter Estimates table, we see that country 2 is the reference category, which is Italy. We also see that the average height in Greece is 1.008 cm taller than Italy. This effect is not significant, $t(98)=1.371,p=0.17$. We use 98 degrees of freedom because we have 100 people and loose 2 degrees of freedom, one for the intercept and once for the regression coefficient for country=1. Note that this number is also indicated in the Tests of Between-Subjects Effects table, as the df of the Error.
+
 \begin{figure}[h]
     \begin{center}
        \includegraphics[scale=0.4]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/planned" "comparisons/simplettest.png}
     \end{center}
+    \caption{Output of an analysis after selecting only the data from Greece and Italy.}
+        \label{fig:simplettest}
 \end{figure}
 
-We see that now only the data from Greece and Italy are compared. From the Parameter Estimates table, we see that country 2 is the reference category, which is Italy. We also see that the average height in Greece is 1.008 cm taller than Italy. This effect is not significant, $t(98)=1.371,p=0.17$. We use 98 degrees of freedom because we have 100 people and loose 2 degrees of freedom, one for the intercept and once for the regression coefficient for country=1. Note that this number is also indicated in the Tests of Between-Subjects Effects table, as the df of the Error. 
+ 
 
 So what is different from the contrast effect? First of all, we see that the $p$-value is different: the $p$-value for the contrast effect analysis is somewhat larger than the one for the 'ordinary' $t$-test. Second, we see that the $t$-statistic is different: In the contrast analysis the $t$-value was 2.96 and in the ordinary analysis it was 1.371. So part of the reason that the $p$-value is different for the contrast is that the $t$-value is higher. Third, we see that the degrees of freedom has changed from 147 to 98. Well, we know that the significance level of a $t$-value depends on its size, the higher the $t$-value the lower the $p$-value, and we know that significance also depends on the degrees of freedom: the more degrees of freedom, the lower the $p$-value. 
 
@@ -5976,7 +6084,7 @@ Thus in summary: if we have a very specific hypothesis about the difference in m
 Note that here we saw a higher $p$-value for the contrast analysis, but still, in general it is wiser to use as much data as possible, so we prefer a contrast analysis over a simple analysis excluding other groups.
 \\
 \\
-The above example of comparing only the means of two groups, at the same time making use of the data in other groups, is called a \textit{simple contrast}. Now let's look at a \textit{complex contrast}. Suppose your hypothesis is that average height is different in Northern-European countries than in Southern-European countries, then you would like to know whether Italy AND Greece taken together differ regarding the average height from Norway. So we'd like to compare the average height in Norway to the average height in Greece and Italy together. We could write that null-hypothesis as follows:
+The above example of comparing only the means of two groups, at the same time making use of the data in other groups, is called a \textit{simple contrast}. Now let's look at a \textit{complex contrast}. Suppose your hypothesis is that average height is different in Northern-European countries than in Southern-European countries, then you would like to know whether Italy \textit{and} Greece taken together differ regarding the average height from Norway. So we'd like to compare the average height in Norway to the average height in Greece and Italy together. We could write that null-hypothesis as follows:
 
 \begin{eqnarray}
 H_0 : \frac{\mu_{Greece}+ \mu_{Italy}}{2} = \mu_{Norway}
@@ -6017,11 +6125,11 @@ UNIANOVA height WITH NrthrnEr
 
 From the contrast analysis we obtain $F(1,147)=10.56, MSE=14.77, p=0.001$, which is equivalent to $t(147)=3.25, p=0.001$. From the dummy variable analysis, we obtain $t(148)= 3.24, p=0.001$. So in this case, the results are very close: the degrees of freedom is larger for the dummy variable analysis, but the $t$-value is lower. All in all, we gain nothing much, and that is because in the dummy analysis we also use all of the data: we put the Greeks and Italians in one group (N=100), and the Norwegians in another group (N=50). The degrees of freedom therefore differs cause we only need to estimate 2 means in the dummy analysis, instead of 3 in the contrast analysis.
 
-In general: if you run a model where you compare various groups, AND you have very specific hypotheses that you'd like to test, it is generally advised to run a contrast analysis, including a small number of them, and then report only the tests and $p$-values of those contrast. Do not then also report the $p$-values of the parameters of your model. Actually, your contrasts are a respecification of your model: either report the contrasts or the parameters, but not both, since they contain the same information. If you report too many $p$-values, the probability that you make a Type I error (concluding that you have a significant difference while there is really no difference) becomes too large. That is also the reason why you should report not more contrasts than the number of your parameters for your variable. For example, if you compare 5 groups, you will have 4 parameters for these groups. In that case specify no more than 4 contrasts. SPSS has a number of prespecified sets of contrasts, like Helmert, Deviation, Difference, etcetera. Check out the SPSS manual for more details. If you want something more specific, use the SPECIAL option as indicated above. 
+In general: if you run a model where you compare various groups, AND you have very specific hypotheses that you'd like to test, it is generally advised to run a contrast analysis, including a small number of them, and then report only the tests and $p$-values of those contrasts. Do not then also report the $p$-values of the parameters of your model. Actually, your contrasts are a respecification of your model: either report the contrasts or the parameters, but not both, since they contain the same information. If you report too many $p$-values, the probability that you make a Type I error (concluding that you have a significant difference while there is really no difference) becomes too large. That is also the reason why you should report not more contrasts than the number of your parameters for your variable. For example, if you compare 5 groups, you will have 4 parameters for these groups. In that case specify no more than 4 contrasts. SPSS has a number of prespecified sets of contrasts, like Helmert, Deviation, Difference, etcetera. Check out the SPSS manual for more details. If you want something more specific, use the SPECIAL option as indicated above. 
 
-Also very important: only go for contrasts when the overall ANOVA is significant. If the group means are not significantly different from eachother in a general sense, it is generally not advised to test specific contrasts.
+% Also very important: only go for contrasts when the overall ANOVA is significant. If the group means are not significantly different from eachother in a general sense, it is generally not advised to test specific contrasts.
 
-\subsection{Testing more than one contrast}
+\section{Testing more than one contrast}
 
 In some cases you have a number of research hypotheses about group differences. For instance, you might have the a priori hypothesis that people in Northern countries are taller than in Southern countries, and another a priori hypothesis that people in Western countries are taller than in Eastern countries. So, a priori you have the hypothesis that the mean height in Norway is different from the mean heights in Greece and Italy combined. Second, you expect that the mean height in Italy is higher than in Greece.
 
@@ -6075,10 +6183,11 @@ This set of 4 contrasts is also completely orthogonal: all pairs of contrasts ar
 
 
 
-\subsection{Post-hoc comparisons}
+\section{Post-hoc comparisons}
 
 In some cases, you compare 3 or more groups, and you find some interesting differences. For instance, in the above example, when you look at the boxplot of the  differences between Greece, Italy and Norway, you might wonder whether there is a real difference in Italy and Greece. Or perhaps there is a difference between Norway and Italy, or even between Norway and Greece. There might be all kinds of interesting things to find out from these data.
-In this case note, we now formulate these hypotheses \textit{after} looking at the difference in our data. In this case, suppose that there was no specific hypothesis before collecting our data, and we merely wanted to find out whether there are differences between mean heights across these countries. So, our null-hypothesis before looking at the data was that there were no differences in mean height across Greek, Italian and Norwegian populations. To test this we perform a regular linear model analysis, with height as the dependent variable and a categorical variable country as independent variable. We want SPSS to make dummy variables automatically, so we use the following syntax using BY:
+
+In this case note, we now formulate these hypotheses \textit{after} looking at the differences in our data. In this case, suppose that there was no specific hypothesis before collecting our data, and we merely wanted to find out whether there are differences between mean heights across these countries. So, our null-hypothesis before looking at the data was that there were no differences in mean height across Greek, Italian and Norwegian populations. To test this, we perform a regular linear model analysis, with height as the dependent variable and a categorical variable country as independent variable. We want SPSS to make dummy variables automatically, so we use the following syntax using BY:
 
 \begin{verbatim}
 UNIANOVA height BY country
@@ -6090,12 +6199,14 @@ UNIANOVA height BY country
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.8,trim={0cm 22cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Ftest}
+       \includegraphics[scale=1,trim={0cm 22cm 0cm 0cm}, clip,width=0.9\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Ftest}
     \end{center}
+    \caption{Output of an regular linear model.}
+    \label{fig:Ftest}
 \end{figure}
 
 
-From the output we use the $F$-test to test the overall hypothesis about equality of means, and report a significant difference between the three means, $F(2, 147)=6.14 , MSE=14.77, p<0.05$. Now \textit{given} that we have this rejection of the null-hypothesis, we might be very interested where this significance comes from: is it that Norway is very different from the other two countries? Perhaps there are no differences between Greece and Italy? Perhaps there is only a real difference between Norway
+From the output in Figure \ref{fig:Ftest} we use the $F$-test to test the overall hypothesis about equality of means, and report a significant difference between the three means, $F(2, 147)=6.14 , MSE=14.77, p<0.05$. Now \textit{given} that we have this rejection of the null-hypothesis, we might be very interested where this significance comes from: is it that Norway is very different from the other two countries? Perhaps there are no differences between Greece and Italy? Perhaps there is only a real difference between Norway
 and Italy, but no real difference between Greece and Italy. And so on, and so forth. Note that here you could make 3 pair-wise simple comparisons: Greece vs Italy, Greece vs Norway and Italy vs Norway. You or anyone else intested in your research would like to know if these pair-wise differences are significant. In that case you can report so-called \textit{post hoc} pairwise comparisons. 
 
 Note that we do not perform planned comparisons using contrasts here. Planned comparisons are very powerful tools that are only allowed for hypotheses that are specificied \textit{a priori}, that is, \textit{before} doing any analysis, and preferably before any data collection. \textit{Post hoc} comparisons are done \textit{after} the fact: after testing the research hypothesis and after having looked at the data (seeing means or boxplots!), you can test extra hypotheses that are of secondary interest. First we will show you how to do it, and second we will explain why we do it like that. 
@@ -6111,21 +6222,23 @@ So we state that we wish to see posthoc comparisons for the variable \textit{cou
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.8,trim={0cm 20cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest}
+       \includegraphics[scale=0.8,trim={0cm 21cm 0cm 2cm}, clip,width=0.7\linewidth]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "model/posthoc" "comparisons/Posthoctest}
     \end{center}
+    \caption{Output of post hoc comparisons.}
+        \label{fig:posthoctest}
 \end{figure}
 
-From the figure we see that there are 6 comparisons, but by closer inspection we see that all three possible comparisons are reported twice. We see a significant difference between Italy and Norway, $p<0.002$, and that the other two comparisons are not significant. So average height in Greece is not different from the average height in Italy, $p>0.575$, nor from that in Norway, $p>0.097$.
+From Figure \ref{fig:posthoctest} we see that there are 6 comparisons, but by closer inspection we see that all three possible comparisons are reported twice. We see a significant difference between Italy and Norway, $p<0.002$, and that the other two comparisons are not significant. So average height in Greece is not different from the average height in Italy, $p>0.575$, nor from that in Norway, $p>0.097$.
 Now note the difference from the Planned comparisons analysis. There we found a $p$-value of 0.19 for the hypothesis that Greece has the same average height as Italy. This contrast had a somewhat higher $p$-value than a simple dummy analysis for Greece and Italy, ignoring the Norwegian data, $p=0.17$. And now we see a much higher $p$-value of 0.58. The reason is that a correction has been applied to the $p$-values. This correction is needed because otherwise we too easily conclude that there are true differences between Greece and Italy.
 
-Remember that the probability of a Type I error is very often chosen to be $5\%$. If we have one null-hypothesis that we want to test, the probability that we incorrectly conclude that there \textit{is} a difference in means (but there is really \textit{no} difference at population level!) is $5\%$. But suppose we have 10 hypotheses that we wish to test. Then what is the probability of finding at least 1 signficant result while there is no difference? Well, it could be that our first hypothesis is falsely rejected, or our second, or our third, or perhaps even both our second and fourth hypothesis, and so on and so forth. With 10 hypotheses to test, there will be a high probablity that \textit{at least} 1 will be falsely rejected. If \textit{each} hypothesis has a probability of a Type I error of 5\%, the probability that none of the hypotheses is falsely rejected equals $0.95^10=0.60$ (if we assume that all probablities are independent). So the probability that at least one is falsely rejected is the complement of that, so 0.40. If we carry out such research with 10 hypotheses, each using a significance level of $5\%$, we actually have a probability of 40\% of making at least one Type I error! That is awful, we don't want that. That's why in research, with a lot of hypotheses to be tested, we generally adjust the $p$-value in order to be more careful rejecting null-hypotheses. Theoretically, the $p$-value of our posthoc comparison of Greece and Italy should be equal to 0.19, corresponding to the simple dummy variable analysis ignoring Norway, but we report 0.575, because we also test two other hypotheses here. Actually, the $p$-value of the simple analysis of 0.19 is multiplied by the total number of tests, which is 3.
+Remember that the probability of a Type I error is very often chosen to be $5\%$. If we have one null-hypothesis that we want to test, the probability that we incorrectly conclude that there \textit{is} a difference in means (but there is really \textit{no} difference at population level!) is $5\%$. But suppose we have 10 hypotheses that we wish to test. Then what is the probability of finding at least 1 signficant result while there is no difference? Well, it could be that our first hypothesis is falsely rejected, or our second, or our third, or perhaps even both our second and fourth hypothesis, and so on and so forth. With 10 hypotheses to test, there will be a high probablity that \textit{at least} 1 will be falsely rejected. If \textit{each} hypothesis has a probability of a Type I error of 5\%, the probability that none of the hypotheses is falsely rejected equals $0.95^{10}=0.60$ (if we assume that all probablities are independent). So the probability that at least one is falsely rejected is the complement of that, so 0.40. If we carry out such research with 10 hypotheses, each using a significance level of $5\%$, we actually have a probability of 40\% of making at least one Type I error! That is awful, we don't want that. That's why in research, with a lot of hypotheses to be tested, we generally adjust the $p$-value in order to be more careful rejecting null-hypotheses. Theoretically, the $p$-value of our posthoc comparison of Greece and Italy should be equal to 0.19, corresponding to the simple dummy variable analysis ignoring Norway, but we report 0.575, because we also test two other hypotheses here. Actually, the $p$-value of the simple analysis of 0.19 is multiplied by the total number of tests, which is 3.
 
 
-\subsection{Posthoc tests for complex contrasts}
+% \subsection{Posthoc tests for complex contrasts}
 
 
 
-\subsection{Fishing expeditions}
+\section{Fishing expeditions}
 The practice of testing a lot of hypotheses is often described as a fishing expedition. Just set out with large nets, throw them out, and catch whatever you can. In some extreme cases, in genetics for example, researchers test thousands or even millions of hypotheses on the basis of only one data set. Imagine that you collect height data on 70 countries and you want to know what countries differ from what other countries. The total number of pairs of countries equals 70 over 2, which is equal to 2415. So with 2415 $p$-values, what is the a priori probablity of a significant result? If in reality there ARE no differences in means, and a fixed significance level of 0.05, 5\% of the $p$-values will be significant! So with such a data set, there will be at least $0.05 \times 2415 = 121$ significant $p$-values. At least, because there might be some true ones too. So in that scenario, it is impossible to know which $p$-values are too be trusted: many of them will involve false rejections.
 
 For this reason, always be very specific about the null-hypothesis that you want to test with your data. If you have a very specific hypothesis about the differences in means, following a specific pattern, then always use a planned contrasts analysis. If after your analysis, there are some secondary hypotheses that you'd like to check (but for which you had no specific expectation) then report posthoc tests. The Bonferroni post hoc test is a good choice, as it is very conservative: it is very unlikely that you will falsely reject a hypothesis. Alternatively, there are some other post hoc tests, for further reading see the SPSS manual.
@@ -6146,7 +6259,7 @@ Otherwise, do posthoc analyses, or better still, perform as few tests as possibl
 
 
 
-\subsubsection{Exercises}
+\section{Exercises}
 
 You compare 4 groups. You'd like to know whether the averages observed in groups 1 and 2 differ from the averages observed in groups 3 and 4. 
 
@@ -6219,9 +6332,9 @@ answer: the supervisor has a clearcut hypothesis about height differences in the
 
 
  % advanced topics linear models
-% %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
-%
-%
+% % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
+% %
+% %
 
 \chapter{Assumptions of linear models}\label{chap:assumptions}
 
@@ -6755,7 +6868,7 @@ Suppose we have the data set given in Table \ref{tab:nonpar_1}. If we want to ma
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:16 2018
+% Wed Oct 31 11:55:53 2018
 \begin{table}[ht]
 \centering
 \caption{Aggression in children and age of the mother.} 
@@ -6817,7 +6930,7 @@ As you can see from the least squares regression lines in Figures \ref{fig:fig10
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:16 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Aggression in children on a 7-point Likert scale and age of the mother.} 
@@ -6886,7 +6999,7 @@ First, we will discuss a nonparametric alternative for two numeric variables. We
 Suppose we have 10 students and we ask their teachers to rate them on their performance. One teachers rates them on geography and the other teacher rates them on history. We only ask them to give rankings: indicate the brightest student with a 1 and the dullest student with a 10. Then we might have the data set in Table \ref{tab:nonpar_3}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Student rankings on geography and history.} 
@@ -6915,7 +7028,7 @@ Now we acknowledge the ordinal nature of the data by only having rankings: a per
 By eyeballing the data, we see that the brightest student in geography is also the brightest student in history (rank 1). We also see that the dullest student in history is the dullest student in geography (rank 10). Furthermore, we see relatively small differences between the rankings on the two subjects: high rankings on geography seem to go together with high rankings on history. Let's look at these differences between rankings more closely by computing them, see Table \ref{tab:nonpar_4}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Student rankings on geography and history.} 
@@ -6942,7 +7055,7 @@ student & rank.geography & rank.history & difference \\
 So theoretically the difference could be as large as 9, but here we see a biggest difference of -2. The average difference is the sum of these differences, divided by 10, so we get 0. This is because we plus and minus values. If we would take the square of the differences, we would get positive values, see Table \ref{tab:nonpar_5}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Student rankings on geography and history.} 
@@ -6985,7 +7098,7 @@ r_s = 1 - \frac{6 \times 10  }{10^3-10} = 1 - 60 /990 = 0.94
 This is called the Spearman rank-order correlation coefficient $r_s$. It can be used for any two variables of which at least one is ordinal. The trick is to convert the scale values into ranks, and then apply the formula above. For instance, if we have the variable Grade with the following values (C, B, D, A, F), we convert them into rankings by saying the A is the highest value (1), B is the second highest value (2), C is the third highest value (3), D is the fourth highest value (4) and F is the fifth highest value (5). So tranformed into rankings we get (3, 2, 4, 1, 5). Similarly, we could turn numeric variables into rankings. Table \ref{tab:nonpar_6} shows how the variables grade, shoe size and height are transformed into their respective ranked versions. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Ordinal and numeric variables and their ranked transformations.} 
@@ -7025,7 +7138,7 @@ If you want to know if there is a relationship between two variables, of which a
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
 \caption{Student rankings on geography and history, now ordered according to the ranking for geography.} 
@@ -7118,7 +7231,7 @@ The output gives you a significance level ($p$-value) of the test that size is d
 
 
 \section{Fixed effects and random effects}
-In the simplest form of linear modelling, we have one dependent continuous variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $x_1$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
+In the simplest form of linear modelling, we have one dependent numeric variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $x_1$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
 
 
 \begin{eqnarray}
@@ -7187,7 +7300,7 @@ e \sim N(0, \sigma_e^2)
 \end{eqnarray}
 
 
-This representation emphasizes that for every school, the intercept is a little bit different: for school A the intercept might be $b_0 + 2$, and for school R the intercept might be $b_0 - 3$.
+This representation emphasizes that for every school, the intercept is a little bit different: for school A the intercept might be $b_0 + 2$, and for school B the intercept might be $b_0 - 3$.
 
 So, this equation states that every observed test score is 1) partly influenced by an intercept that is random, with a certain average $b_0$ and variance $\sigma_s^2$, that is dependent on which school students are in, 2) partly influenced by the number of hours of work, an effect that is the same no matter what school a student is in (fixed), and 3) partly influenced by unknown factors, indicated by a random residual $e$ coming from a normal distribution with variance $\sigma^2_e$.
 
@@ -7199,7 +7312,7 @@ schooleffect_i \sim N(0, \sigma_s^2)\\
 e_{ij} \sim N(0, \sigma_e^2)
 \end{eqnarray}
 
-So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_s^2$, we also have an assumption that the school averages are normally distributed, in this case with mean $b_0$ and variance $\sigma_s^2$.
+So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_e^2$, we also have an assumption that the school averages are normally distributed, in this case with mean $b_0$ and variance $\sigma_s^2$.
 \\
 \\
 Let's go back to the example of reaction times. Suppose in an experiment we measure reaction time in a large number of trials. We want to know whether the size of the stimulus (large/small) has an effect on reaction time. Let's also suppose that we carry out this experiment with 20 participants, where every participant is measured during 100 trials: 50 large stimuli and 50 small stimuli in random order. Now probably, some participants show generally very fast responses, and some participants show generally very slow responses. In other words, the average reaction time for the 100 trials may vary from participant to participant. This means that we can use participant as an important predictor of reaction times. To take this into account we can use the following equation:
@@ -7214,7 +7327,7 @@ e_{ij} \sim N(0, \sigma_e^2),
 where $y_{ij}$, is the reaction time $j$ from participant $i$, $(b_0 + speed_i)$ is a random effect representing the average speed for each participant $i$ (where $b_0$ is the overall average across all participants), $b_1$ is the fixed effect of the size of the stimulus, and unknown residual $e_{ij}$ is a specific residual for the reaction time for trial $j$ of participant $i$.
 \\
 \\
-The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools. When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you only use a simple linear model. With clustered data, it is therefore necessary to work with an extension of the linear model, the so-called linear mixed model. The above models for test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. 
+The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools (see Chapter \ref{chap:assumptions}). When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you only use a simple linear model. With clustered data, it is therefore necessary to work with an extension of the linear model, the so-called linear mixed model. The above models for test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. 
 \\
 \\
 If you have clustered data, you should take this clustering into account, either by using the grouping variable as a qualitative predictor (using a number of dummy variables) or by using a linear mixed model. As a rule of thumb: if you have fewer than 10 groups, consider dummy variables; if you have 10 or more groups, consider a linear mixed model. Use a linear mixed model if the assumption of normally distributed group differences is tenable. Use dummy variables if you are actually interested in the size of group differences.
@@ -7227,9 +7340,11 @@ Below, we will start with a very simple example of linear mixed model, one that 
 \section{Pre-post intervention designs}
 
 
-Imagine a study where we hope to show that aspirin helps reduce headache. For 100 patients we ask to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients were randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course headaches differ from person to person, so we might have to take into account that some patients have a higher average level of headache than other patients. Now, the data could be represented in different ways, but suppose we have the following data matrix (showing only the first 5 patients):
- \\
- \\
+Imagine a study where we hope to show that aspirin helps reduce headache. We ask 100 patients to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients are randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course headaches differ from person to person, so we might have to take into account that some patients have a higher average level of headache than other patients. Now, the data could be represented in different ways, but suppose we have the data matrix in Table \ref{tab:headache_wide }(showing only the first 5 patients):
+ 
+ 
+ \begin{table}
+ \caption{Headache measurements in NY Times readers suffering from headaches.}
  \begin{tabular}{lrr}
  patient & pre & post \\ \hline
  001 & 55 & 45 \\
@@ -7239,19 +7354,20 @@ Imagine a study where we hope to show that aspirin helps reduce headache. For 10
  005 & 63 & 50 \\
  \dots & \dots & \dots \\
  \end{tabular}
-\\
-\\
-What we observe here is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
+ \label{tab:headache_wide}
+\end{table}
+
+What we observe in that table is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
 \\
 \\
 
 There is an alternative way of representing the same data. Let's look at the same data in a new format in Table \ref{tab:analysisprepost1}. In Chapter \ref{chap:intro} we saw this representation is called long format.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:17 2018
+% Wed Oct 31 11:55:54 2018
 \begin{table}[ht]
 \centering
-\caption{Cortisol measures in long format.} 
+\caption{Headache severity measures in long format.} 
 \label{tab:analysisprepost1}
 \begin{tabular}{rrr}
   \hline
@@ -7289,7 +7405,7 @@ patient & measure & headache \\
 %  \end{tabular}
 % \\
 % \\
-Here we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). Here we might consider applying a simple linear regression model, using severity as the dependent variable and \textbf{measure} (1st or 2nd) as a qualitative predictor (using a dummy variable). However, since we know that there is a correlation between the pre and post severity measures, we know that measures systematically vary across patients: some score high on average and some score low on average. Therefore we have to run a linear \textit{mixed} model, including not only the fixed effect of \textbf{measure} but also a random effect for each patient. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \textbf{measure}). For the patient effect, because there are so many patients (100) and we're really not interested in all of these individual differences, we use a random effect. This means that we only assume there is a normal distribution for all of the patient differences. So we get the following equation:
+Here we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). Here we might consider applying a simple linear regression model, using heachache as the dependent variable and \textbf{measure} (1st or 2nd) as a categorical predictor. However, since we know that there is a correlation between the pre and post severity measures, we know that measures systematically vary across patients: some score high on average and some score low on average. The assumption of independence is therefore not tenable. Thus we have to run a linear \textit{mixed} model, including not only the fixed effect of \textbf{measure} but also a random effect for each patient. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \textbf{measure}). For the patient effect, because there are so many patients (100) and we're really not interested in all of these individual differences, we use a random effect. This means that we only assume there is a normal distribution for all of the patient differences. So we get the following equation:
 
 
 \begin{eqnarray}
@@ -7298,10 +7414,10 @@ patient_i \sim N(0, \sigma_p^2)\\
 e_{ij} \sim N(0, \sigma_e^2)
 \end{eqnarray}
 
-$y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + patient_i)$ is the average headache for patient $i$, \textit{measure} is a dummy variable for which measure (first or second), and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
+$y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + patient_i)$ is the average headache for patient $i$, \textit{measure} is a dummy variable, and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
 \\
 \\
-This analysis can be done with the following SPSS syntax, treating time as a categorical variable (using BY) for which SPSS will create a dummy variable automatically. 
+This analysis can be done with the following SPSS syntax, treating measure as a categorical variable (using BY) for which SPSS will create a dummy variable automatically. 
 
 
 \begin{verbatim}
@@ -7320,16 +7436,16 @@ MIXED headache  BY measure
     \caption{Output of a MIXED analysis of the headache data.}
 \end{figure}
 
-The most interesting output is given in Figure \ref{fig:prepost}. We're mostly interested in the fixed effect of the intervention: does aspirin reduce headache? After an F-test, we see the linear model coefficients, with an intercept of around 49 and a positive effect of the intervention dummy variable, around $+10$. We see that the dummy variable was coded 0 for the second measure and 1 for first meausure. So, for our dependent variable headache, we see that the expected headache severity for the observations with a 0 for the dummy variable (that is, measure 2, which is \textit{after} taking aspirin), is equal to $49 + (10) \times 0 = 49$. Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable (that is, \textit{before} taking aspirin), is equal to $49 + (10) \times 1 = 49 + 10 = 59$. So, average pain severity is 10 points higher before the intervention than after the intervention. Whether this difference is significant is indicated by a $t$-test. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t(99) = 25.46, p < 0.01$. The degrees of freedom are taken from the Test of Fixed Effects table with the $F$-statistics. Alternatively we can write 
+The most interesting output is given in Figure \ref{fig:prepost}. We're mostly interested in the fixed effect of the intervention: does aspirin reduce headache? After an $F$-test, we see the linear model coefficients, with an intercept of around 49 and a positive effect of the intervention dummy variable, around $+10$. We see that the dummy variable was coded 1 for the first measure (before taking aspirin). So, for our dependent variable headache, we see that the expected headache severity for the observations with a 0 for the dummy variable (that is, measure 2, which is \textit{after} taking aspirin), is equal to $49 + (10) \times 0 = 49$. Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable (that is, \textit{before} taking aspirin), is equal to $49 + (10) \times 1 = 49 + 10 = 59$. So, expected pain severity is 10 points higher before the intervention than after the intervention. Whether this difference is significant is indicated by a $t$-test. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t(99) = 25.46, p < 0.01$. The degrees of freedom are taken from the Test of Fixed Effects table with the $F$-statistics. Alternatively we can write 
 
 \begin{quote}
-{The average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $F(1,99) = 648.28, p < 0.01$}\end{quote}
+{The average headache severity after taking aspirin is significantly different from the average headache severity before taking aspirin, $F(1,99) = 648.28, p < 0.01$}\end{quote}
 
 
 We might therefore carefully conclude that aspirin reduces headache in the population of NY Times readers with headache problems, where the reduction is around 10 points on a 1...100 scale (95\% CI: 9.55 -- 11.17). 
 \\
 \\
-Now, this looks like reporting the output of a regular linear model, but of course it isn't. We also have some extra output, about the random effect of patient. We assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the Covariance Parameters part of the SPSS output. We there see two random effects: the one for the residuals and one for the patients. The intercept seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
+Now, this looks like reporting the output of a regular linear model, but of course it isn't. We also have some extra output, which is about the random effect of patient. We assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the Covariance Parameters part of the SPSS output. We there see two random effects: the one for the residuals and the one for the patients. The intercept seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
 
 \begin{eqnarray}
 y_{ij} = b_0 + patient_i + b_1 measure + e_{ij} \\
@@ -7338,7 +7454,7 @@ patient_i \sim N(0, 27)\\
 e_{ij} \sim N(0, 8)
 \end{eqnarray}
 
-Since measure is coded 0 for the headache level after the intervention, we conclude that the average pain level after taking aspirin is 49. However, not everybody's pain level after taking aspirin is 49: people show variance. The pain level after aspirin varies with a variance of 27, which is equavalent to a standard deviation of arond 5.2. Figure \ref{fig:resultsprepost1} shows how much this variance actually is. It depicts a normal distribution with mean 49 and a standard deviation of 5.2.
+Since measure is coded 0 for the headache level after the intervention, we conclude that the average pain level after taking aspirin is 49. However, not everybody's pain level after taking aspirin is 49: people show variance (variation). The pain level after aspirin varies with a variance of 27, which is equivalent to a standard deviation of arond 5.2. Figure \ref{fig:resultsprepost1} shows how much this variance actually is. It depicts a normal distribution with mean of 49 and a standard deviation of 5.2.
 
 
 \begin{knitrout}
@@ -7523,7 +7639,7 @@ Would you use an ordinary linear model or a linear mixed model to analyze these 
 
 
 \item 
-A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is meassured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
+A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is measured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
 
 \begin{verbatim}
 MIXED creativity  WITH green sunny
@@ -7598,7 +7714,7 @@ MIXED mood  WITH sunny
 \item  
 \begin{quotation}
 
-A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. The variance not explained by weather and greenness was largely explained by individual differences in creativity among employees, with an intraclass correlation of $\frac{23.7}{23.7+9.2}= 0.72$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
+A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
 
 \end{quotation}
 
@@ -7615,7 +7731,7 @@ A linear mixed model was run to test the effect of green surroundings on creativ
 In many intervention studies, one has more than two measurement moments. Let's go back to the example of the effect of aspirin on headache in Chapter \ref{chap:mixed}. Suppose you'd like to know whether there is not only a short term effect of aspirin, but also a long-term effect. Imagine that the study on headache among NY Times readers was extended by asking patients not only to rate their headache before aspirin and 3 hours after intake, but also 24 hours after intake. In this case our data could look like as presented in Table \ref{tab:analysispremidpost1}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:19 2018
+% Wed Oct 31 11:55:56 2018
 \begin{table}[ht]
 \centering
 \caption{Headache measures in NY Times readers.} 
@@ -7642,7 +7758,7 @@ patient & pre & post1 & post2 \\
 So for each patient we have three measures: pre, post1 and post2. To see if there is some significant clustering, it is no longer possible to study this by computing a single correlation. We could however compute 3 different correlations: pre-post1, pre-post2, and post1-post2, but this is rather tedious, and moreover does not give us a single measure of the extent of clustering of the data. But there is an alternative: one could compute not a Pearson correlation, but an \textit{intraclass correlation} (ICC). To do this, we need to bring the data again into \textit{long format}, as opposed to \textit{wide format}, see Chapter \ref{chap:intro}. This is done in Table \ref{tab:analysispremidpost2}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:19 2018
+% Wed Oct 31 11:55:56 2018
 \begin{table}[ht]
 \centering
 \caption{Headache measures in NY Times readers in long format.} 
@@ -7719,9 +7835,9 @@ There was quite some variation in individual headache levels: the variance is eq
 
 
 
-So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
+So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3 hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
 
-If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the relevant chapter on how to perform planned comparisons and post hoc tests.
+If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the Chapter \ref{chap:advanced} on how to perform planned comparisons and post hoc tests.
 \\
 \\
 Now recall that we mentioned an intraclass correlation, or ICC. An intraclass correlation indicates how much clustering there is within the groups, in this case, clustering of headache scores within NY Times readers. How much are the three scores alike that come from the same patient? This correlation can be computed on the basis of the SPSS output, using the following formula:
@@ -7784,7 +7900,8 @@ Suppose you let a sample of students do a math test in three different rooms: on
 \end{enumerate}
 
 
-Answers:
+\subsection{Answers}
+
 \begin{enumerate}
 \item 
 
@@ -7805,7 +7922,7 @@ MIXED score BY colour
 In the previous section, we've looked at \textit{categorical} variables: \textbf{measure} (pre intervention, 3 hours after, and 24 hours after), or \textbf{colour} (yellow, red, and blue rooms). We can use the same type of analysis for \textit{numerical} variables. In fact, we could have used a linear effect for time in the headache example: using time of measurement as a variable. Let's look at the headache data again. But now we've created a new variable \textbf{time} that is based on the variable \textbf{measure}: all first measurements are coded as \textbf{time}=0, all second measurements after 3 hours are coded as \textbf{time}=3, and all third measurements after 24 hours are coded as \textbf{time}=24. The data are presented in Table \ref{tab:analysispremidpost3}.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:21 2018
+% Wed Oct 31 11:55:59 2018
 \begin{table}[ht]
 \centering
 \caption{Headache measures in NY Times readers in long format with a new variable time.} 
@@ -7887,7 +8004,7 @@ That the model is not appropriate for this data set is also obvious when we plot
 The line shown is the fitted line based on the SPSS output. It can be seen that the prediction for time=0 is too low, for time=2 too high, and for time=24 again too low. So for this particular data set on headache, it would be better to use a categorical predictor for the effect of time on headache, like we did in the previous section.
 \\
 \\
-As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like those in Figure \ref{fig:analysispremidpost6}. There we see a gradual increase of headache levels right after aspirin intake. Here, a numeric treatment of the time variable would be more appropriate. The SPSS output is given in Figure \ref{ffig:premidpostaspirinlinear2}. From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in Figure \ref{fig:analysispremidpost6}. 
+As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like those in Figure \ref{fig:analysispremidpost6}. There we see a gradual increase of headache levels right after aspirin intake. Here, a numeric treatment of the time variable would be more appropriate. The SPSS output is given in Figure \ref{fig:premidpostaspirinlinear2}. From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in Figure \ref{fig:analysispremidpost6}. 
 
 
 
@@ -8002,7 +8119,9 @@ Now you'd like to know if skin conductance in CEOs shows a general decrease duri
 
 \end{enumerate}
 
-Answers:
+\subsection{Answers}
+
+
 \begin{enumerate}
 \item 
 \begin{verbatim}
@@ -8046,7 +8165,7 @@ H\_0: The effect of aspirin is the same for NY Times readers as for Wall Street 
 Suppose we have the data set in Table \ref{tab:tab:analysisprepostmixed1} (we only show the first six patients), and we only look at the measurements before aspirin intake and 3 hours after aspirin intake (pre-post design). 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:22 2018
+% Wed Oct 31 11:56:00 2018
 \begin{table}[ht]
 \centering
 \caption{Headache measures in NY Times and Wall Street Journal readers in wide format.} 
@@ -8071,7 +8190,7 @@ patient & group & pre & post \\
 In this part of the data set, patients 2, 4, and 6 read the Wall Street Journal, and patients 1, 3 and 5 read the NY Times. We assume that people only read one of these newspapers. We measure their headache before and after the intake of aspirin (a pre-post design). The data are now in what we call \textit{wide format}: the dependent variable \textbf{headache} is spread over two columns, \textbf{pre} and \textbf{post}. In order to analyze the data with linear models, we need them in \textit{long format}, as in Table \ref{tab}. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:22 2018
+% Wed Oct 31 11:56:00 2018
 \begin{table}[ht]
 \centering
 \caption{Headache measures in NY Times and Wall Street Journal readers in long format.} 
@@ -8164,12 +8283,14 @@ Let's look at it in the different way, using a table with the dummy codes, see T
 The exact numbers are displayed in Figure \ref{fig:analysisprepostmixed3}. We see that the specific effect of aspirin in NYTimes readers is 0.6 smaller than the effect of aspirin in Wall Street Journal readers. This difference in the effect of aspirin between the groups was not significantly different from 0. The null-hypothesis that the effect is the same in the two populations of readers cannot be rejected. We therefore conclude that the effect that aspirin has on patients is the same for NY Times and Wall Street Journal readers.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
 
 {\centering \includegraphics[width=\maxwidth]{figure/analysisprepostmixed3-1} 
 
 }
 
+\caption[Expected headache levels in NY Times readers and Wall Street Journal readers based on a linear mixed model with an interaction effect]{Expected headache levels in NY Times readers and Wall Street Journal readers based on a linear mixed model with an interaction effect.}\label{fig:analysisprepostmixed3}
+\end{figure}
 
 
 \end{knitrout}
@@ -8274,8 +8395,9 @@ What does the model predict regarding the number of employees in 2008 in the non
 \end{enumerate}
 
 
-Answers:
-\\
+
+\subsection{Answers}
+
 \begin{enumerate}
 \item It could look like this:
 \\
@@ -8454,7 +8576,7 @@ In this data set on average Math performance in schools, we see two variables, c
 \end{enumerate}
 
 
-Answers:
+\section{Answers}
 
 \begin{enumerate}
 
@@ -8511,7 +8633,7 @@ Three groups were studied. One group consisted of 50 athletes who were selected 
 In Table \ref{tab:analysismixed20_1} you see part of the data, the first 6 measurements on person 1 that belongs to the group of Olympeans.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:25 2018
+% Wed Oct 31 11:56:04 2018
 \begin{table}[ht]
 \centering
 \caption{Cortisol measures over time.} 
@@ -8623,13 +8745,756 @@ So based on the linear equation, we see that in this sample the rise in cortisol
 
 
 
- % nonparametrics for within designs
+
+
+\chapter{Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+
+
+\section{Checking assumptions}
+
+In previous chapters we have discussed the assumptions of linear models and linear mixed models: linearity (in parameters), homoscedasticity (equal variance), normal distribution of residuals, normal distribution of random effects (relevant for linear mixed models only), and independence (no clustering unaccounted for). 
+
+
+
+
+The problem of nonlinearity can be solved by introducing quadratic terms, for instance by replacing a linear model $Y = b_0 + b_1 X + e$ by another linear model $Y = b_0 + b_1 X + b_2 X^2 + e$.
+
+If we have nonindependence, then you can introduce either an extra fixed effect or a random effect for this clustering. For example, if you see that cars owned by low income families have much more mileage than cars owned by high income families, you can account for this by adding a fixed effect of an income variable as predictor. If you see that average milage is rather similar within municipality but that average mileage can vary quite a lot across municipalities, you can introduce a random effect for municipality (if you have data say from 30 different municipalities). 
+
+Unequal variance of residuals and nonnormal distribution of residuals are harder to tackle. Unequal variance can be tackled sometimes by using linear models, but with more advanced options, or by making corrections to $p$-values that make inference more robust against model violations. Violations of normality are even a bigger problem. Nonnormality can sometimes be solved by using generalized linear models (see next chapter). A combination of nonnormality and unequal variance can sometimes be solved by using a transformation of the data, for instance not analyzing $Y = b_0 + b_1 X + e$ but analyzing $log(Y)=  b_0 + b_1 X + e$ or $\sqrt{Y}=  b_0 + b_1 X + e$.
+
+If these data transformations or advanced options don't work (or if you're not acquainted with them), and your data show nonequal variance and/or nonnormally distributed residuals, there are nonparametric alternatives.  Here we discuss two: Friedman's test and Wilcoxon's signed rank test. We explain them using an imaginary data set on speedskating.
+\\
+\\
+Suppose we have data on 12 speedskaters that participate on the 10 kilometers distance in three separate championships in 2017-2018: the European Championships, the Winter Olympics and the World Championships. Your friend expects that speedskaters will perform best at the Olympic games, so there she expects the fastest times. So you decide to test the null-hypothesis that average times are the same at the three occasions. In Figure \ref{fig:nonparmixed_1} we see a boxplot of the data.
+
+% H_0: $\mu_{EC}=\mu_{WC}_\mu{WO}$
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_1-1} 
+
+}
+
+\caption[Boxplot of the imaginary speed skating data]{Boxplot of the imaginary speed skating data.}\label{fig:nonparmixed_1}
+\end{figure}
+
+
+\end{knitrout}
+
+In order to test this null-hypothesis, we run a linear mixed model with dependent variable time, and independent variable occasion. We use random effects for the differences in speed across skaters. In Figure \ref{fig:nonparmixed_2} we see the residuals:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_2-1} 
+
+}
+
+\caption[Residuals of the speedskating data with a linear mixed model]{Residuals of the speedskating data with a linear mixed model.}\label{fig:nonparmixed_2}
+\end{figure}
+
+
+\end{knitrout}
+
+From this plot we clearly see that the assumption of equal variance (homogeneity of variance) is violated: the variance of the residuals in the Worldchampionships condition is clearly smaller than the variance of the European championships condition. From the histogram of the residuals in Figure \ref{fig:nonparmixed_3} we also see that the distribution of the residuals is not bell-shaped: it is positively skewed (skewed to the right).
+
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_3-1} 
+
+}
+
+\caption[Histogram of the residuals of the speedskating data with a linear mixed model]{Histogram of the residuals of the speedskating data with a linear mixed model.}\label{fig:nonparmixed_3}
+\end{figure}
+
+
+\end{knitrout}
+% \\
+% \\
+Since the assumptions of homogeneity of variance and of normally distributed residuals are violated\footnote{Remember that assumptions relate to the population not samples: oftentimes your data set is too small to say anything about assumptions at the populationlevel. Residuals for a data set of 8 persons might show very nonnormal residuals, or very different variances for two subgroups of 4 persons each, but that might just be a coincidence, a random result because of the small sample size. If in doubt, it is best to use nonparametric methods.}, the results from the linear mixed model cannot be trusted. In order to answer our research question, we therefore have to resort to another kind of test. Here we discuss Friedman's test, a non-parametric test, for testing the null-hypothesis that the \textit{medians} of the three groups of data are the same. This Friedman test can be used in all situations where you have at least 2 levels of the within variable. In other words, you can use this test when you have data from three occasions, but also when you have data from 10 occassions or only 2. In the following section the Wilcoxon signed ranks test is discussed. This test is often used in social and behavioural sciences. The downside of this test is that it can only handle data sets with 2 levels of the within variable. In other words, it can only be used when we have data from two occassions. Friedman's test is therefore more generally applicable than Wilcoxon's. We therefore advise to always go with the Friedman test, but for the sake of completeness, we will also explain the Wilcoxon test.
 
 
 
 
 
-\chapter{Generalized linear models part I: logistic regression}\label{chap:logistic}
+\section{Friedman's test for $k$ measures}
+
+
+Similar to many other nonparametric tests for testing the equality of medians, Friedman's test is based on ranks. Figure \ref{fig:nonparmixed_4} shows the speedskating data in wide format.
+
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:05 2018
+\begin{table}[ht]
+\centering
+\caption{The speedskating data in wide format.} 
+\label{tab:nonparmixed_4}
+\begin{tabular}{lrrr}
+  \hline
+athlete & EuropeanChampionships & Olympics & WorldChampionships \\ 
+  \hline
+1 & 14.35 & 16.42 & 15.79 \\ 
+  2 & 17.36 & 18.13 & 14.26 \\ 
+  3 & 19.01 & 19.95 & 18.37 \\ 
+  4 & 27.90 & 17.78 & 15.12 \\ 
+  5 & 17.67 & 16.96 & 17.17 \\ 
+  6 & 17.83 & 16.15 & 15.30 \\ 
+  7 & 16.30 & 19.44 & 15.63 \\ 
+  8 & 28.00 & 16.23 & 15.69 \\ 
+  9 & 18.27 & 15.76 & 15.65 \\ 
+  10 & 17.00 & 16.18 & 14.99 \\ 
+  11 & 17.10 & 13.89 & 15.83 \\ 
+  12 & 18.94 & 14.83 & 14.77 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+We rank all of these time measures by determining the fastest time, then the next to fastest time, etcetera, until the slowest time. But because the data in each row belong together (we compare individuals with themselves), we do the ranking \textit{row-wise}. For each athlete separately, we determine the fastest time (1), the next fastest time (2), and the slowest time (3) and put the ranks in a table.
+
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:05 2018
+\begin{table}[ht]
+\centering
+\caption{Row-wise ranks of the speedskating data.} 
+\label{tab:nonparmixed_5}
+\begin{tabular}{lrrr}
+  \hline
+athlete & EuropeanChampionships & Olympics & WorldChampionships \\ 
+  \hline
+1 & 1.00 & 3.00 & 2.00 \\ 
+  2 & 2.00 & 3.00 & 1.00 \\ 
+  3 & 2.00 & 3.00 & 1.00 \\ 
+  4 & 3.00 & 2.00 & 1.00 \\ 
+  5 & 3.00 & 1.00 & 2.00 \\ 
+  6 & 3.00 & 2.00 & 1.00 \\ 
+  7 & 2.00 & 3.00 & 1.00 \\ 
+  8 & 3.00 & 2.00 & 1.00 \\ 
+  9 & 3.00 & 2.00 & 1.00 \\ 
+  10 & 3.00 & 2.00 & 1.00 \\ 
+  11 & 3.00 & 1.00 & 2.00 \\ 
+  12 & 3.00 & 2.00 & 1.00 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+From this table we see for example that athlete 1 had the fastest time on the European Championships (14.35, rank 1) and the slowest at the Olympics (16.42, rank 3).
+
+
+Next we compute the sum of the ranks column-wise: the sum of the ranks for the European Championships data is 31, for the Olympic data it's 26 and for the World Championships data it is 15.
+
+From these sums we can gather that in general, these athletes showed their best times (many rank 1s) at the World Championships, as the sum of the ranks is lowest. We also see that in general these athletes showed their worst times (many rank 2s and 3s) at the European Championships, as the relevant column showed the highest sum of ranks.
+
+In order to know whether these sums of ranks are significantly different from eachother, we may compute an $F_r$-value based on the following formula:
+
+
+\begin{equation}
+F_r = \left[  \frac{12}{Nk(k+1)} \Sigma^k_{j=1} S_j^2      \right] - 3N (k+1)
+\end{equation}
+
+
+In this formula, $N$ stands for the number of rows (12 athletes), $k$ stands for the number of columns (3 occasions), and $S_j^2$ stands for the squared sum of column $j$ ($31^2$, $26^2$ and $15^2$). If we fill in these numbers, we get:
+
+\begin{eqnarray}
+F_r &=& \left[  \frac{12}{12 \times  3(3+1)} \times (31^2 + 26^2 + 15^2)      \right] - 3 \times 12 (3+1) \nonumber \\
+  &=&   \left[  \frac{12}{144} \times  1862      \right] - 144 = 11.17  \nonumber
+\end{eqnarray}
+
+
+
+What can we tell from this $F_r$-statistic? In order to say something about significance, we have to know what values are to be expected under the null-hypothesis that there are no differences across the three groups of data. Suppose we randomly mixed up the data by taking all the speedskating times and randomly assigning them to the three contests and the twelve athletes, until we have a newly filled datamatrix in Table \ref{tab:nonparmixed_26}:
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:05 2018
+\begin{table}[ht]
+\centering
+\caption{The raw skating data in random order.} 
+\label{tab:nonparmixed_26}
+\begin{tabular}{lrrr}
+  \hline
+athlete & EuropeanChampionships & Olympics & WorldChampionships \\ 
+  \hline
+1 & 18.37 & 15.79 & 17.83 \\ 
+  2 & 15.12 & 14.83 & 17.67 \\ 
+  3 & 14.35 & 14.99 & 15.63 \\ 
+  4 & 14.26 & 17.00 & 17.36 \\ 
+  5 & 19.01 & 16.30 & 17.17 \\ 
+  6 & 16.23 & 15.30 & 14.77 \\ 
+  7 & 15.83 & 15.69 & 27.90 \\ 
+  8 & 15.76 & 19.44 & 13.89 \\ 
+  9 & 15.65 & 18.27 & 16.18 \\ 
+  10 & 28.00 & 17.78 & 16.15 \\ 
+  11 & 19.95 & 16.42 & 17.10 \\ 
+  12 & 18.13 & 16.96 & 18.94 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+If we then compute $F_r$ for these mixed up data, we get another value. If we do this say 1000 times, we get the following values for $F_r$, summarized in the  histogram in Figure \ref{fig:nonparmixed_36}.
+
+%fig.cap='Histogram of 1000 possible values for F_r given that the null-hypothesis is true, for 12 speedskaters.'
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_36-1} 
+
+}
+
+\caption[Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 12 speedskaters]{Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 12 speedskaters.}\label{fig:nonparmixed_36}
+\end{figure}
+
+
+\end{knitrout}
+
+So if the data is just randomly distributed over the three columns in the data matrix, we expect no systematic differences and so the null-hypothesis is true. So now we know what the distribution of $F_r$ looks like when the null-hypothesis is true. Remember that for the true data that we actually gathered, we found an $F_r$-value of 11.17. From the histogram, we see that only very few values of 11.17 or larger are observed when the null-hypothesis is true. If we look more closely, we find that only 0.4\% of the values are larger than 11.17, so we have a $p$-value of 0.004. The 95th percentile of these 1000 $F_r$-values is 5.167, meaning that of the 1000 values for $F_r$, 5\% are larger than 5.167. So if we use a signficance level of 5\%, our observed value of 11.17 is larger than the critical value for $F_r$, and we conclude that the null-hypothesis can be rejected.
+
+Now this $p$-value of 0.004 and the critical value of 5.167 are based on our own computations. Actually there are better ways. One is to look up critical values of $F_r$ in tables, for instance in Kendall M.G. (1970) \textit{Rank correlation methods}. (fourth edition). The $p$-value corresponding to this $F_r$-value depends on $k$, the number of groups of data (here 3 columns) and $N$, the number of rows (12 individuals). If we look up that table, we find that for $k=3$ and $N=12$ the critical value of $F_r$ for a type I error rate of 0.05 equals 6.17. Our observed $F_r$-value of 11.17 is larger than that, therefore we can reject the null-hypothesis that the median skating times are the same at the three different championships. So we have to tell your friend that there are general differences in skating times at different contests, $F_r=11.17, p < 0.05$, but it is not the case that the fastest times were observed at the Olympics.
+
+Another way is to make an approximation of the distribution of $F_r$. Note that the distribution in the histogram is very strangely shaped. The reason is that the data set is quite limited. Suppose we have not data on 12 speedskaters, but on 120. If we then randomly mix up data again and compute 1000 different values for $F_r$, we get the histogram in Figure \ref{fig:nonparmixed_46}.
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_46-1} 
+
+}
+
+\caption[Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 120 speedskaters]{Histogram of 1000 possible values for Fr given that the null-hypothesis is true, for 120 speedskaters.}\label{fig:nonparmixed_46}
+\end{figure}
+
+
+\end{knitrout}
+
+The shape becomes more regular. It also starts to resemble another distribution, that of the $\chi^2$ (chi-square). It can be shown that the distribution of the $F_r$ for a large number of rows in the data matrix, and at least 6 columns, approaches the shape of the $\chi^2$-distribution with $k-1$ degrees of freedom. This is shown in Figure \ref{fig:nonparmixed_56}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_56-1} 
+
+}
+
+\caption[The distrbution of Fr under the null-hypothesis, overlain with a chi-square distribution with 2 degrees of freedom]{The distrbution of Fr under the null-hypothesis, overlain with a chi-square distribution with 2 degrees of freedom.}\label{fig:nonparmixed_56}
+\end{figure}
+
+
+\end{knitrout}
+
+The line of the $\chi^2$-distribution with 2 degrees of freedom approaches the histogram quite well, but not perfectly. In general, for large $N$ and $k>5$, the approximation is good enough. In that way it gets easier to look up $p$-values for certain $F_r$-values, because the $\chi^2$-distribution is well-known\footnote{The $\chi^2$-distribution is based on the normal distribution: the $\chi^2$-distribution with $k$ degrees of freedom is the distribution of a sum of the squares of $k$ independent standard normal random variables.}, so we don't have to look up critical values for $F_r$ in old tables. For a significance level of 5\%, the critical value of a $\chi^2$ with 2 degrees of freedom is 5.991. This is close to the value in the table for $F_r$ in old books: 6.17. The part of the $\chi^2$-distribution with 2 degrees of freedom that is larger than the observed 11.17 is 0.004, so our approximate $p$-value for our null-hypothesis is 0.004.
+
+
+\section{How to perform Friedman's test in SPSS}
+
+First of all, you need data in wide format. If your data happens to be in long format, use the CASETOVARS procedure to get the data in wide format. CASETOVARS requires your data to be ordered, so use the SORT CASE BY procedure before CASETOVARS. Suppose your data is in long format, as in Table \ref{tab:nonparmixed_6}.
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:10 2018
+\begin{table}[ht]
+\centering
+\caption{The raw skating data in long data format.} 
+\label{tab:nonparmixed_6}
+\begin{tabular}{lrr}
+  \hline
+athlete & occasion & time \\ 
+  \hline
+1 & 1.00 & 14.35 \\ 
+  1 & 2.00 & 16.42 \\ 
+  1 & 3.00 & 15.79 \\ 
+  2 & 1.00 & 17.36 \\ 
+  2 & 2.00 & 18.13 \\ 
+  2 & 3.00 & 14.26 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+
+Then the following syntax turns the data into wide format:
+
+
+\begin{verbatim}
+SORT CASES BY athlete occasion.
+CASESTOVARS
+  /ID=athlete
+  /INDEX=occasion
+  /GROUPBY=VARIABLE
+ /SEPARATOR = "_".
+\end{verbatim}
+
+
+This creates the wide format data matrix in Table \ref{tab:nonparmixed_7}:
+
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:10 2018
+\begin{table}[ht]
+\centering
+\caption{The raw skating data in wide data format after CASETOVARS} 
+\label{tab:nonparmixed_7}
+\begin{tabular}{lrrr}
+  \hline
+athlete & time\_1.00 & time\_2.00 & time\_3.00 \\ 
+  \hline
+1 & 14.35 & 16.42 & 15.79 \\ 
+  2 & 17.36 & 18.13 & 14.26 \\ 
+  3 & 19.01 & 19.95 & 18.37 \\ 
+  4 & 27.90 & 17.78 & 15.12 \\ 
+  5 & 17.67 & 16.96 & 17.17 \\ 
+  6 & 17.83 & 16.15 & 15.30 \\ 
+  7 & 16.30 & 19.44 & 15.63 \\ 
+  8 & 28.00 & 16.23 & 15.69 \\ 
+  9 & 18.27 & 15.76 & 15.65 \\ 
+  10 & 17.00 & 16.18 & 14.99 \\ 
+  11 & 17.10 & 13.89 & 15.83 \\ 
+  12 & 18.94 & 14.83 & 14.77 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+Note the variable names: they start with the dependent variable time and are then indexed by the number of the occasion, 1.00, 2.00 and 3.00, that relate to European Championships, Olympic Games and World Championships, respectively.
+
+We can then specify that we want Friedman's test by using the NPAR TESTS procedure with the FRIEDMAN subcommand and indicating which variables we want to use:
+
+\begin{verbatim}
+NPAR TESTS
+/FRIEDMAN=time_1.00 time_2.00 time_3.00.
+\end{verbatim}
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman1.pdf}
+    \end{center}
+     \caption{SPSS output of the Friedman test.}
+    \label{fig:friedman1}
+\end{figure}
+
+
+In the output in Figure \ref{fig:friedman1} you first see the mean ranks. Note that if you multiply these by 12 (the number of rows), you get the sum of the ranks per column that we also computed above. Next you see a chi-square statistic, degrees of freedom, and an asymptotic $p$-value (Asymp. Sig.). Why don't we see an $F_r$-statistic?
+
+The reason is, as discussed in the previous section, that for large number of measurements (columns) and a large number of individuals (rows), the $F_r$ statistic tends to behave like a chi-square, $\chi^2$, with $k-1$ degrees of freedom. So what we are looking at in this output is really an $F_r$-value of 11.17 (exactly the same value as we computed by hand in the previous section). In order to approximate the $p$-value, this value of 11.17 is interpreted as a chi-square ($\chi^2$), which with 2 degrees of freedom has a $p$-value of 0.004.
+
+
+This asymptotic (approximated) $p$-value is the correct $p$-value if you have a lot of rows (large $N$) and at least 6 variables ($k>5$). If you do not have that, as we have here, this asymptotic $p$-value is only what it is: an approximation. If you want to have the exact $p$-value, then do
+
+\begin{verbatim}
+NPAR TESTS
+/FRIEDMAN=time_1.00 time_2.00 time_3.00
+/METHOD=EXACT.
+\end{verbatim}
+
+and then use the $p$-value under $exact sign.$, in this case 0.002, see Figure \ref{fig:friedman2}.
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman2.pdf}
+    \end{center}
+    \caption{SPSS output of the Friedman test with the exact p-value.}
+    \label{fig:friedman2}
+\end{figure}
+
+
+Thus, a Friedman's test of equal medians showed that speedskaters show significantly different median times on the 10 kilometer distance at the three types of contests, $F_r=11.17, p=0.002$.
+
+
+
+\section{Wilcoxon's signed ranks test for 2 measures}
+
+Friedman's test can be used for 2 measures, 3 measures or even 10 measures. As stated earlier, the well-known Wilcoxon's test can only be used for 2 measures. For completeness, we also discuss that test here.
+\\
+\\
+For each athlete, we take the difference in skating times and call it $d$, see Table \ref{tab:nonparmixed_77}. Next we rank these $d$-values, irrespective of sign, and call these ranks $rank_d$. From the table \ref{nonparmixed_77} we see that athlete 12 shows the smallest difference in skating times ($d$= 0.06, rank = 1) and athlete 2 the largest difference.
+
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Wed Oct 31 11:56:10 2018
+\begin{table}[ht]
+\centering
+\caption{The raw skating data and the computations for Wilcoxon signed ranks test} 
+\label{tab:nonparmixed_77}
+\begin{tabular}{lrrrrr}
+  \hline
+athlete & Olympics & WorldChampionships & d & rank\_d & ranksign \\ 
+  \hline
+1 & 16.42 & 15.79 & 0.63 & 5.00 & 5.00 \\ 
+  2 & 18.13 & 14.26 & 3.87 & 12.00 & 12.00 \\ 
+  3 & 19.95 & 18.37 & 1.58 & 8.00 & 8.00 \\ 
+  4 & 17.78 & 15.12 & 2.66 & 10.00 & 10.00 \\ 
+  5 & 16.96 & 17.17 & -0.21 & 3.00 & -3.00 \\ 
+  6 & 16.15 & 15.30 & 0.85 & 6.00 & 6.00 \\ 
+  7 & 19.44 & 15.63 & 3.81 & 11.00 & 11.00 \\ 
+  8 & 16.23 & 15.69 & 0.54 & 4.00 & 4.00 \\ 
+  9 & 15.76 & 15.65 & 0.11 & 2.00 & 2.00 \\ 
+  10 & 16.18 & 14.99 & 1.19 & 7.00 & 7.00 \\ 
+  11 & 13.89 & 15.83 & -1.94 & 9.00 & -9.00 \\ 
+  12 & 14.83 & 14.77 & 0.06 & 1.00 & 1.00 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+Next we indicate for each rank whether it belongs to a positive or a negative difference $d$ and call that variable \textbf{ranksign}.
+
+Under the null-hypothesis, we expect that some of the larger $d$-values are positive and some of them negative, in a fairly equal amount. If we sum the ranks having plus-signs and sum the ranks having minus-signs, we would expect that these two sums are about equal, but only if the null-hypothesis is true. If the sums are very different, then we should reject this null-hypothesis. In order to see if the difference in sums is too large, we compute them as follows:
+
+
+\begin{eqnarray}
+T^+ &=& 5+ 12 + 8 +10+6+11+4 +2 +7 +1 = 66 \nonumber \\
+T^- &=& 3 + 9= 12 \nonumber
+\end{eqnarray}
+
+
+
+To know whether $T^+$ is significantly larger than $T^-$, the value of $T^+$ can be looked up in a table, for instance in Siegel \& Castellan (1988). There we see that for $T^+$, with 12 rows, the probability of obtaining a $T^+$ of at least 66 is 0.0171. For a two-sided test (if we would have switched the columns of the two championships, we would have gotten a $T^-$ of 66 and a $T^+$ of 12!), we have to double this probability. So we end up with a $p$-value of $2 \times 0.0171=0.034$.
+
+
+In the table we find no critical values for large sample size $N$, but fortunately, similar to the Friedman test, we use an approximation using the normal distribution. It can be shown that for large sample sizes, the statistic $T^+$ is approximately normally distributed with mean
+
+
+\begin{equation}
+\mu = \frac{N(N+1)}{4}
+\end{equation}
+
+and variance:
+
+\begin{equation}
+\sigma^2= \frac {N(N+1)(2N+1)  }  {24}
+\end{equation}
+
+
+If we therefore standardize the $T^+$ by subtracting the $\mu$ and then dividing by the square root of the variance $\sqrt(\sigma^2)=\sigma$, we get a $Z$-value with mean 0 and standard deviation 1. To do that, we use the following formula:
+
+\begin{equation}
+Z = \frac{T^+ - \mu}{\sigma} =  \frac  { T^+ - N(N+1)/4} {\sqrt{N(N+1)(2N+1)/24}}
+\end{equation}
+
+
+Here $T^+$ is 66 and $N$ equals 12, so if we fill in the formula we get $Z= 2.118$. From the standard normal distribution we know that 5\% of the observations lie above 1.96 and below -1.96. So a value for $Z$ larger than 1.96 or smaller than -1.96 is enough evidence to reject the null-hypothesis. Here our $Z$-statistic is larger than 1.96, therefore we reject the null-hypothesis that the median skating times are the same at the World Championships and the Olympics. The $p$-value associated with a $Z$-score of 2.118 is 0.034.
+
+
+
+
+
+\section{How to perform Wilcoxon's signed ranks test in SPSS}
+
+If you want to use the Wilcoxon test, then use the following syntax:
+
+\begin{verbatim}
+NPAR TESTS
+/WILCOXON=time_2.00 time_3.00
+/METHOD=EXACT.
+\end{verbatim}
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 18cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/wilcoxon1.pdf}
+    \end{center}
+    \caption{SPSS output of the Wilcoxon test.}
+    \label{fig:wilcoxon1}
+\end{figure}
+
+In the output in Figure \ref{fig:wilcoxon1} we see a $Z$-statistic, an asymptotic $p$-value, and two exact $p$-values. The reason that we see a $Z$-statistic is that the Wilcoxon $T^+$ statistic approaches a normal distribution in case we have a large number of observations (many rows). If $N>15$, the approximation is good enough so that the statistic can be interpreted as a $z$-score (standardized score with a normal distribution). That means that a $z$-score of 1.96 or larger or -1.96 or smaller can be regarded as significant at the 5\% significance level. Since the standard normal distribution is only an approximation, and we have $N=12$, we have to look at the exact significance level, which is in this case 0.034. We see that the exact $p$-value is in this case equal to the approximate $p$-value. Note that we use a two-sided test, to allow for the fact that random sampling could lead to a higher median for the Olympic Games or a higher median for the World Championships. We just want to know whether the null-hypothesis that the two medians differ can be rejected (in whatever direction) or not.
+\\
+\\
+
+
+Let's compare the output with the Friedman test, but then only use the relevant variables in your syntax:
+
+\begin{verbatim}
+NPAR TESTS
+/FRIEDMAN=  time_2.00 time_3.00
+/METHOD=EXACT.
+\end{verbatim}
+
+
+In the output in Figure \ref{fig:friedman3} we see that the null-hypothesis of equal medians at the World Championships and the Olympic Games can be rejected, with a $p$-value of 0.039.
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedman3.pdf}
+    \end{center}
+    \caption{SPSS output of the Friedman test for two measures.}
+    \label{fig:friedman3}
+\end{figure}
+
+
+
+Note that both the Friedman and Wilcoxon tests come up with very similar $p$-values. Their rationales are very similar: Friedman's test is based on ranks and Wilcoxon's test is based on positive and negative differences between measures 1 and 2, so in fact ranks 1 and 2 for each row in the data matrix. Both can therefore be used in the case you have two measures. We recommend to use the Friedman test, since that test can be used in all situations where you have 2 or more measures per row. Wilcoxon's test can only be used if you have 2 measures per row.
+\\
+\\
+In sum, we can report in two ways on our hypothesis regarding similar skating times at the World Championships and at the Olympics:
+
+\begin{enumerate}
+
+\item
+
+\begin{quotation}
+A Friedman test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $F_r = 5.33, p=0.04$. Athletes more often show their fastest times at the World Championships than can be expected due to chance.
+\end{quotation}
+
+\item
+
+\begin{quotation}
+A Wilcoxon signed ranks test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $Z = -2.12, p=0.03$. Athletes more often show their fastest times at the World Championships than can be expected due to chance.
+\end{quotation}
+
+\end{enumerate}
+
+How do we know that the fastest times were at the World Championships? If we look at raw data above, that does not seem that obvious. But this conlusion is based on the sum of ranks: we saw a sum of ranks of 26 for the Olympics and 15 for the World Championships. So the average rank is lower at the World Championships.
+
+
+\section{Ties}
+
+Many nonparametric tests are based on ranks. For example, if we have the data sequence {0.1, 0.4, 0.5, 0.2}, we give these values the ranks {1, 3, 4, 2}, respectively. But in may data cases, data sequences cannot be ranked unequivocally. Let's look at the sequence {0.1, 0.4, 0.4, 0.2}. Here we have 2 values that are exactly the same. We say then that we have \textit{ties}. If we have ties in our data like the 0.4 in this case, one very often used option is to arbitrarily choose one of the 0.4 values as smaller than the other, and then average the ranks. Thus, we rank the data into {1, 3, 4, 2} and then average the tied observations: {1, 3.5, 3.5, 2}. As another example, suppose we have the sequence {23, 54, 54, 54, 19}, we turn this into ranks {2, 3, 4, 5, 1} and take the average of the ranks of the tied observations of 54: {2, 4, 4, 4, 1}. These ranks corrected for ties can then be used to compute the test statistic, for instance Friedman's $F_r$ or Wilcoxon's $Z$. However, in many cases, because of these corrections, a slightly different formula is to be used. So the formulas become a little bit different. This is all done in SPSS automatically. If you want to know more, see Siegel and Castellan (1988).
+
+
+
+
+\section{Exercises}
+
+
+A researcher is interested in the relationship between mood and day of the week: are people generally moodier on Monday than on Wednesday or Friday?
+
+Below we see the data on 4 people that rated their mood from 1 (very moody) to 10 (not moody at all) on three separate days in a week in February: Day 1 is Monday, day 2 is Wednesday and day 3 is Friday:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\begin{tabular}{r|r|r}
+\hline
+ID & Day & Mood\\
+\hline
+1 & 1 & 3\\
+\hline
+1 & 2 & 5\\
+\hline
+1 & 3 & 8\\
+\hline
+2 & 1 & 4\\
+\hline
+2 & 2 & 7\\
+\hline
+2 & 3 & 6\\
+\hline
+3 & 1 & 2\\
+\hline
+3 & 2 & 4\\
+\hline
+3 & 3 & 1\\
+\hline
+4 & 1 & 9\\
+\hline
+4 & 2 & 5\\
+\hline
+4 & 3 & 3\\
+\hline
+\end{tabular}
+
+
+\end{knitrout}
+
+\begin{enumerate}
+
+\item Put the data into wide format, and think of appropriate variable names
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Rank these data row-wise: for each row determine the lowest mood (1), the second lowest mood (2) and the highest mood score (3)
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Determine the column sums: the sum of the ranks for Monday, Wednesday and Friday.
+\item How many rows do you have ($N$) and how many columns of data do you have ($k$)?
+\item Compute $F_r$.
+\item Copy the data into SPSS and run a Friedman's test. Should you ask for an exact $p$-value? Provide the syntax.
+\item Suppose you get the SPSS output in Figure \label{ref:friedmanmood1}. What would your conclusion be regarding the research question about the relationship between moodiness and the day of the week?
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedmanmood1.pdf}
+    \end{center}
+    \caption{SPSS output of a Friedman test.}
+    \label{fig:friedmanmood1}
+\end{figure}
+
+\item
+In this data set, for which day did we observe the personal best mood? How many of the individuals showed their best mood on that day?
+
+
+\item
+A linear mixed model was run on this data set. When checking model assumptions, we saw the following graphs in Figures \ref{fig:nonparmixed_11a} and \ref{fig:nonparmixed_11b}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_11a-1} 
+
+}
+
+\caption[Residual plot after a linear mixed model analysis]{Residual plot after a linear mixed model analysis.}\label{fig:nonparmixed_11a1}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_11a-2} 
+
+}
+
+\caption[Residual plot after a linear mixed model analysis]{Residual plot after a linear mixed model analysis.}\label{fig:nonparmixed_11a2}
+\end{figure}
+
+
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/nonparmixed_11b-1} 
+
+}
+
+\caption[Histogram of residuals after a linear mixed model analysis]{Histogram of residuals after a linear mixed model analysis.}\label{fig:nonparmixed_11b}
+\end{figure}
+
+
+\end{knitrout}
+
+
+Would you prefer to stick to the Friedman's test for this data set, or would you prefer to report a linear mixed model? Explain your answer.
+
+\item Could you have performed a Wilcoxon test on these data? Why, or why not?
+
+\end{enumerate}
+
+
+\subsection{Answers}
+
+
+\begin{enumerate}
+
+\item
+The raw data in wide format:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\begin{tabular}{r|r|r|r}
+\hline
+ID & Mood\_1 & Mood\_2 & Mood\_3\\
+\hline
+1 & 3 & 5 & 8\\
+\hline
+2 & 4 & 7 & 6\\
+\hline
+3 & 2 & 4 & 1\\
+\hline
+4 & 9 & 5 & 3\\
+\hline
+\end{tabular}
+
+
+\end{knitrout}
+
+\item
+The row-wise ranked data:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\begin{tabular}{r|r|r|r}
+\hline
+ID & Mood\_1 & Mood\_2 & Mood\_3\\
+\hline
+1 & 1 & 2 & 3\\
+\hline
+2 & 1 & 3 & 2\\
+\hline
+3 & 2 & 3 & 1\\
+\hline
+4 & 3 & 2 & 1\\
+\hline
+\end{tabular}
+
+
+\end{knitrout}
+\item Day 1: 7, Day 2: 10 and Day3: 7.
+\item $N=4$ and $k=3$
+\item
+
+\begin{eqnarray}
+F_r &=& \left[  \frac{12}{4 \times  3(3+1)} \times (7^2 + 10^2 + 7^2)      \right] - 3 \times 4 (3+1) \nonumber \\
+  &=&   \left[  \frac{12}{48} \times  198      \right] - 48 = 1.50  \nonumber
+\end{eqnarray}
+
+\item
+
+\begin{verbatim}
+NPAR TESTS
+/FRIEDMAN=  Mood_1   Mood_2    Mood_3
+/METHOD=Exact.
+\end{verbatim}
+
+\item
+\begin{quotation}
+We found no significant effect of day of the week on mood, $F_r=1.50, p=0.65$, so the null-hypothesis of equal mood during the week is not rejected. Note however that the sample size was extremely small (12 data points), so even if there is a real relationship between mood and day of the week, there was little chance to find evidence of that in this data set.
+\end{quotation}
+
+\item The highest column sum of the ranks was found for day 2, which was Wednesday. So in this data set we saw that the four individuals generally showed their personal highest mood score on Wednesday. Actually, 2 persons out of 4 showed their highest score (rank 3) on Wednesday (ID=2 and ID=3).
+
+\item The plots suggests that the variance of the residuals is very small for the second day, compared to the other two days. The distribution is also hardly normal. But it is hard to tell whether the assumptions are reasonable, since there are so few data points. It would therefore be safest to report a Friedman test.
+
+\item A Wilcoxon test can only be performed on two measures, say Monday and Wednesday data, or Monday and Friday data. You could not test the null-hypothesis of the same moods on three days with a Wilcoxon test.
+
+\end{enumerate}
+
+
+
+ % Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+
+
+
+
+
+\chapter{Generalized linear models: logistic regression}\label{chap:logistic}
 
 \section{Introduction}
 In previous chapters we were introduced to the linear model, with its basic form
@@ -9172,7 +10037,7 @@ Part of the data are displayed in Table \ref{tab:gen_12}. A score of 1 on the va
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:31 2018
+% Wed Oct 31 11:56:15 2018
 \begin{table}[ht]
 \centering
 \caption{Taking the train to Paris data.} 
@@ -9408,7 +10273,7 @@ Table \ref{tab:gen_14} shows part of the data that were analysed. Similar to log
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:31 2018
+% Wed Oct 31 11:56:15 2018
 \begin{table}[ht]
 \centering
 \caption{Scores on an assignment.} 
@@ -9632,7 +10497,7 @@ In 1912, the ship Titanic sank after the collision with an iceberg. There we 220
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:32 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors on the Titanic.} 
@@ -9674,7 +10539,7 @@ The difference in these counts is very small. But does this tell us that women w
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:32 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adults on the Titanic.} 
@@ -9772,7 +10637,7 @@ The data on male and female survivors and non-nonsurvivors are often tabulated i
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:33 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -9795,7 +10660,7 @@ In the previous section these counts were analysed using a generalized linear mo
 First let's have a look at the overall survival rate. In total there we  654 people that survived and 1438 people that did not survive. Table \ref{tab:gen_25} shows these column totals.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:33 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -9818,7 +10683,7 @@ Table \ref{tab_gen26} shows the totals for men and women, as well as the overall
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:33 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Counts of adult survivors and non-survivors on the Titanic.} 
@@ -9852,7 +10717,7 @@ These numbers, after rounding, are displayed in Table \ref{tab:gen_27}.
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:33 2018
+% Wed Oct 31 11:56:17 2018
 \begin{table}[ht]
 \centering
 \caption{Expected numbers of adult survivors and non-survivors on the Titanic.} 
@@ -9942,7 +10807,7 @@ GENLIN survived (REFERENCE=FIRST) BY sex
 Note however that the data is the wrong format. For the Poisson regression, the data were there in the form of what we see in Table \ref{tab:gen_24}. However, for a logistic regression, we need the data in the format like in Table \ref{tab:gen_28}. For every person onboard the ship, we have to know their sex and their survival status.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Fri Oct 26 15:50:33 2018
+% Wed Oct 31 11:56:18 2018
 \begin{table}[ht]
 \centering
 \caption{Individual data of adult survivors and non-survivors on the Titanic.} 

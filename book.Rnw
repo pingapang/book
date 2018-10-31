@@ -1,9 +1,11 @@
 
-\documentclass[]{report}
+\documentclass[]{book}
 \usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage{fancyref}
 \usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
 % \usepackage{xmpincl}
 % \usepackage[
 %     type={CC},
@@ -15,13 +17,52 @@
 % Title Page
 \title{Analyzing data using linear models}
 
+
 \author{St\'ephanie M. van den Berg}
-\date{Versie 0.1 \\ (\today)}
+\date{Version SPSS 1.0.0 \\ (\today)}
 
 
 
 \begin{document}
 \maketitle
+
+\pagestyle{empty}
+%% copyrightpage
+\begingroup
+\footnotesize
+\parindent 0pt
+\parskip \baselineskip
+
+
+Copyright \copyright \space 2018 by St\'ephanie M. van den Berg \\
+University of Twente\\
+Department of Research Methodology, Measurement and Data Analysis\\
+Licensed under Creative Commons, see https://creativecommons.org/licenses/\\
+For source code and updates: github.com/pingapang/book\\
+E-mail: stephanie.vandenberg@utwente.nl\\
+\ccbyncsa
+
+   
+
+ 
+
+\begin{center}
+\begin{tabular}{ll}
+First edition:  & October 2018 \\
+\end{tabular}
+\end{center}
+
+
+
+
+\endgroup
+\clearpage
+
+
+
+
+
+
 
 <<libraries, echo=FALSE,  warning=FALSE, message=F>>=
 library(ggplot2)
@@ -36,12 +77,17 @@ library(DAAG)
 @
 
 
-\begin{abstract}
-This book is intended to be of use to bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, to linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
-\end{abstract}
+
+
+\chapter*{Preface}
+This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, to linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
+
 
 
 \tableofcontents
+
+
+
 
 
 \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
@@ -53,7 +99,6 @@ This book is intended to be of use to bachelor students in social, behavioural a
 
 \Sexpr{knit_child('chapter_inference_I.Rnw')}
 
-
 \Sexpr{knit_child('chapter_inference_II.Rnw')}
 
 \Sexpr{knit_child('chapter_multiple regression.Rnw')} % multiple regression
@@ -63,16 +108,17 @@ This book is intended to be of use to bachelor students in social, behavioural a
 \Sexpr{knit_child('chapter_6.Rnw')} % moderation
 
 \Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
-% %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
-%
-%
+% % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
+% %
+% %
 \Sexpr{knit_child('chapter_7.Rnw')} % assumptions
 \Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
 
 %  MEDIATION ANALYSIS
 
 \Sexpr{knit_child('chapter_mixed.Rnw')} % introduction linear mixed models
-\Sexpr{knit_child('chapter_premidpostdesigns.Rnw')} % nonparametrics for within designs
+\Sexpr{knit_child('chapter_premidpostdesigns.Rnw')}
+\Sexpr{knit_child('chapter_11.Rnw')} % Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
 
 
 \Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
