@@ -344,7 +344,7 @@ The output is given in Figure \ref{fig:titanic2}. From the parameter values, we 
 
 These predicted numbers are displayed in Figure \ref{fig:gen_22}. It also shows the observed counts. The pattern that is observed is clearly different from the one that is predicted from the generalized linear model. The linear model predicts that there are fewer survivors then non-survivors, irrespective of sex, but we observed that in females, there are more survivors then non-survivors. It seems that sex is is moderator of the effect of survival on counts.
 
-<<gen_22, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+<<gen_22, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis", fig.cap="Difference between expected and observerd numbers of passengers.">>=
 data$survived <- as.factor(data$survived)
 outtitanic2 <- glm(count~ sex + as.factor(survived), data=data, family="poisson")
 data <- rbind(data,data)
@@ -381,7 +381,7 @@ The output is displayed in Figure \ref{fig:titanic3}.
 
 When we plot the predicted counts from this new model with an interaction effect, we see that they are exactly equal to the counts that are actually observed in the data, see Figure \ref{fig:gen23}.
 
-<<gen_23, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis">>=
+<<gen_23, fig.height=4, echo=FALSE, fig.align='center', message=F, warning=F, results="asis", fig.cap="Difference between observed and predicted numbers of passengers.">>=
 outtitanic3 <- glm(count~ sex + survived + sex:survived, data=data[5:8,], family="poisson")
 data$count[1:4] <- predict(outtitanic3, data[1:4,1:2], type="response")
 data %>% ggplot(aes(x=sex, y=count, fill=survived)) +

@@ -406,7 +406,7 @@ Figure \ref{fig:multi_4} shows the data and the regression line. From this visua
 
 
 
-<<multi_4, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<multi_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Simulated HR data set.">>=
 Education = factor(Education, labels = c("0", "1", "2"))
 data <- data.frame(
   Salary,
@@ -431,10 +431,10 @@ The answer is: neither. Or perhaps: both! Both analyses give us different inform
 Let's look at the last equation more closely. Suppose we make a prediction for a person with a low educational background (Education=0). Then the equation tells us that the expected salary of a person with neuroticism score of 0 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=0)),0)}, and of a person with a neuroticism score of 7 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=7)),0)}. So for employees with low education, the more neurotic employees earn less! If we do the same exercise for average ecudation and high education employees, we find exactly the same pattern: for each unit increase in neuroticism, the yearly salary drops by \Sexpr{round(-1*out2$coef[2],0)} Euros.
 
 
-It is true that in this company, the more neurotic persons generally earn a higher salary. But if we take into account educational background, the relationship flips around. This can be seen from Figure \ref{fig:multi_4}: looking only at the people with a low educational background (Education=0), then the more neurotic people earn less than they less neurotic colleagues with a similar educational background. And the same is true for people with an average education (Education=1) and a high education (Education=3). Only when you put all employees together in one group, you see a positive relationship between Neuroticism and salary.
+It is true that in this company, the more neurotic persons generally earn a higher salary. But if we take into account educational background, the relationship flips around. This can be seen from Figure \ref{fig:multi_5}: looking only at the people with a low educational background (Education=0), then the more neurotic people earn less than they less neurotic colleagues with a similar educational background. And the same is true for people with an average education (Education=1) and a high education (Education=3). Only when you put all employees together in one group, you see a positive relationship between Neuroticism and salary.
 
 
-<<multi_5, fig.height=4, echo=FALSE, fig.align='center'>>=
+<<multi_5, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Same HR data, now with markers for different education levels.">>=
 p +
   geom_point(aes(col = Education), alpha = alpha) +
   geom_smooth(aes(col = Education), method = 'lm', se=F) +

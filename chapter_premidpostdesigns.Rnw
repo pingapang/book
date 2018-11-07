@@ -100,7 +100,7 @@ ggplot(data, aes (x=interval, y=density1), show.legend = F) + geom_line(show.leg
 
 So, are these distributions significantly different, in other words, do the means differ significantly before aspirin, 3 hrs after aspirin and 24 hrs after aspirin? The answer is yes, because the $F$-test on the group means in the SPSS output is significant. Note the degrees of freedom: 2, because we compare 3 groups of data, so we need two dummy variables. Thus we report that aspirin has an effect on headache levels in NY Times readers, $F(2, 198)=309.58, p<0.001$.
 
-If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See the Chapter \ref{chap:advanced} on how to perform planned comparisons and post hoc tests.
+If one has specific hypotheses regarding short-term and long-term effects, one could perform a planned contrast analysis, comparing the first measure with the second measure, and the first measure with the third measure. If one is just interested in whether aspirin has an effect on headache, then the $F$-test should suffice. If apart from this general effect one wishes to explore whether there are significant differences between the three groups of data, without any prior research hypothesis about this, then one could perform a post hoc analysis of the three means. See Chapter \ref{chap:advanced} on how to perform planned comparisons and post hoc tests.
 \\
 \\
 Now recall that we mentioned an intraclass correlation, or ICC. An intraclass correlation indicates how much clustering there is within the groups, in this case, clustering of headache scores within NY Times readers. How much are the three scores alike that come from the same patient? This correlation can be computed on the basis of the SPSS output, using the following formula:
@@ -304,6 +304,7 @@ Now you'd like to know if skin conductance in CEOs shows a general decrease duri
 \begin{enumerate}
 \item What would the SPSS syntax look like? \\
 \item If you got the following output, what would your predicted skin conductance be for a CEO at 15.00 hrs? \\
+
 \begin{figure}[h]
     \begin{center}
        \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
@@ -388,7 +389,7 @@ Suppose we carry out the aspirin and headache study not only with a random sampl
 H\_0: The effect of aspirin is the same for NY Times readers as for Wall Street Journal readers.
 \\
 \\
-Suppose we have the data set in Table \ref{tab:tab:analysisprepostmixed1} (we only show the first six patients), and we only look at the measurements before aspirin intake and 3 hours after aspirin intake (pre-post design). 
+Suppose we have the data set in Table \ref{tab:analysisprepostmixed1} (we only show the first six patients), and we only look at the measurements before aspirin intake and 3 hours after aspirin intake (pre-post design). 
 
 <<analysisprepostmixed1, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
 set.seed(1234)
@@ -419,13 +420,13 @@ datawide %>% head() %>%
 
 
 
-In this part of the data set, patients 2, 4, and 6 read the Wall Street Journal, and patients 1, 3 and 5 read the NY Times. We assume that people only read one of these newspapers. We measure their headache before and after the intake of aspirin (a pre-post design). The data are now in what we call \textit{wide format}: the dependent variable \textbf{headache} is spread over two columns, \textbf{pre} and \textbf{post}. In order to analyze the data with linear models, we need them in \textit{long format}, as in Table \ref{tab}. 
+In this part of the data set, patients 2, 4, and 6 read the Wall Street Journal, and patients 1, 3 and 5 read the NY Times. We assume that people only read one of these newspapers. We measure their headache before and after the intake of aspirin (a pre-post design). The data are now in what we call \textit{wide format}: the dependent variable \textbf{headache} is spread over two columns, \textbf{pre} and \textbf{post}. In order to analyze the data with linear models, we need them in \textit{long format}, as in Table \ref{tab:analysisprepostmixed2}. 
 
 <<analysisprepostmixed2, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
 datalong %>% head() %>% 
        xtable(
         caption="Headache measures in NY Times and Wall Street Journal readers in long format.",           
-        label="tab:analysisprepostmixed1",
+        label="tab:analysisprepostmixed2",
         digits=c(0,0, 0,0,0)) %>%
         print(include.rownames=F, caption.placement = "top")
 @

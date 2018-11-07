@@ -1,17 +1,22 @@
 
 \documentclass[]{book}
+
 \usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage{fancyref}
 \usepackage{hyperref}
 \usepackage[scale=2]{ccicons}
 \usepackage{url}
-% \usepackage{xmpincl}
-% \usepackage[
-%     type={CC},
-%     modifier={by-nc-sa},
-%     version={3.0},
-% ]{doclicense}
+\usepackage{fancyhdr}
+
+
+
+\pagestyle{fancy}
+% \fancyhf{}
+% \fancyhead[LE]{\leftmark}
+% \fancyhead[RO]{\rightmark}
+% \fancyfoot[C]{\thepage}
+
 
 
 % Title Page
@@ -19,11 +24,14 @@
 
 
 \author{St\'ephanie M. van den Berg}
-\date{Version SPSS 1.0.0 \\ (\today)}
+\date{Version 1.0.1 (SPSS)\\ (\today)}
 
 
 
 \begin{document}
+
+\frontmatter
+
 \maketitle
 
 \pagestyle{empty}
@@ -49,6 +57,7 @@ E-mail: stephanie.vandenberg@utwente.nl\\
 \begin{center}
 \begin{tabular}{ll}
 First edition:  & October 2018 \\
+Second edition:  & November 2018 \\
 \end{tabular}
 \end{center}
 
@@ -88,8 +97,8 @@ This book is for bachelor students in social, behavioural and management science
 
 
 
-
-
+\mainmatter
+\pagestyle{plain}
 \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
 
 \Sexpr{knit_child('linear modelling introduction.Rnw')} % simple regression

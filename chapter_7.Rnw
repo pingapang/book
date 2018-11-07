@@ -60,7 +60,7 @@ data_frame(height ,  residuals=out$residuals) %>%
 @
 
 
-When it looks like this, it shows that the residuals are randomly chosen and independent of height. Taken together Figures \ref{fig:ass_3}, \ref{fig:ass_4} and \ref{fig_ass_4b} suggest that the assumptions of the linear model are met. 
+When it looks like this, it shows that the residuals are randomly chosen and independent of height. Taken together Figures \ref{fig:ass_3}, \ref{fig:ass_4} and \ref{fig:ass_4b} suggest that the assumptions of the linear model are met. 
 
 Let's have a look at the same kinds of residual plots when each of the assumptions of the linear model is not violated.
 

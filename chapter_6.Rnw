@@ -589,7 +589,7 @@ UNIANOVA height BY country sex
     \caption{Main effects of country (A, B, and C) and sex (0,1) and the country by sex interaction effects.}
 \end{figure}
 
-The SPSS output is in Figure \ref{fig:interactionheight3group}. In the Parameter Estimates table we see that 3 dummy variables have been computed for country automatically by SPSS. One for being in country A, and one for being in country B and one for country C. The effect for country C was fixed to 0 because it was redundant (with $K$ categories, you only need $K-1$ dummy variables, see Chapter \ref{chap:}). Therefore country C is here used as the so-called reference category. 
+The SPSS output is in Figure \ref{fig:interactionheight3group}. In the Parameter Estimates table we see that 3 dummy variables have been computed for country automatically by SPSS. One for being in country A, and one for being in country B and one for country C. The effect for country C was fixed to 0 because it was redundant (with $K$ categories, you only need $K-1$ dummy variables, see Chapter \ref{chap:categorical}). Therefore country C is here used as the so-called reference category. 
 
 Furthermore, we see that SPSS created 6 dummy variables for the interaction effect, one for each combination of sex (male and female) and country (A, B and C). Again, because of redundancy, only two of these are not fixed to 0. (Why this is so, will be explained later.) Again, if we ignore the redundant effects, and rename the variables we obtain the following equation:
 
@@ -601,10 +601,10 @@ Furthermore, we see that SPSS created 6 dummy variables for the interaction effe
 
 
 All observations done in country C for variables CountryA and CountryB are coded as 0. So let's do the math to get the predicted heights for each subgroup. Females are coded as 0 and males as 1, so a Female from country C gets the predicted value $171$. Let's do the computations for all subgroups:
-\\
- \\
- \\
- \\
+
+
+\begin{table}
+\caption{Expected heights for males and females in three countries.}
  \begin{tabular}{lrrr}
  Sex & Country & equation & height\\ \hline
  Female & A & $173.8+2.8  \times 0 +4 \times 1 + 19 \times 0 -  12.8 \times 1 \times 0 -  17.8 \times 0 \times 0 $ & 165\\
@@ -614,10 +614,9 @@ All observations done in country C for variables CountryA and CountryB are coded
   Female & C & $173.8+2.8  \times 0 +4 \times 0 + 19 \times 0-  12.8 \times 0 \times 0 -  17.8 \times 0 \times 0 $ & 173.8\\
  Male & C & $173.8+2.8  \times 1 +4 \times 0 + 19 \times 0-  12.8 \times 0 \times 1 -  17.8 \times 0 \times 1 $ & 171\\
  \end{tabular}
-\\
-\\
-\\
-\\
+ \label{tab:expie}
+ \end{table}
+
 Note that we now have very different values for the regression parameters than in the analysis with only countries A and B (see Figure \ref{fig:interactionheightcountrysex}), but nevertheless we end up with the same expected heights in Countries A and B. The difference in the parameter values stems from the fact that we have now treated country C as the reference category (coefficient fixed to 0), whereas in the previous two country analysis, we treated country B as the reference category. 
 
 Let's test the hypothesis of equal differences in heights between males and females across the three countries. In the output we see that the Country=A by female interaction effect is significant at 0.05: there is an extra height of -12.8 cms seen in females from country A, over and above the main effects of being female in general and being from country A. In other words, the effect of being female is smaller in country A than it is in Country C (the reference country). We also see this in the predicted means: male-female difference in country C is -2.8 (males shorter), but in country A it is +10 (males larger). 
@@ -669,9 +668,9 @@ From a sample of data on height, country (country A and country B), and weight, 
 
 \section{The number of non-redundant parameters in a linear model}
 
-Let's go back to the example of heights for males and females in three countries. If we're interested in averages, there are 6 of them. These are displayed in Figure \ref{}, but we also display them in Table \ref{}.
+Let's go back to the example of heights for males and females in three countries. If we're interested in averages, there are 6 of them. These are displayed in Figure \ref{fig:country_sex3}, but we also display them in Table \ref{tab:expie}.
 
-In Chapter \ref{chap:} we saw that we can model two means using one single dummy variable. Thus, a variable \textbf{sex} with values 'male' and 'female' can be coded with a dummy variable \textbf{female} with values '0' and '1', respectively. Similarly, we saw that a variable \textbf{country} with three different values, 'A', 'B' and 'C', can be coded with 2 dummy variables. In general, any categorical variable with $K$ categories can be coded with $K-1$ dummy variables.
+In Chapter \ref{chap:categorical} we saw that we can model two means using one single dummy variable. Thus, a variable \textbf{sex} with values 'male' and 'female' can be coded with a dummy variable \textbf{female} with values '0' and '1', respectively. Similarly, we saw that a variable \textbf{country} with three different values, 'A', 'B' and 'C', can be coded with 2 dummy variables. In general, any categorical variable with $K$ categories can be coded with $K-1$ dummy variables.
 
 % Now with the two sexes and three countries, we have 6 means in total, so in essence we could code them with 5 dummy variables. We could for example look at the means in a way as presented in Table \ref{tab:} and take one of the means, for example the last one, as the reference category.
 % 
@@ -695,13 +694,11 @@ Note that the syntax only leaves out the multiplication in the DESIGN subcommand
     \caption{Output with main effects of country and sex, and an interaction effect.}
 \end{figure}
 
-Table \ref{tab:} presents the expected means based on this model with only main effects. When we compare these expected means with the observed means in Table \ref{tab:} we see a clear discrepency: our model makes predictions that do not match the observations in our sample data. This does not have to be a problem of course: our sample data are merely what they are, sample data. In reality we might be more interested in the population means. Our model might actually be a good reflection of what is true at the population level. 
+Table \ref{tab:country_sex5} presents the expected means based on this model with only main effects. When we compare these expected means with the observed means in Table \ref{tab:country_sex5} we see a clear discrepency: our model makes predictions that do not match the observations in our sample data. This does not have to be a problem of course: our sample data are merely what they are, sample data. In reality we might be more interested in the population means. Our model might actually be a good reflection of what is true at the population level. 
 
-Figure \ref{fig:} shows the expected means based on main effects only. The actual observed means are represented in colour and the arrows represent the differences between the observed and the expected means for each subgroup. If you observe closely, you see that for each country separately, the deviation for the males is exactly opposite the deviation for the females. This can also be seen when you compare Tables \ref{} and \ref{}. For instance, if you look at country A, the observed mean for males equals ... and the expected mean equals .... This difference equals .... If you look at the females, the difference between the observed and expected mean is the opposite of that in the males: ... .
+Figure \ref{fig:country_sex4} shows the expected means based on main effects only. The actual observed means are represented in colour and the arrows represent the differences between the observed and the expected means for each subgroup. If you observe closely, you see that for each country separately, the deviation for the males is exactly opposite the deviation for the females. 
 
 <<country_sex4, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Expected weights for males and females in countries A, B and C on the basis of main effects only. The arrows represent the deviations from the observed means in the sample.">>=
-
-
 
 pred <- data %>% 
         lm(height ~  country + sex , data=.) %>% predict
@@ -738,7 +735,7 @@ data %>%
 
 You see the same happening in the males and females in country B, and in the males and females in country C. Per country, the differences between observed and expected add up to 0. Interestingly, you see the same happening if you look horizontally: if you look only at the males, you see that the deviations for each country add up to 0, and the same happens when you look only at the females. 
 
-Table \ref{} plots these deviations for each combination of sex and country. Now look again at the output of the model with the interaction effect in Table \ref{}. The interaction effect are exactly the same numbers, save a plus or minus sign. This gives a clear interpretation to the interaction effects: they are the deviations from the main effects. 
+Table \ref{tab:country_sex5} plots these deviations for each combination of sex and country. Now look again at the output of the model with the interaction effect in Table \ref{fig:interactionheight3group}. The interaction effect are exactly the same numbers, save a plus or minus sign. This gives a clear interpretation to the interaction effects: they are the deviations from the main effects. 
 
 
 

@@ -682,15 +682,22 @@ GENLIN train (REFERENCE=FIRST) BY business
 
 
 \item
-People that travel for business score 1 on the business variable. So the predicted logodds for those people is $-1.155 - 0.050 \times 1 = -1.205$. The odds is the $exp(-1.205)=\Sexpr{exp(-1.205)} $. So the odds of going by train are 0.30 to 1. This is equivalent to 3 to 10. So suppose we have 13 trips, 3 are by train and 10 are not by train. So the probability of a trip being by train equals $3/13=\Sexpr{round(3/13,2)}$.
+People that travel for business score 1 on the business variable. So the predicted logodds for those people is $-1.155 - 0.050 \times 1 = -1.205$. The odds is the $exp(-1.205)=\Sexpr{exp(-1.205)} $. So the odds of going by train are 0.30 to 1. This is equivalent to 3 to 10. So suppose we have 13 trips, 3 are by train and 10 are not by train. So the probability of a trip being by train equals $3/13=\Sexpr{round(3/13,2)}$. Or logit(-1.205)=exp(-1.205)/(1+exp(-1.205))=0.3/1.3=0.23
 
 \item
 People that travel NOT for business score 0 on the business variable. So the predicted logodds for those people is $-1.155 - 0.050 \times 0 = -1.155$. The odds is the $exp(-1.155)=\Sexpr{exp(-1.155)} $. So the odds of going by train are 0.32 to 1. This is equivalent to 32 to 100. So suppose we have 132 trips, 32 are by train and 100 are not by train. So the probability of a trip being by train equals $32/132=\Sexpr{round(32/132,2)}$.
 
 \item
 
+logit(-1.205)=exp(-1.205)/(1+exp(-1.205))=0.3/1.3=0.23
+
 
 \item
+
+logit(-1.205+0.050)=logit(-1.155)=
+exp(-1.155)/(1+exp(-1.155))=0.32/1.32=0.24
+
+
 
 \item
 

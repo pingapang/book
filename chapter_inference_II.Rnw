@@ -123,7 +123,7 @@ lb=-20; ub=qt(0.025, df=df, ncp=ncp)
             + ylab("density"))
 @
 
-Now let's suppose we have only one sample of 40 bottles, and we find a slope of 0.1 with a standard error of 0.19. Then this value of 0.1 is $(0.1-0)/0.19=0.53$ standard errors away from 0. Thus, the $T$-statistic is 0.53. We then look at the $t$-distribution with 38 degrees of freedom, and see that such a $T$-value of 0.53 is not very strange: it lies well within the middle 95\% of the $t$-distribution (see Figure \ref{inf_117}.
+Now let's suppose we have only one sample of 40 bottles, and we find a slope of 0.1 with a standard error of 0.19. Then this value of 0.1 is $(0.1-0)/0.19=0.53$ standard errors away from 0. Thus, the $T$-statistic is 0.53. We then look at the $t$-distribution with 38 degrees of freedom, and see that such a $T$-value of 0.53 is not very strange: it lies well within the middle 95\% of the $t$-distribution (see Figure \ref{fig:inf_117}).
 
 Let's determine the $p$-value again for this slope of 0.1: we determine the probability that we obtain such a $T$-value of 0.53 or larger. Figure \ref{fig:inf_17} shows the area under the curve for values of $T$ that are larger than 0.53. This area under the curve can be seen as a probability. The total area under the curve of the $t$-distribution amounts to 1. If we know the area of the shaded part of the total area, we can compute the probability of finding $T$-values larger than 0.53.
 
@@ -291,10 +291,11 @@ The $p$-value $\Sexpr{2*(1-pt(2/1.5,2))}$ is larger than her $\alpha$, so the ef
 \section{Type I and Type II errors in decision making}
 
 
-Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully fail to reject the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error). Table \ref{fig:fig:typeIandII} gives an overview.
+Since data-analysis is about probabilities, there is always a chance that you make the wrong decision: you can wrongfully reject the null-hypothesis, or you can wrongfully fail to reject the null-hypothesis. Pearson and Neyman distinguished between two kinds of error: one could reject the null-hypothesis while it is actually true (error of the first kind, or type I error) and one could accept the null-hypothesis while it is not true (error of the second kind, or type II error). Table \ref{tab:typeIandII} gives an overview.
 
 
 \begin{table}[ht]
+\caption{Four different scenarios for hypothesis tests.}
 \centering
 \begin{tabular}{l l c c}
 & & \multicolumn{2}{c}{\textbf{Test conclusion}} \\
@@ -307,8 +308,7 @@ Since data-analysis is about probabilities, there is always a chance that you ma
 \raisebox{1.5ex}{\textbf{Truth}} & $H_A$ true & Type~II Error & OK \\
   \cline{2-4}
 \end{tabular}
-\caption{Four different scenarios for hypothesis tests.}
-\label{fig:typeIandII}
+\label{tab:typeIandII}
 \end{table}
 
 To illustrate the difference between type I and type II errors, let's recall the famous fable by Aesop about the boy who cried wolf. The tale concerns a shepherd boy who repeatedly tricks other people into thinking a wolf is attacking his flock of sheep. The first time he cries "There is a wolf!", the men working in an adjoining field come to help him. But when they repeatedly find there is no wolf to be seen, they realise they are being fooled by the boy. One day, when a wolf \textit{does} appear and the boy again calls for help, the men believe that it is another false alarm and the sheep are eaten by the wolf.

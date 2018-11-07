@@ -500,7 +500,7 @@ Correlation stands for the \textit{co-relation} between two variables. It tells 
 
 Since a slope can be negative, a correlation can be negative too. Furthermore, a correlation is always between -1 and 1. Look at Figure \ref{fig:lm_19}: the correlation between $x$ and $y$ is \Sexpr{round(out1$coef[2],3)}. The dots are almost on a straight line. If the dots would all be exactly on the straight line, the correlation would be 1.
 
-<<lm_20,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Plot of housing data.'>>=
+<<lm_20,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Various plots showing different correlations between variables x and y.'>>=
 set.seed(111)
 x <- rnorm(800,100, 5)
 y[1:200] <- -2000 + 20 * x[1:200] + rnorm(100,0,170)
@@ -607,6 +607,47 @@ The correlation is 0.30, so if you increase intelligence by one standard deviati
 
 
 \section{Regression using SPSS}
+
+<<lm_22,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Imaginary data set on age and conservatism scores in 102 men.'>>=
+set.seed(1112)
+age <- rnorm(102,40,10) %>% round(1)
+conserv <- (5 - 0.02*age + rnorm(102, 0, 1)) %>% round(0)
+data_frame(age,conserv) %>% 
+        ggplot(aes(age,conserv))+
+        geom_point() + geom_smooth(method="lm", se=F)
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data_frame(age, conserv) ,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/simple.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/simple.sps',
+              package = c("SPSS"))
+@
+
+Figure \ref{fig:lm_22} shows an imaginary data set on age and conservatism scores on a 7-point scale in 102 men. The blue line is the least squares regression line. This line can be found with SPSS using the following UNIANOVA syntax:
+
+\begin{verbatim}
+UNIANOVA conserv WITH age
+/PRINT parameter.
+\end{verbatim}
+
+In the syntax we first indicate the dependent variable (the one that we want to explain, which is in this case \textbf{conserv}), and then we indicate that we want to explain this variable with the independent variable \textbf{age}. In the next line we indicate that we want to see the intercept and slope parameters in the output.
+
+SPSS will then show two tables. The first table will be discussed in later chapters. For now, we only look for the table with the Parameter Estimates. Figure \ref{fig:simple} shows that table. It shows that the dependent variable is indeed \textbf{conserv}, and that there are two parameters in our regression model: an intercept and a slope parameter for the variable \textbf{age}. In the column with $B$ we find the values for these parameters. The intercept has the value 4.904 (when rounded to 3 decimals) and the slope has the value -0.021. Thus, with this output, the linear equation for the regression line can be filled in:
+
+\begin{equation}
+conserv = 4.904 - 0.021 \times age + e
+\end{equation}
+
+With this equation we can predict values for conservatism for ages that are not even in the data set displayed in \ref{fig:lm_22}. For instance, that plot does not show a man of age 70, but on the basis of the linear equation, the best bet would be that such a man would have a conservatism score of $4.904 - 0.021 \times 70= \Sexpr{4.904 - 0.021 * 70}$.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 26cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/simple.pdf}
+    \end{center}
+    \label{fig:simple}
+    \caption{SPSS output of a simple regression.}
+\end{figure}
+
 
 
 
