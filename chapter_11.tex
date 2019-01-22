@@ -1,0 +1,130 @@
+\chapter{Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+
+
+\section{Checking assumptions}
+
+In previous chapters we have discussed the assumptions of linear models and linear mixed models: linearity (in parameters), homoscedasticity (equal variance), normal distribution of residuals, normal distribution of random effects (relevant for linear mixed models only), and independence (no clustering unaccounted for). 
+
+
+
+
+The problem of nonlinearity can be solved by introducing quadratic terms, for instance by replacing a linear model $Y = b_0 + b_1 X + e$ by another linear model $Y = b_0 + b_1 X + b_2 X^2 + e$.
+
+If we have nonindependence, then you can introduce either an extra fixed effect or a random effect for this clustering. For example, if you see that cars owned by low income families have much more mileage than cars owned by high income families, you can account for this by adding a fixed effect of an income variable as predictor. If you see that average milage is rather similar within municipality but that average mileage can vary quite a lot across municipalities, you can introduce a random effect for municipality (if you have data say from 30 different municipalities). 
+
+Unequal variance of residuals and nonnormal distribution of residuals are harder to tackle. Unequal variance can be tackled sometimes by using linear models, but with more advanced options, or by making corrections to $p$-values that make inference more robust against model violations. Violations of normality are even a bigger problem. Nonnormality can sometimes be solved by using generalized linear models (see next chapter). A combination of nonnormality and unequal variance can sometimes be solved by using a transformation of the data, for instance not analyzing $Y = b_0 + b_1 X + e$ but analyzing $log(Y)=  b_0 + b_1 X + e$ or $\sqrt{Y}=  b_0 + b_1 X + e$.
+
+If these data transformations or advanced options don't work (or if you're not acquainted with them), and your data show nonequal variance and/or nonnormally distributed residuals, there are nonparametric alternatives.  Here we discuss two: Friedman's test and Wilcoxon's signed rank test. We explain them using an imaginary data set on speedskating.
+\\
+\\
+Suppose we have data on 12 speedskaters that participate on the 10 kilometers distance in three separate championships in 2017-2018: the European Championships, the Winter Olympics and the World Championships. Your friend expects that speedskaters will perform best at the Olympic games, so there she expects the fastest times. So you decide to test the null-hypothesis that average times are the same at the three occasions. In Figure \ref{fig:nonparmixed_1} we see a boxplot of the data.
+
+% H_0: $\mu_{EC}=\mu_{WC}_\mu{WO}$
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rep(seq(1:12), 3) \%>\% as.factor(): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rep(c("{}EuropeanChampionships"{}, "{}WorldChampionships"{}, "{}Olympics"{}), : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(36, log(1017), 0.002) \%>\% exp() \%>\% round(2): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in time + rep(c(-0.2, 1, 0.2), each = 12): non-numeric argument to binary operator}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in max(time): invalid 'type' (closure) of argument}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in min(time): invalid 'type' (closure) of argument}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(athlete, occasion, time) \%>\% dplyr::arrange(athlete): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datalong \%>\% tidyr::spread(occasion, time) \%>\% dplyr::arrange(athlete): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in do.call(paste("{}writeForeign"{}, package, sep = "{}"{}), c(list(df = df, : object 'datalong' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datalong \%>\% ggplot(aes(x = occasion, y = time)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+In order to test this null-hypothesis, we run a linear mixed model with dependent variable time, and independent variable occasion. We use random effects for the differences in speed across skaters. In Figure \ref{fig:nonparmixed_2} we see the residuals:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datalong \%>\% lmer(time \textasciitilde{} occasion + (1 | athlete), data = .) \%>\% : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cbind(datalong, res): object 'datalong' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datalong \%>\% ggplot(aes(x = occasion, y = res)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+From this plot we clearly see that the assumption of equal variance (homogeneity of variance) is violated: the variance of the residuals in the Worldchampionships condition is clearly smaller than the variance of the European championships condition. From the histogram of the residuals in Figure \ref{fig:nonparmixed_3} we also see that the distribution of the residuals is not bell-shaped: it is positively skewed (skewed to the right).
+
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datalong \%>\% ggplot(aes(x = res)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+% \\
+% \\
+Since the assumptions of homogeneity of variance and of normally distributed residuals are violated\footnote{Remember that assumptions relate to the population not samples: oftentimes your data set is too small to say anything about assumptions at the populationlevel. Residuals for a data set of 8 persons might show very nonnormal residuals, or very different variances for two subgroups of 4 persons each, but that might just be a coincidence, a random result because of the small sample size. If in doubt, it is best to use nonparametric methods.}, the results from the linear mixed model cannot be trusted. In order to answer our research question, we therefore have to resort to another kind of test. Here we discuss Friedman's test, a non-parametric test, for testing the null-hypothesis that the \textit{medians} of the three groups of data are the same. This Friedman test can be used in all situations where you have at least 2 levels of the within variable. In other words, you can use this test when you have data from three occasions, but also when you have data from 10 occassions or only 2. In the following section the Wilcoxon signed ranks test is discussed. This test is often used in social and behavioural sciences. The downside of this test is that it can only handle data sets with 2 levels of the within variable. In other words, it can only be used when we have data from two occassions. Friedman's test is therefore more generally applicable than Wilcoxon's. We therefore advise to always go with the Friedman test, but for the sake of completeness, we will also explain the Wilcoxon test.
+
+
+
+
+
+\section{Friedman's test for $k$ measures}
+
+
+Similar to many other nonparametric tests for testing the equality of medians, Friedman's test is based on ranks. Figure \ref{fig:nonparmixed_4} shows the speedskating data in wide format.
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datawide \%>\% xtable(caption = "{}The speedskating data in wide format."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+We rank all of these time measures by determining the fastest time, then the next to fastest time, etcetera, until the slowest time. But because the data in each row belong together (we compare individuals with themselves), we do the ranking \textit{row-wise}. For each athlete separately, we determine the fastest time (1), the next fastest time (2), and the slowest time (3) and put the ranks in a table.
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in apply(datawide[, 2:4], 1, function(x) rank(x)): object 'datawide' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'datawide' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in t(ranks): object 'ranks' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in datawideranks \%>\% xtable(caption = "{}Row-wise ranks of the speedskating data."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

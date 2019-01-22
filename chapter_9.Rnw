@@ -153,7 +153,7 @@ data.frame(student, grade, rank.grade, shoesize, rank.shoesize, height, rank.hei
 @
 
 
-When we let SPSS compute $r_2$ for us, it automatically ranks the data for us. Suppose we have two variables grade and height and we want to compute $r_2$, then we use the syntax:
+When we let SPSS compute $r_s$ for us, it automatically ranks the data for us. Suppose we have two variables grade and height and we want to compute $r_s$, then we use the syntax:
 
  \begin{verbatim}
  NONPAR CORR 
@@ -161,7 +161,7 @@ When we let SPSS compute $r_2$ for us, it automatically ranks the data for us. S
   /PRINT=SPEARMAN .
  \end{verbatim}
   
-In the output you will see a correlation matrix very similar the one for a Pearson correlation. Spearman's rho is equal to the $r_2$ mentioned above. You will also see whether the correlation is significantly different from 0, indicated by a $p$-value. If the $p$-value is very small, you may conclude that on the basis of these data, the correlation in the population is not equal to 0, ergo, in the population there is a relationship between shoe size and aggression. Note that you can use this $p$-value if you want to test the hypothesis that the slope for the regression of height on grade is zero in the population (or, equivalently, for the regression of grade on height).  
+In the output you will see a correlation matrix very similar the one for a Pearson correlation. Spearman's rho is equal to the $r_s$ mentioned above. You will also see whether the correlation is significantly different from 0, indicated by a $p$-value. If the $p$-value is very small, you may conclude that on the basis of these data, the correlation in the population is not equal to 0, ergo, in the population there is a relationship between shoe size and aggression. Note that you can use this $p$-value if you want to test the hypothesis that the slope for the regression of height on grade is zero in the population (or, equivalently, for the regression of grade on height).  
   
 
 Below we discuss an alternative measure for a correlation for ordinal data, the Kendall rank-order correlation coefficient $T$. 

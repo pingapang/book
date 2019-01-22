@@ -121,9 +121,12 @@ As this correlation is quite higher than 0, there seems to be quite a lot of clu
 
 \subsection{Exercises}
 
-Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are as follows:
-\\
- \\
+Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are in Table \ref{tab:math_scores}.
+
+
+
+\begin{table}
+ \caption{Math test scores.}
  \begin{tabular}{lrr}
  student & colour & score \\ \hline
  001 & yellow & 60 \\
@@ -143,8 +146,8 @@ Suppose you let a sample of students do a math test in three different rooms: on
  005 & blue & 18 \\
  \dots & \dots & \dots \\
  \end{tabular}
-\\
-\\
+\label{tab:math_scores}
+\end{table}
 
 \begin{enumerate}
 \item If you want to test the hypothesis that the colour of the walls do not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be? 
@@ -274,9 +277,10 @@ A linear mixed model was run, using a quantitive variable time and random effect
 
 \subsection{Exercises}
 
-Suppose you have a number of CEOs with smart watches and you have these smart watches log skin conductance. Skin conductance is a good measure for stress. These measurements are done at random intervals, for at most 4 times during one day. The experiment starts at 7am and stops at 7pm. The \textbf{time} variable measures how many hours have passed since 7am.
- \\
- \\
+Suppose you have a number of CEOs with smart watches and you have these smart watches log skin conductance. Skin conductance is a good measure for stress. These measurements are done at random intervals, for at most 4 times during one day. The experiment starts at 7am and stops at 7pm. The \textbf{time} variable measures how many hours have passed since 7am. Table \ref{tab:conductance} shows part of the data matrix.
+
+ \begin{table}
+ \caption{Skin conductance measures in CEOs.}
  \begin{tabular}{lrr}
  CEO & time & conductance \\ \hline
  001 & 2 & 80 \\
@@ -297,25 +301,17 @@ Suppose you have a number of CEOs with smart watches and you have these smart wa
  004 & 11 & 65 \\
  \dots & \dots & \dots \\
  \end{tabular}
-\\
-\\
+\label{tab:conductance}
+\end{table}
+
+
 Now you'd like to know if skin conductance in CEOs shows a general decrease during the day. Your null-hypothesis is therefore that there is no linear effect of time on skin conductance. Now, you have multiple measures for each CEO (repeated measures), and there might be individual differences in the average skin conductance that you would like to take into account. Therefore you perform a MIXED analysis in SPSS. 
 
 \begin{enumerate}
-\item What would the SPSS syntax look like? \\
-\item If you got the following output, what would your predicted skin conductance be for a CEO at 15.00 hrs? \\
 
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
-    \end{center}
-\end{figure}
+\item Look at the data plotted in Figure \ref{fig:analysispremidpost7}: do you think a linear effect is reasonable for this data set?
 
-
-
-\item Look at the data plotted: do you think a linear effect is reasonable for this data set?
-
- <<analysispremidpost7, fig.height=4, echo=FALSE, fig.align='center'>>=
+ <<analysispremidpost7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Skin conductance measured in CEOs.'  >>=
 set.seed(1234)
 time <- runif(100, 0, 12)
 skinconductance <- rnorm(100, 78 -4.2 * time ,10    )
@@ -324,6 +320,17 @@ sc %>% ggplot( aes(x=time, y=skinconductance)) + geom_point() + ylab("skin condu
 @
 
 
+\item What would the SPSS syntax look like? \\
+\item If you got the output as in Figure \ref{fig:CEOexample}, what the predicted skin conductance be for a CEO at 15.00 hrs? 
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
+    \end{center}
+    \caption{Example output for the analysis of skin conductance in CEOs.}
+    \label{fig:CEOexample}
+\end{figure}
 
 
 \item How much clustering is there for skin conductance across CEOs? \\
@@ -331,9 +338,9 @@ sc %>% ggplot( aes(x=time, y=skinconductance)) + geom_point() + ylab("skin condu
 \item Is there a significant effect of time of day on skin conductance in CEOs?\\
 \item What is the effect of time of day on skin conductance in CEOs? Also give the 95\% confidence interval of this effect.
 \item Write a short paragraph that describes the results in APA format.
-\item Given a new data set where every student's mood was tested at three points in time: During Christmas holidays (time points 1), during Easter holidays (time point 2) and at the start of the academic year, September 1 (time point 3). Look at the data plotted: do you think a linear effect is reasonable for this data set? Explain your answer.
+\item Suppose there is a new data set where every student's mood was tested at three points in time: During Christmas holidays (time point 1), during Easter holidays (time point 2) and at the start of the academic year, September 1 (time point 3). Look at the data plotted in Figure \ref{fig:analysispremidpost8}: do you think a linear effect is reasonable for this data set? Explain your answer.
 
- <<analysispremidpost8, fig.height=4, echo=FALSE, fig.align='center'>>=
+ <<analysispremidpost8, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data on mood at three different time points." >>=
 set.seed(1234)
 time <- rep(c(1, 2, 3), 50)
 mood <- rnorm(150, 2780 -64.2 * time^3 ,100    )
@@ -341,7 +348,7 @@ data <- data.frame(time, mood)
 data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time point") 
 @
 
-\item Provide the syntax you would use to analyse the problem of question 9.
+\item Provide the syntax that you would use to analyze the problem of question 9.
 
 
 \end{enumerate}
@@ -350,6 +357,8 @@ data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time
 
 
 \begin{enumerate}
+
+\item Yes, a general linear downward trend is observed for the skin conductance.
 \item 
 \begin{verbatim}
 MIXED conductance WITH time
@@ -358,7 +367,7 @@ MIXED conductance WITH time
   /RANDOM=intercept | SUBJECT(CEO) COVTYPE(VC).
 \end{verbatim}
 \item 15 hrs is equal to 8 hours after 7am, so the expected skin conductance is equal to $62 - 4 \times 8= 30$\\
-\item Yes, a general linear downward trend is observed for the skin conductance.
+
 \item The intraclass correlation coefficient is equal to $\frac{235}{235+247}=0.49$, 
 \item The correlation is quite different from 0, so there is certainly some clustering in the data and it is important to take these individual differences into account. \\
 \item Yes, there is a signficant linear effect of time on skin conductance in CEOs, $t(59)=-4.24, p < 0.01$.\\
@@ -527,7 +536,7 @@ MIXED headache BY measure group
 \end{verbatim}
 
 
-The output is given in Figure \ref{fig:fig:mixedprepostquali}. Here SPSS has automatically created dummy variables, one for \textbf{measure=1}, one for \textbf{group=1}, and one for the interaction effect, \textbf{group=1 AND measure=1}. Because the dummy coding is different, the intercept and the main effects of group and measure have changed, but you see that the interaction effect is still 0.6, albeit now negative. We also see that the significance level of the interaction effect is still the same. You are always free to choose to either construct your own dummy variables and analyze them in a quantitative way (using WITH), or to let SPSS construct the dummy variables for you (using BY): the $p$-value for the interaction effect will always be the same (this is not true for the intercept and the main effects).
+The output is given in Figure \ref{fig:mixedprepostquali}. Here SPSS has automatically created dummy variables, one for \textbf{measure=1}, one for \textbf{group=1}, and one for the interaction effect, \textbf{group=1 AND measure=1}. Because the dummy coding is different, the intercept and the main effects of group and measure have changed, but you see that the interaction effect is still 0.6, albeit now negative. We also see that the significance level of the interaction effect is still the same. You are always free to choose to either construct your own dummy variables and analyze them in a quantitative way (using WITH), or to let SPSS construct the dummy variables for you (using BY): the $p$-value for the interaction effect will always be the same (this is not true for the intercept and the main effects).
 
 
 
@@ -730,15 +739,15 @@ Also note that the within and between distinction refers to the units of analysi
  \end{tabular}
 \\
 \\
-In this data set on Math performance, we see two variables, nationality and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.
-\\
-1. Would you call this a mixed design? Explain.\\
-2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+In this data set on Math performance, we see two variables, nationality and sex. 
+1. What kind of variables are these: within-participant variables or between-participants variables? Explain. \\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
 \\
 \\
 \item Look at the data table below.
 \\
- \\
+\\
  \begin{tabular}{rllr}
   ID & Nationality & Age & Mathscore  \\ \hline
   1   & Dutch      &  3 & 67   \\
@@ -749,9 +758,9 @@ In this data set on Math performance, we see two variables, nationality and sex.
  \end{tabular}
 \\
 \\
-In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
-1. Would you call this a mixed design? Explain.\\
-2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+1. In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
 \\
 \\
 \item Look at the data table below.
@@ -767,10 +776,11 @@ In this data set on Math performance, we see two variables, nationality and age.
  \end{tabular}
 \\
 \\
-In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
-1. Would you call this a mixed design? Explain.\\
-2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.\\
-\\
+1. In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+
+
 \item Look at the data table below.
 \\
  \\
@@ -788,9 +798,9 @@ In this data set on mood in transsexuals, we see two variables, the subject they
  \end{tabular}
 \\
 \\
-In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
-1. Would you call this a mixed design? Explain.\\
-2. Would you analyze this data set with a linear model or with a linear mixed model? Explain.\\
+1.In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
 
 \end{enumerate}
 
@@ -801,37 +811,36 @@ In this data set on average Math performance in schools, we see two variables, c
 
 \item 
 
-1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.
+1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.\\
 2. Two groups of participants were studied. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
 
 
 \item
-1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.
+1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.\\
 2. One group of participants was studied and for each participant we have two math scores. Because we have more than one measure for each participant, we have to use a linear mixed model to account for clustering.
 
 \item 
-Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.
-1. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. 
-2. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+1.Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.\\
+2. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. \\
+3. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
 
 
 \item 
-Each participant is either Dutch or German. This is a between-participants variable.
-On measurement 1 participants have a different age than on measurement 2. This is a within-participant variable.
-1. This is a mixed design as it has both a within-participant and a between-participants independent variable. 
-2. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
+1. Each participant is either Dutch or German. This is a between-participants variable. On measurement 1 the same participants have a different age than on measurement 2. Age is therefore a within-participant variable.\\
+2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+3. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
 
 \item
-Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.
-1. This is a mixed design as it has both a within-participant and a between-participants independent variable. 
-2. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
+1. Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.\\
+2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+3. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
 
 
 \item
 
-Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.
-1. This is a mixed design as it has both a within-school and a between-schools independent variable. 
-1. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
+1. Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.\\
+2. This is a mixed design as it has both a within-school and a between-schools independent variable. \\
+3. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
 
 
 
@@ -894,7 +903,7 @@ MIXED cortisol WITH measure BY group
 \end{verbatim}
 
 
-The SPSS output is presented in Figure \ref{fig:fig:mixed20}. There we see an intercept of 19.7, a slope of 1.0 for the effect of measure, two main effects for the group variable (group3 is the reference group, in this case the Olympeans, see the plot above), and two effects for the interaction effect (one for control group I and one for control group II). Let's fill in the linear equation based on this output:
+The SPSS output is presented in Figure \ref{fig:mixed20}. There we see an intercept of 19.7, a slope of 1.0 for the effect of measure, two main effects for the group variable (group3 is the reference group, in this case the Olympeans, see the plot above), and two effects for the interaction effect (one for control group I and one for control group II). Let's fill in the linear equation based on this output:
 
 
 

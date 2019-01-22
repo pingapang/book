@@ -41,11 +41,11 @@
 \contentsline {section}{\numberline {2.1}Dependent and independent variables}{47}{section.2.1}
 \contentsline {subsection}{\numberline {2.1.1}Exercises}{48}{subsection.2.1.1}
 \contentsline {section}{\numberline {2.2}Linear equations}{49}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Exercises}{52}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Answers}{52}{subsection.2.2.2}
-\contentsline {section}{\numberline {2.3}Linear regression}{52}{section.2.3}
+\contentsline {subsection}{\numberline {2.2.1}Exercises}{51}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Answers}{54}{subsection.2.2.2}
+\contentsline {section}{\numberline {2.3}Linear regression}{54}{section.2.3}
 \contentsline {section}{\numberline {2.4}Residuals}{56}{section.2.4}
-\contentsline {section}{\numberline {2.5}Least squares regression lines}{58}{section.2.5}
+\contentsline {section}{\numberline {2.5}Least squares regression lines}{57}{section.2.5}
 \contentsline {subsection}{\numberline {2.5.1}Exercises}{61}{subsection.2.5.1}
 \contentsline {subsection}{\numberline {2.5.2}Answers}{61}{subsection.2.5.2}
 \contentsline {section}{\numberline {2.6}Pearson correlation}{62}{section.2.6}
@@ -54,110 +54,110 @@
 \contentsline {subsection}{\numberline {2.7.2}Answers}{66}{subsection.2.7.2}
 \contentsline {section}{\numberline {2.8}Regression using SPSS}{67}{section.2.8}
 \contentsline {section}{\numberline {2.9}Linear models}{68}{section.2.9}
-\contentsline {chapter}{\numberline {3}Inference I: random samples, standard errors and confidence intervals}{71}{chapter.3}
-\contentsline {section}{\numberline {3.1}Population data and sample data}{72}{section.3.1}
-\contentsline {section}{\numberline {3.2}Random sampling and the standard error}{73}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Standard error and sample size}{76}{subsection.3.2.1}
-\contentsline {subsection}{\numberline {3.2.2}From sample slope to population slope}{79}{subsection.3.2.2}
-\contentsline {section}{\numberline {3.3}$t$-distributions}{79}{section.3.3}
-\contentsline {section}{\numberline {3.4}$T$-statistics}{81}{section.3.4}
-\contentsline {section}{\numberline {3.5}Hypothetical population slopes}{83}{section.3.5}
-\contentsline {section}{\numberline {3.6}Confidence intervals for smaller sample sizes}{85}{section.3.6}
-\contentsline {subsection}{\numberline {3.6.1}Exercises}{88}{subsection.3.6.1}
-\contentsline {section}{\numberline {3.7}Degrees of freedom}{89}{section.3.7}
-\contentsline {chapter}{\numberline {4}Inference II: hypothesis testing, $p$-values and beyond}{93}{chapter.4}
-\contentsline {section}{\numberline {4.1}The null-hypothesis}{93}{section.4.1}
-\contentsline {section}{\numberline {4.2}The $p$-value}{95}{section.4.2}
-\contentsline {section}{\numberline {4.3}Hypothesis testing}{98}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Exercises}{99}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Answers}{100}{subsection.4.3.2}
-\contentsline {section}{\numberline {4.4}Type I and Type II errors in decision making}{101}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Exercises}{105}{subsection.4.4.1}
-\contentsline {section}{\numberline {4.5}Statistical power}{107}{section.4.5}
-\contentsline {subsection}{\numberline {4.5.1}Exercises}{109}{subsection.4.5.1}
-\contentsline {section}{\numberline {4.6}Power analysis}{109}{section.4.6}
-\contentsline {subsection}{\numberline {4.6.1}Exercises}{110}{subsection.4.6.1}
-\contentsline {section}{\numberline {4.7}Criticism on null-hypothesis testing and $p$-values}{111}{section.4.7}
-\contentsline {subsection}{\numberline {4.7.1}Exercise}{115}{subsection.4.7.1}
-\contentsline {section}{\numberline {4.8}Relationship between $p$-values and confidence intervals}{115}{section.4.8}
-\contentsline {section}{\numberline {4.9}Inference using SPSS}{116}{section.4.9}
-\contentsline {subsection}{\numberline {4.9.1}Exercises}{117}{subsection.4.9.1}
-\contentsline {chapter}{\numberline {5}Multiple regression}{121}{chapter.5}
-\contentsline {section}{\numberline {5.1}Explained and unexplained variance}{121}{section.5.1}
-\contentsline {section}{\numberline {5.2}More than one predictor}{122}{section.5.2}
-\contentsline {section}{\numberline {5.3}R-squared}{123}{section.5.3}
-\contentsline {section}{\numberline {5.4}Multicollinearity}{125}{section.5.4}
-\contentsline {section}{\numberline {5.5}Multiple regression and inference}{127}{section.5.5}
-\contentsline {section}{\numberline {5.6}Multiple regression in SPSS}{128}{section.5.6}
-\contentsline {section}{\numberline {5.7}Simpson's paradox}{129}{section.5.7}
-\contentsline {section}{\numberline {5.8}Exercises}{131}{section.5.8}
-\contentsline {chapter}{\numberline {6}Categorical predictor variables}{135}{chapter.6}
-\contentsline {section}{\numberline {6.1}Dummy coding}{135}{section.6.1}
-\contentsline {section}{\numberline {6.2}Using regression to describe group means}{137}{section.6.2}
-\contentsline {section}{\numberline {6.3}Testing hypotheses about differences in group means}{141}{section.6.3}
-\contentsline {section}{\numberline {6.4}Regression analysis using a dummy variable in SPSS}{141}{section.6.4}
-\contentsline {subsection}{\numberline {6.4.1}Exercise}{144}{subsection.6.4.1}
-\contentsline {section}{\numberline {6.5}Dummy coding for more than two groups}{146}{section.6.5}
-\contentsline {subsection}{\numberline {6.5.1}Exercise}{147}{subsection.6.5.1}
-\contentsline {subsection}{\numberline {6.5.2}Answer}{148}{subsection.6.5.2}
-\contentsline {section}{\numberline {6.6}Analyzing categorical predictor variables in SPSS}{148}{section.6.6}
-\contentsline {subsection}{\numberline {6.6.1}Treating dummy variables as numeric}{149}{subsection.6.6.1}
-\contentsline {subsection}{\numberline {6.6.2}Treating the original variable as a categorical variable}{151}{subsection.6.6.2}
-\contentsline {section}{\numberline {6.7}$F$-test for comparing multiple group means}{153}{section.6.7}
-\contentsline {section}{\numberline {6.8}Reporting ANOVA}{153}{section.6.8}
-\contentsline {section}{\numberline {6.9}Relationship between $F$- and $T$-distributions}{154}{section.6.9}
-\contentsline {subsection}{\numberline {6.9.1}Exercises}{156}{subsection.6.9.1}
-\contentsline {subsection}{\numberline {6.9.2}Answers}{157}{subsection.6.9.2}
-\contentsline {chapter}{\numberline {7}Moderation: testing interaction effects}{159}{chapter.7}
-\contentsline {section}{\numberline {7.1}Interaction with one numeric and one dichotomous variable}{159}{section.7.1}
-\contentsline {section}{\numberline {7.2}Testing for interaction effects with a dummy variable in SPSS}{164}{section.7.2}
-\contentsline {section}{\numberline {7.3}Testing for interaction effects with a categorical variable in SPSS}{164}{section.7.3}
-\contentsline {subsection}{\numberline {7.3.1}Exercises}{168}{subsection.7.3.1}
-\contentsline {subsection}{\numberline {7.3.2}Answers}{169}{subsection.7.3.2}
-\contentsline {section}{\numberline {7.4}Interaction between two dichotomous variables}{169}{section.7.4}
-\contentsline {subsection}{\numberline {7.4.1}More than two groups}{173}{subsection.7.4.1}
-\contentsline {subsection}{\numberline {7.4.2}Exercises}{176}{subsection.7.4.2}
-\contentsline {subsection}{\numberline {7.4.3}Answers}{176}{subsection.7.4.3}
-\contentsline {section}{\numberline {7.5}The number of non-redundant parameters in a linear model}{176}{section.7.5}
-\contentsline {section}{\numberline {7.6}Interaction between two numeric variables}{178}{section.7.6}
-\contentsline {chapter}{\numberline {8}Planned and post hoc comparisons}{185}{chapter.8}
-\contentsline {section}{\numberline {8.1}Planned comparisons}{185}{section.8.1}
-\contentsline {section}{\numberline {8.2}Testing more than one contrast}{191}{section.8.2}
-\contentsline {section}{\numberline {8.3}Post-hoc comparisons}{192}{section.8.3}
-\contentsline {section}{\numberline {8.4}Fishing expeditions}{195}{section.8.4}
-\contentsline {section}{\numberline {8.5}Exercises}{196}{section.8.5}
-\contentsline {chapter}{\numberline {9}Assumptions of linear models}{199}{chapter.9}
-\contentsline {section}{\numberline {9.1}Introduction}{199}{section.9.1}
-\contentsline {section}{\numberline {9.2}Independence}{202}{section.9.2}
-\contentsline {section}{\numberline {9.3}Linearity}{207}{section.9.3}
-\contentsline {section}{\numberline {9.4}Equal variances}{211}{section.9.4}
-\contentsline {section}{\numberline {9.5}Residuals normally distributed}{214}{section.9.5}
-\contentsline {section}{\numberline {9.6}General approach to testing assumptions}{215}{section.9.6}
-\contentsline {section}{\numberline {9.7}Checking assumptions in SPSS}{216}{section.9.7}
-\contentsline {subsection}{\numberline {9.7.1}A histogram of the residuals}{217}{subsection.9.7.1}
-\contentsline {subsection}{\numberline {9.7.2}Residuals by observation number}{217}{subsection.9.7.2}
-\contentsline {subsection}{\numberline {9.7.3}Residuals by independent variables}{218}{subsection.9.7.3}
-\contentsline {chapter}{\numberline {10}When assumptions are not met: non-parametric alternatives}{219}{chapter.10}
-\contentsline {section}{\numberline {10.1}Introduction}{219}{section.10.1}
-\contentsline {section}{\numberline {10.2}Spearman's rho}{223}{section.10.2}
-\contentsline {section}{\numberline {10.3}Kendall rank-order correlation coefficient $T$}{226}{section.10.3}
-\contentsline {section}{\numberline {10.4}Kruskall-Wallis test for group comparisons}{227}{section.10.4}
-\contentsline {chapter}{\numberline {11}Linear mixed modelling: introduction}{231}{chapter.11}
-\contentsline {section}{\numberline {11.1}Fixed effects and random effects}{231}{section.11.1}
-\contentsline {section}{\numberline {11.2}Pre-post intervention designs}{235}{section.11.2}
-\contentsline {subsection}{\numberline {11.2.1}Exercises}{240}{subsection.11.2.1}
-\contentsline {subsubsection}{Answers:}{244}{section*.3}
+\contentsline {chapter}{\numberline {3}Inference I: random samples, standard errors and confidence intervals}{69}{chapter.3}
+\contentsline {section}{\numberline {3.1}Population data and sample data}{70}{section.3.1}
+\contentsline {section}{\numberline {3.2}Random sampling and the standard error}{71}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Standard error and sample size}{74}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}From sample slope to population slope}{77}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}$t$-distributions}{77}{section.3.3}
+\contentsline {section}{\numberline {3.4}$T$-statistics}{79}{section.3.4}
+\contentsline {section}{\numberline {3.5}Hypothetical population slopes}{81}{section.3.5}
+\contentsline {section}{\numberline {3.6}Confidence intervals for smaller sample sizes}{83}{section.3.6}
+\contentsline {subsection}{\numberline {3.6.1}Exercises}{86}{subsection.3.6.1}
+\contentsline {section}{\numberline {3.7}Degrees of freedom}{87}{section.3.7}
+\contentsline {chapter}{\numberline {4}Inference II: hypothesis testing, $p$-values and beyond}{91}{chapter.4}
+\contentsline {section}{\numberline {4.1}The null-hypothesis}{91}{section.4.1}
+\contentsline {section}{\numberline {4.2}The $p$-value}{93}{section.4.2}
+\contentsline {section}{\numberline {4.3}Hypothesis testing}{96}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Exercises}{97}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Answers}{98}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Type I and Type II errors in decision making}{99}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Exercises}{103}{subsection.4.4.1}
+\contentsline {section}{\numberline {4.5}Statistical power}{105}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}Exercises}{107}{subsection.4.5.1}
+\contentsline {section}{\numberline {4.6}Power analysis}{107}{section.4.6}
+\contentsline {subsection}{\numberline {4.6.1}Exercises}{108}{subsection.4.6.1}
+\contentsline {section}{\numberline {4.7}Criticism on null-hypothesis testing and $p$-values}{109}{section.4.7}
+\contentsline {subsection}{\numberline {4.7.1}Exercise}{113}{subsection.4.7.1}
+\contentsline {section}{\numberline {4.8}Relationship between $p$-values and confidence intervals}{113}{section.4.8}
+\contentsline {section}{\numberline {4.9}Inference using SPSS}{114}{section.4.9}
+\contentsline {subsection}{\numberline {4.9.1}Exercises}{115}{subsection.4.9.1}
+\contentsline {chapter}{\numberline {5}Multiple regression}{119}{chapter.5}
+\contentsline {section}{\numberline {5.1}Explained and unexplained variance}{119}{section.5.1}
+\contentsline {section}{\numberline {5.2}More than one predictor}{120}{section.5.2}
+\contentsline {section}{\numberline {5.3}R-squared}{121}{section.5.3}
+\contentsline {section}{\numberline {5.4}Multicollinearity}{123}{section.5.4}
+\contentsline {section}{\numberline {5.5}Multiple regression and inference}{125}{section.5.5}
+\contentsline {section}{\numberline {5.6}Multiple regression in SPSS}{126}{section.5.6}
+\contentsline {section}{\numberline {5.7}Simpson's paradox}{127}{section.5.7}
+\contentsline {section}{\numberline {5.8}Exercises}{129}{section.5.8}
+\contentsline {chapter}{\numberline {6}Categorical predictor variables}{133}{chapter.6}
+\contentsline {section}{\numberline {6.1}Dummy coding}{133}{section.6.1}
+\contentsline {section}{\numberline {6.2}Using regression to describe group means}{135}{section.6.2}
+\contentsline {section}{\numberline {6.3}Testing hypotheses about differences in group means}{139}{section.6.3}
+\contentsline {section}{\numberline {6.4}Regression analysis using a dummy variable in SPSS}{139}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1}Exercise}{142}{subsection.6.4.1}
+\contentsline {section}{\numberline {6.5}Dummy coding for more than two groups}{144}{section.6.5}
+\contentsline {subsection}{\numberline {6.5.1}Exercise}{145}{subsection.6.5.1}
+\contentsline {subsection}{\numberline {6.5.2}Answer}{146}{subsection.6.5.2}
+\contentsline {section}{\numberline {6.6}Analyzing categorical predictor variables in SPSS}{146}{section.6.6}
+\contentsline {subsection}{\numberline {6.6.1}Treating dummy variables as numeric}{147}{subsection.6.6.1}
+\contentsline {subsection}{\numberline {6.6.2}Treating the original variable as a categorical variable}{149}{subsection.6.6.2}
+\contentsline {section}{\numberline {6.7}$F$-test for comparing multiple group means}{151}{section.6.7}
+\contentsline {section}{\numberline {6.8}Reporting ANOVA}{151}{section.6.8}
+\contentsline {section}{\numberline {6.9}Relationship between $F$- and $T$-distributions}{152}{section.6.9}
+\contentsline {subsection}{\numberline {6.9.1}Exercises}{154}{subsection.6.9.1}
+\contentsline {subsection}{\numberline {6.9.2}Answers}{155}{subsection.6.9.2}
+\contentsline {chapter}{\numberline {7}Moderation: testing interaction effects}{157}{chapter.7}
+\contentsline {section}{\numberline {7.1}Interaction with one numeric and one dichotomous variable}{157}{section.7.1}
+\contentsline {section}{\numberline {7.2}Testing for interaction effects with a dummy variable in SPSS}{162}{section.7.2}
+\contentsline {section}{\numberline {7.3}Testing for interaction effects with a categorical variable in SPSS}{162}{section.7.3}
+\contentsline {subsection}{\numberline {7.3.1}Exercises}{166}{subsection.7.3.1}
+\contentsline {subsection}{\numberline {7.3.2}Answers}{167}{subsection.7.3.2}
+\contentsline {section}{\numberline {7.4}Interaction between two dichotomous variables}{167}{section.7.4}
+\contentsline {subsection}{\numberline {7.4.1}More than two groups}{171}{subsection.7.4.1}
+\contentsline {subsection}{\numberline {7.4.2}Exercises}{174}{subsection.7.4.2}
+\contentsline {subsection}{\numberline {7.4.3}Answers}{174}{subsection.7.4.3}
+\contentsline {section}{\numberline {7.5}The number of non-redundant parameters in a linear model}{174}{section.7.5}
+\contentsline {section}{\numberline {7.6}Interaction between two numeric variables}{176}{section.7.6}
+\contentsline {chapter}{\numberline {8}Planned and post hoc comparisons}{183}{chapter.8}
+\contentsline {section}{\numberline {8.1}Planned comparisons}{183}{section.8.1}
+\contentsline {section}{\numberline {8.2}Testing more than one contrast}{189}{section.8.2}
+\contentsline {section}{\numberline {8.3}Post-hoc comparisons}{190}{section.8.3}
+\contentsline {section}{\numberline {8.4}Fishing expeditions}{193}{section.8.4}
+\contentsline {section}{\numberline {8.5}Exercises}{194}{section.8.5}
+\contentsline {chapter}{\numberline {9}Assumptions of linear models}{197}{chapter.9}
+\contentsline {section}{\numberline {9.1}Introduction}{197}{section.9.1}
+\contentsline {section}{\numberline {9.2}Independence}{200}{section.9.2}
+\contentsline {section}{\numberline {9.3}Linearity}{205}{section.9.3}
+\contentsline {section}{\numberline {9.4}Equal variances}{209}{section.9.4}
+\contentsline {section}{\numberline {9.5}Residuals normally distributed}{212}{section.9.5}
+\contentsline {section}{\numberline {9.6}General approach to testing assumptions}{213}{section.9.6}
+\contentsline {section}{\numberline {9.7}Checking assumptions in SPSS}{214}{section.9.7}
+\contentsline {subsection}{\numberline {9.7.1}A histogram of the residuals}{215}{subsection.9.7.1}
+\contentsline {subsection}{\numberline {9.7.2}Residuals by observation number}{215}{subsection.9.7.2}
+\contentsline {subsection}{\numberline {9.7.3}Residuals by independent variables}{216}{subsection.9.7.3}
+\contentsline {chapter}{\numberline {10}When assumptions are not met: non-parametric alternatives}{217}{chapter.10}
+\contentsline {section}{\numberline {10.1}Introduction}{217}{section.10.1}
+\contentsline {section}{\numberline {10.2}Spearman's rho}{221}{section.10.2}
+\contentsline {section}{\numberline {10.3}Kendall rank-order correlation coefficient $T$}{224}{section.10.3}
+\contentsline {section}{\numberline {10.4}Kruskall-Wallis test for group comparisons}{225}{section.10.4}
+\contentsline {chapter}{\numberline {11}Linear mixed modelling: introduction}{229}{chapter.11}
+\contentsline {section}{\numberline {11.1}Fixed effects and random effects}{229}{section.11.1}
+\contentsline {section}{\numberline {11.2}Pre-post intervention designs}{233}{section.11.2}
+\contentsline {subsection}{\numberline {11.2.1}Exercises}{239}{subsection.11.2.1}
+\contentsline {subsubsection}{Answers:}{243}{section*.3}
 \contentsline {chapter}{\numberline {12}Linear mixed models for more than two measurements}{247}{chapter.12}
 \contentsline {section}{\numberline {12.1}Pre-mid-post intervention designs}{247}{section.12.1}
 \contentsline {subsection}{\numberline {12.1.1}Exercises}{251}{subsection.12.1.1}
 \contentsline {subsection}{\numberline {12.1.2}Answers}{252}{subsection.12.1.2}
 \contentsline {section}{\numberline {12.2}Pre-mid-post intervention design: linear effects}{252}{section.12.2}
 \contentsline {subsection}{\numberline {12.2.1}Exercises}{256}{subsection.12.2.1}
-\contentsline {subsection}{\numberline {12.2.2}Answers}{259}{subsection.12.2.2}
+\contentsline {subsection}{\numberline {12.2.2}Answers}{258}{subsection.12.2.2}
 \contentsline {section}{\numberline {12.3}Linear mixed models and interaction effects}{260}{section.12.3}
-\contentsline {subsection}{\numberline {12.3.1}Exercises}{266}{subsection.12.3.1}
+\contentsline {subsection}{\numberline {12.3.1}Exercises}{265}{subsection.12.3.1}
 \contentsline {subsection}{\numberline {12.3.2}Answers}{268}{subsection.12.3.2}
-\contentsline {section}{\numberline {12.4}Mixed designs}{269}{section.12.4}
+\contentsline {section}{\numberline {12.4}Mixed designs}{270}{section.12.4}
 \contentsline {subsection}{\numberline {12.4.1}Exercises}{271}{subsection.12.4.1}
 \contentsline {section}{\numberline {12.5}Answers}{273}{section.12.5}
 \contentsline {section}{\numberline {12.6}Mixed design with a linear effect}{274}{section.12.6}
@@ -184,4 +184,4 @@
 \contentsline {section}{\numberline {15.2}Poisson regression in SPSS}{326}{section.15.2}
 \contentsline {section}{\numberline {15.3}Interaction effects in Poisson models}{328}{section.15.3}
 \contentsline {section}{\numberline {15.4}Crosstabulation and the Pearson chi-square statistic}{332}{section.15.4}
-\contentsline {section}{\numberline {15.5}Poisson regression or logistic regression?}{336}{section.15.5}
+\contentsline {section}{\numberline {15.5}Poisson regression or logistic regression?}{335}{section.15.5}

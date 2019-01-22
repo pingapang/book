@@ -5,7 +5,7 @@
 
 \section{Explained and unexplained variance}
 
-In the previous chapter we have seen relationships between two variables: one dependent variable and one independent variable. The dependent variable we usually denote as $y$, and the indepedent variable we denote by $x$. The relationship was modelled by a linear equation: an equation with an intercept $b_0$ and a slope parameter $b_1$:
+In the previous chapters we have seen relationships between two variables: one dependent variable and one independent variable. The dependent variable we usually denote as $y$, and the indepedent variable we denote by $x$. The relationship was modelled by a linear equation: an equation with an intercept $b_0$ and a slope parameter $b_1$:
 
 
 \begin{equation}
@@ -73,6 +73,7 @@ Let's use an example with data on the weight of books, the size of books (area),
 set.seed(123456789)
 options(scipen = 999)
 
+rm(weight) # from chapter 1
 
 # (Taken from Maindonald, 2007)
 outbooks <- lm(weight~ volume , data=allbacks)
@@ -127,7 +128,7 @@ e \sim N(0, \Sexpr{round(summary(outbooks2)$sigma^2,0)})
 
 How much of the variance in weight does this equation explain? The proportion of explained variance is equal to $ \frac{\Sexpr{round(var(weight),0)- round(summary(outbooks2)$sigma^2,0)}}{\Sexpr{round(var(weight),0)}}=\Sexpr{(round(var(weight),0)- round(summary(outbooks2)$sigma^2,0))/round(var(weight),0)}$. So the proportion of explained variance has increased!
 
-Note that the variance of the residuals has decreased; this is the main reason why the proportion of explained variance has increased. By adding the extra independent variable, we can explain some of the variance that without this variable could not be explained! In summary, by adding independent variables to a regression equation, we can explain more of the variance of the dependent variable. A regression analysis with more than one independent variable we call \textit{multiple regression}. Regression with only one indendent variable is often called \textit{simple regression}.
+Note that the variance of the residuals has decreased; this is the main reason why the proportion of explained variance has increased. By adding the extra independent variable, we can explain some of the variance that without this variable could not be explained! In summary, by adding independent variables to a regression equation, we can explain more of the variance of the dependent variable. A regression analysis with more than one independent variable we call \textit{multiple regression}. Regression with only one independent variable is often called \textit{simple regression}.
 
 
 
@@ -196,10 +197,10 @@ In general, if you add independent variables to a regression equation, the propo
 \begin{eqnarray}
 weight = b_0 + b_1 \times  volume + e \\
 weight = b_0 + b_1 \times  area + e \\
-weight = b_0 + b_1 \times  volume + b_1 \times  area + e
+weight = b_0 + b_1 \times  volume + b_2 \times  area + e
 \end{eqnarray}
 
-If we carry out these three analyses, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared} if we only use \textbf{volume} as predictor, and an $R^2$ of \Sexpr{summary(lm(weight~ area, allbacks))$r.squared} if we only use \textbf{area} as predictor. So perhaps you'd think that if we take both \textbf{volume} and \textbf{area} as predictors in the model, we would get an $R^2$ of $\Sexpr{summary(lm(weight~ volume, allbacks))$r.squared}+\Sexpr{summary(lm(weight~ area, allbacks))$r.squared}= \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared+summary(lm(weight~ area, allbacks))$r.squared}$. However, if we carry out the multiple regression with \textbf{volume} and \textbf{area}, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume + area, allbacks))$r.squared}, which is slightly less! This is not a rounding error, but the result of the fact that there is a correlation between the volume of a book and the area of a book. Here it is a tiny correlation of $round(cor(allbacks$area, allbacks$volume),3)$, but nevertheless it affects the proportion of variance explained when you use both these variables.
+If we carry out these three analyses, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared} if we only use \textbf{volume} as predictor, and an $R^2$ of \Sexpr{summary(lm(weight~ area, allbacks))$r.squared} if we only use \textbf{area} as predictor. So perhaps you'd think that if we take both \textbf{volume} and \textbf{area} as predictors in the model, we would get an $R^2$ of $\Sexpr{summary(lm(weight~ volume, allbacks))$r.squared}+\Sexpr{summary(lm(weight~ area, allbacks))$r.squared}= \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared+summary(lm(weight~ area, allbacks))$r.squared}$. However, if we carry out the multiple regression with \textbf{volume} and \textbf{area}, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume + area, allbacks))$r.squared}, which is slightly less! This is not a rounding error, but the result of the fact that there is a correlation between the volume of a book and the area of a book. Here it is a tiny correlation of \Sexpr{round(cor(allbacks$area, allbacks$volume),3)}, but nevertheless it affects the proportion of variance explained when you use both these variables.
 
 
 Let's look at what happens when indendent variables are strongly correlated. Table \ref{tab:multi_2} shows measurements on a breed of seals (only measurements on the first 6 seals are shown). Often, the age of an animal is gaged from its weight: we assume that heavier seals are older than lighter seals. If we carry out a simple regression analysis, we get the following equation:
@@ -230,17 +231,13 @@ e \sim N(0, \Sexpr{round(summary(out1)$sigma^2,0)})
 
 
 
-USE regression table instead of formula
-
-
-
 
 From the data we calculate the variance of age, and we find that it is \Sexpr{var(cfseal$age)}. The variance of the residuals is 200, so that the proportion of explained variance is $(\Sexpr{var(cfseal$age)}-200)/\Sexpr{var(cfseal$age)}  = \Sexpr{(var(cfseal$age)-200)/var(cfseal$age)}$.
 
 Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get:
 
 <<multi_2b, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
-out1 %>% summary() %>% xtable(caption="Regression table for predicting age from heart", label="tab:multi_2b") %>%
+out2 %>% summary() %>% xtable(caption="Regression table for predicting age from heart", label="tab:multi_2b") %>%
         print(include.rownames=T, caption.placement = "top")
 @
 
@@ -249,7 +246,7 @@ age = \Sexpr{round(out2$coef[1],1)} + \Sexpr{round(out2$coef[2],2)} \times  hear
 e \sim N(0, \Sexpr{round(summary(out2)$sigma^2,0)})
 \end{eqnarray}
 
-USE regression table instead of formula
+
 
 
 
@@ -265,10 +262,10 @@ e \sim N(0, \Sexpr{round(summary(out3)$sigma^2,0)})
 \end{eqnarray}
 
 <<multi_2c, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
-out1 %>% summary() %>% xtable(caption="Regression table for predicting age from heart and weight", label="tab:multi_2c") %>%
+out3 %>% summary() %>% xtable(caption="Regression table for predicting age from heart and weight", label="tab:multi_2c") %>%
         print(include.rownames=T, caption.placement = "top")
 @
-USE regression table instead of formula
+
 
 
 Here we see that the regression parameter for total weight has increased from 0.82 to 0.99. At the same time, the regression parameter for the weight of the heart has decreased, has even become negative, from 0.11 to -0.03. From this equation we see that there is a strong relationship between the total weight and the age of a seal, but on top of that, for every unit increase in the weight of the heart, there is a very small decrease in the expected age. In fact, we find that the effect of \textbf{heart} is no longer significant, so we could say that on top of the effect of total weight, there is no remaining relationship between the weight of the heart and age. In other words, once we can use the total weight of a seal, there is no more information coming from the weight of the heart.
@@ -277,17 +274,18 @@ This is because the total weight of a seal and the weight of its heart are stron
 
 Here we have seen, that if we use multiple regression, we should be aware of how strongly the independent variables are correlated. Heavily correlated predictor variables do not add extra predictive power. Worse: they can cause problems in estimating regression parameters because it becomes hard to tell which variable is more important: if they are strongly correlated (positive or negative), than they measure almost the same thing!
 
-When two predictor variabels are perfectly correlated, either 1 or -1, estimation is no longer possible, the software stops and you get a warning. We call such a situation \textit{multiple collinearity}. But also if the correlation is close to 1 or -1, you should be very careful interpeting the regression parameters. You will then see there are very wide confidence intervals (very large standard errors). If this happens, try to find out what variables are highly correlated, and select the variable that makes most sense.
+When two predictor variables are perfectly correlated, either 1 or -1, estimation is no longer possible, the software stops and you get a warning. We call such a situation \textit{multicollinearity}. But also if the correlation is close to 1 or -1, you should be very careful interpeting the regression parameters. You will then see there are very wide confidence intervals (very large standard errors). If this happens, try to find out what variables are highly correlated, and select the variable that makes most sense.
 
-In our seal data, there is a very high correlation between the variables \textbf{heart} and \textbf{weight} that results in estimation problems and very large standard errors (wide confidence intervals), so a lot of uncertaintly. The standard errors were about 3 times as large with the multiple regression than with simple regressions. It makes therefore more sense to use only the total weight variable, since when seals get older, \textit{all} their organs and limbs get larger, not just their heart.
+In our seal data, there is a very high correlation between the variables \textbf{heart} and \textbf{weight} that results in estimation problems and very large standard errors (wide confidence intervals), so a lot of uncertainty. The standard errors were about 3 times as large with the multiple regression than with simple regressions. It makes therefore more sense to use only the total weight variable, since when seals get older, \textit{all} their organs and limbs get larger, not just their heart.
 
 
 
 \section{Multiple regression and inference}
 
-In an earlier chapter on inference, we saw that if we want to say something about the population slope on the basis of the sample slope, we can use $t$-distribtutions. The sahpe of the $t$-distribtution depends on the degrees freedom and we saw that these depend on sample size. For simple regression (one intercept and one slope), we saw that the number of degrees of freedom, the residual degrees of freedom, was equal to sample size minus 2 ($n-2$).
+In an earlier chapter on inference, we saw that if we want to say something about the population slope on the basis of the sample slope, we can use $t$-distributions. The shape of the $t$-distribtution depends on the degrees freedom and we saw that these depend on sample size. For simple regression (one intercept and one slope), we saw that the number of degrees of freedom, the residual degrees of freedom, was equal to sample size minus 2 ($n-2$).
 
-In the more general case of multiple regression, with the number of independent variables equal to $K$ and including an intercept, the degrees of freedom for the $t$-distribution of sample slopes is equal to $n-K-1$. One could also say, the degrees of freedom is equal to sample size minus the number of parameters (coefficients) in your model.
+In the more general case of multiple
+regression, with the number of independent variables equal to $K$ and including an intercept, the degrees of freedom for the $t$-distribution of sample slopes is equal to $n-K-1$. One could also say, the degrees of freedom is equal to sample size minus the number of parameters (coefficients) in your model.
 
 For example, suppose you have 200 data points and 4 independent variables. Then you have 4 slope parameters and 1 intercept parameter in your model, so 5 parameters in total. The (residual) degrees of freedom is in that case $n-5=195$.
 
@@ -331,7 +329,7 @@ In the output, there is also another table, and there we see the R-squared and t
 
 \section{Simpson's paradox}
 
-With muliple regression, you may uncover very surprising relationships between two variables, that can never be found using simple regression. Here's an example from Paul van der Laken\footnote{https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/}, who simulated a data set on the topic of Human Resources (HR).
+With multiple regression, you may uncover very surprising relationships between two variables, that can never be found using simple regression. Here's an example from Paul van der Laken\footnote{https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/}, who simulated a data set on the topic of Human Resources (HR).
 
 Assume you run a company of 1000 employees and you have asked all of them to fill out a Big Five personality survey. Per individual, you therefore have a score depicting his/her personality characteristic Neuroticism, which can run from 0 (not at all neurotic) to 7 (very neurotic). Now you are interested in the extent to which this \textbf{Neuroticism} of employees relates to their \textbf{salary} (measured in Euro’s per year).
 

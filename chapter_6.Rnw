@@ -233,8 +233,8 @@ These results could be read as the following regression equation, using the dumm
     \begin{center}
        \includegraphics[scale=0.7,trim={0cm 16cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/interaction/countryside.pdf}
     \end{center}
-    \label{fig:interactionheight}
     \caption{Output with main effects of age and location\_dummy, and an interaction effect.}
+        \label{fig:interactionheight}
 \end{figure}
 
 If we fill in 1s for the city dummy variable, we get the equation for city children:
@@ -385,10 +385,10 @@ UNIANOVA height BY sex country
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.7, trim={6.7cm 21.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear model/height3groups1.pdf}
+       \includegraphics[scale=0.7, trim={0cm 21.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups1.pdf}
     \end{center}
-    \label{fig:interactionheightcountrysex}
     \caption{Output with main effects of country and sex, and an interaction effect.}
+     \label{fig:interactionheightcountrysex}
 \end{figure}
 
 In Figure \ref{fig:interactionheightcountrysex} we see the relevant output. Table \ref{tab:2countries} what variables SPSS has created automatically. Note that the column with the [country=A] * [sex=.00] variable is exactly the multiplication of the values from the [country=A] column with the correspnding values in the [sex=.00] column. Therefore, for the [country=A] * [sex=.00] variable, only those persons get a value of 1 that are both from country A \textit{and} are female (sex=0). 
@@ -585,8 +585,8 @@ UNIANOVA height BY country sex
     \begin{center}
        \includegraphics[scale=0.7, trim={0cm 12cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups2.pdf}
     \end{center}
-    \label{fig:interactionheight3group}
     \caption{Main effects of country (A, B, and C) and sex (0,1) and the country by sex interaction effects.}
+     \label{fig:interactionheight3group}
 \end{figure}
 
 The SPSS output is in Figure \ref{fig:interactionheight3group}. In the Parameter Estimates table we see that 3 dummy variables have been computed for country automatically by SPSS. One for being in country A, and one for being in country B and one for country C. The effect for country C was fixed to 0 because it was redundant (with $K$ categories, you only need $K-1$ dummy variables, see Chapter \ref{chap:categorical}). Therefore country C is here used as the so-called reference category. 
@@ -624,7 +624,7 @@ Let's test the hypothesis of equal differences in heights between males and fema
 In the output we also see that the CountryB by female interaction effect is significant at 0.05: the effect of being female is -17.8 cm in country B compared to Country C (the reference category). From the means we see that the male-female difference is 15 in country B, which is 17.8 cm more than the -2.8 in country C. So both these interaction effects are significant. Similarly to the previous chapter, we now have two coefficients to test one hypothesis, so again we should do an ANOVA $F$-test to test the hypothesis that male-female differences are the same across all three countries, or, equivalently, that country differences in height are the same in males and females.
 
 
-Therefore, we should look at the Analysis of Variance (ANOVA) table (Tests of Between-Subjects Effects). There we see that for the country*sex interaction effect we have an $F$-value of 13.141. With 2 model degrees of freedom (number of interaction dummy variables) and 24 error degrees of freedom, the probability of getting an $F$-value of at least 13.141, given that the null-hypothesis is true, equals less than 0.001. Therefore we conclude that in the populations of countries A, B and C, the difference in height between males and females is significantly different, $F(2, 24)=13.141, MSE=210.70, p < 0.001$. Alternatively, but equivalently, we may conclude that the differences in height across the three countries, are significantly different for males than for females, $F(2, 24)=13.141, MSE=210.70, p < 0.001$.\footnote{Note that we never report $p=0.000$. A $p$-value is always greater than 0, no matter how small. Therefore, for very small values, we report $p < 0.001$.}. 
+Therefore, we should look at the Analysis of Variance (ANOVA) table (Tests of Between-Subjects Effects). There we see that for the country*sex interaction effect we have an $F$-value of 13.141. With 2 model degrees of freedom (number of interaction dummy variables) and 24 error degrees of freedom, the probability of getting an $F$-value of at least 13.141, given that the null-hypothesis is true, equals less than 0.001. Therefore we conclude that in the populations of countries A, B and C, the difference in height between males and females is significantly different, $F(2, 24)=13.141, MSE=16.033, p < 0.001$. Alternatively, but equivalently, we may conclude that the differences in height across the three countries, are significantly different for males than for females, $F(2, 24)=13.141, MSE=16.033, p < 0.001$.\footnote{Note that we never report $p=0.000$. A $p$-value is always greater than 0, no matter how small. Therefore, for very small values, we report $p < 0.001$.}. 
 
 
 
@@ -688,10 +688,10 @@ Note that the syntax only leaves out the multiplication in the DESIGN subcommand
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.7, trim={6.7cm 24.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear model/height3groups3.pdf}
+       \includegraphics[scale=0.7, trim={0cm 24.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups3.pdf}
     \end{center}
-    \label{fig:interactionheightcountrysexMAIN}
     \caption{Output with main effects of country and sex, and an interaction effect.}
+    \label{fig:interactionheightcountrysexMAIN}
 \end{figure}
 
 Table \ref{tab:country_sex5} presents the expected means based on this model with only main effects. When we compare these expected means with the observed means in Table \ref{tab:country_sex5} we see a clear discrepency: our model makes predictions that do not match the observations in our sample data. This does not have to be a problem of course: our sample data are merely what they are, sample data. In reality we might be more interested in the population means. Our model might actually be a good reflection of what is true at the population level. 
@@ -783,8 +783,8 @@ and find the output in Figure \ref{fig:interactionlbyl1}.
     \begin{center}
        \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/interactionlbyl1.pdf}
     \end{center}
-    \label{fig:interactionlbyl1}
     \caption{Main effects of income and educational years on home market value.}
+    \label{fig:interactionlbyl1}
 \end{figure}
 
 Based on this output, the linear equation for the relation between income and home market value is 
@@ -824,8 +824,8 @@ and the output is in Figure \ref{fig:interactionlbyl2}
     \begin{center}
        \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/interactionlbyl2.pdf}
     \end{center}
+    \caption{Main effects of income and educational years and their interaction effect on home market value.}
     \label{fig:interactionlbyl2}
-    \caption{Main effects of income and educational years on home market value.}
 \end{figure}
 
 Based on this output, the linear equation for the relation between income and home market value is 
@@ -846,7 +846,7 @@ If education equals 12, we get the equation
 \widehat{value}= 40014 - 0.4 income -.8 \times 12 + 20 income \times 12 = 40003.4 + 239.6 income
 \end{equation}
 
-Now we see that for different values of eduation, both the intercept and the slope are different. In Figure \ref{fig:interactionlbyl2} these two regression lines are plotted. These nonparallel lines seem to describe the data much better than the parallel lines in Figure \ref{fig:interactionlbyl1}. 
+Now we see that for different values of eduation, both the intercept and the slope are different. In Figure \ref{fig:linearbylinear_2} these two regression lines are plotted. These nonparallel lines seem to describe the data much better than the parallel lines in Figure \ref{fig:linearbylinear_1}. 
 
 <<linearbylinear_2, fig.height=4, echo=FALSE, fig.align='center', message=T, results="asis", warning=F, fig.cap="Sample data on gross yearly income, number of educational years and home market value.">>=
 

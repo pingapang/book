@@ -24,7 +24,7 @@
 
 
 \author{St\'ephanie M. van den Berg}
-\date{Version 1.0.1 (SPSS)\\ (\today)}
+\date{Third edition (SPSS)\\ (\today)}
 
 
 
@@ -42,7 +42,7 @@
 \parskip \baselineskip
 
 
-Copyright \copyright \space 2018 by St\'ephanie M. van den Berg \\
+Copyright \copyright \space 2018, 2019 by St\'ephanie M. van den Berg \\
 University of Twente\\
 Department of Research Methodology, Measurement and Data Analysis\\
 Licensed under Creative Commons, see https://creativecommons.org/licenses/\\
@@ -58,6 +58,7 @@ E-mail: stephanie.vandenberg@utwente.nl\\
 \begin{tabular}{ll}
 First edition:  & October 2018 \\
 Second edition:  & November 2018 \\
+Third edition:  & January 2019 \\
 \end{tabular}
 \end{center}
 
@@ -89,7 +90,7 @@ library(DAAG)
 
 
 \chapter*{Preface}
-This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, to linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
+This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
 
 
 
@@ -122,8 +123,8 @@ This book is for bachelor students in social, behavioural and management science
 % %
 \Sexpr{knit_child('chapter_7.Rnw')} % assumptions
 \Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
-
-%  MEDIATION ANALYSIS
+%
+% %  MEDIATION   ANALYSIS
 
 \Sexpr{knit_child('chapter_mixed.Rnw')} % introduction linear mixed models
 \Sexpr{knit_child('chapter_premidpostdesigns.Rnw')}

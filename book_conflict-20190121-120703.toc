@@ -1,0 +1,14 @@
+\select@language {english}
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Moderation: testing interaction effects}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Interaction with one numeric and one dichotomous variable}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Testing for interaction effects with a dummy variable in SPSS}{6}{section.1.2}
+\contentsline {section}{\numberline {1.3}Testing for interaction effects with a categorical variable in SPSS}{6}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Exercises}{10}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}Answers}{11}{subsection.1.3.2}
+\contentsline {section}{\numberline {1.4}Interaction between two dichotomous variables}{11}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}More than two groups}{15}{subsection.1.4.1}
+\contentsline {subsection}{\numberline {1.4.2}Exercises}{18}{subsection.1.4.2}
+\contentsline {subsection}{\numberline {1.4.3}Answers}{18}{subsection.1.4.3}
+\contentsline {section}{\numberline {1.5}The number of non-redundant parameters in a linear model}{18}{section.1.5}
+\contentsline {section}{\numberline {1.6}Interaction between two numeric variables}{20}{section.1.6}

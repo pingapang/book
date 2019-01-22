@@ -38,17 +38,17 @@ density <- dnorm(residual, 0, 2)
 data <- data.frame(residual, density)
 data %>% ggplot(aes(x=residual, y=density)) + geom_line() +
         geom_vline(xintercept = -2, col='blue') +geom_vline(xintercept = 2, col='blue') +
-        geom_label(  aes(x=5, y=dnorm(2,0,2)), col='black', label='Inflection point', show.legend = F) +
+        geom_label(  aes(x=5, y=dnorm(2,0,2)), col='black', label='Inflexion point', show.legend = F) +
         geom_segment(aes(x=3.5, xend=2.1, y=dnorm(2,0,2), yend=dnorm(2,0,2)), size = 1,
                arrow = arrow(length = unit(0.1, "cm")))+
-        geom_label(  aes(x=-5, y=dnorm(2,0,2)), col='black', label='Inflection point', show.legend = F) +
+        geom_label(  aes(x=-5, y=dnorm(2,0,2)), col='black', label='Inflexion point', show.legend = F) +
         geom_segment(aes(x=-3.5, xend=-2.1, y=dnorm(2,0,2), yend=dnorm(2,0,2)), size = 1,
                arrow = arrow(length = unit(0.1, "cm"))) + scale_x_continuous(breaks=seq (-6,6,1))
         @
 % 
 A normal distribution is suitable for continuous data: for example a variable that can take all possible values between -1 and 0. For many variables this is not true. Think for example of temperature measures: if the thermometer gives degrees centigrade with a precision of only 1 decimal, we can never have values of say 10.07 or -56.789. Our data will in fact be \textit{discrete}, showing rounded values like 10.1, 10.2, 10.3, but no values in between.
 
-Nevertheless, the normal distribution can still be used in many such cases. Take for instance a data set where the temperature in Amsterdam in summer was predicted on the basis of a linear model. Fig \ref{fig:gen_2} shows the distribution of the residuals of that model:
+Nevertheless, the normal distribution can still be used in many such cases. Take for instance a data set where the temperature in Amsterdam in summer was predicted on the basis of a linear model. Fig \ref{fig:gen_2} shows the distribution of the residuals for that model.
 % 
 <<gen_2, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='Even if residuals are really discrete, the normal distribution can be a good approximation of their distribution.'>>=
 set.seed(1234)
@@ -79,7 +79,7 @@ data %>% ggplot(aes(x=residual, y=density)) + geom_histogram(aes(y=..density..))
 @
 
 
-Figure \ref{fig:gen_3} shows that the residuals are very discrete, and that the continous normal distribution is a very bad approximation of the histogram. We often see this phenomenon when our data consists of \textit{counts} with a limited maximum number.
+Figure \ref{fig:gen_3} shows that the residuals are very discrete, and that the continuous normal distribution is a very bad approximation of the histogram. We often see this phenomenon when our data consists of \textit{counts} with a limited maximum number.
 
 An even more extreme case we observe when our dependent variable consists of whether or not students passed the assignment: only those assignments that fulfilled all 4 criteria are regarded as sufficient. If we score all students with a sufficient assignment as passed (1) and all students with an insufficient assignment as failed (0) and we predict this again by the average exam score on previous assignments using a linear model, we get the residuals displayed in Figure \ref{fig:gen_4}.
 
@@ -105,7 +105,7 @@ In the coming two chapters we will discuss how generalized linear models can be 
 
 \section{Logistic regression}
 
-Imagine that we analyze results on an exam for third grade children. These children are usually either 6 or 7 years old, dependending on what month they were born in. The exam is on February 1st. A researcher wants to know whether the age of the child can explain why some children pass the test and others fail. She computes the age of the child in months. Each child that passes the exam gets a score 1 and all the others get a score 0. Figure \ref{fig:gen_5} plots the data.
+Imagine that we analyze results on an exam for third grade children. These children are usually either 6 or 7 years old, depending on what month they were born in. The exam is on February 1st. A researcher wants to know whether the age of the child can explain why some children pass the test and others fail. She computes the age of the child in months. Each child that passes the exam gets a score 1 and all the others get a score 0. Figure \ref{fig:gen_5} plots the data.
 
 
 
@@ -151,7 +151,7 @@ Clearly a linear model is not appropriate. Here, the assumption that the depende
 Rather than using a normal distribution, we could try a Bernoulli distributiuon. The Bernoulli distribution is the distribution of a coin flip. For example, if the probability of heads is 0.1, we can expect that if we flip the coin, on average we expect to see $0.1$ times heads and 0.9 times tails. Our best bet then is that the outcome is tails. However, if we actually flip the coin, we might see heads anyway. There is some randomness to be expected. Let $y$ be the outcome of a coin flip: heads or tails. If we have a Bernoulli distribution for variable $y$ with probability $p$ for heads, we \textit{expect} to see heads $p$ times, but we actually \textit{observe} heads or tails.
 
 \begin{equation}
-y \sim Bern(n, p)
+y \sim Bern(p)
 \end{equation}
 
 The same is true for the normal distribution in the linear model case: we \textit{expect} that the observed value of $y$ is exactly equal to its predicted value ($b_0 + b_1 X$), but we always \textit{observe} that it is different.
@@ -390,7 +390,7 @@ A big data analyst constructs a model that predicts whether an account on Twitte
 \begin{enumerate}
 
 \item
-For one account, a user of this model finds an logodds of 4.5 that the account belongs to a bot. What is the corresponding probability that the twitter account belongs to a bot? Give the calculation.
+For one account, a user of this model finds a logodds of 4.5 that the account belongs to a bot. What is the corresponding probability that the twitter account belongs to a bot? Give the calculation.
 
 \item
 For a short tweet with only a hyperlink, the probability that it comes from a bot is only 10\%. What is the logodds that corresponds to this probability? Give the calculation.
@@ -408,7 +408,7 @@ The odds of being a bot is then 90:1.
 The probability of being a bot is 90/ (90+1)= 0.99
 
 \item
-Out of 100 tweets with only a hyperlink, 10 are by bots and 90 are by real persons or organisations. So the odds of coming from a bot are 10:90. The odds is therefore 10/90 = 0.11. When we take the natural logarithm of this odds, we get the logodd: ln(0.11) = -2.21.
+Out of 100 tweets with only a hyperlink, 10 are by bots and 90 are by real persons or organisations. So the odds of coming from a bot are 10:90. The odds is therefore 10/90 = 0.11. When we take the natural logarithm of this odds, we get the logodds: ln(0.11) = -2.21.
 
 \end{enumerate}
 
@@ -533,7 +533,7 @@ GENLIN train (REFERENCE=FIRST) WITH income
 \end{verbatim}
 
 
-Note the similary with the GLM and MIXED procedures: start with the dependent variable (\textbf{train} in this case, with only two possible values) and then after the WITH word the variables that you'd like to treat quantitatively, here \textbf{income}. Under the MODEL subcommand we specify the model, here only a main effect of \textbf{income}. But further we have to specify that we want to use the Bernoulli distribution and a logit link function. So LINK=LOGIT, but why a binomial distribution? Well, a Bernoulli distribution (one coin flip) is only a special case of the Binomial distribution (the distribution of several coin flips). So here we use a binomial distribution for one coin flip, which is equivalent to a Bernoulli distribution. The last line indicates what type of output we want to see: case processing statistics, descriptives and the solution in terms of parameter estimates.
+Note the similary with the GLM and MIXED procedures: start with the dependent variable (\textbf{train} in this case, with only two possible values) and then after the WITH word the variables that you'd like to treat as numeric, here \textbf{income}. Under the MODEL subcommand we specify the model, here only a main effect of \textbf{income}. But further we have to specify that we want to use the Bernoulli distribution and a logit link function. So LINK=LOGIT, but why a binomial distribution? Well, a Bernoulli distribution (one coin flip) is only a special case of the Binomial distribution (the distribution of several coin flips). So here we use a binomial distribution for one coin flip, which is equivalent to a Bernoulli distribution. The last line indicates what type of output we want to see: case processing statistics, descriptives and the solution in terms of parameter estimates.
 
 One very important part of the syntax is the (REFERENCE = FIRST) statement for the dependent variable. The default SPSS syntax uses (REFERENCE = LAST), so that's what you get when you do not specify this part. (REFERENCE = LAST) means that the reference category of the train variable is the last value. Since there are only two values, 0 an 1, the last value is equal to 1. In that case, SPSS will derive a model that predicts the logoddss for NOT taking the train, since it estimates the effect of income on the dependent variable \textit{relative to taking the train}. In our case, it makes more sense to derive a model for the logoddss of taking the train. We want to predict logodddsratios for taking the train, so we need to specify that our first value, 0, is our reference category: (REFERENCE = FIRST).
 
@@ -543,7 +543,7 @@ In Figure \ref{fig:train1} we see the parameter estimates from this generalized 
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train1.pdf}
+       \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train1.pdf}
     \end{center}
      \caption{SPSS output of a generalized linear model for predicting taking the train from income.}
     \label{fig:train1}
@@ -600,7 +600,7 @@ Suppose the results look like those in Figure \ref{fig:train2}. What is the pred
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train2.pdf}
+       \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train2.pdf}
     \end{center}
      \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
     \label{fig:train2}
@@ -617,7 +617,7 @@ Suppose the results look like those in Figure \ref{fig:train3}. What is the pred
 
 \begin{figure}[h]
     \begin{center}
-       \includegraphics[scale=0.7, trim={0cm 22cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train3.pdf}
+       \includegraphics[scale=0.7, trim={0cm 23cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train3.pdf}
     \end{center}
      \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
     \label{fig:train3}

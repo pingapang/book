@@ -9,7 +9,7 @@ In the chapters on simple and multiple regression we have seen that both the dep
 
 The basic trick that we need is \textit{dummy coding}. Dummy coding involves making one or more new variables, that reflect the different categories of a categorical variable. First we focus on categorical variables with only two categories (dichotomous variables). Later in this chapter, we will explain what to do with categorical variables with more than two categories (nominal variables). 
 
-Imagine we study bus companies and there are two different seatings in buses: aisle seats and window seats. Suppose we ask 5 people who have travelled from Amsterdam to Paris during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows the anonymized data.
+Imagine we study bus companies and there are two different seatings in buses: aisle seats and window seats. Suppose we ask 5 people, who have travelled from Amsterdam to Paris by bus during the last 12 months, whether they had an aisle seat or a window seat, and how much they payed for the trip. Suppose we have the variables, person, seat and price. Table \ref{tab:dummy_1} shows the anonymized data.
 
 <<dummy_1, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
 set.seed(123)
@@ -217,7 +217,7 @@ Because the slope for the second dummy variable is automatically fixed to 0, the
  \label{fig:dummy_10}
 \end{figure}
 
-Sometimes, the automatic choice of the reference category by software is something you don't want. Suppose that you'd like to compare two treatments: the old treatment 1, and a new treatment 2 that avoids all the insectides that are so bad for bees and bumblebees. Here, the most interesting question is how the new treatment differs from the old one. So you'd like to use the \textit{old} treatment as the reference category (coded as 0) to which you want to compare the yield of the new treatment.
+Sometimes, the automatic choice of the reference category by software is something you don't want. Suppose that you'd like to compare two treatments: the old treatment 1, and a new treatment 2 that avoids all the insecticides that are so bad for bees and bumblebees. Here, the most interesting question is how the new treatment differs from the old one. So you'd like to use the \textit{old} treatment as the reference category (coded as 0) to which you want to compare the yield of the new treatment.
 
 In order to choose your own way of dummy coding, and thereby choosing your own reference category, you can use the syntax below to create a new variable, the dummy variable \textbf{treatment2}. All yields associated with trt2 are coded as a 1, and all others are coded as a 0.
 
@@ -419,6 +419,7 @@ First we create two new dummy variables, and then perform a linear model analysi
 RECODE Country ('A'=1) ('B'=0) ('C'=0) INTO CountryA.
 RECODE Country ('A'=0) ('B'=1) ('C'=0) INTO CountryB.
 EXECUTE.
+
 UNIANOVA height WITH CountryA CountryB
 / design = CountryA CountryB
 / print = parameter.

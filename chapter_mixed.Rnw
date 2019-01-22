@@ -3,15 +3,15 @@
 
 
 \section{Fixed effects and random effects}
-In the simplest form of linear modelling, we have one dependent numeric variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $x_1$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
+In the simplest form of linear modelling, we have one dependent numeric variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $x$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
 
 
 \begin{eqnarray}
-y = b_0 + b_1 x_1 + e \\
+y = b_0 + b_1 x + e \\
 e \sim N(0, \sigma^2)
 \end{eqnarray}
 
-Using this model, we know that for a person with a value of 5 for $x_1$, we expect $y$ to be equal to $b_0 + b_1 \times 5$. As another example, if $y$ is someone's IQ score, $x_1$ is someone's brain size in cubic milliliters, $b_0$ is equal to 70, and $b_1$ is equal to 0.1, we expect on the basis of this model that a person with a brain size of 1500 cubic millimeters has an IQ score of $70 + 0.01 \times 1500$, which equals 85.
+Using this model, we know that for a person with a value of 5 for $x$, we expect $y$ to be equal to $b_0 + b_1 \times 5$. As another example, if $y$ is someone's IQ score, $x$ is someone's brain size in cubic milliliters, $b_0$ is equal to 70, and $b_1$ is equal to 0.1, we expect on the basis of this model that a person with a brain size of 1500 cubic millimeters has an IQ score of $70 + 0.01 \times 1500$, which equals 85.
 \\
 \\
 Now, for any model the predicted values usually are not the same as the observed values. If the model predicts on the basis of my brain size that my IQ is 140, my true IQ might be in fact 130. This discrepancy is termed the residual: the observed $y$, minus the predicted $y$, or $\hat{y}$, so in this case the residual is $y - \hat{y}=130-140= -10$.
@@ -24,19 +24,21 @@ IQ = 70 + 0.1 \times Brainsize + e \\
 e \sim N(0, \sigma^2)
 \end{eqnarray}
 
-Note that in this model, the values of 70 and 0.1 are \textit{fixed}, that is, we use the same intercept and the same slope for everyone. You use these values for any person, for Henry, Jake, Lizz, and Margaret. We therefore call these effects of intercept and slope \textit{fixed effects}, as they are all the same for all research units. In contrast, we call the $e$ term, the random error term or the residual in the regression, a \textit{random effect}. This is because the error term is \textit{different for every research unit}. We don't know the specific values of these random errors or residuals for every person, but nevertheless, we assume that they come from a distribution, in this case a normal distribution with mean 0 and an unknown variance. This unknown variance is given the symbol $\sigma^2$ 
+Note that in this model, the values of 70 and 0.1 are \textit{fixed}, that is, we use the same intercept and the same slope for everyone. You use these values for any person, for Henry, Jake, Lizz, and Margaret. We therefore call these effects of intercept and slope \textit{fixed effects}, as they are all the same for all units of analysis. In contrast, we call the $e$ term, the random error term or the residual in the regression, a \textit{random effect}. This is because the error term is \textit{different for every unit}. We don't know the specific values of these random errors or residuals for every person, but nevertheless, we assume that they come from a distribution, in this case a normal distribution with mean 0 and an unknown variance. This unknown variance is given the symbol $\sigma^2$. 
 
 Here are a few more examples. 
 
 \begin{enumerate}
-\item Suppose we study a number of schools, and for every school we use a simple linear regression equation to predict the number of students (dependent variable) on the basis of the number of teachers (independent variable). For every research unit (in this case: school), the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect). 
+\item Suppose we study a number of schools, and for every school we use a simple linear regression equation to predict the number of students (dependent variable) on the basis of the number of teachers (independent variable). For every unit of analysis (in this case: school), the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect). 
 
-\item Suppose we study a number of students, and for every student we use a simple linear regression equation to predict the math test score on the basis of the number of hours of study the student puts in. Here, the research unit is student, and for every student, the  intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+\item Suppose we study reaction times, and for every measure of reaction time -- a trial -- we use a simple linear regression equation to predict reaction time in milliseconds on the basis of the characteristics of the stimulus. Here, the unit of analysis is trial, and for every trial, the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
 
-\item Suppose we study reaction times, and for every measure of reaction time -- a trial -- we use a simple linear regression equation to predict reaction time in milliseconds on the basis of the characteristics of the stimulus. Here, the research unit is trial, and for every trial, the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+\item Suppose we study a number of students, and for every student we use a simple linear regression equation to predict the math test score on the basis of the number of hours of study the student puts in. Here, the unit of analysis is student, and for every student, the  intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+
+
 \end{enumerate}
 
-Now, what happens when we have a lot of data on students, but the students come from different schools? Suppose we want to predict average grade for every student, on the basis of the number of hours of study the student puts in. We again could use a simple linear regression equation. 
+Let's focus for now on the last example. What happens when we have a lot of data on students, but the students come from different schools? Suppose we want to predict average grade for every student, on the basis of the number of hours of study the student puts in. We again could use a simple linear regression equation. 
 
 \begin{eqnarray}
 y = b_0 + b_1 hourswork + e \\
@@ -45,14 +47,16 @@ e \sim N(0, \sigma^2)
 
 
 
-That would be fine if all schools would be all very similar. But suppose that some schools have a lot of high scoring students, and some schools have a lot of low scoring students? Then school itself would also be a very important predictor, apart from the number of hours of study. One thing we could therefore do is to include school as a categorical predictor. We would then have to code this school variable into a number of dummy variables. The first dummy variable called $school1$ would indicate whether students are in the first school (school1=1) or not (school1=0). The second dummy variable $school2$ would indicate whether students are in the second school (school2=1) or not (school2=0), etcetera. You can then add these dummy variables to the regression equation like this:
+That would be fine if all schools would be all very similar. But suppose that some schools have a lot of high scoring students, and some schools have a lot of low scoring students? Then school itself would also be a very important predictor, apart from the number of hours of study. One could say that the data are \textit{clustered}: math test scores coming from the same school are more similar than math test scores coming from different schools. When we do not take this into account, the residuals will not show independence (see Chapter \ref{chap:assumptions} on the assumptions of linear models).
+
+One thing we could therefore do to remedy this is to include school as a categorical predictor. We would then have to code this school variable into a number of dummy variables. The first dummy variable called $school1$ would indicate whether students are in the first school (school1=1) or not (school1=0). The second dummy variable $school2$ would indicate whether students are in the second school (school2=1) or not (school2=0), etcetera. You can then add these dummy variables to the regression equation like this:
 
 \begin{eqnarray}
 y = b_0 + b_1 hourswork + b_2 school1 + b_3 school2 + b_4 school3 + ... + e  \nonumber\\
 e \sim N(0, \sigma^2)  \nonumber
 \end{eqnarray}
 
-In the output we would find a large number of effects, one for each dummy variable. For example, if the students came from 100 different schools, I would get 99 fixed effects for the 99 dummy variables. However, one could wonder whether this is very useful. As stated earlier, fixed effects are called fixed because they are the same for every unit of research, in this case every student. But working with 99 dummy variables, where students mostly score 0, this seems very much over the top. In fact, we're not even interested in these 99 effects. We're interested in the relationship between test score and hours of work, meanwhile taking into account that there are test score differences across schools. The dummy variables are only there to account for differences across schools; the prediction for one school is a little bit higher or lower than for another school, depending on how well students generally perform in each school. 
+In the output we would find a large number of effects, one for each dummy variable. For example, if the students came from 100 different schools, you would get 99 fixed effects for the 99 dummy variables. However, one could wonder whether this is very useful. As stated earlier, fixed effects are called fixed because they are the same for every unit of research, in this case every student. But working with 99 dummy variables, where students mostly score 0, this seems very much over the top. In fact, we're not even interested in these 99 effects. We're interested in the relationship between test score and hours of work, meanwhile taking into account that there are test score differences across schools. The dummy variables are only there to account for differences across schools; the prediction for one school is a little bit higher or lower than for another school, depending on how well students generally perform in each school. 
 \\
 \\
 We could therefore try an alternative model, where we treat the school effect as $random$: we assume that every school has a different average test score, and that these averages are normally distributed. We call these average test score deviations \textit{school effects}:
@@ -66,7 +70,7 @@ e \sim N(0, \sigma_e^2)
 So in this equation, the intercept is fixed, that is, the intercept is the same for all observed test scores. The regression coefficient $b_1$ for the effect of hours of work is also fixed. But the schooleffect is random, since it is different for every school. The residual $e$ is also random, being different for every student. It could also be written like this:
 
 \begin{eqnarray}
-y = (b_0  + schooleffect) + b_1 hourswork + e \\
+y = (b_0  + schooleffect) + b_1 hourswork + e  \label{eq:mix1}  \\
 schooleffect \sim N(0, \sigma_s^2)\\
 e \sim N(0, \sigma_e^2)
 \end{eqnarray}
@@ -74,7 +78,13 @@ e \sim N(0, \sigma_e^2)
 
 This representation emphasizes that for every school, the intercept is a little bit different: for school A the intercept might be $b_0 + 2$, and for school B the intercept might be $b_0 - 3$.
 
-So, this equation states that every observed test score is 1) partly influenced by an intercept that is random, with a certain average $b_0$ and variance $\sigma_s^2$, that is dependent on which school students are in, 2) partly influenced by the number of hours of work, an effect that is the same no matter what school a student is in (fixed), and 3) partly influenced by unknown factors, indicated by a random residual $e$ coming from a normal distribution with variance $\sigma^2_e$.
+So, equation \ref{eq:mix1} states that every observed test score is 
+
+\begin{enumerate}
+\item partly influenced by an intercept that is random, with a certain average $b_0$ and variance $\sigma_s^2$, that is dependent on which school students are in, 
+\item partly influenced by the number of hours of work, an effect that is the same no matter what school a student is in (fixed), and
+\item partly influenced by unknown factors, indicated by a random residual $e$ coming from a normal distribution with variance $\sigma^2_e$.
+\end{enumerate}
 
 To put it more formally: test score $y_{ij}$, that is, the test score from student $j$ in school $i$, is the sum of an effect of the school $b_0 + schooleffect_i$ (the average test score in school $i$), plus an effect of hours of work,  $b_1 \times hourswork$, and an unknown residual $e_{ij}$ (a specific residual for the test score for studuent $j$ in school $i$).
 
@@ -84,10 +94,10 @@ schooleffect_i \sim N(0, \sigma_s^2)\\
 e_{ij} \sim N(0, \sigma_e^2)
 \end{eqnarray}
 
-So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_e^2$, we also have an assumption that the school averages are normally distributed, in this case with mean $b_0$ and variance $\sigma_s^2$.
+So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_e^2$, we also have an assumption that the school averages have a normal distribution, in this case with mean $b_0$ and variance $\sigma_s^2$.
 \\
 \\
-Let's go back to the example of reaction times. Suppose in an experiment we measure reaction time in a large number of trials. We want to know whether the size of the stimulus (large/small) has an effect on reaction time. Let's also suppose that we carry out this experiment with 20 participants, where every participant is measured during 100 trials: 50 large stimuli and 50 small stimuli in random order. Now probably, some participants show generally very fast responses, and some participants show generally very slow responses. In other words, the average reaction time for the 100 trials may vary from participant to participant. This means that we can use participant as an important predictor of reaction times. To take this into account we can use the following equation:
+Let's go back to the example of reaction times. Suppose in an experiment we measure reaction time in a large number of trials. We want to know whether the size of the stimulus (large or small) has an effect on reaction time. Let's also suppose that we carry out this experiment with 20 participants, where every participant is measured during 100 trials: 50 large stimuli and 50 small stimuli, in random order. Now probably, some participants show generally very fast responses, and some participants show generally very slow responses. In other words, the average reaction time for the 100 trials may vary from participant to participant. This means that we can use participant as an important predictor of reaction times. To take this into account we can use the following linear equation:
 
 
 \begin{eqnarray}
@@ -96,23 +106,23 @@ speed_i \sim N(0, \sigma_s^2)\\
 e_{ij} \sim N(0, \sigma_e^2),
 \end{eqnarray}
 
-where $y_{ij}$, is the reaction time $j$ from participant $i$, $(b_0 + speed_i)$ is a random effect representing the average speed for each participant $i$ (where $b_0$ is the overall average across all participants), $b_1$ is the fixed effect of the size of the stimulus, and unknown residual $e_{ij}$ is a specific residual for the reaction time for trial $j$ of participant $i$.
+where $y_{ij}$, is the reaction time $j$ from participant $i$, $(b_0 + speed_i)$ is a random intercept representing the average speed for each participant $i$ (where $b_0$ is the overall average across all participants and $speed_i$ the random deviation for each and every participant), $b_1$ is the fixed effect of the size of the stimulus. Unknown residual $e_{ij}$ is a specific residual for the reaction time for trial $j$ of participant $i$.
 \\
 \\
-The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools (see Chapter \ref{chap:assumptions}). When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you only use a simple linear model. With clustered data, it is therefore necessary to work with an extension of the linear model, the so-called linear mixed model. The above models for test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. 
+The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools (see Chapter \ref{chap:assumptions}). When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you use an ordinary linear model, the so-called general linear model (GLM). With clustered data, it is therefore necessary to work with an extension of the general linear model or GLM, the \textit{linear mixed model}. The above models for students' test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. GLMs only contain fixed effects, apart from the random residual.
 \\
 \\
-If you have clustered data, you should take this clustering into account, either by using the grouping variable as a qualitative predictor (using a number of dummy variables) or by using a linear mixed model. As a rule of thumb: if you have fewer than 10 groups, consider dummy variables; if you have 10 or more groups, consider a linear mixed model. Use a linear mixed model if the assumption of normally distributed group differences is tenable. Use dummy variables if you are actually interested in the size of group differences.
+If you have clustered data, you should take this clustering into account, either by using the grouping variable as a categorical predictor or by using random factor in a linear mixed model. As a rule of thumb: if you have fewer than 10 groups, consider a fixed categorical factor; if you have 10 or more groups, consider a random factor. Two other rules you can follow are: Use a random factor if the assumption of normally distributed group differences is tenable. Use a fixed categorical factor if you are actually interested in the \textit{size} of group differences.
 \\
 \\
-Below, we will start with a very simple example of linear mixed model, one that we use for a simple pre-post intervention design.
+Below, we will start with a very simple example of a linear mixed model, one that we use for a simple pre-post intervention design.
 
 
 
 \section{Pre-post intervention designs}
 
 
-Imagine a study where we hope to show that aspirin helps reduce headache. We ask 100 patients to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients are randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course headaches differ from person to person, so we might have to take into account that some patients have a higher average level of headache than other patients. Now, the data could be represented in different ways, but suppose we have the data matrix in Table \ref{tab:headache_wide }(showing only the first 5 patients):
+Imagine a study where we hope to show that aspirin helps reduce headache. We ask 100 patients to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients are randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course, overall headache severity levels tend to vary from person to person, so we might have to take into account that some patients have a higher average level of pain than other patients. 
  
  
  \begin{table}
@@ -129,7 +139,14 @@ Imagine a study where we hope to show that aspirin helps reduce headache. We ask
  \label{tab:headache_wide}
 \end{table}
 
-What we observe in that table is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
+<<analysisprepost1a, fig.height=3, echo=FALSE, fig.align='center', fig.cap="Scatterplot of pre and post headache levels.">>=
+pre <- c(55,63,66,50,63)
+post<- c(45,50,56,37,50)
+data_frame(pre,post) %>% ggplot(aes(pre,post))+geom_point()
+@
+
+
+The data could be represented in different ways, but suppose we have the data matrix in Table \ref{tab:headache_wide} (showing only the first five patients). What we observe in that table is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. We can also visualize this clustering by a scatterplot, see Figure \ref{fig:analysisprepost1a}. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
 \\
 \\
 
@@ -177,7 +194,13 @@ data %>% head(10) %>%
 %  \end{tabular}
 % \\
 % \\
-Here we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). Here we might consider applying a simple linear regression model, using heachache as the dependent variable and \textbf{measure} (1st or 2nd) as a categorical predictor. However, since we know that there is a correlation between the pre and post severity measures, we know that measures systematically vary across patients: some score high on average and some score low on average. The assumption of independence is therefore not tenable. Thus we have to run a linear \textit{mixed} model, including not only the fixed effect of \textbf{measure} but also a random effect for each patient. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \textbf{measure}). For the patient effect, because there are so many patients (100) and we're really not interested in all of these individual differences, we use a random effect. This means that we only assume there is a normal distribution for all of the patient differences. So we get the following equation:
+By representing the data in long format we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). There is therefore a variable \textbf{measure} that indicates whether the headache severity was measured pre intervention (measure=1) or post intervention (measure=2). 
+
+Here we might consider applying a simple linear regression model, using \textbf{heachache} as the dependent variable and \textbf{measure} (1st or 2nd) as a categorical predictor. However, since we know that there is a correlation between the pre and post severity measures, we know that measures also systematically vary across patients: some score high on average and some score low on average. The assumption of independence is therefore not tenable. Thus we have to run a linear model, including not only an effect of \textbf{measure} but also an effect of \textbf{patient}. We then have to decide between fixed effects or random effects for these variables. 
+
+Let's first look at the variable \textbf{measure}. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \textbf{measure}). Moreover, the variable \textbf{measure} has only two levels, which is another reason to opt for a fixed effect. 
+
+Then for the patient effect, we see that we have 100 patients. Are we really interested by how much the average pain level in say patient 23 differs from the average pain level in say patient 45? No, not really. We only want to acknowledge that the individual differences exist, we want to take them into account in our model so that our inference regarding the confidence intervals and hypothesis testing is correct. We therefore prefer to assume random effects, assuming they are normally distributed. We therefore end up with a fixed effect for \textbf{measure} and a random effect for \textbf{patient} resulting in the following model equation:
 
 
 \begin{eqnarray}
@@ -186,18 +209,20 @@ patient_i \sim N(0, \sigma_p^2)\\
 e_{ij} \sim N(0, \sigma_e^2)
 \end{eqnarray}
 
-$y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + patient_i)$ is the average headache for patient $i$, \textit{measure} is a dummy variable, and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
+where $y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + patient_i)$ is the average headache for patient $i$, \textit{measure} is a dummy variable, and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
 \\
 \\
-This analysis can be done with the following SPSS syntax, treating measure as a categorical variable (using BY) for which SPSS will create a dummy variable automatically. 
+An analysis with this model can be done with the following SPSS syntax, treating \textbf{measure} as a categorical variable (using BY) for which SPSS will create a dummy variable automatically. 
 
 
 \begin{verbatim}
-MIXED headache  BY measure
+MIXED headache BY measure
   /FIXED=measure
   /PRINT=DESCRIPTIVES  SOLUTION
   /RANDOM=intercept | SUBJECT(patient) COVTYPE(VC).
 \end{verbatim}
+
+You see that the first line of the syntax is quite similar to the UNIANOVA syntax as far as the fixed effects go. In the last line, you indicate that you want to use a random effect for the variable \textbf{patient}, and that you want to use a so-called random intercepts model. By this is meant a model where you regard the combination $(b_0 + patient_i)$ as one unit: the model represents a linear equation, but that equation has a different intercept for each and every patient.  
 
 
 \begin{figure}[h]
@@ -208,16 +233,15 @@ MIXED headache  BY measure
     \caption{Output of a MIXED analysis of the headache data.}
 \end{figure}
 
-The most interesting output is given in Figure \ref{fig:prepost}. We're mostly interested in the fixed effect of the intervention: does aspirin reduce headache? After an $F$-test, we see the linear model coefficients, with an intercept of around 49 and a positive effect of the intervention dummy variable, around $+10$. We see that the dummy variable was coded 1 for the first measure (before taking aspirin). So, for our dependent variable headache, we see that the expected headache severity for the observations with a 0 for the dummy variable (that is, measure 2, which is \textit{after} taking aspirin), is equal to $49 + (10) \times 0 = 49$. Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable (that is, \textit{before} taking aspirin), is equal to $49 + (10) \times 1 = 49 + 10 = 59$. So, expected pain severity is 10 points higher before the intervention than after the intervention. Whether this difference is significant is indicated by a $t$-test. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t(99) = 25.46, p < 0.01$. The degrees of freedom are taken from the Test of Fixed Effects table with the $F$-statistics. Alternatively we can write 
+The most interesting output is given in Figure \ref{fig:prepost}. We're mainly focused on the fixed effect of the intervention: does aspirin reduce headache? After two $F$-tests, we see the linear model coefficients, with an intercept of around 49 and a positive effect of the intervention dummy variable, around $+10$. We see that the dummy variable was coded 1 for the first measure (before taking aspirin). So, for our dependent variable headache, we see that the expected headache severity for the observations with a 0 for the dummy variable (that is, measure 2, which is \textit{after} taking aspirin), is equal to $49 + (10) \times 0 = 49$. 
 
-\begin{quote}
-{The average headache severity after taking aspirin is significantly different from the average headache severity before taking aspirin, $F(1,99) = 648.28, p < 0.01$}\end{quote}
+Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable (that is, \textit{before} taking aspirin), is equal to $49 + (10) \times 1 = 49 + 10 = 59$. So, expected pain severity is 10 points higher before the intervention than after the intervention. Whether this difference is significant is indicated by a $t$-test. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t(99) = 25.46, p < 0.01$. \footnote{You might be surprised by the number of degrees of freedom. The determination of the degrees of freedom in a linear mixed model is a complicated matter, with different choices, the discussion of which is beyond the scope of this introductory chapter.}
 
 
-We might therefore carefully conclude that aspirin reduces headache in the population of NY Times readers with headache problems, where the reduction is around 10 points on a 1...100 scale (95\% CI: 9.55 -- 11.17). 
+Taking into account the direction of the effect and the confidence interval for this effect, we might therefore carefully conclude that aspirin reduces headache in the population of NY Times readers with headache problems, where the reduction is around 10 points on a 1...100 scale (95\% CI: 9.55 -- 11.17). 
 \\
 \\
-Now, this looks like reporting the output of a regular linear model, but of course it isn't. We also have some extra output, which is about the random effect of patient. We assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the Covariance Parameters part of the SPSS output. We there see two random effects: the one for the residuals and the one for the patients. The intercept seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
+Now let's look at the output regarding the random effect of patient more closely. The model assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the Covariance Parameters part of the SPSS output. The 'intercept' (actually, the patient effect in our model) seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
 
 \begin{eqnarray}
 y_{ij} = b_0 + patient_i + b_1 measure + e_{ij} \\
@@ -226,7 +250,7 @@ patient_i \sim N(0, 27)\\
 e_{ij} \sim N(0, 8)
 \end{eqnarray}
 
-Since measure is coded 0 for the headache level after the intervention, we conclude that the average pain level after taking aspirin is 49. However, not everybody's pain level after taking aspirin is 49: people show variance (variation). The pain level after aspirin varies with a variance of 27, which is equivalent to a standard deviation of arond 5.2. Figure \ref{fig:resultsprepost1} shows how much this variance actually is. It depicts a normal distribution with mean of 49 and a standard deviation of 5.2.
+Since SPSS used the the headache level after the intervention as the reference category, we conclude that the average pain level after taking aspirin is 49. However, not everybody's pain level after taking aspirin is 49: people show variance (variation). The pain level after aspirin varies with a variance of 27, which is equivalent to a standard deviation of arond 5.2. Figure \ref{fig:resultsprepost1} shows how much this variance actually is. It depicts a normal distribution with a mean of 49 and a standard deviation of 5.2.
 
 
 <<resultsprepost1, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Distribution of headache scores after taking aspirin, according to the linear mixed model.">>=
@@ -237,13 +261,13 @@ data <- data.frame(interval,density )
 ggplot(data, aes (x=interval, y=density)) + geom_line() + xlab("headache")
 @
 
-So \textit{after} taking aspirin, most patients show headache levels between 30 and 60. More specificially, if we would take the middle 95\% by using plus or minus twice the standard deviation, we can estimate that 95\% of the patients shows levels between $49 - 2 \times 5.2 = 38.6$ and $49 + 2 \times 5.2 = 59.4$
+So \textit{after} taking aspirin, most patients show headache levels roughly between 30 and 60. More specificially, if we would take the middle 95\% by using plus or minus twice the standard deviation, we can estimate that 95\% of the patients shows levels between $49 - 2 \times 5.2 = 38.6$ and $49 + 2 \times 5.2 = 59.4$
 \\
 \\
-Now let's look at the levels \textit{before} taking aspirin. The average headache leves is equal to $49 + 10 = 59$. So 95\% of the patients shows headache levels between $59 - 2 \times 5.2 = 48.6$ and $59 + 2 \times 5.2 = 49.4$ before taking aspirin. 
+Now let's look at the levels \textit{before} taking aspirin. The average headache level is equal to $49 + 10 = 59$. So 95\% of the patients shows headache levels between $59 - 2 \times 5.2 = 48.6$ and $59 + 2 \times 5.2 = 49.4$ before taking aspirin. 
 \\
 \\
-Together these results can be graphically explained in the plot in Figure \ref{fig:resultsanalysisprepost2}. In this plot you see there is variability in headache levels before taking aspirin, and there is variation in headache levels after taking aspirin. We also see that these distributions have the same spread (variance): in the model we assume that the variability in headache before aspirin is equal to the variability after aspirin. The distributions are equal, except for a horizontal shift: the distribution for heachache after aspirin is the same as the distribution before apsirin, except for a shift to the left of about 10 points. This is of course the effect of aspirin in the model, the $b_1$ parameter in our model above.  
+Together these results are visualized in Figure \ref{fig:resultsanalysisprepost2}. In this plot you see there is variability in headache levels before taking aspirin, and there is variation in headache levels after taking aspirin. We also see that these distributions have the same spread (variance): in the model we assume that the variability in headache before aspirin is equal to the variability after aspirin. The distributions are equal, except for a horizontal shift: the distribution for heachache after aspirin is the same as the distribution before apsirin, except for a shift to the left of about 10 points. This is of course the effect of aspirin in the model, the $b_1$ parameter in our model above.  
 
 <<resultsanalysisprepost2, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Distribution of headache scores before and after taking aspirin, according to the linear mixed model.">>=
 set.seed(1234)
@@ -300,7 +324,7 @@ Look at the output below. You see information about random effects and you see i
 
 \begin{enumerate}
 \item What is the intercept of the model?\\
-\item  What is the slope coefficent for the measure variable?\\
+\item  What is the slope coefficient for the measure variable?\\
 \item  What is the variance of the residuals? What is the standard deviation?\\
 \item  What is the variance of the individual differences among patients? What is the standard deviation?\\
 \item  Fill in the values in the linear mixed model below:
