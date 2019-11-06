@@ -5,9 +5,18 @@
 \usepackage{graphicx}
 \usepackage{fancyref}
 \usepackage{hyperref}
-\usepackage[scale=2]{ccicons}
+\usepackage[scale = 2]{ccicons}
 \usepackage{url}
 \usepackage{fancyhdr}
+
+% For correct tildes in R formulas:
+\usepackage[formats]{listings}
+\lstdefineformat{R}{~ = \( \sim \), 
+                    § = \( \_ \),
+                    ± = \( \\ \)}
+
+\lstset{basicstyle = \ttfamily, format = R, tabsize = 3, 
+                                showtabs = true, numbers = none}
 
 
 
@@ -24,7 +33,7 @@
 
 
 \author{St\'ephanie M. van den Berg}
-\date{Third edition (SPSS)\\ (\today)}
+\date{Fourth edition (SPSS and some R)\\ (\today)}
 
 
 
@@ -59,6 +68,7 @@ E-mail: stephanie.vandenberg@utwente.nl\\
 First edition:  & October 2018 \\
 Second edition:  & November 2018 \\
 Third edition:  & January 2019 \\
+Fourth edition: & November 2019\\
 \end{tabular}
 \end{center}
 
@@ -75,22 +85,24 @@ Third edition:  & January 2019 \\
 
 
 <<libraries, echo=FALSE,  warning=FALSE, message=F>>=
-library(ggplot2)
+library(tidyverse)
 library(foreign)
 library(haven)
-library(dplyr)
 library(lme4)
-library(tidyr)
 library(xtable)
 library(scales)
 library(DAAG)
+library(ggthemes)
+library(latex2exp)
+library(broom)
+library(modelr)
 @
 
 
 
 
 \chapter*{Preface}
-This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, linear mixed models and generalized linear models. All methods can be carried out within one supermodel: the generalized linear mixed model. This approach is illustrated using SPSS.
+This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyze their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, linear mixed models and generalized linear models. This approach is illustrated using SPSS, and in some cases also R.
 
 
 
@@ -100,12 +112,29 @@ This book is for bachelor students in social, behavioural and management science
 
 \mainmatter
 \pagestyle{plain}
+
+<<echo = F>>=
+old <- theme_update(
+  panel.background = element_blank(),
+  legend.key = element_blank(),
+  legend.background = element_blank(),
+  strip.background = element_rect(fill = "white", colour = "black"),
+  plot.background = element_rect(fill = "white"),
+  # panel.grid = element_blank(),
+  axis.line = element_line(color = "black"),
+  axis.ticks = element_line(color = "black"),
+  # strip.text = element_text(size = 16, color = myRed),
+  # axis.title.y = element_text(color = myRed, hjust = 0, face = "italic"),
+  # axis.title.x = element_text(color = myRed, hjust = 0, face = "italic"),
+  axis.text = element_text(color = "black")
+  # legend.position = "none"
+)
+@
+
+
 \Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics
 
 \Sexpr{knit_child('linear modelling introduction.Rnw')} % simple regression
-
-
-
 
 \Sexpr{knit_child('chapter_inference_I.Rnw')}
 
@@ -115,24 +144,30 @@ This book is for bachelor students in social, behavioural and management science
 
 \Sexpr{knit_child('chapter_categorical.Rnw')}
 
-\Sexpr{knit_child('chapter_6.Rnw')} % moderation
+\Sexpr{knit_child('chapter_moderation.Rnw')} % moderation
 
-\Sexpr{knit_child('chapter_8.Rnw')} % advanced topics linear models
+\Sexpr{knit_child('chapter_contrasts.Rnw')} % advanced topics linear models
 % % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
 % %
 % %
-\Sexpr{knit_child('chapter_7.Rnw')} % assumptions
-\Sexpr{knit_child('chapter_9.Rnw')} % nonparametric alternatives linear models
+\Sexpr{knit_child('chapter_assumptions.Rnw')} % assumptions
+\Sexpr{knit_child('chapter_nonparbetween.Rnw')} % nonparametric alternatives linear models
 %
-% %  MEDIATION   ANALYSIS
+% % %  MEDIATION   ANALYSIS
 
 \Sexpr{knit_child('chapter_mixed.Rnw')} % introduction linear mixed models
+% \Sexpr{knit_child('chapter_mixed_alt.Rnw')} % introduction linear mixed models
 \Sexpr{knit_child('chapter_premidpostdesigns.Rnw')}
-\Sexpr{knit_child('chapter_11.Rnw')} % Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+\Sexpr{knit_child('chapter_nonparwithin.Rnw')} % Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
 
 
-\Sexpr{knit_child('chapter_12.Rnw')} % generalized linear models: logistic regression
+\Sexpr{knit_child('chapter_logistic.Rnw')} % generalized linear models: logistic regression
 
-\Sexpr{knit_child('chapter_13.Rnw')} % generalized linear models: poisson models
+\Sexpr{knit_child('chapter_poisson.Rnw')} % generalized linear models: poisson models
+\Sexpr{knit_child('chapter_big_data_analytics.Rnw')}
+<<echo = F>>=
+theme_set(old)
+@
+
 
 \end{document}

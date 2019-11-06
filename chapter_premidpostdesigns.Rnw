@@ -9,28 +9,31 @@ In many intervention studies, one has more than two measurement moments. Let's g
 
 <<analysispremidpost1, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
 set.seed(1234)
-patient <- rep (seq(1:100), 3)
-measure <- rep( c( 1,2,3), each=100)
+patient <- rep(seq(1:100), 3)
+measure <- rep(c(1, 2, 3), each = 100)
 # time <- as.factor(time)
-headache1 <-  rnorm(100, 60, 5)
-headache2 <-  headache1 + rnorm(100, -10, 3)
-headache3 <-  headache1 + rnorm(100, -8, 3)
-headache1 <- headache1 +  rnorm(100, 0, 3)
-headache = c(headache1, headache2, headache3)
-headache <- round(headache,0)
+headache1 <- rnorm(100, 60, 5)
+headache2 <- headache1 + rnorm(100, -10, 3)
+headache3 <- headache1 + rnorm(100, -8, 3)
+headache1 <- headache1 + rnorm(100, 0, 3)
+headache <- c(headache1, headache2, headache3)
+headache <- round(headache, 0)
 datalong <- data.frame(patient, measure, headache) %>% dplyr::arrange(patient)
 datawide <- datalong %>% tidyr::spread(measure, headache)
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(datalong, 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/premidpost.sav', 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/getdatapremidpost.sps',
-              package = c("SPSS"))
+source("/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R")
+write.foreign(datalong,
+  "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/premidpost.sav",
+  "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/premidpost/getdatapremidpost.sps",
+  package = c("SPSS")
+)
 names(datawide) <- c("patient", "pre", "post1", "post2")
-datawide %>% head(10) %>% 
-         xtable(
-        caption="Headache measures in NY Times readers.",           label="tab:analysispremidpost1",
-        digits=c(0,0, 0,0,0)) %>%
-        print(include.rownames=F, caption.placement = "top")
+datawide %>%
+  head(10) %>%
+  xtable(
+    caption = "Headache measures in NY Times readers.", label = "tab:analysispremidpost1",
+    digits = c(0, 0, 0, 0, 0)
+  ) %>%
+  print(include.rownames = F, caption.placement = "top")
 @
 
 So for each patient we have three measures: pre, post1 and post2. To see if there is some significant clustering, it is no longer possible to study this by computing a single correlation. We could however compute 3 different correlations: pre-post1, pre-post2, and post1-post2, but this is rather tedious, and moreover does not give us a single measure of the extent of clustering of the data. But there is an alternative: one could compute not a Pearson correlation, but an \textit{intraclass correlation} (ICC). To do this, we need to bring the data again into \textit{long format}, as opposed to \textit{wide format}, see Chapter \ref{chap:intro}. This is done in Table \ref{tab:analysispremidpost2}.
@@ -119,69 +122,69 @@ As this correlation is quite higher than 0, there seems to be quite a lot of clu
 \\
 
 
-\subsection{Exercises}
-
-Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are in Table \ref{tab:math_scores}.
-
-
-
-\begin{table}
- \caption{Math test scores.}
- \begin{tabular}{lrr}
- student & colour & score \\ \hline
- 001 & yellow & 60 \\
- 001 & red & 66 \\
- 001 & blue & 60 \\
- 002 & yellow & 24 \\
- 002 & red & 15 \\
- 002 & blue & 30 \\
- 003 & yellow & 90 \\
- 003 & red & 90 \\
- 003 & blue & 89 \\
- 004 & yellow & 10 \\
- 004 & red & 20 \\
- 004 & blue & 15 \\
- 005 & yellow & 23 \\
- 005 & red & 13 \\
- 005 & blue & 18 \\
- \dots & \dots & \dots \\
- \end{tabular}
-\label{tab:math_scores}
-\end{table}
-
-\begin{enumerate}
-\item If you want to test the hypothesis that the colour of the walls do not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be? 
-\item In the output that would result from that syntax from question 1, would you look at a $t$-test or or an $F$-test? Explain your answer.
-\item How many degrees of freedom would you see for the denominator?
-\item Suppose you see this in the output for this colour experiment. How important are the individual difference in math performance in the population of students? Can you quantify the amount of clustering?
-
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.png}
-    \end{center}
-\end{figure}
-
-\end{enumerate}
-
-
-\subsection{Answers}
-
-\begin{enumerate}
-\item 
-
-\begin{verbatim}
-MIXED score BY colour
-  /FIXED=colour
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
-\end{verbatim}
-
-\item  $F$-test. There will be two dummy variable and I want to know if the effects of both of these are significantly different from 0. The $t$-tests  give me only information about the dummy variables separately. \\
-\item  2, because there are 3 different colours, which can be represented by 2 dummy-variables. \\
-\item  In the table with the data you generally see that students who score high in one room also score high in another room (for instance, students 001 and 003). Students who score low in one room also score low in another room (for instance students 002, 004 and 005). This clustering can be quantified using an intraclass correlation, in this case equal to $\frac{228}{228+270}=0.46$. 
-\end{enumerate}
+% \subsection{Exercises}
+% 
+% Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are in Table \ref{tab:math_scores}.
+% 
+% 
+% 
+% \begin{table}
+%  \caption{Math test scores.}
+%  \begin{tabular}{lrr}
+%  student & colour & score \\ \hline
+%  001 & yellow & 60 \\
+%  001 & red & 66 \\
+%  001 & blue & 60 \\
+%  002 & yellow & 24 \\
+%  002 & red & 15 \\
+%  002 & blue & 30 \\
+%  003 & yellow & 90 \\
+%  003 & red & 90 \\
+%  003 & blue & 89 \\
+%  004 & yellow & 10 \\
+%  004 & red & 20 \\
+%  004 & blue & 15 \\
+%  005 & yellow & 23 \\
+%  005 & red & 13 \\
+%  005 & blue & 18 \\
+%  \dots & \dots & \dots \\
+%  \end{tabular}
+% \label{tab:math_scores}
+% \end{table}
+% 
+% \begin{enumerate}
+% \item If you want to test the hypothesis that the colour of the walls do not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be? 
+% \item In the output that would result from that syntax from question 1, would you look at a $t$-test or or an $F$-test? Explain your answer.
+% \item How many degrees of freedom would you see for the denominator?
+% \item Suppose you see this in the output for this colour experiment. How important are the individual difference in math performance in the population of students? Can you quantify the amount of clustering?
+% 
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.png}
+%     \end{center}
+% \end{figure}
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% \item 
+% 
+% \begin{verbatim}
+% MIXED score BY colour
+%   /FIXED=colour
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+% \end{verbatim}
+% 
+% \item  $F$-test. There will be two dummy variable and I want to know if the effects of both of these are significantly different from 0. The $t$-tests  give me only information about the dummy variables separately. \\
+% \item  2, because there are 3 different colours, which can be represented by 2 dummy-variables. \\
+% \item  In the table with the data you generally see that students who score high in one room also score high in another room (for instance, students 001 and 003). Students who score low in one room also score low in another room (for instance students 002, 004 and 005). This clustering can be quantified using an intraclass correlation, in this case equal to $\frac{228}{228+270}=0.46$. 
+% \end{enumerate}
 
 
 \section{Pre-mid-post intervention design: linear effects}
@@ -198,7 +201,7 @@ datalongnew %>% head(10) %>%
 @
  
  
-Instead of using a qualitative variable intervention, with three levels, we now use a quantitative variable, time, indicating the number of hours that have elapsed after aspirin intake. At point 0 hours, we measure headache severity, and patients take an aspirin. Next we measure headache after 3 hours and 24 hours. Above, we wanted to know if there were differences in average headache between before intake and 3hrs and 24 hrs after intake. Another question we might ask ourselves: is there a \textit{linear} reduction in headache severity after taking aspirin?
+Instead of using a categorical variable intervention, with three levels, we now use a numeric variable, time, indicating the number of hours that have elapsed after aspirin intake. At point 0 hours, we measure headache severity, and patients take an aspirin. Next we measure headache after 3 hours and 24 hours. Above, we wanted to know if there were differences in average headache between before intake and 3hrs and 24 hrs after intake. Another question we might ask ourselves: is there a \textit{linear} reduction in headache severity after taking aspirin?
 
 For this we can do a linear regression type of analysis. We want to take into account individual differences in headache severity levels among patients, so we perform a MIXED analysis in SPSS, using the following syntax, replacing the key word BY with WITH, and the variable \textbf{measure} by \textbf{time}:
 
@@ -243,7 +246,7 @@ That the model is not appropriate for this data set is also obvious when we plot
 datalongnew %>% ggplot( aes(x=time, y=headache) ) + geom_point() +xlab("time after aspirin intake") +ylab("headache score") + geom_abline(intercept=54, slope=-0.16)
 @
 
-The line shown is the fitted line based on the SPSS output. It can be seen that the prediction for time=0 is too low, for time=2 too high, and for time=24 again too low. So for this particular data set on headache, it would be better to use a categorical predictor for the effect of time on headache, like we did in the previous section.
+The line shown is the fitted line based on the SPSS output. It can be seen that the prediction for time=0 is too low, for time=3 too high, and for time=24 again too low. So for this particular data set on headache, it would be better to use a categorical predictor for the effect of time on headache, like we did in the previous section.
 \\
 \\
 As an example of a data set where a linear effect would have been appropriate, imagine that we measured headache 2 hours and 3 hours after aspirin intake (but not after 24 hours). Suppose these data would look like those in Figure \ref{fig:analysispremidpost6}. There we see a gradual increase of headache levels right after aspirin intake. Here, a numeric treatment of the time variable would be more appropriate. The SPSS output is given in Figure \ref{fig:premidpostaspirinlinear2}. From the output we see that the intercept is 59 and that the slope is -3.3. So this model predicts an hourly decrease of 3.3 points in headache level. This regression line is also depicted in Figure \ref{fig:analysispremidpost6}. 
@@ -271,122 +274,122 @@ datalongnew2 %>% ggplot( aes(x=time, y=headache) ) + geom_point() +xlab("time af
 Because we are confident that this model is appropriate for our data, we can interpret the statistical output from SPSS. 
 
 \begin{quotation}
-A linear mixed model was run, using a quantitive variable time and random effects for the variable patient. We saw a significant linear effect of time on headache level, $t(199)=-24.42, p < 0.001$. The estimated effect of time based on this analysis is negative, $-3.3$, so with every hour that elapses after aspirin intake, the predicted headache score decreases with 3.3 points. 
+A linear mixed model was run, using a numeric variable time and random effects for the variable patient. We saw a significant linear effect of time on headache level, $t(199)=-24.42, p < 0.001$. The estimated effect of time based on this analysis is negative, $-3.3$, so with every hour that elapses after aspirin intake, the predicted headache score decreases with 3.3 points. 
 \end{quotation}
 
 
-\subsection{Exercises}
-
-Suppose you have a number of CEOs with smart watches and you have these smart watches log skin conductance. Skin conductance is a good measure for stress. These measurements are done at random intervals, for at most 4 times during one day. The experiment starts at 7am and stops at 7pm. The \textbf{time} variable measures how many hours have passed since 7am. Table \ref{tab:conductance} shows part of the data matrix.
-
- \begin{table}
- \caption{Skin conductance measures in CEOs.}
- \begin{tabular}{lrr}
- CEO & time & conductance \\ \hline
- 001 & 2 & 80 \\
- 001 & 3 & 65 \\
- 001 & 10 & 60 \\
- 001 & 11 & 60 \\
- 002 & 4 & 34 \\
- 002 & 6 & 25 \\
- 002 & 9 & 30 \\
- 002 & 12 & 30 \\
- 003 & 3 & 23 \\
- 003 & 4 & 15 \\
- 003 & 5 & 20 \\
- 003 & 8 & 20 \\
- 004 & 0 & 90 \\
- 004 & 3 & 70 \\
- 004 & 4 & 65 \\
- 004 & 11 & 65 \\
- \dots & \dots & \dots \\
- \end{tabular}
-\label{tab:conductance}
-\end{table}
-
-
-Now you'd like to know if skin conductance in CEOs shows a general decrease during the day. Your null-hypothesis is therefore that there is no linear effect of time on skin conductance. Now, you have multiple measures for each CEO (repeated measures), and there might be individual differences in the average skin conductance that you would like to take into account. Therefore you perform a MIXED analysis in SPSS. 
-
-\begin{enumerate}
-
-\item Look at the data plotted in Figure \ref{fig:analysispremidpost7}: do you think a linear effect is reasonable for this data set?
-
- <<analysispremidpost7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Skin conductance measured in CEOs.'  >>=
-set.seed(1234)
-time <- runif(100, 0, 12)
-skinconductance <- rnorm(100, 78 -4.2 * time ,10    )
-sc <- data.frame(time, skinconductance)
-sc %>% ggplot( aes(x=time, y=skinconductance)) + geom_point() + ylab("skin conductance") + xlab("time elapsed after 7am in hours") +ylim(c(0,100))
-@
-
-
-\item What would the SPSS syntax look like? \\
-\item If you got the output as in Figure \ref{fig:CEOexample}, what the predicted skin conductance be for a CEO at 15.00 hrs? 
-
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
-    \end{center}
-    \caption{Example output for the analysis of skin conductance in CEOs.}
-    \label{fig:CEOexample}
-\end{figure}
-
-
-\item How much clustering is there for skin conductance across CEOs? \\
-\item Would you say these individual differences are very important to take into account? \\
-\item Is there a significant effect of time of day on skin conductance in CEOs?\\
-\item What is the effect of time of day on skin conductance in CEOs? Also give the 95\% confidence interval of this effect.
-\item Write a short paragraph that describes the results in APA format.
-\item Suppose there is a new data set where every student's mood was tested at three points in time: During Christmas holidays (time point 1), during Easter holidays (time point 2) and at the start of the academic year, September 1 (time point 3). Look at the data plotted in Figure \ref{fig:analysispremidpost8}: do you think a linear effect is reasonable for this data set? Explain your answer.
-
- <<analysispremidpost8, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data on mood at three different time points." >>=
-set.seed(1234)
-time <- rep(c(1, 2, 3), 50)
-mood <- rnorm(150, 2780 -64.2 * time^3 ,100    )
-data <- data.frame(time, mood)
-data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time point") 
-@
-
-\item Provide the syntax that you would use to analyze the problem of question 9.
-
-
-\end{enumerate}
-
-\subsection{Answers}
-
-
-\begin{enumerate}
-
-\item Yes, a general linear downward trend is observed for the skin conductance.
-\item 
-\begin{verbatim}
-MIXED conductance WITH time
-  /FIXED=time
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(CEO) COVTYPE(VC).
-\end{verbatim}
-\item 15 hrs is equal to 8 hours after 7am, so the expected skin conductance is equal to $62 - 4 \times 8= 30$\\
-
-\item The intraclass correlation coefficient is equal to $\frac{235}{235+247}=0.49$, 
-\item The correlation is quite different from 0, so there is certainly some clustering in the data and it is important to take these individual differences into account. \\
-\item Yes, there is a signficant linear effect of time on skin conductance in CEOs, $t(59)=-4.24, p < 0.01$.\\
-\item The linear effect of time of day on skin conductance in CEOs is around -4.13 points per hour after 7am (95 \% CI: -6.08 -- -2.18). \\
-\item \begin{quotation}
-        A linear mixed model was run with time as a quantitative predictor for skin conductance, including random effects for CEO. We found an effect of time of -4.13 points per hour which was significantly different from 0, $t(59)=-4.24, p < 0.001$. Therefore we conclude that time of day has an effect on skin conductance in the entire population of CEOs.
-        \end{quotation}
-        
-\item The relationship is not linear: you cannot draw a straight line through the means of the three measurements. 
-\item Because we have multiple measurements from the same students we should use a MIXED analysis. Furthermore, a qualitave analysis would be more suitable, given the nonlinear relationship between time and mood. So we use the syntax:
-
-\begin{verbatim}
-MIXED mood BY time
-  /FIXED=time
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
-\end{verbatim}
-
-\end{enumerate}
+% \subsection{Exercises}
+% 
+% Suppose you have a number of CEOs with smart watches and you have these smart watches log skin conductance. Skin conductance is a good measure for stress. These measurements are done at random intervals, for at most 4 times during one day. The experiment starts at 7am and stops at 7pm. The \textbf{time} variable measures how many hours have passed since 7am. Table \ref{tab:conductance} shows part of the data matrix.
+% 
+%  \begin{table}
+%  \caption{Skin conductance measures in CEOs.}
+%  \begin{tabular}{lrr}
+%  CEO & time & conductance \\ \hline
+%  001 & 2 & 80 \\
+%  001 & 3 & 65 \\
+%  001 & 10 & 60 \\
+%  001 & 11 & 60 \\
+%  002 & 4 & 34 \\
+%  002 & 6 & 25 \\
+%  002 & 9 & 30 \\
+%  002 & 12 & 30 \\
+%  003 & 3 & 23 \\
+%  003 & 4 & 15 \\
+%  003 & 5 & 20 \\
+%  003 & 8 & 20 \\
+%  004 & 0 & 90 \\
+%  004 & 3 & 70 \\
+%  004 & 4 & 65 \\
+%  004 & 11 & 65 \\
+%  \dots & \dots & \dots \\
+%  \end{tabular}
+% \label{tab:conductance}
+% \end{table}
+% 
+% 
+% Now you'd like to know if skin conductance in CEOs shows a general decrease during the day. Your null-hypothesis is therefore that there is no linear effect of time on skin conductance. Now, you have multiple measures for each CEO (repeated measures), and there might be individual differences in the average skin conductance that you would like to take into account. Therefore you perform a MIXED analysis in SPSS. 
+% 
+% \begin{enumerate}
+% 
+% \item Look at the data plotted in Figure \ref{fig:analysispremidpost7}: do you think a linear effect is reasonable for this data set?
+% 
+%  <<analysispremidpost7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Skin conductance measured in CEOs.'  >>=
+% set.seed(1234)
+% time <- runif(100, 0, 12)
+% skinconductance <- rnorm(100, 78 -4.2 * time ,10    )
+% sc <- data.frame(time, skinconductance)
+% sc %>% ggplot( aes(x=time, y=skinconductance)) + geom_point() + ylab("skin conductance") + xlab("time elapsed after 7am in hours") +ylim(c(0,100))
+% @
+% 
+% 
+% \item What would the SPSS syntax look like? \\
+% \item If you got the output as in Figure \ref{fig:CEOexample}, what the predicted skin conductance be for a CEO at 15.00 hrs? 
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/CEOexample.png}
+%     \end{center}
+%     \caption{Example output for the analysis of skin conductance in CEOs.}
+%     \label{fig:CEOexample}
+% \end{figure}
+% 
+% 
+% \item How much clustering is there for skin conductance across CEOs? \\
+% \item Would you say these individual differences are very important to take into account? \\
+% \item Is there a significant effect of time of day on skin conductance in CEOs?\\
+% \item What is the effect of time of day on skin conductance in CEOs? Also give the 95\% confidence interval of this effect.
+% \item Write a short paragraph that describes the results in APA format.
+% \item Suppose there is a new data set where every student's mood was tested at three points in time: During Christmas holidays (time point 1), during Easter holidays (time point 2) and at the start of the academic year, September 1 (time point 3). Look at the data plotted in Figure \ref{fig:analysispremidpost8}: do you think a linear effect is reasonable for this data set? Explain your answer.
+% 
+%  <<analysispremidpost8, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data on mood at three different time points." >>=
+% set.seed(1234)
+% time <- rep(c(1, 2, 3), 50)
+% mood <- rnorm(150, 2780 -64.2 * time^3 ,100    )
+% data <- data.frame(time, mood)
+% data %>% ggplot( aes(x=time, y=mood)) + geom_point() + ylab("mood") + xlab("time point") 
+% @
+% 
+% \item Provide the syntax that you would use to analyze the problem of question 9.
+% 
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% 
+% \begin{enumerate}
+% 
+% \item Yes, a general linear downward trend is observed for the skin conductance.
+% \item 
+% \begin{verbatim}
+% MIXED conductance WITH time
+%   /FIXED=time
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(CEO) COVTYPE(VC).
+% \end{verbatim}
+% \item 15 hrs is equal to 8 hours after 7am, so the expected skin conductance is equal to $62 - 4 \times 8= 30$\\
+% 
+% \item The intraclass correlation coefficient is equal to $\frac{235}{235+247}=0.49$, 
+% \item The correlation is quite different from 0, so there is certainly some clustering in the data and it is important to take these individual differences into account. \\
+% \item Yes, there is a signficant linear effect of time on skin conductance in CEOs, $t(59)=-4.24, p < 0.01$.\\
+% \item The linear effect of time of day on skin conductance in CEOs is around -4.13 points per hour after 7am (95 \% CI: -6.08 -- -2.18). \\
+% \item \begin{quotation}
+%         A linear mixed model was run with time as a quantitative predictor for skin conductance, including random effects for CEO. We found an effect of time of -4.13 points per hour which was significantly different from 0, $t(59)=-4.24, p < 0.001$. Therefore we conclude that time of day has an effect on skin conductance in the entire population of CEOs.
+%         \end{quotation}
+%         
+% \item The relationship is not linear: you cannot draw a straight line through the means of the three measurements. 
+% \item Because we have multiple measurements from the same students we should use a MIXED analysis. Furthermore, a qualitave analysis would be more suitable, given the nonlinear relationship between time and mood. So we use the syntax:
+% 
+% \begin{verbatim}
+% MIXED mood BY time
+%   /FIXED=time
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+% \end{verbatim}
+% 
+% \end{enumerate}
 
 
 
@@ -395,7 +398,7 @@ MIXED mood BY time
 
 Suppose we carry out the aspirin and headache study not only with a random sample of NY Times readers that suffer from regular headaches, but also with a random sample of readers of the Wall Street Journal that suffer from regular headaches. We'd like to know whether aspirin works, but we are also interested to know whether the effect of aspirin is similar in the two groups of readers. Our null-hypothesis is that the effect of aspirin in affecting headache severity is the same in NY Times and Wall Street Journal readers that suffer from headache.\\
 \\
-H\_0: The effect of aspirin is the same for NY Times readers as for Wall Street Journal readers.
+$H_0$: The effect of aspirin is the same for NY Times readers as for Wall Street Journal readers.
 \\
 \\
 Suppose we have the data set in Table \ref{tab:analysisprepostmixed1} (we only show the first six patients), and we only look at the measurements before aspirin intake and 3 hours after aspirin intake (pre-post design). 
@@ -554,133 +557,133 @@ Because the two analyses are equivalent (they end up with exactly the same predi
 
 
 
-\subsection{Exercises}
-
-Below we see data from a study on the effects of the financial crisis on the number of employees in specific Dutch companies. The companies are distinguised into food and non-food related companies. The number of employees are recorded in January 2008 and January 2011.
-
-<<analysisprepostmixed11, fig.height=4, echo=FALSE, fig.align='center', warning=F>>=
-set.seed(1234)
-company <- rep (seq(1:1000), 2)
-year <- rep( c( 2008,2011), each=1000)
-# time <- as.factor(time)
-food <- rep(c("nonfood", "food"),1000 )
-employees <-  rnorm(2000, 60 + 21*(year==2011) + 40 *(food=="food")  , 15) %>% round(0)
-datalong <- data.frame(company, food, year, employees) %>% dplyr::arrange(company)
-datawide <- datalong %>% tidyr::spread(year, employees) %>% dplyr::arrange(company)
-names(datawide) <- c('company','food','2008','2011') 
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(datalong, 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixedprepostexercise.sav', 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixedprepostexercise.sps',
-              package = c("SPSS"))
-datawide %>% head(4) %>% kable()
-@
-
-\begin{enumerate}
-\item These data are in wide format. Rewrite the datamatrix in such a way that we have the same data in long format. Provide column (variable) names. 
-\\
- \\
- \begin{tabular}{llrrrr}
-   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
-  & \dots & \dots  & \dots & \dots  & \dots  \\
- \end{tabular}
-\\
-\\
-\item Do we need to use a linear mixed model, or can we analyse these data with an ordinary linear model?
-\item We want to test the null-hypothesis that the effects of the financial crisis in 2008 has the same effect on the number of employees in the food sector as in the non-food sector. Provide the syntax that helps you test this hypothesis. 
-\item Suppose the output in Figure \ref{fig:mixedprepostemployee} results from an analysis done by a colleague:
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf}
-    \end{center}
-    \label{fig:mixedprepostemployee}
-    \caption{Output of a MIXED analysis done by a colleague.}
-\end{figure}
-
-She provides you with the information that food=1 means the food sector and food=2 is the nonfood sector.
-
-What does the model predict regarding the number of employees in 2008 in the non-food sector?
-\item What does the model predict regarding the number of employees in 2011 in the non-food sector?
-\item What does the model predict regarding the number of employees in 2008 in the food sector?
-\item What does the model predict regarding the number of employees in 2011 in the food sector?
-\item How large is the effect of the crisis in the food sector?
-\item How large is the effect of the crisis in the non-food sector
-\item How large is the intraclass correlation (ICC)? Give the computation.
-\item Could we have done the analysis with an ordinary linear model? Explain your answer.
-\item Can we reject the null-hypothesis that the effects of the crisis were the same in the food and non-food sectors? Explain your answer.
-\end{enumerate}
-
-
-
-\subsection{Answers}
-
-\begin{enumerate}
-\item It could look like this:
-\\
-\\
-\begin{tabular}{llrrrr}
-   & company & sector  & year & NEmployees  & \dots  \\ \hline
-  & 1 & nonfood  & 2008 & 42  & \dots  \\
-  & 1 & nonfood  & 2011 & 63  & \dots  \\
-  & 2 & food  & 2008 & 104  & \dots  \\
-  & 2 & food  & 2011 & 126  & \dots  \\
-  & 3 & nonfood  & 2008 & 76  & \dots  \\
-  & 3 & nonfood  & 2011 & 58  & \dots  \\
-  & 4 & food  & 2008 & 65  & \dots  \\
-  & 4 & food  & 2011 & 131  & \dots  \\
-\end{tabular}
-\\
-\\
-\item The data are clustered into companies: for each company we have two data points, so we should at least try a linear mixed model. Only if the variance of the company random effects is extremely small, we could use a linear model without random effects.
-\item One option is to let SPSS construct the dummy variables:
-
-\begin{verbatim}
-MIXED employees BY year sector 
-  /FIXED=year sector year*sector
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
-\end{verbatim}
-
-Or you do the dummy coding yourself, for example like this:
-
-\begin{verbatim}
-
-RECODE year (2008=0) (2011=1) INTO year2011.
-RECODE sector ('Nonfood'=0) ('food'=1) INTO food.
-EXECUTE.
-
-COMPUTE food2011=year2011*food.
-EXECUTE.
-
-MIXED employees WITH year2011 food food2011
-  /FIXED= year2011 food food2011
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
-\end{verbatim}
-
-\item the nonfood sector is food=2, so the predicted number of employees in 2008 in the nonfood sector is equal to $81.57 + 0 -22.056 + 0= 59.514$
-\item the nonfood sector is food=2, so the predicted number of employees in 2011 in the nonfood sector is equal to $81.57 + 0 + 0 + 0= 81.57$
-\item the food sector is food=1, so the predicted number of employees in 2008 in the food sector is equal to $81.57 + 39.31 -22.056 + 0.85=99.674 $
-\item the food sector is food=1, so the predicted number of employees in 2011 in the food sector is equal to $81.57 + 39.31 + 0 + 0 = 120.88   $ 
-\item in the food sector the effect is a $120.88 - 99.674 =   21.206$ increase in number of employees
-\item in the non-food sector the effect is a $81.57 - 59.514 =   22.056$ increase in number of employees
-\item the ICC is $\frac{12}{12+208}=0.05$
-\item we have clustering, with multiple data point per company, so in general a linear mixed model is better than an ordinary linear model. However, since the intraclass correlation is rather low, the results would be very similar if we would use an ordinary linear model.
-\item The null-hypothesis cannot be reject as the year by sector interaction effect is not signifcantly different from 0, $t(998)=0.66, p=0.51$. (alternatively, $F(1,998)=0.44, p=0.51$). Note however that the statistical results are in terms of absolute number of employees. These data show that the average number of employees in 2008 is larger in the food sector than in the non-food sector. Perhaps it would be wiser to look at percentage increase in number of employees: A change from 100 to 102 reflects a larger impact than a change from 1000 to 1002.
-
-\end{enumerate}
+% \subsection{Exercises}
+% 
+% Below we see data from a study on the effects of the financial crisis on the number of employees in specific Dutch companies. The companies are distinguised into food and non-food related companies. The number of employees are recorded in January 2008 and January 2011.
+% 
+% <<analysisprepostmixed11, fig.height=4, echo=FALSE, fig.align='center', warning=F>>=
+% set.seed(1234)
+% company <- rep (seq(1:1000), 2)
+% year <- rep( c( 2008,2011), each=1000)
+% # time <- as.factor(time)
+% food <- rep(c("nonfood", "food"),1000 )
+% employees <-  rnorm(2000, 60 + 21*(year==2011) + 40 *(food=="food")  , 15) %>% round(0)
+% datalong <- data.frame(company, food, year, employees) %>% dplyr::arrange(company)
+% datawide <- datalong %>% tidyr::spread(year, employees) %>% dplyr::arrange(company)
+% names(datawide) <- c('company','food','2008','2011') 
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(datalong, 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixedprepostexercise.sav', 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixedprepostexercise.sps',
+%               package = c("SPSS"))
+% datawide %>% head(4) %>% kable()
+% @
+% 
+% \begin{enumerate}
+% \item These data are in wide format. Rewrite the datamatrix in such a way that we have the same data in long format. Provide column (variable) names. 
+% \\
+%  \\
+%  \begin{tabular}{llrrrr}
+%    & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% \item Do we need to use a linear mixed model, or can we analyse these data with an ordinary linear model?
+% \item We want to test the null-hypothesis that the effects of the financial crisis in 2008 has the same effect on the number of employees in the food sector as in the non-food sector. Provide the syntax that helps you test this hypothesis. 
+% \item Suppose the output in Figure \ref{fig:mixedprepostemployee} results from an analysis done by a colleague:
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf}
+%     \end{center}
+%     \label{fig:mixedprepostemployee}
+%     \caption{Output of a MIXED analysis done by a colleague.}
+% \end{figure}
+% 
+% She provides you with the information that food=1 means the food sector and food=2 is the nonfood sector.
+% 
+% What does the model predict regarding the number of employees in 2008 in the non-food sector?
+% \item What does the model predict regarding the number of employees in 2011 in the non-food sector?
+% \item What does the model predict regarding the number of employees in 2008 in the food sector?
+% \item What does the model predict regarding the number of employees in 2011 in the food sector?
+% \item How large is the effect of the crisis in the food sector?
+% \item How large is the effect of the crisis in the non-food sector
+% \item How large is the intraclass correlation (ICC)? Give the computation.
+% \item Could we have done the analysis with an ordinary linear model? Explain your answer.
+% \item Can we reject the null-hypothesis that the effects of the crisis were the same in the food and non-food sectors? Explain your answer.
+% \end{enumerate}
+% 
+% 
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% \item It could look like this:
+% \\
+% \\
+% \begin{tabular}{llrrrr}
+%    & company & sector  & year & NEmployees  & \dots  \\ \hline
+%   & 1 & nonfood  & 2008 & 42  & \dots  \\
+%   & 1 & nonfood  & 2011 & 63  & \dots  \\
+%   & 2 & food  & 2008 & 104  & \dots  \\
+%   & 2 & food  & 2011 & 126  & \dots  \\
+%   & 3 & nonfood  & 2008 & 76  & \dots  \\
+%   & 3 & nonfood  & 2011 & 58  & \dots  \\
+%   & 4 & food  & 2008 & 65  & \dots  \\
+%   & 4 & food  & 2011 & 131  & \dots  \\
+% \end{tabular}
+% \\
+% \\
+% \item The data are clustered into companies: for each company we have two data points, so we should at least try a linear mixed model. Only if the variance of the company random effects is extremely small, we could use a linear model without random effects.
+% \item One option is to let SPSS construct the dummy variables:
+% 
+% \begin{verbatim}
+% MIXED employees BY year sector 
+%   /FIXED=year sector year*sector
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+% \end{verbatim}
+% 
+% Or you do the dummy coding yourself, for example like this:
+% 
+% \begin{verbatim}
+% 
+% RECODE year (2008=0) (2011=1) INTO year2011.
+% RECODE sector ('Nonfood'=0) ('food'=1) INTO food.
+% EXECUTE.
+% 
+% COMPUTE food2011=year2011*food.
+% EXECUTE.
+% 
+% MIXED employees WITH year2011 food food2011
+%   /FIXED= year2011 food food2011
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+% \end{verbatim}
+% 
+% \item the nonfood sector is food=2, so the predicted number of employees in 2008 in the nonfood sector is equal to $81.57 + 0 -22.056 + 0= 59.514$
+% \item the nonfood sector is food=2, so the predicted number of employees in 2011 in the nonfood sector is equal to $81.57 + 0 + 0 + 0= 81.57$
+% \item the food sector is food=1, so the predicted number of employees in 2008 in the food sector is equal to $81.57 + 39.31 -22.056 + 0.85=99.674 $
+% \item the food sector is food=1, so the predicted number of employees in 2011 in the food sector is equal to $81.57 + 39.31 + 0 + 0 = 120.88   $ 
+% \item in the food sector the effect is a $120.88 - 99.674 =   21.206$ increase in number of employees
+% \item in the non-food sector the effect is a $81.57 - 59.514 =   22.056$ increase in number of employees
+% \item the ICC is $\frac{12}{12+208}=0.05$
+% \item we have clustering, with multiple data point per company, so in general a linear mixed model is better than an ordinary linear model. However, since the intraclass correlation is rather low, the results would be very similar if we would use an ordinary linear model.
+% \item The null-hypothesis cannot be reject as the year by sector interaction effect is not signifcantly different from 0, $t(998)=0.66, p=0.51$. (alternatively, $F(1,998)=0.44, p=0.51$). Note however that the statistical results are in terms of absolute number of employees. These data show that the average number of employees in 2008 is larger in the food sector than in the non-food sector. Perhaps it would be wiser to look at percentage increase in number of employees: A change from 100 to 102 reflects a larger impact than a change from 1000 to 1002.
+% 
+% \end{enumerate}
 
 
 
@@ -713,140 +716,140 @@ Remember that when there is at least one within variable in your design, you hav
 
 Also note that the within and between distinction refers to the units of analysis. If the unit of analysis is school, then the location of the school building is a between-school variable. An example of a within-school variable could be time: before a major curriculum reform and after a major curriculum reform. 
 
-\subsection{Exercises}
-
-\begin{enumerate}
-\item A psychologist studies whether age affects math performance. In 2017, she measures math performance (one score) in a group of 80-year-olds and she measures math performance (one score) in a group of 90-year-olds. \\
-1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
-2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
-\\
-\\
-\item A psychologist studies whether age affects math performance. She measures math performance (one score) in a group of 7-year-olds and she measures math performance again when the same children are 8 years old. \\
-1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
-2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
-\\
-\\
-\item Look at the data table below.
-\\
- \\
- \begin{tabular}{rllr}
-  ID & Nationality & Sex & Mathscore  \\ \hline
-  1   & Dutch      &  Male & 67   \\
- 2   &  Dutch     &  Female & 88   \\
- 3    & German         &  Male & 50   \\
- 4   &  German        &  Female & 98  \\
-  \dots   & \dots        &  \dots& \dots  \\
- \end{tabular}
-\\
-\\
-In this data set on Math performance, we see two variables, nationality and sex. 
-1. What kind of variables are these: within-participant variables or between-participants variables? Explain. \\
-2. Would you call this a mixed design? Explain.\\
-3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
-\\
-\\
-\item Look at the data table below.
-\\
-\\
- \begin{tabular}{rllr}
-  ID & Nationality & Age & Mathscore  \\ \hline
-  1   & Dutch      &  3 & 67   \\
- 1   &  Dutch     &  5 & 88   \\
- 2    & German         &  4 & 50   \\
- 2   &  German        &  6 & 98  \\
-  \dots   & \dots        &  \dots& \dots  \\
- \end{tabular}
-\\
-\\
-1. In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
-2. Would you call this a mixed design? Explain.\\
-3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
-\\
-\\
-\item Look at the data table below.
-\\
- \\
- \begin{tabular}{rllr}
-  ID & Subject & Sex & Mood  \\ \hline
-  1   & Psychology      &  Male & 67   \\
- 1   &  Psychology     &  Female & 88   \\
- 2    & Sociology         &  Female & 50   \\
- 2   &  Sociology        &  Male & 98  \\
-  \dots   & \dots        &  \dots& \dots  \\
- \end{tabular}
-\\
-\\
-1. In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
-2. Would you call this a mixed design? Explain.\\
-3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
-
-
-\item Look at the data table below.
-\\
- \\
- \begin{tabular}{lrrr}
-  SchoolID & Country & Year & Avarage Mathscore  \\ \hline
- 1   & The Netherlands      &  2010 & 67   \\
- 1   &  The Netherlands     &  2011 & 88   \\
- 1    & The Netherlands         &  2012 & 50   \\
- 1   &  The Netherlands        &  2013 & 98  \\
- 2   & Germany      &  2010 & 67   \\
- 2   &  Germany     &  2011 & 88   \\
- 2    & Germany         &  2012 & 50   \\
- 2   &  Germany        &  2013 & 98  \\
-  \dots   & \dots        &  \dots & \dots  \\
- \end{tabular}
-\\
-\\
-1.In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
-2. Would you call this a mixed design? Explain.\\
-3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
-
-\end{enumerate}
-
-
-\section{Answers}
-
-\begin{enumerate}
-
-\item 
-
-1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.\\
-2. Two groups of participants were studied. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
-
-
-\item
-1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.\\
-2. One group of participants was studied and for each participant we have two math scores. Because we have more than one measure for each participant, we have to use a linear mixed model to account for clustering.
-
-\item 
-1.Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.\\
-2. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. \\
-3. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
-
-
-\item 
-1. Each participant is either Dutch or German. This is a between-participants variable. On measurement 1 the same participants have a different age than on measurement 2. Age is therefore a within-participant variable.\\
-2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
-3. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
-
-\item
-1. Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.\\
-2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
-3. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
-
-
-\item
-
-1. Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.\\
-2. This is a mixed design as it has both a within-school and a between-schools independent variable. \\
-3. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
-
-
-
-\end{enumerate}
-
-
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% \item A psychologist studies whether age affects math performance. In 2017, she measures math performance (one score) in a group of 80-year-olds and she measures math performance (one score) in a group of 90-year-olds. \\
+% 1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+% 2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
+% \\
+% \\
+% \item A psychologist studies whether age affects math performance. She measures math performance (one score) in a group of 7-year-olds and she measures math performance again when the same children are 8 years old. \\
+% 1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+% 2. Would you analyze these data with a linear model, or with a linear mixed model? Explain. 
+% \\
+% \\
+% \item Look at the data table below.
+% \\
+%  \\
+%  \begin{tabular}{rllr}
+%   ID & Nationality & Sex & Mathscore  \\ \hline
+%   1   & Dutch      &  Male & 67   \\
+%  2   &  Dutch     &  Female & 88   \\
+%  3    & German         &  Male & 50   \\
+%  4   &  German        &  Female & 98  \\
+%   \dots   & \dots        &  \dots& \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% In this data set on Math performance, we see two variables, nationality and sex. 
+% 1. What kind of variables are these: within-participant variables or between-participants variables? Explain. \\
+% 2. Would you call this a mixed design? Explain.\\
+% 3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+% \\
+% \\
+% \item Look at the data table below.
+% \\
+% \\
+%  \begin{tabular}{rllr}
+%   ID & Nationality & Age & Mathscore  \\ \hline
+%   1   & Dutch      &  3 & 67   \\
+%  1   &  Dutch     &  5 & 88   \\
+%  2    & German         &  4 & 50   \\
+%  2   &  German        &  6 & 98  \\
+%   \dots   & \dots        &  \dots& \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% 1. In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+% 2. Would you call this a mixed design? Explain.\\
+% 3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+% \\
+% \\
+% \item Look at the data table below.
+% \\
+%  \\
+%  \begin{tabular}{rllr}
+%   ID & Subject & Sex & Mood  \\ \hline
+%   1   & Psychology      &  Male & 67   \\
+%  1   &  Psychology     &  Female & 88   \\
+%  2    & Sociology         &  Female & 50   \\
+%  2   &  Sociology        &  Male & 98  \\
+%   \dots   & \dots        &  \dots& \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% 1. In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+% 2. Would you call this a mixed design? Explain.\\
+% 3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+% 
+% 
+% \item Look at the data table below.
+% \\
+%  \\
+%  \begin{tabular}{lrrr}
+%   SchoolID & Country & Year & Avarage Mathscore  \\ \hline
+%  1   & The Netherlands      &  2010 & 67   \\
+%  1   &  The Netherlands     &  2011 & 88   \\
+%  1    & The Netherlands         &  2012 & 50   \\
+%  1   &  The Netherlands        &  2013 & 98  \\
+%  2   & Germany      &  2010 & 67   \\
+%  2   &  Germany     &  2011 & 88   \\
+%  2    & Germany         &  2012 & 50   \\
+%  2   &  Germany        &  2013 & 98  \\
+%   \dots   & \dots        &  \dots & \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% 1.In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
+% 2. Would you call this a mixed design? Explain.\\
+% 3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+% 
+% \end{enumerate}
+% 
+% 
+% \section{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item 
+% 
+% 1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.\\
+% 2. Two groups of participants were studied. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+% 
+% 
+% \item
+% 1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.\\
+% 2. One group of participants was studied and for each participant we have two math scores. Because we have more than one measure for each participant, we have to use a linear mixed model to account for clustering.
+% 
+% \item 
+% 1.Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.\\
+% 2. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. \\
+% 3. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+% 
+% 
+% \item 
+% 1. Each participant is either Dutch or German. This is a between-participants variable. On measurement 1 the same participants have a different age than on measurement 2. Age is therefore a within-participant variable.\\
+% 2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+% 3. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
+% 
+% \item
+% 1. Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.\\
+% 2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+% 3. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
+% 
+% 
+% \item
+% 
+% 1. Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.\\
+% 2. This is a mixed design as it has both a within-school and a between-schools independent variable. \\
+% 3. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% 
 
 
 

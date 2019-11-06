@@ -4,14 +4,20 @@ In Chapter \ref{chap:simple} on simple regression we saw how a linear equation c
 
 <<inf_0, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in a sample of 200 bottles.'>>=
 set.seed(1234)
-bottles <- data.frame(ID=1:800000,
-                      volume= round(rnorm(800000, 30,1 ),2),
-                      temperature=  round(runif(800000, 18,21 ),2)                 )
-bottles1 <- bottles[sample(1:80000,200),]
-out.sample <-  lm(volume~temperature, bottles1 )
+bottles <- data.frame(ID = 1:800000,
+                      volume = round(rnorm(800000, 30, 1), 2),
+                      temperature = round(runif(800000, 18, 21), 2))
+bottles1 <- bottles[sample(1:80000, 200), ]
+out.sample <- lm(volume ~ temperature, bottles1)
 
 
-bottles1  %>%  ggplot(aes(temperature, volume)) + geom_point() +xlim(c(17,22)) + geom_smooth(method="lm", se=F) + xlab("Temperature in degrees Celsius") + ylab("Volume in centiliters")
+bottles1 %>%  
+  ggplot(aes(temperature, volume)) + 
+  geom_point() +
+  xlim(c(17, 22)) + 
+  geom_smooth(method = "lm", se = F) + 
+  xlab("Temperature in degrees Celsius") + 
+  ylab("Volume in centiliters")
 @
 
 
@@ -28,12 +34,12 @@ In the beer bottle example above, the volume of beer was measured in a total of 
 
 
 <<inf_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='The relationship between temperature and volume in all 80,000 bottles.'>>=
-out.population <- lm(volume~ temperature, bottles)
-bottles[sample(1:80000,18000),]  %>%  
+out.population <- lm(volume ~ temperature, bottles)
+bottles[sample(1:80000, 18000), ]  %>%  
         ggplot(aes(temperature, volume)) + 
         geom_point() +
-        xlim(c(17,22)) + 
-        geom_smooth(method = "lm" , se=F)+ 
+        xlim(c(17, 22)) + 
+        geom_smooth(method = "lm", se = F)+ 
         xlab("Temperature in degrees Celsius") + 
         ylab("Volume in centiliters")
 
@@ -75,19 +81,19 @@ sample.intercept <- c()
 sample.slope <- c()
 for (i in 1:100)
 {
-        sample <- bottles[sample(1:80000,200),]
-        out <- lm(volume~temperature, sample)
-        sample.intercept[i] <- out$coef[1]
-        sample.slope[i] <- out$coef[2]
+  sample <- bottles[sample(1:80000, 200), ]
+  out <- lm(volume ~ temperature, sample)
+  sample.intercept[i] <- out$coef[1]
+  sample.slope[i] <- out$coef[2]
 }
 equations <- c()
 for (i in 1:10) {
-        equations[i] <- paste("volume = ",round(sample.intercept[i],2),ifelse(sample.slope[i]>0," + "," -- "),ifelse(round(sample.slope[i],2)!=0, abs(round(sample.slope[i],2)), "0.00"),"* temperature + e" )
+  equations[i] <- paste("volume = ", round(sample.intercept[i], 2), ifelse(sample.slope[i] > 0, " + ", " -- "), ifelse(round(sample.slope[i], 2) != 0, abs(round(sample.slope[i], 2)), "0.00"), "* temperature + e")
 }
 random_sample <- 1:10
-data_frame(sample = random_sample, equation =equations) %>%
-        xtable(caption="Ten different sample equations based on ten different random samples from the population of bottles.", label="tab:inf_3a", digits=c(0,0,0)) %>%
-        print(include.rownames=F, caption.placement = "top")
+tibble(sample = random_sample, equation = equations) %>%
+  xtable(caption = "Ten different sample equations based on ten different random samples from the population of bottles.", label = "tab:inf_3a", digits = c(0, 0, 0)) %>%
+  print(include.rownames = F, caption.placement = "top")
 @
 
 
@@ -96,7 +102,11 @@ data_frame(sample = random_sample, equation =equations) %>%
 
 <<inf_3b, fig.height=4, echo=FALSE, fig.align='center', message=F,fig.cap='Distribution of the 100 sample intercepts and 100 sample slope.'>>=
 
-data.frame(x=c(sample.intercept, sample.slope), fill=rep(c("intercept","slope"), each=100)) %>% ggplot(aes(x=x)) +geom_histogram(binwidth = 0.1) + facet_wrap(~fill) +  xlab("")
+tibble(x = c(sample.intercept, sample.slope), fill = rep(c("intercept", "slope"), each = 100)) %>% 
+  ggplot(aes(x = x)) + 
+  geom_histogram(binwidth = 0.1) + 
+  facet_wrap(~fill) +
+  xlab("")
 @
 
 
@@ -108,13 +118,16 @@ sample.intercept <- c()
 sample.slope <- c()
 for (i in 1:1000)
 {
-        sample <- bottles[sample(1:80000,200),]
-        out <- lm(volume~temperature, sample)
-        sample.intercept[i] <- out$coef[1]
-        sample.slope[i] <- out$coef[2]
+  sample <- bottles[sample(1:80000, 200), ]
+  out <- lm(volume ~ temperature, sample)
+  sample.intercept[i] <- out$coef[1]
+  sample.slope[i] <- out$coef[2]
 }
-data.frame(sample.slope) %>% ggplot(aes(x=sample.slope)) +geom_histogram(binwidth = 0.01) + xlim(c(-0.3,0.3)) 
-se<- sd(sample.slope)
+data.frame(sample.slope) %>% 
+  ggplot(aes(x = sample.slope)) + 
+  geom_histogram(binwidth = 0.01) + 
+  xlim(c(-0.3, 0.3)) 
+se <- sd(sample.slope)
 @
 
 For now, let's focus on the slope; this because we are mostly interested in the linear relationship between volume and temperature. However, everything that follows also applies to the intercept. In Figure \ref{fig:inf_5} we see the histogram of the slopes if we carry out the random sampling 1000 times. We see that on average the sample slope is around $\Sexpr{round(out.population$coef[2],3)}$, which is the population slope (the slope if we analyze all bottles). But there is variation around that mean of $\Sexpr{round(out.population$coef[2],3)}$: the standard deviation of all 1000 sample slopes turns out to be \Sexpr{round(se,3)}.
@@ -155,31 +168,42 @@ Imagine that you draw only 2 bottles from the population of 80,000 bottles. Then
 Now imagine that your sample size is 20. Then the probability that the 20 bottles will result in a large variation of slopes will be smaller: it would be very unlikely that \textit{all} 20 bottles have either a high volume and a high temperature, or a low volume and a low temperature. If there happen to be a few of such bottles in the sample, the other bottles will average these effects out. Take a look at Table \ref{tab:samplesize20}. There we see measurements on a random sample of 20 bottles. The first bottle shows a relatively low volume and a relatively low temperature measure. The second bottle shows the opposite: a relatively large volume and a relatively high temperature. This is also depicted in Figure \ref{fig:fig_samplesize20}. Had our sample size been only 2, then on the basis of these two bottles we would have found a highly positive slope coefficient (a high correlation). However, since our sample size is 20, there are many other bottles in our sample, including bottles that have relatively high volumes but relatively low temperatures measures, and vice versa: bottles with relatively low volumes and relatively high volumes, see Figure \ref{fig:fig_samplesize20}. Combined with all the other bottles, we would not find a very strong positive slope coefficient, because in the population of 80,000 bottles there is no such strong slope. The fact that we found one with the two bottles was just sheer coincidence. With large numbers of observations, you are less prone to chance observations. With large sample sizes, your results from a regression analysis become less dependent on chance, become more stable, and therefore more reliable. 
 
 <<samplesize20, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
-    sample  %>%
-        dplyr::select( volume, temperature) %>% slice(1:18) %>%
-        bind_rows(data_frame(volume=c(32.00,28.00)  , temperature=c(20.6, 18.5)   )) %>% 
-        slice(20:1) %>% 
-        mutate(bottle=seq(1:20)) %>% 
-        dplyr::select(bottle, volume, temperature) %>% 
-        xtable(caption="A random sample of 20 bottles with their beer volumes and their logged temperature.", 
-                label="tab:samplesize20", 
-                digits=c(0,1,1,0)) %>%
-        print(include.rownames=F, 
-              caption.placement = "top")
+sample %>%
+  dplyr::select(volume, temperature) %>%
+  slice(1:18) %>%
+  bind_rows(tibble(volume = c(32.00, 28.00), temperature = c(20.6, 18.5))) %>%
+  slice(20:1) %>%
+  mutate(bottle = seq(1:20)) %>%
+  dplyr::select(bottle, volume, temperature) %>%
+  xtable(
+    caption = "A random sample of 20 bottles with their beer volumes and their logged temperature.",
+    label = "tab:samplesize20",
+    digits = c(0, 1, 1, 0)
+  ) %>%
+  print(
+    include.rownames = F,
+    caption.placement = "top"
+  )
  @
 
 <<fig_samplesize20, fig.height=4, echo=FALSE, fig.align='center',results='asis', fig.cap='The averaging effect of increasing sample size. The figure shows the relationship between temperature and volume for a random sample of 20 bottles; the first two bottles are marked in red. The red line would be the sample slope based on the first two bottles, the blue line is the sample slope based on all 20 bottles, and the black line represents the population slope, based on all 80,000 bottles.' >>=
-sample  %>%
-        dplyr::select( volume, temperature) %>% slice(1:18) %>%
-        bind_rows(data_frame(volume=c(32.00,28.00)  , temperature=c(20.6, 18.5)   )) %>% 
-        slice(20:1) %>% 
-        mutate(bottle=c(1,1,rep(2,18)) %>% factor ) %>% 
-        dplyr::select(bottle, volume, temperature) %>% 
-        ggplot(aes(temperature, volume, col=bottle)) + geom_point(size=5) +
-        theme(legend.position = "none") +
-        geom_abline(intercept=out.population$coefficients[1] , slope=out.population$coefficients[2] ) +
-        geom_segment(x= 20.6 ,y=32, xend=18.5, yend=28, col='red') +
-        geom_smooth(method='lm', se=F)
+sample %>%
+  dplyr::select(volume, temperature) %>%
+  slice(1:18) %>%
+  bind_rows(tibble(
+    volume = c(32.00, 28.00),
+    temperature = c(20.6, 18.5)
+  )) %>%
+  slice(20:1) %>%
+  mutate(bottle = c(1, 1, rep(2, 18)) %>%
+    factor()) %>%
+  dplyr::select(bottle, volume, temperature) %>%
+  ggplot(aes(temperature, volume, colour = bottle)) +
+  geom_point(size = 5) +
+  theme(legend.position = "none") +
+  geom_abline(intercept = out.population$coefficients[1], slope = out.population$coefficients[2]) +
+  geom_segment(x = 20.6, y = 32, xend = 18.5, yend = 28, col = "red") +
+  geom_smooth(method = "lm", se = F)
 
 @
 
@@ -196,23 +220,27 @@ In Figure \ref{fig:inf_7} we see the distributions of the sample slope where the
 sample.slope <- c()
 for (i in 1:1000)
 {
-        sample <- bottles[sample(1:80000,2),]
-        out <- lm(volume~temperature, sample)
+  sample <- bottles[sample(1:80000, 2), ]
+  out <- lm(volume ~ temperature, sample)
 
-        sample.slope[i] <- out$coef[2]
-
+  sample.slope[i] <- out$coef[2]
 }
 for (i in 1001:2000)
 {
-        sample <- bottles[sample(1:80000,20),]
-        out <- lm(volume~temperature, sample)
+  sample <- bottles[sample(1:80000, 20), ]
+  out <- lm(volume ~ temperature, sample)
 
-        sample.slope[i] <- out$coef[2]
-
+  sample.slope[i] <- out$coef[2]
 }
-panel <- rep(c("sample size 2","sample size 20"), each=1000)
+panel <- rep(c("sample size 2", "sample size 20"), each = 1000)
 
-data.frame(sample.slope, panel) %>% ggplot(aes(x=sample.slope)) + geom_histogram(binwidth =0.5)  + facet_wrap(~ panel) + xlim(c(-20,20)) + xlab("sample slope") + theme_bw()
+data.frame(sample.slope, panel) %>%
+  ggplot(aes(x = sample.slope)) +
+  geom_histogram(binwidth = 0.5) +
+  facet_wrap(~panel) +
+  xlim(c(-20, 20)) +
+  xlab("sample slope") +
+  theme_bw()
  @
 
 
@@ -257,12 +285,17 @@ Above we saw that if there is a large collection of data points (population) wit
 
 
 <<inf_8,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Difference in the shapes of a normal distribution and a t-distribution'>>=
-x=seq(-3,3,0.1)
-data.frame(x)  %>%  ggplot(aes(x=x)) +
-  stat_function(fun = dnorm, args = list(mean = 0, sd = 1), aes(colour = "normal"))  +
-  stat_function(fun = dt, args = list( df= 3), aes(colour = "t")) +
+x = seq(-3, 3, 0.1)
+data.frame(x) %>%  
+  ggplot(aes(x = x)) +
+  stat_function(fun = dnorm, 
+                args = list(mean = 0, sd = 1), 
+                aes(colour = "normal"))  +
+  stat_function(fun = dt, args = list(df = 3), aes(colour = "t")) +
   scale_color_manual("Distribution", values = c("blue", "red")) +
-        ylab("density") + xlim(c(-5,5)) +xlab(" ")
+  ylab("density") + 
+  xlim(c(-5, 5)) + 
+  xlab(" ")
 
 @
 
@@ -281,14 +314,15 @@ In summary, when we draw many samples from a population, the standard deviation 
 <<inf_9,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The shape of the distribution of sample slopes depends on sample size.'>>=
 set.seed(1234)
 
-
-data.frame(x)  %>%  ggplot(aes(x=x)) +
-  stat_function(fun = dt, args = list(df=199), aes(colour = "sample size 200"))  +
+data.frame(x) %>% 
+  ggplot(aes(x=x)) +
+  stat_function(fun = dt, args = list(df=199), aes(colour = "sample size 200")) +
   stat_function(fun = dt, args = list( df= 3), aes(colour = "sample size 4")) +
   #       stat_function(fun = dnorm, args = list( mean=0, sd=1.005708), aes(colour = "sample size 200")) +
   # stat_function(fun = dnorm, args = list( mean=0, sd=1.70675), aes(colour = "sample size 4")) +
   scale_color_manual("t-distribution", values = c("blue", "red")) +
-        ylab("density") + xlim(c(-4,4))
+  ylab("density") + 
+  xlim(c(-4, 4))
 
 # rt(10000, df=199) %>% sd()
 @
@@ -300,7 +334,7 @@ data.frame(x)  %>%  ggplot(aes(x=x)) +
 \section{$T$-statistics}
 
 
-Above we saw that sample slopes have a $t$-distribution, and that if sample size is large, say larger than 200, the $t$-distribution looks very much like a normal distribution. From the normal distribution, we know that if we standardize the scores by computing $Z$-scores, that is, if we subtract the mean and then divide by the standard deviation, $Z= \frac{x-\bar{x}}{\sigma}$, then 2.5\% of the $Z$-values is smaller than -1.96 and 2.5\% of the $z$-values is larger than +1.96.
+Above we saw that sample slopes have a $t$-distribution, and that if sample size is large, say larger than 200, the $t$-distribution looks very much like a normal distribution. From the normal distribution, we know that if we standardize the scores by computing $Z$-scores, that is, if we subtract the mean and then divide by the standard deviation, $Z=\frac{x-\bar{x}}{\sigma}$, then 2.5\% of the $Z$-values is smaller than -1.96 and 2.5\% of the $z$-values is larger than +1.96.
 
 
 Therefore, if for large sample sizes the $t$-distribution is practically indistinguishable from the normal distribution, we know that if we standardize the sample slope values, we get a similar result. Instead of looking at the actual slope value, we can compute a standardized slope. Let's call that standardized result $T$. Then we get:
@@ -335,20 +369,25 @@ Now, what can we say about this $T$-value? Since with a sample size of 200 the d
 
 <<inf_9b,fig.height=4, echo=FALSE, fig.align='center', fig.cap='The standard normal distribution and the probability of a Z-score lower than -1.06'>>=
 
-df = 198; ncp = 0; limits = c(-5,5)
-lb=-20; ub=-1.06
-    x <- seq(limits[1], limits[2], length.out = 100)
-    xmin <- max(lb, limits[1])
-    xmax <- min(ub, limits[2])
-    areax <- seq(xmin, xmax, length.out = 100)
-    area <- data.frame(x = areax, ymin = 0, ymax = dnorm(areax))
-    (ggplot()
-     + geom_line(data.frame(x = x, y = dnorm(x)),
-                 mapping = aes(x = x, y = y))
-     + geom_area(data = area, mapping = aes(x = x,  y = ymax))
-     + scale_x_continuous(limits = limits, breaks=seq(-5,5,1))
-     # + geom_area(data = area, mapping = aes(x = seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100),  y = dt(seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100), df=df, ncp=ncp)))
-            + geom_vline(xintercept = (out.sample$coef[2]-out.population$coef[2])  / se )  + xlab("T") )
+df <- 198
+ncp <- 0
+limits <- c(-5, 5)
+lb <- -20
+ub <- -1.06
+x <- seq(limits[1], limits[2], length.out = 100)
+xmin <- max(lb, limits[1])
+xmax <- min(ub, limits[2])
+areax <- seq(xmin, xmax, length.out = 100)
+area <- data.frame(x = areax, ymin = 0, ymax = dnorm(areax))
+(ggplot()
++ geom_line(data.frame(x = x, y = dnorm(x)),
+    mapping = aes(x = x, y = y)
+  )
+  + geom_area(data = area, mapping = aes(x = x, y = ymax))
+  + scale_x_continuous(limits = limits, breaks = seq(-5, 5, 1))
+  # + geom_area(data = area, mapping = aes(x = seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100),  y = dt(seq(qt(0.975, df=df, ncp=ncp), 5, length.out = 100), df=df, ncp=ncp)))
+  + geom_vline(xintercept = (out.sample$coef[2] - out.population$coef[2]) / se) + 
+    xlab("T"))
 @
 
 
@@ -389,32 +428,38 @@ So when do we no longer feel that a person's guess of the population slope is re
 
 <<normal_2z, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The standard normal distribution.' >>=
 
-shadedleft <-  data_frame(x=seq(-5, 0-2.58 ,.1),y= dnorm(seq(-5, 0-2.58 ,.1), 0, 1))
-shadedright <-  data_frame(x=seq(0+2.58 , 5,  .1),y= dnorm(x=seq(0+2.58 , 5,  .1), 0, 1))
-  data_frame(z = seq(-5,5,0.1)) %>%
-        ggplot()+
-        geom_line(aes(x=z, y = dnorm(z, mean=0, sd=1))) +
-        scale_x_continuous(breaks=seq(-5, 5))+
-        geom_area(data=shadedleft, mapping=aes(x=seq(-5 , 0-2.58,  .1),y= dnorm(x=seq(-5 , 0-2.58,  .1), 0, 1) ), alpha=0.5)+
-        geom_area(data=shadedright, mapping=aes(x=seq(0+2.58 , 5,  .1),y= dnorm(x=seq(0+2.58 , 5,  .1), 0, 1) ), alpha=0.5)+
-        ylab("density") +
-          geom_text(x=-2.58, y=0.03, label="0.5 percent")+
-          geom_text(x=2.58, y=0.03, label="0.5 percent")
+shadedleft <-  tibble(x = seq(-5, 0 - 2.58 , .1),y = dnorm(seq(-5, 0 - 2.58 , .1), 0, 1))
+shadedright <-  tibble(x = seq(0 + 2.58 , 5, .1),y = dnorm(x = seq(0 + 2.58, 5, .1), 0, 1))
+  tibble(z = seq(-5, 5, 0.1)) %>%
+    ggplot()+
+    geom_line(aes(x = z, y = dnorm(z, mean = 0, sd = 1))) +
+    scale_x_continuous(breaks = seq(-5, 5))+
+    geom_area(data = shadedleft, 
+              mapping = aes(x = seq(-5 , 0 - 2.58, .1),y = dnorm(x = seq(-5 , 0 - 2.58, .1), 0, 1)), 
+              alpha = 0.5) +
+    geom_area(data = shadedright, 
+              mapping = aes(x = seq(0 + 2.58, 5, .1),y = dnorm(x = seq(0 + 2.58 , 5, .1), 0, 1)), 
+              alpha = 0.5) +
+    ylab("density") +
+    geom_text(x = -2.58, y = 0.03, 
+              label = "0.5 percent") +
+    geom_text(x = 2.58, y = 0.03, 
+              label = "0.5 percent")
 @
 
 <<normal_2z2, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The standard normal distribution.' >>=
-mean <-round(out.sample$coef[2],3)
-sd<-  round(se,3)         
-shadedleft <-  data_frame(x=seq(-0.4, round(-2.58*sd+mean,2) ,.01),y= dnorm(x=seq(-0.4, round(mean-2.58*sd,2) ,.01), mean, sd))
-shadedright <-  data_frame(x=seq(round(mean+2.58*sd,2) , 0.4,  .01),y= dnorm(x=seq(round(mean+2.58*sd,2) , 0.4,  .01), mean, sd))
-  data_frame(z = seq(-0.4,0.4,0.01)) %>%
-        ggplot()+
-        scale_x_continuous(breaks=seq(-0.4, 0.4,0.1))+
-        geom_line(aes(x=z, y = dnorm(z, mean=mean, sd=sd))) +
-        geom_area(data=shadedleft, mapping=aes(x,y), alpha=0.5)  +
-        geom_area(data=shadedright, aes(x,y),alpha=0.5) +
-        ylab('density')+
-        xlab('sample slope')
+mean <- round(out.sample$coef[2], 3)
+sd <- round(se, 3)
+shadedleft <- tibble(x = seq(-0.4, round(-2.58 * sd + mean, 2), .01), y = dnorm(x = seq(-0.4, round(mean - 2.58 * sd, 2), .01), mean, sd))
+shadedright <- tibble(x = seq(round(mean + 2.58 * sd, 2), 0.4, .01), y = dnorm(x = seq(round(mean + 2.58 * sd, 2), 0.4, .01), mean, sd))
+tibble(z = seq(-0.4, 0.4, 0.01)) %>%
+  ggplot() +
+  scale_x_continuous(breaks = seq(-0.4, 0.4, 0.1)) +
+  geom_line(aes(x = z, y = dnorm(z, mean = mean, sd = sd))) +
+  geom_area(data = shadedleft, mapping = aes(x, y), alpha = 0.5) +
+  geom_area(data = shadedright, aes(x, y), alpha = 0.5) +
+  ylab("density") +
+  xlab("sample slope")
           
 @
 
@@ -449,11 +494,15 @@ In the previous section we used the normal distribution to come up with 95\% and
 set.seed(1234)
 
 
-data.frame(x)  %>%  ggplot(aes(x=x)) +
-  stat_function(fun = dt, args = list(df=199), aes(colour = "sample size 200"))  + geom_vline(xintercept=qt(c(0.025, 0.975), df=2), colour="red") +
-  stat_function(fun = dt, args = list( df= 3), aes(colour = "sample size 4")) +  geom_vline(xintercept=qt(c(0.025, 0.975), df=198), colour="blue") +
+data.frame(x) %>%  
+  ggplot(aes(x = x)) +
+  stat_function(fun = dt, args = list(df = 199), aes(colour = "sample size 200")) + 
+  geom_vline(xintercept = qt(c(0.025, 0.975), df = 2), colour = "red") +
+  stat_function(fun = dt, args = list(df = 3), aes(colour = "sample size 4")) +  
+  geom_vline(xintercept = qt(c(0.025, 0.975), df = 198), colour = "blue") +
   scale_color_manual("Distribution", values = c("blue", "red")) +
-        ylab("density") + xlim(c(-7,7))
+  ylab("density") + 
+  xlim(c(-7, 7))
 
 # rt(10000, df=3) %>% sd()
 @
@@ -466,16 +515,19 @@ Because for every sample size, the middle region where 95\% of the observations 
 
 
 <<table_1, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
-probs <- c(0.0005, 0.001, 0.005,0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975,0.99, 0.995,0.999, 0.9995)
-    norm <- qnorm(probs)
-    t198 <- qt(probs, df=198)
-    t100 <- qt(probs, df=100)
-    t50 <- qt(probs, df=50)
-    t10 <- qt(probs, df=10)
-    t2 <- qt(probs, df=2)
-    data.frame(probs, norm, t198, t100, t50, t10, t2) %>%
-        xtable(caption="Quantiles for the standard normal and several t-distributions.", label="tab:table_1", digits=c(0,4,2,2,2,2,2,2)) %>%
-        print(include.rownames=F, caption.placement = "top")
+probs <- c(0.0005, 0.001, 0.005, 0.01, 0.025, 0.05, 
+           0.10, 0.90, 0.95, 0.975, 0.99, 0.995, 0.999, 0.9995)
+norm <- qnorm(probs)
+t198 <- qt(probs, df = 198)
+t100 <- qt(probs, df = 100)
+t50 <- qt(probs, df = 50)
+t10 <- qt(probs, df = 10)
+t2 <- qt(probs, df = 2)
+data.frame(probs, norm, t198, t100, t50, t10, t2) %>%
+  xtable(caption = "Quantiles for the standard normal and several t-distributions.", 
+         label = "tab:table_1", 
+         digits=c(0, 4, 2, 2, 2, 2, 2, 2)) %>%
+  print(include.rownames = F, caption.placement = "top")
  @
 But let us look at a few regularities. For several probabilities, the corresponding quantiles are presented in Table \ref{tab:table_1} for the standard normal distribution and several $t$-distributions.
 
@@ -492,52 +544,52 @@ In short, we can look up the cut-off points for 95\%, 99\% and other intervals f
 
 
 
-\subsection{Exercises}
-
-\begin{enumerate}
-
-
-\item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. 
-
-\subitem Construct the 95\% confidence interval for the slope in the entire population in UT students using table \ref{tab:nonparmixed_4}.
-
-\subitem What can we say about values within this constructed confidence interval?
-
-\subitem Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
-
-
-\item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). 
-
-\subitem Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
-
-\subitem What can we say about values within this constructed confidence interval?
-
-\subitem Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
-
-
-
-
-\end{enumerate}
-
-
-Answers:
-
-\begin{enumerate}
-
-\item Sample size is 102, so degrees of freedom for the sample slope is 100. For a 95\% interval, 2.5\% of the observations should be on the left, and 2.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.025 and 0.975. These cut-off values for the $t$-distribution with 100 degrees of freedom are -1.98 and 1.98. Therefore the 95\% interval ranges from $0.010 - 1.98 \times 0.009$ to $0.010 + 1.98 \times 0.009$, so from -0.008 to 0.028.
-
-\subitem These values are all reasonable values for the slope in the population of University of Twente students.
-
-\subitem Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
-
-\item Sample size is 52, so degrees of freedom for the sample slope is 50. For a 99\% interval, 0.5\% of the observations should be on the left, and 0.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.005 and 0.995. The 99\% cut-off values for the $t$-distribution with 100 degrees of freedom are therefore -2.68 and 2.68. Thus, the 99\% interval ranges from $168 - 2.68 \times 0.07$ to $168 + 2.68 \times 0.07$, so from 167.8124 to 168.1876.
-
-\subitem These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
-
-\subitem No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
-
-
-\end{enumerate}
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% 
+% 
+% \item Suppose we randomly pick 102 students from the University of Twente and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). Suppose we find a slope coefficient of 0.010, with a standard error of 0.009. 
+% 
+% \subitem Construct the 95\% confidence interval for the slope in the entire population in UT students using Table \ref{tab:table_1}.
+% 
+% \subitem What can we say about values within this constructed confidence interval?
+% 
+% \subitem Suppose a professor believes the true slope is equal to 0: is that a reasonable belief given the finding of a sample slope of 0.010? Motivate your answer using the 95\% confidence interval.
+% 
+% 
+% \item Suppose we randomly pick 52 adult inhabitants of Tuvalu and determine the linear equation between age in years (independent variable) and height in cms (dependent variable). 
+% 
+% \subitem Suppose we find an intercept of 168, with a standard error of 0.07. Construct the 99\% confidence interval for the intercept in the entire population of adult inhabitants of Tuvalu using Table \ref{tab:table_1}.
+% 
+% \subitem What can we say about values within this constructed confidence interval?
+% 
+% \subitem Suppose a Swedish diplomat stationed in Tuvalu believes the population intercept is equal to 169 cm: is that a reasonable belief given the finding of a sample intercept of 168? Motivate your answer using the 99\% confidence interval.
+% 
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% Answers:
+% 
+% \begin{enumerate}
+% 
+% \item Sample size is 102, so degrees of freedom for the sample slope is 100. For a 95\% interval, 2.5\% of the observations should be on the left, and 2.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.025 and 0.975. These cut-off values for the $t$-distribution with 100 degrees of freedom are -1.98 and 1.98. Therefore the 95\% interval ranges from $0.010 - 1.98 \times 0.009$ to $0.010 + 1.98 \times 0.009$, so from -0.008 to 0.028.
+% 
+% \subitem These values are all reasonable values for the slope in the population of University of Twente students.
+% 
+% \subitem Yes, the value of 0 lies within the range from -0.008 to 0.028, so 0 is a reasonable value for the population slope.
+% 
+% \item Sample size is 52, so degrees of freedom for the sample slope is 50. For a 99\% interval, 0.5\% of the observations should be on the left, and 0.5\% of the observations should be on the right. The cut-off quantiles should therefore be 0.005 and 0.995. The 99\% cut-off values for the $t$-distribution with 100 degrees of freedom are therefore -2.68 and 2.68. Thus, the 99\% interval ranges from $168 - 2.68 \times 0.07$ to $168 + 2.68 \times 0.07$, so from 167.8124 to 168.1876.
+% 
+% \subitem These values are all reasonable values for the slope in the population of all adult inhabitants of Tuvalu.
+% 
+% \subitem No, the value of 169 does not lie within the range from 167.8124 to 168.1876, so 169 is not a reasonable value for the population intercept.
+% 
+% 
+% \end{enumerate}
 
 
 \section{Degrees of freedom}
@@ -556,8 +608,11 @@ Let's carry this example to regression analysis. Suppose I have four observation
 <<inf_11,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when sample size is 4 or 200'>>=
 
 x <- c(1, 2, 4)
-y<- c(2, 6, 2 )
-data.frame(x, y) %>% ggplot(aes(x, y)) + geom_point() + geom_hline(yintercept=5)
+y <- c(2, 6, 2)
+data.frame(x, y) %>% 
+  ggplot(aes(x, y)) + 
+  geom_point() + 
+  geom_hline(yintercept = 5)
 @
 
 Before we continue, you must know that if we talk about degrees of freedom in regression analysis, we generally talk about \textit{residual degrees of freedom}. We therefore look at residuals. If we compute the residuals, we have residuals -3, 1 and -3 for these data points. When we sum them we get -5. Since we know that all residuals should sum to 0 in a regression analysis (see previous chapter), we can derive the fourth residual to be +5, since only then the residuals sum to 0. Therefore, the $y$-value for the fourth data point (for $x=3$) has to be 10, since then the residual is equal to $10-5=5$.
@@ -567,10 +622,14 @@ In short, when we do a regression analysis with only an intercept, the degrees o
 Now let's look at the situation where we do a regression analysis with both an intercept and a slope: suppose the intercept is equal to 3 and the slope is equal to 1: $y=3+1 x+e$. Then suppose we have the same $x$-values as the example above: 1, 2 and 4. When we give these $x$-values corresponding $y$-values, 2, 6, and 3, we get the plot in Figure \ref{fig:inf_12}.
 
 <<inf_12,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of the sample mean when sample size is 4 or 200'>>=
-x <- c(1, 2 ,4)
-y<- c(2, 6 ,3)
-data.frame(x, y) %>% ggplot(aes(x, y)) + geom_point() + geom_abline(intercept=3, slope=1, size=2) + geom_smooth(method='lm', se=F)+
-        ylim(c(0,12.5))
+x <- c(1, 2, 4)
+y <- c(2, 6, 3)
+data.frame(x, y) %>% 
+  ggplot(aes(x, y)) + 
+  geom_point() + 
+  geom_abline(intercept = 3, slope = 1, size = 2) + 
+  geom_smooth(method = 'lm', se = F) +
+  ylim(c(0, 12.5))
 # X<- matrix(c(1,1,1,1,1,2,3,4),4,2)
 # XX=(t(X)%*%X)^(-1)
 # M= diag(4) -  X %*% XX %*% t(X)
@@ -583,18 +642,93 @@ The black line is the regression line that should be appropriate for these data 
 Figure \ref{fig:inf_13} shows a number of possibilities for the value of $y$ if $x=3$. It can be seen, that it is impossible to pick a value for $y$ such that we get a regression equation $y=3+1x$. The blue line for instance comes closest to the black line. This is the regression line when $y=11$. However, it does not exactly overlap the black line. If you lower values for $y$ such as 9.5 (green line) or 8 (red line), the regression lines still not overlap, nor for a higher value of $y$ such as 12 (purple line).
 
 <<inf_13,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Different regression lines for different values of y if x=3.'>>=
-x <- rep(c(1, 2 ,3, 4),4)
-fill <- c(8,9.5, 11, 12)
-y<- rep (c(2, 6 ,0,3),4)
+x <- rep(c(1, 2 ,3, 4), 4)
+fill <- c(8, 9.5, 11, 12)
+y <- rep (c(2, 6, 0, 3), 4)
 
-y [seq(3,16, 4) ]<- fill
-line = rep(1:4, each=4) %>% as.factor()
-data.frame(x, y,line) %>% ggplot(aes(x, y)) + geom_point(aes(col=line)) + geom_abline(intercept=3, slope=1, size=2) + geom_smooth(aes(col=line),method='lm', se=F) +
-        ylim(c(0,12.5))
+y [seq(3, 16, 4)] <- fill
+line <- rep(1:4, each = 4) %>% as.factor()
+data.frame(x, y, line) %>% 
+  ggplot(aes(x, y)) + 
+  geom_point(aes(col = line)) + 
+  geom_abline(intercept = 3, slope = 1, size = 2) + 
+  geom_smooth(aes(col = line), method = 'lm', se = F) +
+  ylim(c(0, 12.5))
 @
 
 So, with 4 data points, we can never freely choose 3 residuals in order to satisfy the constraint that a particular regression equation holds. We have less then 3 degrees of freedom because it is impossible to think of a fitting fourth value. It turns out, that in this case we can only choose 2 residuals freely, and the remaining residuals are then already determined. To prove this requires matrix algebra, but the gist of it is that if you have a regression equation with both an intercept and a slope, the degrees of freedom is equal to the number of data points (sample size) minus 2: $n-2$.
 
 Generally, these degrees of freedom based on the number of residuals that could be freely chosen, given the constraints of the model, are termed \textit{residual degrees of freedom}. When using regression models, one usually only reports these residual degrees of freedom. Later on in this book, we will see instances where one also should use \textit{model degrees of freedom}. For now, it suffices to know what is meant by residual degrees of freedom.
 
+\section{On estimators, estimates, and sample variance}
 
+In Chapter \ref{chap:intro} we saw that there are two equations for the variance: one where the numerator equals $N$, and one where the numerator equals $N-1$. The same was seen in Chapter \ref{chap:simple} for the equation for the covariance. It was briefly noted that the formulas with the denominator equal to $N-1$ were estimators. Here we will go deeper into this issue. 
+
+The difference has to do with the distinction between population data and sample data. Suppose that we have population data with a very large sample size. Suppose that variable $X$ has a normal distribution in that population with mean $\mu$ and variance $\sigma^2$. If we want to know what the value is of $\sigma^2$ in the population, and we would not be in the position to collect all the $X$-values in the population, we could take a random sample of size $n$ and measure the variance of the $X$-values in that sample. If we use the variance formula $\frac{SS}{n}$ we could call the result the \textit{sample variance}, denoted by $S^2$.
+
+Suppose we use a sample size of $n=4$, and the actual variance in the population equals $\sigma^2 = 20$. Figure \ref{fig:} shows what happens if we take 10000 samples of size $n=4$, each time taking another random subselection of all existing $X$-values in the population. In each sample we compute $S^2$. Thus we end up with 10,000 values of $S^2$. If we compute the mean value of these, we find a value of 15. Thus, on average, if we take the sample variance as an indicator of the population variance, we are generally underestimating the population by a factor $\frac{3}{4}$, since the population value is 20. We say that the sample variance, when we compute it like $\frac{SS}{n}$, is \textit{a biased estimator} of the population variance. 
+
+
+
+<<sample_variance,, message = F, warning = F, fig.height=4, echo = FALSE, fig.align = 'center', fig.cap = 'Histogram of 10,000 sample variances. The black line shows the population variance, the dotted line shows the mean variance computed based on all 10,000 sample variances.'>>=
+set.seed(1234)
+S2 <- NA
+for (i in 1:10000) {
+  sample <- rnorm(4, 0, sqrt(20))
+  SS_sample <- (sample - mean(sample))^2 %>%
+    sum()
+  S2[i] <- SS_sample / 4
+}
+tibble(S2) %>% 
+  ggplot(aes(S2)) +
+  geom_histogram() +
+  geom_vline(xintercept = 20) +
+  geom_vline(xintercept = mean(S2), lty = 2) + 
+  scale_x_continuous(breaks = seq(0, 100, 5))
+@
+
+In general, it turns out that the bias of the sample variance as an estimator of the population variance depends on sample size. We can make the sample variance unbiased by correcting for the sample size in the following way:
+
+\begin{equation}
+s^2 = \frac{n}{n-1}S^2
+\end{equation}
+
+Thus, if we happen to see a sample variance of 15 and we have a sample size of 4, we can get a better \textit{estimate} of the population variance by multiplying this variance by $\frac{4}{3}$, obtaining an estimate of 20. Note the difference between estimator and estimate: the estimator is the formula to obtain an idea of a population quantity, the estimate is the actual quantity you get by applying the formula.
+
+A more direct way to compute $s^2$ is
+
+\begin{equation}
+s^2 = \frac{SS}{n-1}
+\end{equation}
+
+Confusingly, in many textbooks and online texts and even statistical software, this is also referred to as the sample variance. But here we make an explicit distinction between the variance of sample values, $S^2$, and an estimator of the population variance, $s^2$.
+
+
+In sum, $\sigma^2$ is the variance of a defined variable, partly unseen (the population variance), $S^2$ is the variance of a randomly drawn subset of a variable, and $s^2$ is the estimator of the population variance, based on the randomly drawn subset.
+
+What we can do for the variance, we can do also for the mean. Suppose that the population consists of $N$ $X$-values with a mean $\mu$ equal to 14. This mean is based on the usual definition of $\mu = \frac{\sum_i^N X_i}{N}$. Again, we can draw 10,000 samples of a particular sample size, say $n=4$, and for each random sample compute the sample mean
+
+\begin{equation}
+M = \frac{\sum_i^n X_i}{n}.
+\end{equation}
+
+
+If we plot a histogram of the 10,000 sample means we obtain Figure \ref{fig:sample_mean}. The mean of all computed sample means is now equal to the population mean of 14. In that case we say that \textit{the sample mean is an unbiased estimator of the population mean}. Thus, for a particular random sample, we may get a sample mean that is somewhere between 12 and 16, for example we may get an \textit{estimate} of 12.1, but in the in the long run, if we would use the estimator a lot, the mean of the estimates would be close to the population mean. The sample mean is therefore an unbiased estimator of the population mean.
+
+<<sample_mean, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Histogram of 10,000 sample means when the population mean is 14. The dotted line shows the mean of the sample means based on all 10,000 samples.'>>=
+set.seed(1234)
+M <- NA
+for (i in 1:10000){
+sample <- rnorm(4, 14, 1)
+M[i] <-  mean(sample)
+}
+tibble(M) %>%
+  ggplot(aes(M)) +
+  geom_histogram(bins = 35) +
+  geom_vline(xintercept = mean(M), lty = 2) +
+  scale_x_continuous(breaks = seq(10, 18, 0.5))
+  @
+
+The same is true for the population slope and the population intercept. That is, if we assume that there is a population data set for which there is an intercept and a slope, then we can get unbiased estimators of these by taking a random sample of these data and computing the OLS intercept and slope. The OLS intercept and slope coefficients are unbiased estimators of the population intercept and slope respectively.
+
+Note that for these estimators ($s^2$, $M$, intercept, and slope) they are only unbiased if the sample data are indeed \textit{randomly} sampled. This means that every data point in the population had an equal probability of being in the sample.

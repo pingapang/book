@@ -1,0 +1,140 @@
+\chapter{When assumptions are not met: non-parametric alternatives}\label{chap:nonpar1}
+
+
+\section{Introduction}
+
+Linear models do not apply to every data set. As discussed in Chapter \ref{chap:assumptions}, sometimes the assumptions of linear models are not met. One of the assumptions is linearity or additivity. Additivity requires that one unit change in variable $x$ leads to the same amount of change in $y$, no matter what value $x$ has. For bivariate relationships this leads to a linear shape. But sometimes you can only expect that $y$ will change in the same direction, but you don't believe that this amount is the same for all values of $x$. This is the case for example with an ordinal dependent variable. Suppose we wish to model the relationship between the age of a mother and an aggression score in her 7-year-old child. Suppose aggression is measured on a three-point ordinal scale: 'not aggressive', 'sometimes aggressive', 'often aggressive'. Since we do not know the quantitative differences between these three levels there are many graphs we could draw for a given data set.
+
+
+Suppose we have the data set given in Table \ref{tab:nonpar_1}. If we want to make a scatter plot, we could arbitrarily choose the values 1, 2, and 3 for the three categories, respectively. We would then get the plot in Figure \ref{fig:fig101}. But since the aggression data are ordinal, we could also choose the arbitrary numeric values 0, 2, and 3, which would yield the plot in Figure \ref{fig:fig1114}. 
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(AgeMother = round(AgeMother, 0), Aggression = Aggression1) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(AgeMother, Aggression) \%>\% ggplot(aes(AgeMother, Aggression)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data\_frame(AgeMother, Aggression2) \%>\% ggplot(aes(AgeMother, : could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+As you can see from the least squares regression lines in Figures \ref{fig:fig101} and \ref{fig:fig1114}, when we change the way in which we code the ordinal variable into a numeric one, we also see the best fitting regression line changing. This does not mean though, that ordinal data cannot be modelled linearly. Look at the example data in Table \ref{tab:nonpar_1} where aggression is measured with a 7-point scale. Plotting these data in Figure \ref{fig:fig1121} using the values 1 through 7, we see a nice linear relationship. So even when the values 1 thru 7 are arbitrarily chosen, a linear model can be a good model for a given data set with one or more ordinal variables. Whether the interpretation makes sense is however up to the researcher. 
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(AgeMother, Aggression = Aggression) \%>\% xtable(caption = "{}Aggression in children on a 7-point Likert scale and age of the mother."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data\_frame(AgeMother, Aggression) \%>\% ggplot(aes(AgeMother, Aggression)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+So with ordinal data, always check that your data indeed conform to a linear model, but realize at the same time that you're assuming a \textit{quantitative} and additive relationship between the variables that may or may not make sense. If you believe that a quantitative analysis is meaningless then you may consider a nonparametric analysis that we discuss in this chapter. 
+
+Another instance where we favour a nonparametric analysis over a linear model one, is when the assumption of normally distributed residuals is not tenable. For instance, look again at Figure \ref{fig:fig101} where we regressed aggression in the child on the age of its mother. Figure \ref{fig:fig1201} shows a histogram of the residuals. Because of the limited number of possible values in the dependent variable (1, 2 and 3), the number of possible values for the residuals is also very restricted, which leads to a very discrete distribution. The histogram looks therefore far removed from a continuous symmetric, bell-shaped distribution, a violation of the normality assumption. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ggplot(data.frame(resid), aes(resid)): could not find function "{}ggplot"{}}}\end{kframe}
+\end{knitrout}
+
+Everytime we see a distribution of residuals that is either very skew, or has very few different values, we should consider a nonparametric analysis. Note that the shape of the distribution of the residuals is directly related to what scale values we choose for the ordinal categories. By changing the values we change the regression line, and that directly affects the relative sizes of the residuals. 
+
+First, we will discuss a nonparametric alternative for two numeric variables. We will start with Spearman's rho, or Spearman's rank-order correlation coefficient $r_s$. Next we will discuss an alternative to $r_s$, Kendall's $T$. After that we will discuss the combination of numeric and categorical variables, when comparing groups.
+
+\section{Spearman's rho}
+
+Suppose we have 10 students and we ask their teachers to rate them on their performance. One teachers rates them on geography and the other teacher rates them on history. We only ask them to give rankings: indicate the brightest student with a 1 and the dullest student with a 10. Then we might have the data set in Table \ref{tab:nonpar_3}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(student, rank.geography, rank.history) \%>\% xtable(caption = "{}Student rankings on geography and history."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+Now we acknowledge the ordinal nature of the data by only having rankings: a person with rank 1 is brighter than a person with rank 2, but we do not how large the difference in brightness really is. Now we want to establish whether there is a relationship between rankings on geography and the rankings on history: is it true that the higher the ranking on geography, the higher the ranking on history?
+
+By eyeballing the data, we see that the brightest student in geography is also the brightest student in history (rank 1). We also see that the dullest student in history is the dullest student in geography (rank 10). Furthermore, we see relatively small differences between the rankings on the two subjects: high rankings on geography seem to go together with high rankings on history. Let's look at these differences between rankings more closely by computing them, see Table \ref{tab:nonpar_4}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(student, rank.geography, rank.history, difference) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+So theoretically the difference could be as large as 9, but here we see a biggest difference of -2. The average difference is the sum of these differences, divided by 10, so we get 0. This is because we plus and minus values. If we would take the square of the differences, we would get positive values, see Table \ref{tab:nonpar_5}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(rank.geography, rank.history, difference, squared.difference) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+Now we can compute the average squared difference, which is equal to 10/10 = 1. Generally, the smaller this value, the closer the rankings of the two teachers are together, and the more correlation there is between the two subjects. 
+
+A clever mathematician like Spearman has shown that is even better to use a somewhat different measure for a correlation between ranks. He showed that it is wiser to compute the following statistic:
+
+\begin{eqnarray}
+r_s = 1 - \frac{6 \sum d^2 }{N^3-N}
+\end{eqnarray}
+
+because then you get a value between -1 and 1, just like a Pearson correlation. So in this case the sum of the squared difference is equal to 10, $N$ is the number of students, so we get:
+
+
+\begin{eqnarray}
+r_s = 1 - \frac{6 \times 10  }{10^3-10} = 1 - 60 /990 = 0.94
+\end{eqnarray}
+
+
+This is called the Spearman rank-order correlation coefficient $r_s$. It can be used for any two variables of which at least one is ordinal. The trick is to convert the scale values into ranks, and then apply the formula above. For instance, if we have the variable Grade with the following values (C, B, D, A, F), we convert them into rankings by saying the A is the highest value (1), B is the second highest value (2), C is the third highest value (3), D is the fourth highest value (4) and F is the fifth highest value (5). So tranformed into rankings we get (3, 2, 4, 1, 5). Similarly, we could turn numeric variables into rankings. Table \ref{tab:nonpar_6} shows how the variables grade, shoe size and height are transformed into their respective ranked versions. 
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(student, grade, rank.grade, shoesize, rank.shoesize, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+When we let SPSS compute $r_s$ for us, it automatically ranks the data for us. Suppose we have two variables grade and height and we want to compute $r_s$, then we use the syntax:
+
+ \begin{verbatim}
+ NONPAR CORR 
+   /VARIABLES=grade height 
+  /PRINT=SPEARMAN .
+ \end{verbatim}
+  
+In the output you will see a correlation matrix very similar the one for a Pearson correlation. Spearman's rho is equal to the $r_s$ mentioned above. You will also see whether the correlation is significantly different from 0, indicated by a $p$-value. If the $p$-value is very small, you may conclude that on the basis of these data, the correlation in the population is not equal to 0, ergo, in the population there is a relationship between shoe size and aggression. Note that you can use this $p$-value if you want to test the hypothesis that the slope for the regression of height on grade is zero in the population (or, equivalently, for the regression of grade on height).  
+  
+
+Below we discuss an alternative measure for a correlation for ordinal data, the Kendall rank-order correlation coefficient $T$. 
+
+
+\section{Kendall's rank-order correlation coefficient $T$}
+
+
+If you want to know if there is a relationship between two variables, of which at least one is ordinal, you can either use Spearman's $r_s$ or Kendall's $\tau$. However, if you have three variables, and you want to know whether there is a relationship between variables A and B, over and above the effect of variable C, you can use an extension of Kendall's $\tau$. Note that this is very similar to the idea of multiple regression: a coefficient for variable $x_1$ in multiple regression with two predictors is the effect of $x_1$ on $y$ over and above the effect of $x_2$ on $y$. The logic of Kendall's $\tau$ is also based on rank orderings, but it involves a different computation. Let's look at the student data again with the teachers' rankings of ten students on two subjects in Table \ref{tab:nonpar_4}. 
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(student, rank.geography, rank.history) \%>\% xtable(caption = "{}Student rankings on geography and history, now ordered according to the ranking for geography."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+

@@ -75,9 +75,9 @@ options(scipen = 999)
 
 rm(weight) # from chapter 1
 
-# (Taken from Maindonald, 2007)
-outbooks <- lm(weight~ volume , data=allbacks)
-outbooks2 <- lm(weight~ volume + area , data=allbacks)
+# (Taken from Maindonald, 2007, available in package DAAG)
+outbooks <- lm(weight~ volume , data = allbacks)
+outbooks2 <- lm(weight~ volume + area , data = allbacks)
 
 attach(allbacks)
 
@@ -237,8 +237,11 @@ From the data we calculate the variance of age, and we find that it is \Sexpr{va
 Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get:
 
 <<multi_2b, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
-out2 %>% summary() %>% xtable(caption="Regression table for predicting age from heart", label="tab:multi_2b") %>%
-        print(include.rownames=T, caption.placement = "top")
+out2 %>% 
+  summary() %>% 
+  xtable(caption = "Regression table for predicting age from heart", 
+         label = "tab:multi_2b") %>%
+        print(include.rownames = T, caption.placement = "top")
 @
 
 \begin{eqnarray}
@@ -262,8 +265,11 @@ e \sim N(0, \Sexpr{round(summary(out3)$sigma^2,0)})
 \end{eqnarray}
 
 <<multi_2c, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
-out3 %>% summary() %>% xtable(caption="Regression table for predicting age from heart and weight", label="tab:multi_2c") %>%
-        print(include.rownames=T, caption.placement = "top")
+out3 %>% 
+  summary() %>% 
+  xtable(caption = "Regression table for predicting age from heart and weight", 
+         label = "tab:multi_2c") %>%
+        print(include.rownames = T, caption.placement = "top")
 @
 
 
@@ -284,8 +290,7 @@ In our seal data, there is a very high correlation between the variables \textbf
 
 In an earlier chapter on inference, we saw that if we want to say something about the population slope on the basis of the sample slope, we can use $t$-distributions. The shape of the $t$-distribtution depends on the degrees freedom and we saw that these depend on sample size. For simple regression (one intercept and one slope), we saw that the number of degrees of freedom, the residual degrees of freedom, was equal to sample size minus 2 ($n-2$).
 
-In the more general case of multiple
-regression, with the number of independent variables equal to $K$ and including an intercept, the degrees of freedom for the $t$-distribution of sample slopes is equal to $n-K-1$. One could also say, the degrees of freedom is equal to sample size minus the number of parameters (coefficients) in your model.
+In the more general case of multiple regression, with the number of independent variables equal to $K$ and including an intercept, the degrees of freedom for the $t$-distribution of sample slopes is equal to $n-K-1$. One could also say, the degrees of freedom is equal to sample size minus the number of parameters (coefficients) in your model.
 
 For example, suppose you have 200 data points and 4 independent variables. Then you have 4 slope parameters and 1 intercept parameter in your model, so 5 parameters in total. The (residual) degrees of freedom is in that case $n-5=195$.
 
@@ -327,6 +332,53 @@ In the output, there is also another table, and there we see the R-squared and t
 
 
 
+
+
+\section{Multiple regression in R}
+
+Let's use the book data and run the multiple regression in R. The syntax looks very similar to simple regression, except that we now specify two independent variables, volume and area, instead of one. We combine these two independent variables using the +-sign.
+
+\begin{lstlisting}
+model <- lm(weight ~ volume + area, data = allbacks)
+model %>% tidy()
+\end{lstlisting}
+
+
+<<out_books_r, fig.height=4, echo=FALSE, fig.align='center', message=F, results='asis'>>=
+model <- lm(weight ~ volume + area, data = allbacks)
+model %>% 
+  tidy() %>% 
+  xtable(caption = "lm() output for predicting the weight of a book by its volume and area.", 
+         label = "tab:out_books_r", 
+         digits = 3) %>%
+  print(include.rownames = F, caption.placement = "top")
+  
+@
+
+Table \ref{tab:out_books_r} shows the output. There we see an intercept, a slope parameter for volume and a slope parameter for area. These numbers tell us that the expected or predicted weight of a book that has a volume of 0 and an area of 0 is 22.413. For every unit increase in volume, the predicted weight increases by 0.708, and for every unit increase in area, the predicted weight increases by 0.468.
+
+So the linear model looks like:
+
+
+\begin{eqnarray}
+weight =  22.413 + 0.708 \times volume + 0.468 \times area + e
+\end{eqnarray}
+
+Thus, the predicted weight of a book that has a volume of 10 and an area of 5, the expected weight is equal to $22.413 + 0.708 \times 10 + 0.468 \times 5 = \Sexpr{22.413 + 0.708 * 10 + 0.468 * 5}$.
+
+In R, the R-squared and the adjusted R-squared can be obtained by first making a summary of the results, and then accessing these statistics directly.
+
+\begin{lstlisting}
+sum <- model %>% summary()
+sum$r.squared
+sum$adj.r.squared
+\end{lstlisting}
+
+
+This will give you that the R squared equals 0.93 and the adjusted R squared 0.92. 
+
+
+
 \section{Simpson's paradox}
 
 With multiple regression, you may uncover very surprising relationships between two variables, that can never be found using simple regression. Here's an example from Paul van der Laken\footnote{https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/}, who simulated a data set on the topic of Human Resources (HR).
@@ -343,16 +395,18 @@ We carry out a simple regression, with salary as our dependent variable and Neur
 <<multi_3, fig.height=4, echo=FALSE, fig.align='center'>>=
 # options(scipen = 0)
 
-alpha = 0.5
+# https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/
+
+alpha <- 0.5
 set.seed(123)
-n = 1000
+n <- 1000
 
-Neuroticism = rnorm(n)
-Performance = rnorm(n) + Neuroticism * 0.1
+Neuroticism <- rnorm(n)
+Performance <- rnorm(n) + Neuroticism * 0.1
 
-Performance = rescale(Performance, to = c(0, 100))
+Performance <- rescale(Performance, to = c(0, 100))
 # summary(Performance)
-Neuroticism = rescale(Neuroticism, to = c(0, 7))
+Neuroticism <- rescale(Neuroticism, to = c(0, 7))
 # summary(Neuroticism)
 
 data <- data.frame(
@@ -360,12 +414,12 @@ data <- data.frame(
   Neuroticism
 )
 
-options = c("Technical","Service")
-technical =
+options <- c("Technical", "Service")
+technical <-
   (data$Performance > mean(data$Performance) &
-     data$Neuroticism > mean(data$Neuroticism)) |
-  (data$Performance < mean(data$Performance) &
-     data$Neuroticism < mean(data$Neuroticism))
+    data$Neuroticism > mean(data$Neuroticism)) |
+    (data$Performance < mean(data$Performance) &
+      data$Neuroticism < mean(data$Neuroticism))
 
 data$Job[technical] <- sample(options, sum(technical), T, c(0.6, 0.2))
 data$Job[is.na(data$Job)] <- sample(options, sum(is.na(data$Job)), T, c(0.2, 0.8))
@@ -373,26 +427,22 @@ data$Job[is.na(data$Job)] <- sample(options, sum(is.na(data$Job)), T, c(0.2, 0.8
 # p <- data %>% ggplot(aes(Neuroticism, Performance))
 # p + geom_point(alpha = alpha) + geom_smooth(method = 'lm')
 set.seed(123)
-n = 1000
+n <- 1000
 
-Education = rbinom(n, 2, 0.5)
-Neuroticism = rnorm(n) + Education
-Salary = Education * 2 + rnorm(n) - Neuroticism * 0.3
+Education <- rbinom(n, 2, 0.5)
+Neuroticism <- rnorm(n) + Education
+Salary <- Education * 2 + rnorm(n) - Neuroticism * 0.3
 
-Salary = sample(10000:11000,1) + rescale(Salary, to = c(0, 100000))
+Salary <- sample(10000:11000, 1) + rescale(Salary, to = c(0, 100000))
 # summary(Salary)
-Neuroticism = rescale(Neuroticism, to = c(0, 7))
+Neuroticism <- rescale(Neuroticism, to = c(0, 7))
 # summary(Neuroticism)
 
 
-data <- data.frame(
-  Salary,
-  Neuroticism,
-  Education
-)
+data <- tibble(Salary, Neuroticism, Education)
 
-out2 <- lm(Salary~ Neuroticism + Education, data)
-out1 <- lm(Salary~ Neuroticism , data)
+out2 <- lm(Salary ~ Neuroticism + Education, data)
+out1 <- lm(Salary ~ Neuroticism, data)
 @
 
 \begin{equation}
@@ -405,14 +455,13 @@ Figure \ref{fig:multi_4} shows the data and the regression line. From this visua
 
 
 <<multi_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Simulated HR data set.">>=
-Education = factor(Education, labels = c("0", "1", "2"))
-data <- data.frame(
-  Salary,
-  Neuroticism,
-  Education
-)
-p <- data %>% ggplot(aes(Neuroticism, Salary))
-p + geom_point(alpha = alpha) + geom_smooth(method = 'lm', se=F)
+Education <- factor(Education, labels = c("0", "1", "2"))
+data <- tibble(Salary, Neuroticism, Education)
+p <- data %>% 
+  ggplot(aes(Neuroticism, Salary))
+p + 
+  geom_point(alpha = alpha) + 
+  geom_smooth(method = "lm", se = F)
 
 @
 
@@ -444,69 +493,69 @@ p +
 Simpson's paradox tells us that we should always be careful when interpreting positive and negative correlations between two variables: what might be true at the total group level, might not be true at the level of smaller subgroups. Multiple linear regression helps us investigate correlations more deeply and uncover exciting relationships between multiple variables.
 
 
-\section{Exercises}
-
-
-Two neighbours, Elsa and John, are chopping trees in the forest for their respective fireplaces. They pick their trees to chop down, based on the expected volume of wood they can get from that tree. However, Elsa and John disagree on what is the most important aspect of trees for selection. Elsa believes that the tallest tree will give the biggest volume of wood for the fireplace, but John believes that the tree with the largest girth gives the most volume of wood. Luckily there is a data set with three variables: Volume, Girth and Height.
-
-
-\begin{enumerate}
-\item What would the SPSS syntax look like to run a multiple regression, if you want to find out which predictor is most important for the volume of wood that comes from a tree?
-
-
-\begin{verbatim}
-UNIANOVA ....... WITH ........
-  /DESIGN = ........
-  /PRINT = PARAMETER R-Squared.
-\end{verbatim}
-
-
-\item Suppose you find the output in Table \ref{tab:multi_5}: what would your linear equation look like?
-
-\begin{equation}
-\dots \dots = \dots    \dots   \dots \dots \dots \dots+ e
-\end{equation}
-
-
-<<multi_6, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
-data(trees)
-out <- lm(Volume~ Girth + Height, data=trees) %>%
-        xtable(caption="Regression table for predicting volume from height and girth.", label="tab:multi_5") %>%
-        print(include.rownames=T, caption.placement = "top")
-@
-
-
-
-
-\item On the basis of the output, what would be the predicted volume for a tree with a height of 10 and a girth of 5?
-
-\item On the basis of the output, what would be the predicted volume for a tree with a height of 5 and a girth of 10?
-
-\item For each unit increase of height, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
-
-\item For each unit increase of girth, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
-
-
-\item On the basis of the SPSS output, do you think Lisa is right in saying that height is an important predictor of volume? Explain your answer.
-
-\item On the basis of the SPSS output, do you think John is right in saying that girth is an important predictor of volume? Explain your answer.
-
-\item On the basis of the plots in Figures \ref{fig:multi_7} and \ref{fig:multi_8}, which do you think is the most reliable predictor for Volume: Height or Girth? Explain your answer.
-
-\item How large is the proportion of variance explained in volume, by girth and height?
-
-\item How would you summarize this multiple regression analysis in a research report?
-
-\end{enumerate}
-
-<<multi_7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between height and volume of a tree.' >>=
-trees %>% ggplot(aes(Height, Volume)) + geom_point()
-@
-
-<<multi_8, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between girth and volume of a tree.'>>=
-trees %>% ggplot(aes(Girth, Volume)) + geom_point()
-@
-
-
-
+% \section{Exercises}
+% 
+% 
+% Two neighbours, Elsa and John, are chopping trees in the forest for their respective fireplaces. They pick their trees to chop down, based on the expected volume of wood they can get from that tree. However, Elsa and John disagree on what is the most important aspect of trees for selection. Elsa believes that the tallest tree will give the biggest volume of wood for the fireplace, but John believes that the tree with the largest girth gives the most volume of wood. Luckily there is a data set with three variables: Volume, Girth and Height.
+% 
+% 
+% \begin{enumerate}
+% \item What would the SPSS syntax look like to run a multiple regression, if you want to find out which predictor is most important for the volume of wood that comes from a tree?
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ....... WITH ........
+%   /DESIGN = ........
+%   /PRINT = PARAMETER R-Squared.
+% \end{verbatim}
+% 
+% 
+% \item Suppose you find the output in Table \ref{tab:multi_5}: what would your linear equation look like?
+% 
+% \begin{equation}
+% \dots \dots = \dots    \dots   \dots \dots \dots \dots+ e
+% \end{equation}
+% 
+% 
+% <<multi_6, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+% data(trees)
+% out <- lm(Volume~ Girth + Height, data=trees) %>%
+%         xtable(caption="Regression table for predicting volume from height and girth.", label="tab:multi_5") %>%
+%         print(include.rownames=T, caption.placement = "top")
+% @
+% 
+% 
+% 
+% 
+% \item On the basis of the output, what would be the predicted volume for a tree with a height of 10 and a girth of 5?
+% 
+% \item On the basis of the output, what would be the predicted volume for a tree with a height of 5 and a girth of 10?
+% 
+% \item For each unit increase of height, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+% 
+% \item For each unit increase of girth, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+% 
+% 
+% \item On the basis of the SPSS output, do you think Lisa is right in saying that height is an important predictor of volume? Explain your answer.
+% 
+% \item On the basis of the SPSS output, do you think John is right in saying that girth is an important predictor of volume? Explain your answer.
+% 
+% \item On the basis of the plots in Figures \ref{fig:multi_7} and \ref{fig:multi_8}, which do you think is the most reliable predictor for Volume: Height or Girth? Explain your answer.
+% 
+% \item How large is the proportion of variance explained in volume, by girth and height?
+% 
+% \item How would you summarize this multiple regression analysis in a research report?
+% 
+% \end{enumerate}
+% 
+% <<multi_7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between height and volume of a tree.' >>=
+% trees %>% ggplot(aes(Height, Volume)) + geom_point()
+% @
+% 
+% <<multi_8, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between girth and volume of a tree.'>>=
+% trees %>% ggplot(aes(Girth, Volume)) + geom_point()
+% @
+% 
+% 
+% 
 

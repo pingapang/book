@@ -53,7 +53,7 @@ cars %>% ggplot( aes(speed,dist))  +
 So far, this ordinary multiple regression. But suppose that such a model does not describe the data that we actually have, or does not make the right predictions based on on our theories. Suppose our researcher also expects that the \textit{yearly increase} in vocabulary is a bit lower than 500 words in low SES families, and a little bit higher than 500 words in high SES families. In other words, he believes that SES might \textit{moderate} (affect or change) the slope coefficient for age. Let's call the slope coefficent in this case $b_1$. In the above equation this slope parameter is equal to 500, but let's now let itself have a linear relationship with SES:
 
 \begin{eqnarray}
-b_1 = \alpha + b_3 \times SES
+b_1 = a + b_3 \times SES
 \end{eqnarray}
 
 In words: the slope coefficient for the regression of vocabulary on age, is itself linearly related to SES: we predict the slope on the basis of SES. We model that by including a slope $b_3$, but also an intercept $a$. Now we have \textit{two} linear equations for the relationship between vocabulary, age and SES:
@@ -211,7 +211,7 @@ UNIANOVA height WITH age BY location
 \end{verbatim}
 
 
-In Figure \ref{fig:interactionheight} we find the corresponding SPSS output. In the Parameter Estimates table, we see the effect of the numeric age variable, which has a slope of 4.25. For every increase of 1 in age, there is a corresponding expected increase of 4.3 centimeters in height. Next, we see that SPSS created a dummy variable \textbf{[location=city]}. For every observation (child) for which the variable location has the value city, this dummy variable has a value 1. In that case, the expected increase in height is -3.84. In other words: for every child living in the city, the expected height is 3.84 centimeters \textit{less} then children living in the countryside. 
+In Figure \ref{fig:interactionheight} we find the corresponding SPSS output. In the Parameter Estimates table, we see the effect of the numeric age variable, which has a slope of 4.25. For every increase of 1 in age, there is a corresponding expected increase of 4.3 centimeters in height. Next, we see that SPSS created a dummy variable \textbf{[location=city]}. For every observation (child) for which the variable location has the value city, this dummy variable has a value 1. In that case, the expected increase in height is -3.84. In other words: for every child living in the city, the expected height is 3.84 centimeters \textit{less} than children living in the countryside. 
 
 Next, SPSS created a dummy variable \textbf{[location=country]}, but the effect of that dummy variable is fixed to zero because of redundancy.
 
@@ -690,7 +690,7 @@ Note that the syntax only leaves out the multiplication in the DESIGN subcommand
     \begin{center}
        \includegraphics[scale=0.7, trim={0cm 24.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups3.pdf}
     \end{center}
-    \caption{Output with main effects of country and sex, and an interaction effect.}
+    \caption{Output with main effects of country and sex.}
     \label{fig:interactionheightcountrysexMAIN}
 \end{figure}
 

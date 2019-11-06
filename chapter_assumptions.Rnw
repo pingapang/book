@@ -1,0 +1,405 @@
+\chapter{Assumptions of linear models}\label{chap:assumptions}
+
+
+\section{Introduction}
+Linear models are models. A model describes the relationship between two or more variables. A good model gives a valid summary of what the relationship between the variables looks like. Let's look at a very simple example of two variables: height and weight. In a sample of 100 children from a distant country, we find 100 combinations of height in cms and weight in kilograms that are depicted in the scatterplot in Figure \ref{fig:ass_1}
+
+<<ass_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data set on height and weight in 100 children.">>=
+set.seed(12345)
+height <- rnorm(100, 130,10)
+weight <- height -100 + rnorm(100, 0, 4)
+tibble(weight, height) %>% 
+        ggplot(aes(x=height, y=weight)) + geom_point() 
+out <- lm(weight~ height) %>% summary
+@
+
+We'd like to find a linear model for these data, so we determine the least squares regression line. We also determine the standard deviation of the residuals so that we have the following statistical model:
+
+\begin{eqnarray}
+weight = \Sexpr{out$coef[1]} + \Sexpr{out$coef[2]}* height + e \\
+e \sim N(0, \sigma = \Sexpr{out$sigma}) 
+\end{eqnarray}
+
+<<ass_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data set on height and weight in 100 children and the least squares regression line.">>=
+out <- lm(weight~ height)
+tibble(weight, height) %>% 
+        ggplot(aes(x=height, y=weight)) + geom_smooth(se=F, method='lm') +
+        geom_point(aes(x=height, y=predict(out)+rnorm(100,0,summary(out)$sigma)))
+out <- lm(weight~ height) %>% summary
+@
+
+
+This model, defined above, is depicted in Figure \ref{fig:ass_2}. The blue line is the regression line, and the dots are the result of simulating (inventing) independent normal residuals with standard deviation \Sexpr{out$sigma}. The figure shows how the data would like if we don't have access to the data. 
+The actual data might have arisen from this model. The data is only different from the simulated data because of the randomness of the residuals. 
+
+A model should be a good model for two reasons. First, a good model is a summary of the data. Instead of describing all 100 data points on the children, we could summarize these data with the linear equation of the regression line and the standard deviation of the residuals. The second reason is that you would like to infer something about the relationship between height and weight in all children from that distant country. It turns out that the standard error, and hence the confidence intervals  and hypothesis testing, are only valid if the model describes the data well. This means that if the model is not a good description of your sample data, then you draw the wrong conclusions about the population.
+
+For a linear model to be a good model, there are four conditions that need to be fullfilled. First, the relationship between the variables can be described by a linear equation (linearity), second, the residuals are independent of eachother (independence), third, the residuals have equal variance (equal variance), and the distribution of the residuals is normal (normality). If these conditions (often called assumptions) are not met, the inference with the computed standard error is invalid. That is, if the assumptions are not met, the standard error should not be trusted, or should be computed using alternative methods. 
+
+Below we will discuss these four assumptions in turn briefly. For each assumption, we will show that the assumptions can be checked by looking at the residuals. We will see that if the residuals do not look right, one or more of the assumptions are violated. But what does it mean that the residuals look right?
+
+Well, the linear model says that the residuals have a \textit{normal distribution}. So for the height and weight data, let's compute the residuals for all 100 children and plot the distribution with a histogram, see Figure \ref{fig:ass_3}. The histogram shows a bell-shaped distribution with one peak and more or less symmetric. The symmetry is not perfect, bu you can well imagine that if we had measured more children, the distribution would more and more resemble a normal distribution. 
+
+<<ass_3, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Histogram of the residuals after regressing weight on height.">>=
+tibble(residuals=out$residuals) %>% ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 2)
+@
+
+<<ass_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Residual plot after regressing weight on height.">>=
+tibble(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=observation, y=residuals)) +
+        geom_point()
+@
+
+Another thing the model implies is that the residuals are \textit{random}: they are random draws from a normal distribution. This means, if we would plot the residuals, we should see no systematic pattern in the residuals. The scatterplot in Figure \ref{fig:ass_4} plots the residuals in the order in which they appear in the data set. The figure seems to suggest a random scatter of dots, \textit{without any kind of system or logic}. We could also plot the residuals as a function of their predictor value. Figure \ref{fig:ass_4b} shows there is no systematic relationship between the height of a child and the residual.  
+
+<<ass_4b, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Residuals as a function of height.">>=
+tibble(height ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=height, y=residuals)) +
+        geom_point()
+@
+
+
+When it looks like this, it shows that the residuals are randomly chosen and independent of height. Taken together Figures \ref{fig:ass_3}, \ref{fig:ass_4} and \ref{fig:ass_4b} suggest that the assumptions of the linear model are met. 
+
+Let's have a look at the same kinds of residual plots when each of the assumptions of the linear model is not violated.
+
+\section{Independence}
+The assumption of independence is about the way in which observations are similar and dissimilar \textit{from each other}. Take for instance the following regression equation for children's height predicted by their age:
+
+\begin{eqnarray}
+height = 100 + 5 \times age + e
+\end{eqnarray}
+
+This regression equation predicts that a child of age 5 has a height of 125 and a child of age 10 has a height of 150. In fact, all children of age 5 have the same predicted height of 125 and all children of age 10 have the same predicted height of 150. Of course, in reality, children of the same age will have very different heights: they differ. According to the above regression equation, children are similar in height because they have the same height, but they differ because of the random term $e$ that has a normal distribution: predictor age makes them similar, residual $e$ makes them dissimilar. Now, if this is all there is, then this is a good model. But let's suppose that we're studying height in an international group of 50 Ethiopian children and 50 Vietnamese children. Their heights are plotted in Figure \ref{fig:ass_5}.
+
+
+<<ass_5, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Data on age and height in children from two countries.">>=
+set.seed(1234)
+age <- runif(50, 4, 12)
+country <- rep(seq(1:2), each=50)
+country <-replace(country, country==1, 'Ethiopean')
+country <- replace(country, country==2, 'Vietnamese')
+country <- as.factor(country)
+height <- 101 + 5*age + 2*(country=='Ethiopean') + rnorm(100)
+data <- data.frame(age, country, height)
+ggplot(data, aes(x=age, y=height,col=country)) + geom_point() 
+out <- lm( height~ age + country + age*country, data=data )
+# summary(out)
+@
+
+From this graph, we see that heights are similar because of age: older children are taller than younger children. But we see that children are also similar because of their national background: Ethiopean children are systematically taller than Vietnamese children, irrespective of age. So here we see that a simple regression of height on age is not a good model. We see that when we estimate the simple regression on age and look at the residuals in Figure \ref{fig:ass_6}
+
+<<ass_6, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Residual plot after regressing height on age.">>=
+res <- lm(height~ age, data=data)$res
+data <- data.frame(age, country, height, res)
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('child') + ylab("residual")
+@
+
+As our model predicts random residuals, we expect a random scatter of residuals. However, what we see here is a systematic order in the residuals: they tend to be positive for the first 50 children and negative for the last 50 children. These turn out to be the Ethiopean and the Vietnamese children, respectively. This systematic order in the residuals is a violation of independence: the residuals should be random, and they are not. The residuals are dependent on country: positive for Ethiopeans, negative for Vietnamese children. Thus, there is more than just age that makes children similar. Thus, the model is not a good model: if there is more than just age that makes children more alike, then that should be incorporated into our model. 
+
+If we use multiple regression, including both age and country, and we do the analysis, then we get the following regression equation:
+
+
+
+\begin{eqnarray}
+\widehat{height} = 102.641 + 5.017 \times age - 1.712 \times country 
+\end{eqnarray}
+
+When we now plot the residuals we get a nice random scatter, see Figure \ref{fig:ass_7}.
+
+<<ass_7, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap="Residual plot after regressing height on age and country.">>=
+out <- lm(height~ age + country, data=data)
+data$res <- out$res
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('child')
+@
+
+
+
+
+<<ass_8, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap="Residual plot after regressing reaction time on IQ.">>=
+set.seed(1234)
+student <- rep(1:10, each=10)
+student <- as.factor(student)
+IQ <- rnorm(10, 100, 15)
+IQ <- rep(IQ, each=10)
+person <- rnorm(10, 0, 3)
+person <- rep(person, each=10)
+RT <- 200 - 1* IQ - person + rnorm(100, 0, 1)
+out <- lm(RT ~ IQ)
+res <- out$residuals
+data <- data.frame(IQ, person, RT, res, student)
+ggplot(data, aes(x=1:100, y=res)) + geom_point() + xlab('trial') + ylab('residual')
+@
+
+Another typical example of non random scatter of residuals is shown in Figure \ref{fig:ass_8}. They come from an analysis of reaction times, done on 10 students where we also measured their IQ. Each student was measured on 10 trials. We predicted reaction time on the basis of student's IQ using a simple regression analysis. The residuals are clearly not random, and if we look more closely, we see some clustering if we give different colours for the data from the different students, see Figure \ref{fig:ass_9}.
+
+
+<<ass_9, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE, fig.cap="Residual plot after regressing reaction time on IQ, with separate colours for each student.">>=
+ggplot(data, aes(x=1:100, y=res, col=student)) + geom_point() + xlab('trial') + ylab('residual') 
+# ggplot(data, aes(x=student, y=res)) + geom_boxplot() + xlab('student') + ylab('residual') 
+@
+
+We see that residuals that are close together come from the same student. So, reaction time are not only similar because of IQ, but also because they come from the same student: clearly something other than IQ explains why reaction times are different across individuals. The residuals in this analysis are not independent given IQ, they are dependent on the student. This may be because of a number of factors: dexterity, left-handedness, practice, age, motivation, tiredness or any combination of such factors. You may or may not have information about these factors. If you do, you can add them to your model and see if they explain variance and check if the residuals become more randomly distributed. But if you don't have any extra information, or if do you but the residuals remain clustered, you might consider linear mixed models, discussed in Chapter \ref{chap:mixed}.
+
+The assumption of independence is the most important assumption in linear models. Just a small amount of dependence among the observations causes your actual standard error to be much larger than reported by your software. For example, you may think that a confidence interval is [0.1, 0.2], so you reject the null-hypothesis, but in reality the standard error is much larger, with a much wider interval, say [-0.1, 0.4] so that you in reality you are not allowed to reject the null-hypothesis. The reason that this happens can be explained when we look again at Figure \ref{fig:ass_9}. Objectively, there are 100 observations, and this is fed into the software: $N=100$. This sample size is then used to compute the standard error (see Chapter \ref{chap:confidence}). However, because the reaction times from the same student are so much alike, \textit{effectively} the number of observations is much smaller. The reaction times from one student are in fact so much alike, you could almost say that there are only 10 different reaction times, one for each student, with only slight deviations within each student. Therefore, the real number of observations is somewhere between 10 and 100, and therefore the reported standard error is underestimated when there is dependence in your residuals (standard errors are inversely related to sample size, see Chapter \ref{chap:confidence}). 
+
+
+
+\section{Linearity}
+
+The assumption of linearity is often also referred to as the assumption of \textit{additivity}. Contrary to intuition, the assumption is not that the relationship between variables should be linear. The assumption is that there is linearity or additivity in the parameters. That is, \textit{the effects of the variables in the model} should add up. 
+
+Suppose we gather data on height and fear of snakes in 100 children from a different distant country. Figure \ref{fig:ass_10} plots these two variables, together with the least squares regression line.
+
+<<ass_10, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Least squares regression line for fear of snakes on height in 100 children.">>=
+set.seed(12345)
+height <- rnorm(100, 130,10)
+fear <-  (height*height )/-1.8+ 100* height  -2000 + rnorm(100, 0, 10)
+tibble(fear, height) %>% 
+        ggplot(aes(x=height, y=fear)) + geom_point()  + geom_smooth(method='lm', se=F)
+out <- lm(fear~ height) 
+@
+
+<<ass_11, fig.height=4, echo=FALSE, fig.align='center',fig.cap="Residual plot after regressing fear of snakes on height.">>=
+tibble(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=observation, y=residuals)) +
+        geom_point()
+@
+
+Figure \ref{fig:ass_11} shows regularity in the residuals: the positive residuals seem to be smaller than the negative residuals. This is also reflected in the histogram in Figure \ref{fig:ass_12}, that does not look symmetric at all. What might be the problem?
+
+<<ass_12, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Histogram of the residuals after regressing fear of snakes on height.">>=
+tibble(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 10)
+@
+
+
+Take another look at the data in Figure \ref{fig:ass_10}. We see that for small heights, the data points are all below the regression line, and the same pattern we see for large heights. For average heights, we see on the contrary all data points above the regression line. Somehow the data points do not suggest a completely linear relationship, but a curved one. 
+
+This problem of model misfit could be solved by not only using height as the predictor variable, but also the \textit{square} of height, that is, $height^2$. For each observed height we compute the square. This new variable, let's call it \textbf{height2} we add  to our regression model. The least squares regression equation then becomes:
+
+\begin{eqnarray}
+\widehat{fear} = -2000 + 100 \times height - 0.56 \times height2 \label{eq:nonlinear}
+\end{eqnarray}
+
+
+If we then plot the data and the regression line, we get Figure \ref{fig:ass_13}. There we see that the regression line goes straight through the points. Note that the regression line when plotted agains height is non-linear, but equation \ref{eq:nonlinear} itself is linear, that is, there are only two effects added up, one from variable \textbf{height} and one from variable \textbf{height2}. We also see from the histogram (Figure \ref{fig:ass_14}) and the residuals plot (Figure \ref{fig:ass_15}) that the residuals are randomly drawn from a normal distribution and are not related to the square of height. Thus, our additive model (our linear model) with effects of height and height squared result in a nice model with random normally scattered residuals. 
+
+<<ass_13, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Observed and predicted fear based on a linear model with height and height squared">>=
+height2=height*height
+out<- lm(fear~height2+height )
+pred=predict(out)
+tibble(height ,  pred, fear) %>% 
+        ggplot(aes(x=height, y=pred)) +
+        geom_line()  + ylab("Fear for snakes") + 
+        geom_point(aes(y=fear))
+
+out<- lm(fear~height2+height )
+@
+
+<<ass_14, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Histogram of the residuals of the fear of snakes data with height squared introduced into the linear model.">>=
+tibble(residuals = out$residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 1) 
+@
+
+<<ass_15, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Residuals plot of the fear of snakes data with height squared introduced into the linear model. ">>=
+tibble(observation=1:length(height)  ,  residuals=out$residuals) %>% 
+        ggplot(aes(x=observation, y=residuals)) +
+        geom_point()
+@
+
+
+In sum, the relationship between two variables need not be linear in order for a linear model to be appropriate. A transformation of an independent variable, such as taking a square, can result in normally randomly scattered residuals. The linearity assumption is that the effects of a number of variables (transformed or untransformed) add up and lead to model with normally and  independently randomly scattered residuals.
+
+
+\section{Equal variances}
+
+Suppose we measure reaction times in both young and older adults. Older persons tend to have longer reaction times than young adults. Figure \ref{fig:ass_16} shows a data set on 100 persons. Figure \ref{fig:ass_17} shows the residuals as a function of age, and shows something remarkable: it seems that the residuals are much more varied for older people than for young people. There is more variance at older ages than at younger ages. This is violation of the equal variance assumption. Remember that a linear model goes with a normal distribution for the residuals with a certain variance. In a linear model, there is only mention of one variance of the residuals, not several!
+
+The equal variance assumption is an important one: if the data show that the variance is different for different subgroups of individuals in the data set, then the standard errors of the regression coefficients cannot be trusted. 
+
+<<ass_16, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Least squares regression line for reaction time on age in 100 adults.">>=
+set.seed(12365679)
+age <- runif(100, 20, 90)
+logrt <- rnorm(100, 0.015*age , .5)
+rt <- exp(logrt)
+tibble(age ,  rt) %>% 
+        ggplot(aes(x=age, y=rt)) +
+        geom_point() + geom_smooth(method='lm', se=F) + xlab("Age in years") +
+        ylab("Reaction time in seconds")
+@
+
+
+<<ass_17, fig.height=4, echo=FALSE, fig.align='center',fig.cap="Residual plot after regressing reaction time on age.">>=
+out<- lm(rt~age)
+residuals = out$residuals
+tibble(age ,  residuals) %>% 
+        ggplot(aes(x=age, y=residuals)) +
+        geom_point()  + xlab("Age in years")
+@
+
+
+
+We often see an equal variance violation in reaction times. An often used strategy of getting rid of such a problem is to work not with the reaction time, but the \textit{logarithm} of the reaction time. Figure \ref{fig:ass_18} shows the data with the computed logarithms of reaction time, and Figure \ref{fig:ass_19} shows the residuals plot. You can see that the log-transformation of the reaction times resulted in a much better model. 
+
+<<ass_18, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Least squares regression line for log reaction time on age in 100 adults.">>=
+logrt <- log(rt)
+tibble(age ,  logrt) %>% 
+        ggplot(aes(x=age, y=logrt)) +
+        geom_point()  + xlab("Age in years") +ylab("Logarithm of reaction time") + geom_smooth(method='lm', se=F)
+@
+
+<<ass_19, fig.height=4, echo=FALSE, fig.align='center',fig.cap="Residual plot after regressing log reaction time on age.">>=
+out<- lm(logrt~age)
+residuals = out$residuals
+tibble(age ,  residuals) %>% 
+        ggplot(aes(x=age, y=residuals)) +
+        geom_point()  + xlab("Age in years")
+@
+
+
+Note that the assumption is not about the variance in the sample data, but about the population data. It might well be that there are slight differences in the sample data of the older people than in the sample data of the younger people. These could well be due to chance. The important thing to know is that the assumption of equal variance is that in the population of older adults, the variation in reaction times is the same as the variation in reaction times in the population of younger adults. 
+
+The equal variance assumption is often referred to as the \textit{homogeneity of variance} assumption or  \textit{homoscedasticity}. It is the assumption that variance is homogeneous (of equal size) across all levels and subgroups of the independent variables in the population. The computation of the standard error is highly dependent on the size of the variance of the residuals. If the size of this variance differs across levels and subgroups of the data, the standard error also varies and the confidence intervals cannot be easily determined. This in turn has effect on the computation of $p$-values, and therefore inference. Having no homogeneity of variance therefore leads to wrong inference, with inflated or deflated type I and type II error rates. 
+
+The inflation or deflation of type I and type II error rates are limited in the case that group sizes are more or less equal. For example, suppose you have an age variable with about an equal number of older persons and younger persons, but unequal variances of the residuals, you should no worry too much about the precision of your $p$-values and your confidence intervals. However, if you have more than 1.5 times more elderly in your sample than youngsters (or vice versa), with unequal variances of the residuals, you should worry. Briefly: if the greater error variance is associated with the greater group size, then the $p$-value reported by UNIANOVA is too small, and if the greater error variance is associated with the smaller group size, then the $p$-value reported by UNIANOVA is too large. If the $p$-value is around your pre-chosen $\alpha$-level and you're unsure whether to reject or not to reject your null-hypothesis, look for more robust methods of computing standard errors.  
+
+
+\section{Residuals normally distributed}
+
+
+As we've already seen, the assumption of the linear model is that the residuals are normally distributed. Let's look at the reaction time data again and see what the histogram of the residuals look like if we use reaction time as our dependent variable. Figure \ref{fig:ass_20} shows that in that case the distribution is not symmetric: it is clearly skewed. 
+
+<<ass_20, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Histogram of the residuals after a regression of reaction time on age.">>=
+out <- lm(rt~age)
+residuals = out$residuals
+tibble(age ,  residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 0.5)  
+@
+
+After the logarithmic transformation of the reaction times, we get the histogram in Figure \ref{fig:ass_21}, which looks more symmetric. 
+
+<<ass_21, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Histogram of the residuals after a regression of log reaction time on age.">>=
+out <- lm(logrt~age)
+residuals = out$residuals
+tibble(age ,  residuals) %>% 
+        ggplot(aes(x=residuals)) +
+        geom_histogram(binwidth = 0.2)  
+@
+
+Remember that if your sample size is of limited size, a distibution will never look completely normal, even if it is sampled from a normal distribution. It should however be \textit{likely} to be sampled from a \textit{population} of data that seems normal. That means that the histogram should not be too skewed, or too peaked, or have two peaks far apart. Only if you have a lot of observation, say 1000, you can reasonably say something about the shape of the distribution. 
+
+If you have categorical independent variables in your linear model, it is best to look at the various subgroups separately and look at the histogram of the residuals: the residuals $e$ are defined as residuals given the rest of the linear model. For instance, if there is a model for height and country is the only predictor in the model, all individuals from the same country are given the same expected height based on the model. They only differ from eachother because of the normally distributed random residuals. Therefore look at the residuals for all individuals from one particular country to see whether the residuals are indeed normally distributed. Then do this for all countries separately. Think about it: the residuals might look non-normal from country A, and non-nornormal from country B, but put together, they might look very normal! This is illustrated in Figure \ref{fig:ass_21a}. Therefore, when checking for the assumption of normality, do this for every subgroup separately.  
+
+<<ass_21a, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Two distributions might be very non-normal, but when taken together, might look normal nevertheless. Normality should therefore always be checked for each subgroup separately.">>=
+set.seed(1234)
+r1 <-  rchisq(1000, 2)
+r2 <- -r1
+residual <- c(r1,r2) 
+tibble(residual, country=rep(c("A", "B"), each=1000) ) %>%  
+        ggplot (aes(x=residual, fill=country))  + 
+        geom_histogram(binwidth = 1) 
+@
+
+
+
+\section{General approach to testing assumptions}
+
+It is generally advised to always check the residuals. All four assumptions mentioned above can be checked by looking at the residuals. We advise to do this with three types of plots. 
+
+The first is the histogram of the residuals: this shows whether the residuals are more or less normally distributed. The histogram should show a more or less symmetric distribution. If the plot does not look assymetric at all, try to find a transformation of the dependent variable that makes the residuals more normal. An example of this is to log-transform reaction times. 
+
+The second type of plot that you should look at is a plot where the residuals are on the $y$-axis and the observation is on the $x$-axis. Such a plot can reveal systematic clustering of residuals, which is a violation of independence. Usually there is an ordering in your data matrix: for instance, first observations are at the top, last observations at the bottom, observations from one company are grouped together, or observations that were made by one observer. By plotting the residuals in the order in which they appear in the data set can reveal patterns that conflict with the assumption of independence, and that helps you to solve the problem. 
+
+The third type of plot that you should study is a one where the residuals are on the vertical axis and the predictor variable (or one of the predictor variables) is on the horizontal axis. Any systematic pattern in such a plot suggests that the residuals are not random, but are dependent on the predictor value (if there is a pattern, they can be predicted, and if things can be predicted they are not random). In this plot, you can also spot violations of the equal variance assumption. 
+
+
+
+\section{Checking assumptions in SPSS}
+
+
+In this section we show the general syntax for making residual plots in SPSS. We will look at how to make the three types of plots of the residuals to check the four assumpions.
+
+
+When you run a linear model with the UNIANOVA command, you can add the subcommand SAVE RESID to indicate that you want to save the residuals that SPSS computes automatically for you. For instance, for a multiple regression model, your syntax might look like 
+
+\begin{verbatim}
+UNIANOVA height BY country WITH age
+/DESIGN country age country*age 
+/PRINT=PARAMETER
+/SAVE RESID.
+\end{verbatim}
+
+The SPSS data matrix now contains the variable \textbf{RES\_1}. 
+
+
+
+\subsection{A histogram of the residuals}
+
+You can make the histogram by using the syntax
+
+\begin{verbatim}
+GRAPH
+  /HISTOGRAM=RES_1.
+\end{verbatim}
+
+If you have one or more categorical predictors, make such histograms for each subgroup with the following syntax:
+
+\begin{verbatim}
+SORT CASES  BY country sex.
+SPLIT FILE SEPARATE BY country sex.
+GRAPH
+  /HISTOGRAM=RES_1.
+SPLIT FILE OFF. 
+\end{verbatim}
+
+With this syntax you split the data file into subfiles. Then for each subfile you make a histogram, after which you put the put the subfiles together again. 
+
+
+\subsection{Residuals by observation number}
+
+First we have to create a new variable that indicates what observation a residual belongs to. SPSS calls this the case number. It is actually the row number in the data matrix. We compute the new variable \textbf{obs\_number} with the following syntax:
+\begin{verbatim}
+COMPUTE obs_number=$CASENUM.
+EXECUTE.
+\end{verbatim}
+
+Next, we plot the residual against this new variable with a scatterplot:
+
+\begin{verbatim}
+GRAPH
+  /SCATTERPLOT(BIVAR)=obs_number WITH RES_1.
+\end{verbatim}
+
+
+
+\subsection{Residuals by independent variables}
+
+We plot the residual against independent variables with scatterplots if they are numeric, for example:
+
+\begin{verbatim}
+GRAPH
+  /SCATTERPLOT(BIVAR)=age WITH RES_1.
+\end{verbatim}
+
+
+We plot the residual against independent variables with boxplots if they are categorical, for example:
+
+\begin{verbatim}
+EXAMINE VARIABLES=RES_1 BY country
+  /PLOT=BOXPLOT.
+\end{verbatim}
+
+If you have two categorical independent variables, for instance if beside country, you also have sex in your linear model, it's generally best to split the boxplot into subgroups, for example:
+
+\begin{verbatim}
+EXAMINE VARIABLES=RES_1 BY country BY sex
+  /PLOT=BOXPLOT.
+\end{verbatim}
+
+
+

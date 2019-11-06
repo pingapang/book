@@ -142,7 +142,9 @@ Imagine a study where we hope to show that aspirin helps reduce headache. We ask
 <<analysisprepost1a, fig.height=3, echo=FALSE, fig.align='center', fig.cap="Scatterplot of pre and post headache levels.">>=
 pre <- c(55,63,66,50,63)
 post<- c(45,50,56,37,50)
-data_frame(pre,post) %>% ggplot(aes(pre,post))+geom_point()
+tibble(pre,post) %>% 
+  ggplot(aes(pre,post)) + 
+  geom_point()
 @
 
 
@@ -154,26 +156,29 @@ There is an alternative way of representing the same data. Let's look at the sam
 
 <<analysisprepost1, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
 set.seed(1234)
-patient <- rep (seq(1:100), 2)
-measure <- rep( c( 1,2), each=100)
+patient <- rep(seq(1:100), 2)
+measure <- rep(c(1, 2), each = 100)
 # time <- as.factor(time)
-headache1 <-  rnorm(100, 60, 5)
-headache2 <-  headache1 + rnorm(100, -10, 3)
-headache1 <- headache1 +  rnorm(100, 0, 3)
-headache = c(headache1, headache2)
-headache <- round(headache,0)
-data <- data.frame(patient, measure, headache) %>%  dplyr::arrange(patient)
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(data, 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepost.sav', 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdata.sps',
-              package = c("SPSS"))
-data %>% head(10) %>% 
-        xtable(
-        caption="Headache severity measures in long format.",           
-        label="tab:analysisprepost1",
-        digits=c(0,0, 0,0)) %>%
-        print(include.rownames=F, caption.placement = "top")
+headache1 <- rnorm(100, 60, 5)
+headache2 <- headache1 + rnorm(100, -10, 3)
+headache1 <- headache1 + rnorm(100, 0, 3)
+headache <- c(headache1, headache2)
+headache <- round(headache, 0)
+data <- data.frame(patient, measure, headache) %>% dplyr::arrange(patient)
+source("/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R")
+write.foreign(data,
+  "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepost.sav",
+  "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdata.sps",
+  package = c("SPSS")
+)
+data %>%
+  head(10) %>%
+  xtable(
+    caption = "Headache severity measures in long format.",
+    label = "tab:analysisprepost1",
+    digits = c(0, 0, 0, 0)
+  ) %>%
+  print(include.rownames = F, caption.placement = "top")
         
 @
 %  \\
@@ -288,223 +293,223 @@ The fact that the two distributions before and after aspirin show the same sprea
 
 
 
-\subsection{Exercises}
-
-Suppose an intervention study looked at the effect of therapy on depression levels. A random sample of patients were measured before and after the therapy. Given the following equation, based on output of the statistical software package R. The dummy variable \textit{measure} was coded 0 for before therapy and 1 for after therapy.
-
-
-<<analysisprepostexample1, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
-set.seed(1234)
-patient <- rep (seq(1:100), 2)
-measure <- rep( c( 1,2), each=100)
-# time <- as.factor(time)
-depression1 <-  rnorm(100, 8, 1)
-depression2 <-  depression1 + rnorm(100, -2, 3)
-depression1 <- depression1 +  rnorm(100, 0, 3)
-depression = c(depression1, depression2)
-depression <- round(depression,0)
-data <- data.frame(patient, measure, depression) %>%  dplyr::arrange(patient)
-out  <- lme4::lmer(depression ~ measure + (1|patient) , data=data)
-# summary(out)
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(data, 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostdepression.sav', 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostdepression.sps',
-              package = c("SPSS"))
-@
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf}
-    \end{center}
-\end{figure}
-
-
-Look at the output below. You see information about random effects and you see information about fixed effects. 
-
-\begin{enumerate}
-\item What is the intercept of the model?\\
-\item  What is the slope coefficient for the measure variable?\\
-\item  What is the variance of the residuals? What is the standard deviation?\\
-\item  What is the variance of the individual differences among patients? What is the standard deviation?\\
-\item  Fill in the values in the linear mixed model below:
-
-\begin{eqnarray}
-depression_{ij} = \dots + patient_i + \dots \times measure + e_{ij} \\
-patient_i \sim N(0, \sigma_p^2 = \dots)\\
-e_{ij} \sim N(0, \sigma_e^2 = \dots)
-\end{eqnarray}
-
-
-\item  What can you say about the average depression level before therapy? \\
-\item  What can you say about the average depression level after therapy?\\
-\item  How much variance in depression level before therapy does this model predict? What is the standard deviation? \\
-\item  Between what values do depression levels before therapy in the middle 95\% of patients show?\\
-\item  How much variance in depression level after therapy does this model predict? What is the standard deviation? \\
-\item  Between what values do depression levels after therapy in the middle 95\% of patients show?\\
-\item  Does therapy help to alleviate depression in patients? You may use an approximation to construct a confidence interval.
-
-\item A researcher has two groups of patients: one group receives medicine and one group receives therapy. The null-hypothesis is that depression levels after medicine are as high as depression levels after therapy. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer.
-
-\item  A researcher studies one group of students: they first get lectures from teacher A and then they get lectures from teacher B. The null-hypothesis is that the average teacher evaluation for teacher A is the same as the average teacher evaluation for teacher B. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer. 
-
-
-\item  For a study to the effect of light on mood, we have data on 100 teachers They were asked to rate their mood on a cloudy day and asked to rate their mood on a sunny day. We have the variable \textbf{mood}, the dummy variable \textbf{sunny} and we want to include a random effect for \textbf{teacher} From the three syntaxes below, choose the one that is most suitable for your analysis and fill in the blanks.
-
-
-\begin{verbatim}
-MIXED ...  WITH ...
-  /FIXED=...
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(...) COVTYPE(VC).
-\end{verbatim}
-
-
-\begin{verbatim}
-UNIANOVA ... WITH ... 
-/ design = ...
-/ print = parameter.
-\end{verbatim}
-
-
-\begin{verbatim}
-UNIANOVA ... BY ... 
-/ design = ...
-/ print = parameter.
-\end{verbatim}
-
-
-\item  A researcher wants to know whether students in green classrooms (colour = 1) perform better than students in yellow classrooms (colour = 2). The following data were collected (showing only a part):
-
-<<analysisprepostexample2, fig.height=4, echo=FALSE, fig.align='center'>>=
-set.seed(1234)
-student <- rep (seq(1:100), 1)
-colour <- rep( c( 1,2), each=1)
-# time <- as.factor(time)
-performance <-  rnorm(100, 8, 1)
-
-performance <- round(performance,2)
-data <- data.frame(student, colour, performance) 
-data[1:10,] %>% kable()
-@
-
-Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
-
-\item  A researcher wants to know whether students in dark classrooms (brightness = 0) perform better than students in bright classrooms (brightness = 1). The following data were collected (showing only a part):
-
-
-<<analysisprepostexample3, fig.height=4, echo=FALSE, fig.align='center'>>=
-set.seed(0234)
-student <- rep (seq(1:100), each=2)
-brightness <- rep( c( 0,1), each=1)
-# time <- as.factor(time)
-performance <-  rnorm(100, 8, 1)
-
-performance <- round(performance,2)
-data <- data.frame(student, brightness, performance) %>%  dplyr::arrange(student)
-data[1:10,] %>% kable()
-@
-
-Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
-
-<<analysisprepostexample4, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
-set.seed(0123)
-employee <- rep (seq(1:100), 2)
-green <- rep( c( 0,1), each=100)
-sunny <- rbinom(200, 1, 0.5)
-# time <- as.factor(time)
-creativity1 <-  rnorm(100, 60, 5)
-creativity2 <-  creativity1 + rnorm(100, -5, 3)
-creativity1 <- creativity1 +  rnorm(100, 0, 3)
-creativity = c(creativity1, creativity2)
-creativity <- round(creativity,0)
-data <- data.frame(employee, green, sunny , creativity) %>%  dplyr::arrange(employee)
-source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
-write.foreign(data, 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostcreativity.sav', 
-              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostcreativity.sps',
-              package = c("SPSS"))
-@
-
-\item 
-A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is measured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
-
-\begin{verbatim}
-MIXED creativity  WITH green sunny
-  /FIXED= green sunny
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(employee) COVTYPE(VC).
-\end{verbatim}
-
-We get the following output: 
-
-\begin{figure}[h]
-    \begin{center}
-       \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf}
-    \end{center}
-\end{figure}
-
-Write a short paragraph describing these results and the conclusions in APA format.
-
-
-\end{enumerate}
-
-
-\subsubsection{Answers:}
-
-\begin{enumerate}
-
-\item  \Sexpr{summary(out)$coef[ 1,1 ]} \\
-\item  \Sexpr{summary(out)$coef[ 2,1 ]} \\
-\item  \Sexpr{8.31},\Sexpr{2.88} \\
-\item  \Sexpr{1.79},\Sexpr{1.34} \\
-
-\item 
-\begin{eqnarray}
-depression_{ij} = \Sexpr{summary(out)$coef[1,1]} + patient_i + (\Sexpr{summary(out)$coef[2,1]}) \times measure + e_{ij} \\
-patient_i \sim N(0, \sigma_p^2 = 1.79)\\
-e_{ij} \sim N(0, \sigma_e^2 = 8.31)
-\end{eqnarray}
-
-
-
-
-\item  \Sexpr{summary(out)$coef[1,1]}\\
-\item  \Sexpr{summary(out)$coef[ 1,1 ]} + \Sexpr{summary(out)$coef[ 2,1 ]}  = \Sexpr{summary(out)$coef[1,1]+summary(out)$coef[2,1] }\\
-% Ad 8: SD = 1.34, variance is 1.34^2= 1.80$. \\
-\item  1.79, 1.34 \\
-
-\item  $10.57 \pm 2 \times 1.34 = {7.89, 13.25}$\\
-
-\item  1.79, 1.34 \\
-
-\item  $(10.57 -2.28)  \pm  2 \times 1.34 = {5.61, 10.79 }   $\\
-
-\item  For the effect of therapy (the measure variable), we see a $b$-value of \Sexpr{summary(out)$coef[2,1]} with a standard error of \Sexpr{summary(out)$coef[2,2]}, so if we use the +/-2 rule to compute a 95\% confidence interval, we get $[ -2.28 - 2\times 0.41 , -2.28 + 2\times 0.41]  = [ -3.1 ,  -1.46]$. The 95\% interval does NOT contain the value 0 so we can reject the null-hypothesis that the effect of therapy is zero. Therefore, we conclude that therapy has an influence on depression. In this case we saw a decrease in depression levels after therapy.
-
-\item  Two groups of patients are studied, and for each patient we have only one measure. Because we only have one measure for each unit of observation we conduct an ordinary linear model.
-
-\item  One group of students is studied, and for each student we have two evaluations: one for teacher A and one for teacher B. Because we have more than one measure for each unit of observation, we have to use a linear mixed model. 
-
-\item 
-
-\begin{verbatim}
-MIXED mood  WITH sunny
-  /FIXED=sunny
-  /PRINT=DESCRIPTIVES  SOLUTION
-  /RANDOM=intercept | SUBJECT(teacher) COVTYPE(VC).
-\end{verbatim}
-
-\item  it seems as if each student was only measured once, there is no clustering, so we can use an ordinary linear model.
-
-\item  it seems as if each student was measured twice, in both dark and bright conditions, so we use a linear mixed model to account for clustering.
-
-\item  
-\begin{quotation}
-
-A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
-
-\end{quotation}
-
-\end{enumerate}
+% \subsection{Exercises}
+% 
+% Suppose an intervention study looked at the effect of therapy on depression levels. A random sample of patients were measured before and after the therapy. Given the following equation, based on output of the statistical software package R. The dummy variable \textit{measure} was coded 0 for before therapy and 1 for after therapy.
+% 
+% 
+% <<analysisprepostexample1, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+% set.seed(1234)
+% patient <- rep (seq(1:100), 2)
+% measure <- rep( c( 1,2), each=100)
+% # time <- as.factor(time)
+% depression1 <-  rnorm(100, 8, 1)
+% depression2 <-  depression1 + rnorm(100, -2, 3)
+% depression1 <- depression1 +  rnorm(100, 0, 3)
+% depression = c(depression1, depression2)
+% depression <- round(depression,0)
+% data <- data.frame(patient, measure, depression) %>%  dplyr::arrange(patient)
+% out  <- lme4::lmer(depression ~ measure + (1|patient) , data=data)
+% # summary(out)
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(data, 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostdepression.sav', 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostdepression.sps',
+%               package = c("SPSS"))
+% @
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf}
+%     \end{center}
+% \end{figure}
+% 
+% 
+% Look at the output below. You see information about random effects and you see information about fixed effects. 
+% 
+% \begin{enumerate}
+% \item What is the intercept of the model?\\
+% \item  What is the slope coefficient for the measure variable?\\
+% \item  What is the variance of the residuals? What is the standard deviation?\\
+% \item  What is the variance of the individual differences among patients? What is the standard deviation?\\
+% \item  Fill in the values in the linear mixed model below:
+% 
+% \begin{eqnarray}
+% depression_{ij} = \dots + patient_i + \dots \times measure + e_{ij} \\
+% patient_i \sim N(0, \sigma_p^2 = \dots)\\
+% e_{ij} \sim N(0, \sigma_e^2 = \dots)
+% \end{eqnarray}
+% 
+% 
+% \item  What can you say about the average depression level before therapy? \\
+% \item  What can you say about the average depression level after therapy?\\
+% \item  How much variance in depression level before therapy does this model predict? What is the standard deviation? \\
+% \item  Between what values do depression levels before therapy in the middle 95\% of patients show?\\
+% \item  How much variance in depression level after therapy does this model predict? What is the standard deviation? \\
+% \item  Between what values do depression levels after therapy in the middle 95\% of patients show?\\
+% \item  Does therapy help to alleviate depression in patients? You may use an approximation to construct a confidence interval.
+% 
+% \item A researcher has two groups of patients: one group receives medicine and one group receives therapy. The null-hypothesis is that depression levels after medicine are as high as depression levels after therapy. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer.
+% 
+% \item  A researcher studies one group of students: they first get lectures from teacher A and then they get lectures from teacher B. The null-hypothesis is that the average teacher evaluation for teacher A is the same as the average teacher evaluation for teacher B. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer. 
+% 
+% 
+% \item  For a study to the effect of light on mood, we have data on 100 teachers They were asked to rate their mood on a cloudy day and asked to rate their mood on a sunny day. We have the variable \textbf{mood}, the dummy variable \textbf{sunny} and we want to include a random effect for \textbf{teacher} From the three syntaxes below, choose the one that is most suitable for your analysis and fill in the blanks.
+% 
+% 
+% \begin{verbatim}
+% MIXED ...  WITH ...
+%   /FIXED=...
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(...) COVTYPE(VC).
+% \end{verbatim}
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ... WITH ... 
+% / design = ...
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ... BY ... 
+% / design = ...
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \item  A researcher wants to know whether students in green classrooms (colour = 1) perform better than students in yellow classrooms (colour = 2). The following data were collected (showing only a part):
+% 
+% <<analysisprepostexample2, fig.height=4, echo=FALSE, fig.align='center'>>=
+% set.seed(1234)
+% student <- rep (seq(1:100), 1)
+% colour <- rep( c( 1,2), each=1)
+% # time <- as.factor(time)
+% performance <-  rnorm(100, 8, 1)
+% 
+% performance <- round(performance,2)
+% data <- data.frame(student, colour, performance) 
+% data[1:10,] %>% kable()
+% @
+% 
+% Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+% 
+% \item  A researcher wants to know whether students in dark classrooms (brightness = 0) perform better than students in bright classrooms (brightness = 1). The following data were collected (showing only a part):
+% 
+% 
+% <<analysisprepostexample3, fig.height=4, echo=FALSE, fig.align='center'>>=
+% set.seed(0234)
+% student <- rep (seq(1:100), each=2)
+% brightness <- rep( c( 0,1), each=1)
+% # time <- as.factor(time)
+% performance <-  rnorm(100, 8, 1)
+% 
+% performance <- round(performance,2)
+% data <- data.frame(student, brightness, performance) %>%  dplyr::arrange(student)
+% data[1:10,] %>% kable()
+% @
+% 
+% Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+% 
+% <<analysisprepostexample4, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+% set.seed(0123)
+% employee <- rep (seq(1:100), 2)
+% green <- rep( c( 0,1), each=100)
+% sunny <- rbinom(200, 1, 0.5)
+% # time <- as.factor(time)
+% creativity1 <-  rnorm(100, 60, 5)
+% creativity2 <-  creativity1 + rnorm(100, -5, 3)
+% creativity1 <- creativity1 +  rnorm(100, 0, 3)
+% creativity = c(creativity1, creativity2)
+% creativity <- round(creativity,0)
+% data <- data.frame(employee, green, sunny , creativity) %>%  dplyr::arrange(employee)
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(data, 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostcreativity.sav', 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostcreativity.sps',
+%               package = c("SPSS"))
+% @
+% 
+% \item 
+% A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is measured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
+% 
+% \begin{verbatim}
+% MIXED creativity  WITH green sunny
+%   /FIXED= green sunny
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(employee) COVTYPE(VC).
+% \end{verbatim}
+% 
+% We get the following output: 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf}
+%     \end{center}
+% \end{figure}
+% 
+% Write a short paragraph describing these results and the conclusions in APA format.
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsubsection{Answers:}
+% 
+% \begin{enumerate}
+% 
+% \item  \Sexpr{summary(out)$coef[ 1,1 ]} \\
+% \item  \Sexpr{summary(out)$coef[ 2,1 ]} \\
+% \item  \Sexpr{8.31},\Sexpr{2.88} \\
+% \item  \Sexpr{1.79},\Sexpr{1.34} \\
+% 
+% \item 
+% \begin{eqnarray}
+% depression_{ij} = \Sexpr{summary(out)$coef[1,1]} + patient_i + (\Sexpr{summary(out)$coef[2,1]}) \times measure + e_{ij} \\
+% patient_i \sim N(0, \sigma_p^2 = 1.79)\\
+% e_{ij} \sim N(0, \sigma_e^2 = 8.31)
+% \end{eqnarray}
+% 
+% 
+% 
+% 
+% \item  \Sexpr{summary(out)$coef[1,1]}\\
+% \item  \Sexpr{summary(out)$coef[ 1,1 ]} + \Sexpr{summary(out)$coef[ 2,1 ]}  = \Sexpr{summary(out)$coef[1,1]+summary(out)$coef[2,1] }\\
+% % Ad 8: SD = 1.34, variance is 1.34^2= 1.80$. \\
+% \item  1.78, 1.33 \\
+% 
+% \item  $10.57 \pm 2 \times 1.34 = {7.89, 13.25}$\\
+% 
+% \item  1.78, 1.33 \\
+% 
+% \item  $(10.57 -2.28)  \pm  2 \times 1.34 = {5.61, 10.79 }   $\\
+% 
+% \item  For the effect of therapy (the measure variable), we see a $b$-value of \Sexpr{summary(out)$coef[2,1]} with a standard error of \Sexpr{summary(out)$coef[2,2]}, so if we use the +/-2 rule to compute a 95\% confidence interval, we get $[ -2.28 - 2\times 0.41 , -2.28 + 2\times 0.41]  = [ -3.1 ,  -1.46]$. The 95\% interval does NOT contain the value 0 so we can reject the null-hypothesis that the effect of therapy is zero. Therefore, we conclude that therapy has an influence on depression. In this case we saw a decrease in depression levels after therapy.
+% 
+% \item  Two groups of patients are studied, and for each patient we have only one measure. Because we only have one measure for each unit of observation we conduct an ordinary linear model.
+% 
+% \item  One group of students is studied, and for each student we have two evaluations: one for teacher A and one for teacher B. Because we have more than one measure for each unit of observation, we have to use a linear mixed model. 
+% 
+% \item 
+% 
+% \begin{verbatim}
+% MIXED mood  WITH sunny
+%   /FIXED=sunny
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(teacher) COVTYPE(VC).
+% \end{verbatim}
+% 
+% \item  it seems as if each student was only measured once, there is no clustering, so we can use an ordinary linear model.
+% 
+% \item  it seems as if each student was measured twice, in both dark and bright conditions, so we use a linear mixed model to account for clustering.
+% 
+% \item  
+% \begin{quotation}
+% 
+% A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
+% 
+% \end{quotation}
+% 
+% \end{enumerate}
 

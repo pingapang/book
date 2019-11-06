@@ -78,7 +78,7 @@ ggplot(data.frame(resid) ,aes(resid)) + geom_histogram() + xlab("residual")
 
 Everytime we see a distribution of residuals that is either very skew, or has very few different values, we should consider a nonparametric analysis. Note that the shape of the distribution of the residuals is directly related to what scale values we choose for the ordinal categories. By changing the values we change the regression line, and that directly affects the relative sizes of the residuals. 
 
-First, we will discuss a nonparametric alternative for two numeric variables. We will start with Spearman's rho, or Spearmams rank-order correlation coefficient $r_s$. Next we will discuss an alternative to $r_s$, Kendall's $T$. After that we will discuss the combination of numeric and categorical variables, when comparing groups.
+First, we will discuss a nonparametric alternative for two numeric variables. We will start with Spearman's rho, or Spearman's rank-order correlation coefficient $r_s$. Next we will discuss an alternative to $r_s$, Kendall's $T$. After that we will discuss the combination of numeric and categorical variables, when comparing groups.
 
 \section{Spearman's rho}
 
@@ -194,13 +194,13 @@ disagreements = (dif + 45) / 2
 agreements = 45 - disagreements
  @
 
-From this table we see that the history teacher disagrees with the geography teacher that student 8 is brighter than student 10. She also disagrees with her colleague that student 1 is brighter than student 2. If we do this for all possible pairs of students, we can count the number of times that they agree and we can count the number of times they disagree. The total number of possible pairs is equal to $10 \choose 2 $ $ = 90/2= 45$. This is a rather tedious job to do, but it can be made simpler if we reshuffle the data a bit. We put the students in a new order, such that the brightest student in geography comes first, and the dullest last. This also changes the order in the variable history. We then get the data in Table \ref{tab:nonpar_7}. If we look at the column with the ranks for history, we can count the number of times a higher rank precedes a lower rank. This happens four times. Since the students are ordered according to the ranking of the geography teacher, any higher rank that precedes a lower rank is necessarily a disagreement between the two teachers. Thus, we find that the two teachers disagree \Sexpr{disagreements} times and therefore agree $45-8=37$ times. Then we can compute Kendall's $T$ as follows:
+From this table we see that the history teacher disagrees with the geography teacher that student 8 is brighter than student 10. She also disagrees with her colleague that student 1 is brighter than student 2. If we do this for all possible pairs of students, we can count the number of times that they agree and we can count the number of times they disagree. The total number of possible pairs is equal to $10 \choose 2 $ $ = 90/2= 45$. This is a rather tedious job to do, but it can be made simpler if we reshuffle the data a bit. We put the students in a new order, such that the brightest student in geography comes first, and the dullest last. This also changes the order in the variable history. We then get the data in Table \ref{tab:nonpar_7}. If we look at the column with the ranks for history, we can count the number of times a higher rank precedes a lower rank. This happens three times. Since the students are ordered according to the ranking of the geography teacher, any higher rank that precedes a lower rank is necessarily a disagreement between the two teachers. Thus, we find that the two teachers disagree 3 times and therefore agree $45-3=42$ times. Then we can compute Kendall's $T$ as follows:
  
   \begin{eqnarray}
-  T= \frac { agreements - disagreements }{total number of pairs} = \frac{\Sexpr{agreements}-\Sexpr{agreements} }{45} = \Sexpr{round(K,2)}
+  T= \frac { agreements - disagreements }{total number of pairs} = \frac{42} {45} = \Sexpr{round(K,2)}
   \end{eqnarray}
 
-This $T$ statistic varies between -1 and 1 and can therefore be seen as a nonparametric analog of a Pearson correlation. Here, the teachers more often agree than disagree, and therefore the correlation is positive. A negative correlation means that the teachers more often disagree than agree on the relative brightness of their students. 
+This $T$-statistic varies between -1 and 1 and can therefore be seen as a nonparametric analog of a Pearson correlation. Here, the teachers more often agree than disagree, and therefore the correlation is positive. A negative correlation means that the teachers more often disagree than agree on the relative brightness of their students. 
 The computations are quite tedious for larger sample sizes so we're very lucky that SPSS can do this job for us, with the following syntax:
 
 
