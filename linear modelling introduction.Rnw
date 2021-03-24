@@ -1,0 +1,1666 @@
+\chapter{Linear modelling: introduction}\label{chap:simple}
+
+
+
+% 110.	Linear equations (and models) 
+% •	Students are able to identify dependent and independent variables in a causal or predictive statement implied in a research hypothesis.
+% •	Students are able to interpret both negative and positive constants (intercepts) and both negative and positive regression slope coefficients for numeric variables.  
+% •	Students are able to interpret both negative and positive constants (intercepts) and both negative and positive regression slope coefficients for numeric variables in a visual/graphical way.
+
+
+\section{Dependent and independent variables}
+
+In the previous two chapters we discussed single variables. In Chapter \ref{chap:mean} we discussed a numeric variable that had a certain mean, for instance we talked about the height of elephants. In Chapter \ref{chap:prop} we talked about a dichotomous categorical variable: elephants being taller than 3.40 m or not, with a certain proportion of tall elephants. This chapter deals with the relationship between two variables, more specifically the relationship between two numeric variables. 
+
+In Chapter \ref{chap:intro} we discussed the distinction between numeric, ordinal and categorical variables. In linear modelling, there is also another important distinction between variables: \textit{dependent} and \textit{independent} variables. Dependency of a variable is not really a property of a variable but it is the result of the data analyst's choice. Let's first think about relationships between two variables. Determining whether a variable is to be treated as independent or not, is often either a case of logic or a case of theory. When studying the relationship between the height of a mother and that of her child, the more logical it would be to see the height of the child \textit{as dependent} on the height of the mother. This is because we assume that the genes are transferred from the mother to the child. The mother comes first, and the height of the child is partly the \textit{result} of the mother's genes that were transmitted during fertilisation. The height of a child depends in part on the height of the mother. The variable that measures the result is usually taken as the \textit{dependent} variable. The theoretical cause or antecedent is usually taken as the \textit{independent} variable. 
+
+The dependent variable is often called the \textit{response variable}. An independent variable is often called a \textit{predictor variable} or simply \textit{predictor}. Independent variables are also often called \textit{explanatory} variables. We can explain a very tall child by the genes that it got from its very tall mother. The height of a child is then the response variable, and the height of the mother is the explanatory variable. We can also predict the adult height of a child from the height of the mother.
+
+The dependent variable is usually the most central variable. It is the variable that we'd like to understand better, or perhaps predict. The independent variable is usually an explanatory variable: it explains why some people have high values for the dependent variable and other people have low values. For instance, we'd like to know why some people are healthier than others. Health may then be our dependent variable. An explanatory variable might be age (older people tend to be less healthy), or perhaps occupation (being a dive instructor induces more health problems than being a university professor). 
+
+Sometimes we're interested to see whether we can predict a variable. For example, we might want to predict longevity. Age at death would then be our dependent variable and our independent (predictor) variables might concern lifestyle and genetic make-up. 
+
+Thus, we often see four types of relations:
+\begin{itemize}
+\item Variable $A$ affects/influences another variable $B$.
+\item Variable $A$ causes variable $B$.
+\item Variable $A$ explains variable $B$.
+\item Variable $A$ predicts variable $B$.
+\end{itemize}
+
+In all these four cases, variable $A$ is the independent variable and variable $B$ is the dependent variable.
+
+Note that in general, dependent variables can be either numeric, ordinal, or categorical. Also independent variables can be numeric, ordinal, or categorical. 
+
+% \subsection{Exercises}
+% 
+% Below, variables are printed in \textbf{bold}. For each research statement, identify which variable is the dependent variable, and which variable is the independent variable.
+% 
+% \begin{enumerate}
+% 
+% \item The effect of \textbf{income} on \textbf{health}
+% \item \textbf{Stock value} is affected by \textbf{inflation}
+% \item \textbf{Size} is influenced by \textbf{weight}
+% \item \textbf{Shoe size} is predicted by \textbf{sex}
+% \item The less you \textbf{drink} the more \textbf{thirsty} you become 
+% \item The more \textbf{calories} you eat, the more you \textbf{weigh}
+% \item \textbf{Weight} is affected by \textbf{food intake} 
+% \item \textbf{Weight} is affected by \textbf{exercise} 
+% \item \textbf{Food intake} is predicted by \textbf{time of year}
+% \item There is an effect of \textbf{exercise} on \textbf{heart rate} 
+% \item \textbf{Inflation} leads to higher \textbf{wages} 
+% \item \textbf{Unprotected sex} leads to \textbf{pregnancy}
+% \item \textbf{HIV-infection} is caused by \textbf{unprotected sex}
+% \item The effect of \textbf{alcohol intake} on \textbf{driving performance}
+% \item \textbf{Sunshine} causes \textbf{growth}
+% 
+% 
+% \end{enumerate}
+% 
+% Answers:
+% 
+% \begin{enumerate}
+% 
+% \item \textbf{income} independent, \textbf{health} dependent.
+% \item \textbf{Stock value} dependent, \textbf{inflation} independent
+% \item \textbf{Size} dependent, \textbf{weight} independent
+% \item \textbf{Shoe size} dependent, \textbf{sex} independent
+% \item \textbf{drink} independent, \textbf{thirsty} dependent
+% \item \textbf{calories} independent, \textbf{weigh} dependent
+% \item \textbf{Weight} dependent, \textbf{food intake} independent
+% \item \textbf{Weight} dependent, \textbf{exercise} independent
+% \item \textbf{Food intake} dependent, \textbf{time of year} independent
+% \item \textbf{exercise} independent, \textbf{heart rate} dependent
+% \item \textbf{Inflation} independent, \textbf{wages} dependent
+% \item \textbf{Unprotected sex} independent, \textbf{pregnancy} dependent
+% \item \textbf{HIV-infection} dependent, \textbf{unprotected sex} independent
+% \item \textbf{alcohol intake} independent, \textbf{driving performance} dependent
+% \item \textbf{Sunshine} independent, \textbf{growth} dependent
+% 
+% 
+% \end{enumerate}
+
+
+
+\section{Linear equations}\label{sec:equations}
+
+
+<<lm_1,fig.height=4, warning = F, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept 0 and slope 2.'>>=
+X <- seq(-1, 5, 0.01)
+Y <- 2 * X
+tibble(X, Y) %>% 
+  ggplot(aes(X, Y)) +
+  geom_point() +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = seq(-1, 5, 1), minor_breaks = seq(-1, 5, 1)) +
+  scale_y_continuous(breaks = seq(-2, 6, 1), minor_breaks = seq(-2, 6, 1), limits = c(-2, 6)) +
+  # theme(plot.background = element_rect(fill = "grey85")) +
+  theme_minimal()
+@
+
+
+From secondary education you might remember linear equations. Suppose you have two quantities, $X$ and $Y$, and there is a straight line that describes best their relationship. An example is given in Figure \ref{fig:lm_1}. We see that for every value of $X$, there is only one value of $Y$. Moreover, the larger the value of $X$, the larger the value of $Y$. If we look more closely, we see that for each increase of 1 unit in $X$, there is an increase of 2 units in $Y$. For instance, if $X=1$, we see a $Y$-value of 2, and if $X=2$ we see a $Y$-value of 4. So if we move from $X=1$ to $X=2$ (a step of one on the $X$-axis), we move from 2 to 4 on the $Y$-axis, which is an increase of 2 units. This increase of 2 units for every step of 1 unit in $X$ is the same for all values of $X$ and $Y$. For instance, if we move from 2 to 3 on the $X$-axis, we go from 4 to 6 on the $Y$-axis: an increase of again 2 units. This constant increase is typical for linear relationships. The increase in $Y$ for every unit increase in $X$ is called the \textit{slope} of a straight line. In this figure, the slope is equal to 2.
+
+The slope is one important characteristic of a straight line. The second important property of a straight line is the \textit{intercept}. The intercept is the value of $Y$, when $X=0$. In Figure \ref{fig:lm_1} we see that when $X=0$, $Y$ is 0, too. Therefore the intercept of this straight line is 0.
+
+With the intercept and the slope, we completely describe this straight line: no other information is necessary. Such a straight line describes a \textit{linear relationship} between $X$ and $Y$. The linear relationship can be formalised using a linear equation. The general form of a linear equation for two variables $X$ and $Y$ is the following:
+
+\begin{equation}
+Y = \textrm{intercept} + \textrm{slope} \times X
+\end{equation}
+
+
+For the linear relationship between $X$ and $Y$ in Figure \ref{fig:lm_1} the linear equation is therefore
+
+\begin{equation}
+Y = 0 + 2 X
+\end{equation}
+
+which can be simplified to
+
+\begin{equation}
+Y =  2 X
+\end{equation}
+
+
+With this equation, we can find the $Y$-value for all values of $X$. For instance, if we want to know the $Y$-value for $X=3.14$, then using the linear equation we know that $Y = 2 \times 3.14 = 6.28$. If we want to know the $Y$-value for $X=49876.6$, we use the equation to obtain $Y=2\times 49876.6 = 99753.2$. In short, the linear equation is very helpful to quickly say what the $Y$-value is on the basis of the $X$-value, even if we don't have a graph of the relationship or if the graph does not extent to certain $X$-values.
+
+
+In the linear equation, we call $Y$ the \textit{dependent} variable, and $X$ the \textit{independent} variable. This is because the equation helps us determine or predict our value of $Y$ on the basis of what we know about the value of $X$. When we graph the line that the equation represents, such as in Figure \ref{fig:lm_1}, the common way is to put the dependent variable on the vertical axis, and the independent variable on the horizontal axis. 
+
+
+Figure \ref{fig:lm_2} shows a different linear relationship between $X$ and $Y$. First we look at the slope: we see that for every unit increase in $X$ (from 1 to 2, or from 4 to 5) we see an increase of 0.5 in $Y$. Therefore the slope is equal to 0.5. Second, we look at the intercept: we see that when $X=0$, $Y$ has the value -2. So the intercept is -2. Again, we can describe the linear relationship by a linear equation, which is now:
+
+\begin{equation}
+Y = -2 + 0.5 X
+\end{equation}
+
+
+
+<<lm_2,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept -2 and slope 0.5.'>>=
+X <- seq(-1, 6, 0.01)
+Y <- -2 + 0.5*X
+tibble(X, Y) %>% 
+  ggplot(aes(X, Y)) + 
+  geom_point() +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0) + 
+  scale_x_continuous(breaks=seq(-1, 6, 1), minor_breaks =seq(-1, 6, 1)) +
+  scale_y_continuous(breaks=seq(-2, 10, 1), minor_breaks =seq(-2, 10, 1)) +
+  theme(plot.background = element_rect(fill = "grey85")) +
+  theme_minimal()
+@
+
+
+Linear relationships can also be negative, see Figure \ref{fig:lm_3}. There, we see that if we move from 0 to 1, we see a \textit{decrease} of 2 in $Y$ (we move from $Y = -2$ to $Y = -4$), so $-2$ is our slope value. Because the slope is negative, we call the relationship between the two variables negative. Further, when $X=0$, we see a $Y$-value of -2, and that is our intercept. The linear equation is therefore:
+
+\begin{equation}
+Y = -2 - 2 X
+\end{equation}
+
+
+<<lm_3,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with intercept -2 and slope -2.'>>=
+X <- seq(-1, 5, 0.01)
+Y <- -2 - 2*X
+tibble(X, Y) %>% 
+  ggplot(aes(X, Y)) + 
+  geom_point() +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0) + 
+  scale_x_continuous(breaks = seq(-1, 10, 1), minor_breaks = seq(-1, 10, 1)) +
+  scale_y_continuous(breaks = seq(-60, 0, 1), minor_breaks = seq(-60, 0, 1)) +
+  # theme(plot.background = element_rect(fill = "grey85")) +
+  theme_minimal()
+@
+
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{dependent variable}: the variable that we want to describe, understand, predict or explain. Usually denoted as $Y$.
+
+\item \textbf{independent variable}: the variable that we use in order to understand, predict or explain something. Usually denoted as $X$. 
+
+\item \textbf{linear relationship}: two variables are said to be linearly related if their relationship can be described by a linear equation with an intercept and a slope.
+
+\item \textbf{intercept}: the value for $Y$ (dependent variable) if $X=0$ (independent variable).
+
+\item \textbf{slope}: the change in $Y$ when we increase $X$ by 1 unit.
+
+
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% \item
+% For Figures \ref{fig:lm_4}, \ref{fig:lm_5} and \ref{fig:lm_6}, give the linear equations for the relationship between $x$ and $y$.
+% 
+% 
+% <<lm_4,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line example.'>>=
+% x = seq(-1,10,0.01)
+% y = 3 - 1*x
+% tibble(x, y) %>% ggplot(aes(x,y)) + geom_point()+
+%         geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
+% scale_y_continuous(breaks=seq(-60,20,1), minor_breaks =seq(-60,20,1))
+% @
+% 
+% <<lm_5,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line example.'>>=
+% x = seq(-1,10,0.01)
+% y = 1.5 - 0.5*x
+% tibble(x, y) %>% ggplot(aes(x,y)) + geom_point()+
+%         geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
+% scale_y_continuous(breaks=seq(-60,20,1), minor_breaks =seq(-60,20,1))
+% @
+% 
+% <<lm_6,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line example.'>>=
+% x = seq(-1,10,0.01)
+% y = -1.5 + 0.3333333333*x
+% tibble(x, y) %>% ggplot(aes(x,y)) + geom_point()+
+%         geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,10,1), minor_breaks =seq(-1,10,1) ) +
+% scale_y_continuous(breaks=seq(-60,20,1), minor_breaks =seq(-60,20,1))
+% @
+% \item
+% Try to sketch the straight line for the equation $y=1 - 2x$
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% The equations are
+% \begin{enumerate}
+% \item 
+% \begin{equation}
+% y = 3 - 1 x
+% \end{equation}
+% \item
+% \begin{equation}
+% y = 1.5 - 0.5 x
+% \end{equation}
+% \item
+% \begin{equation}
+% y = -2 + 0.33 x
+% \end{equation}
+% \item
+% The straight line for $y=1 - 2x$ is presented in Figure \ref{fig:lm_7}.
+% 
+% <<lm_7,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Straight line with based on y=1-2x.'>>=
+% x = seq(-1,5,0.01)
+% y = 1 -2*x
+% tibble(x, y) %>% ggplot(aes(x,y)) + geom_point()+
+%         geom_vline(xintercept=0)+ geom_hline(yintercept = 0) + scale_x_continuous(breaks=seq(-1,5,1), minor_breaks =seq(-1,5,1) ) +
+% scale_y_continuous(breaks=seq(-10,20,1), minor_breaks =seq(-10,20,1))
+% @
+% \end{enumerate}
+
+\section{Linear regression}
+
+In the previous section, we saw perfect linear relationships between quantities $X$ and $Y$: for each $X$-value there was only one $Y$-value, and the values are all described by a straight line. Such relationships we hope to see in physics, but mostly see only in mathematics.
+
+In social sciences we hardly ever see such perfectly linear relationships between quantities (variables). For instance, let us plot the relationship between yearly income and the amount of Euros spent on holidays. Yearly income is measured in thousands of Euros (k Euros), and money yearly spent on holidays is measured in Euros. Let us regard money spent on holidays as our dependent variable and yearly income as our independent variable (we assume money needs to be saved before it can be spent). We therefore plot yearly income on the $X$-axis (horizontal axis) and holiday spendings on the $Y$-axis (vertical axis). Let's imagine we find the data from 100 women between 30 and 40 years of age that are plotted in Figure \ref{fig:lm_8}.
+
+
+<<lm_8, fig.height = 4, echo = FALSE, fig.align = 'center', fig.cap = 'Data on holiday spending.'>>=
+set.seed(12346)
+X <- runif(100, 10, 100)
+X[X > 50 & X < 99] <- runif(length(X[X > 50 & X < 99]), 10, 70)
+Y <- 100 + 10 * X + rnorm(100, 0, 15)
+plot <- tibble(X, Y) %>% 
+  ggplot(aes(X, Y)) + 
+  geom_point() +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0) + 
+  scale_x_continuous(breaks = seq(0, 100, 10), minor_breaks = seq(0, 100, 10)) +
+  scale_y_continuous(breaks = seq(0, 20000, 100), minor_breaks = seq(0, 20000, 100)) + 
+  xlab("Yearly income in k Euros") + 
+  ylab("Euros yearly spent on holidays") +
+  theme_minimal()
+plot
+@
+
+In the scatter plot, we see that one woman has a yearly income of 100,000 Euros, and that she spends almost 1100 Euros per year on holidays. We also see a couple of women who earn less, between 10,000 and 20,000 Euros a year, and they spend between 200 and 300 Euros per year on holiday.
+
+The data obviously do not form a straight line. However, we tend to think that the relationship between yearly income and holiday spending is more or less linear: there is a general linear trend such that for every increase of 10,000 Euros in yearly income, there is an increase of about 100 Euros.
+
+Let's plot such a straight line that represents that general trend, with a slope of 100 straight through the data points. The result is seen in Figure \ref{fig:lm_9}. We see that the line with a slope of 100 is a nice approximation of the relationship between yearly income and holiday spendings. We also see that the intercept of the line is 100.
+
+<<lm_9,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on holiday spending with an added straight line.'>>=
+plot +
+  geom_abline(intercept = 100, slope = 10, col = "blue") +
+  geom_segment(aes(x = X[order(X)][99] - 25, y = 900, xend = 67, yend = 824),
+               arrow = arrow(length = unit(0.5, "cm"))) +
+  geom_label(x = X[order(X)][99] - 25, y = 900, label = "Sandra Schmidt") +
+  theme_minimal()
+options(scipen = 999)
+@
+
+Given the intercept and slope, the linear equation for the straight line approximating the relationship is
+
+\begin{equation}
+\texttt{HolidaySpendings} = 100 + 100 \times \texttt{YearlyIncome}
+\end{equation}
+
+In summary, data on two variables may not show a perfect linear relationship, but in many cases, a perfect straight line can be a very reasonable approximation of the data. Another word for a reasonable approximation of the data is a \textit{prediction model}. Finding such a straight line to approximate the data points is called \textit{linear regression}. In this chapter we will see what method we can use to find a straight line. In linear regression we describe the behaviour of the dependent variable (the $Y$-variable on the vertical axis) on the basis of the independent variable (the $X$-value on the horizontal axis) using a linear equation. We say that \textit{we regress variable $Y$ on variable $X$}.
+
+
+
+
+\section{Residuals}
+
+Even though a straight line can be a good approximation of a data set consisting of two variables, it is hardly ever perfect: there are always discrepancies between what the straight line describes and what the data actually tell us.
+
+For instance, in Figure \ref{fig:lm_9}, we see a woman, Sandra Schmidt, who makes \Sexpr{round(X[order(X)][99],0)} k Euros a year and who spends \Sexpr{round(Y[order(X)][99],0)} Euros on holidays. According to the linear equation that describes the straight line, a woman that earns \Sexpr{round(X[order(X)][99],0)} k Euros a year would spend $100 + 100 \times \Sexpr{round(X[order(X)][99],0)}= \Sexpr{round(100 + 10*X[order(X)][99],0)}$ Euros on holidays. The discrepancy between the actual amount spent and the amount prescribed by the linear equation equals $\Sexpr{round(Y[order(X)][99],0)}-\Sexpr{round(100 + 10*X[order(X)][99],0)}=\Sexpr{round(Y[order(X)][99],0)-round(100 + 10*X[order(X)][99],0)}$ Euros. This difference is rather small and the same holds for all the other women in this data set. Such discrepancies between the actual amount spent and the amount as prescribed or predicted by the straight line are called \textit{residuals} or \textit{errors}. The residual (or error) is the difference between a certain data point (the \textit{actual} value) and what the linear equation predicts.
+
+
+% Using the linear equation, we could predict holiday spendings even for yearly incomes that are not in the data set. For instance, in this data set there is no woman with an income of 80,000, but still we can use the linear equation with a prediction that such a woman would probably spend around $100+100\times 80= 8100$ Euros.
+
+
+Let us look at another fictitious data set where the residuals (errors) are a bit larger. Figure \ref{fig:lm_10} shows the relationship between variables $X$ and $Y$. The dots are the actual data points and the blue straight line is an approximation of the actual relationship. The residuals are also visualised: sometimes the observed $Y$-value is greater than the predicted $Y$-value (dots above the line) and sometimes the observed $Y$-value is smaller than the predicted $Y$-value (dots below the line). If we denote the $i$th predicted $Y$-value (predicted by the blue line) as $\widehat{Y_i}$ (pronounced as 'y-hat-i'), then we can define the residual or error as the discrepancy between the observed $Y_i$ and the predicted $\widehat{Y_i}$:
+
+\begin{equation}
+e_i = Y_i - \widehat{Y_i}
+\end{equation}
+
+where $e_i$ stands for the error (residual) for the $i$th data point .
+
+
+<<lm_10,fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='Data on variables $X$ and $Y$ with an added straight line.'>>=
+set.seed(111)
+X <- runif(200, 0, 100)
+X[X > 97 & X < 99] <- runif(length(X[X > 97 & X < 99]), 10, 70)
+Y <- 500 + 20 * X + rnorm(200, 0, 120)
+
+out <- lm(Y ~ X)
+predicted <- predict(out)
+residuals <- residuals(out)
+
+plot <- tibble(X, Y) %>%
+  ggplot(aes(X, Y)) +
+  geom_point() +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = seq(0, 100, 10), 
+                     minor_breaks = seq(0, 100, 10)) +
+  scale_y_continuous(breaks = seq(0, 20000, 500), 
+                     minor_breaks = seq(0, 20000, 500)) +
+  geom_segment(aes(xend = X, yend = predicted)) 
+plot + 
+  geom_smooth(se = F, method = "lm")+
+  theme_minimal()
+@
+
+If we compute residual $e_i$ for all $Y$-values in the data set, we can plot them using a histogram, as displayed in Figure \ref{fig:lm_11}. We see that the residuals are on average 0, and that the histogram resembles the shape of a normal distribution. We see that most of the residuals are around 0, and that means that most of the values $Y$-values are close to the line (where the predicted values are). We also see some large residuals but that there are not so many of these. Observing a more or less normal distribution of residuals happens often in research. Here, the residuals show a normal distribution with mean 0 and variance of \Sexpr{round(var(residuals),0)} (i.e., a standard deviation of \Sexpr{round(sqrt(round(var(residuals),0)),0)}).
+
+
+<<lm_11, fig.height=4, warning = F, echo=FALSE, fig.align='center', fig.cap='Histogram of the residuals (errors).'>>=
+data.frame(residuals) %>% 
+  ggplot(aes(x = residuals)) +
+  geom_histogram(bins = 15) +
+  scale_x_continuous(breaks = seq(-400, 400, 50), limits = c(-410, 410)) 
+@
+
+
+\section{Least squares regression lines}\label{sec:least_squares}
+
+
+You may ask yourself how to draw a straight line through the data points: How do you decide on the exact slope and the exact intercept? And what if you don't want to draw the data points and the straight line by hand? That can be quite cumbersome if you have more than 2000 data points to plot!
+
+First, because we are lazy, we always use a computer to draw the data points and the line, that we call a \textit{regression line}. Second, since we could draw many different straight lines through a scatter of points, we need a criterion to determine a nice combination of intercept and slope. With such a criterion we can then let the computer determine the regression line with its equation for us.
+
+The criterion that we use in this chapter is called Least Squares, or Ordinary Least Squares (OLS). To explain the Least Squares principle, look again at Figure \ref{fig:lm_10} where we see both small and large residuals. About half of them are positive (above the blue line) and half of them are negative (below the blue line).
+
+The most reasonable idea is to draw a straight line that is more or less in the middle of the $Y$-values, in other words, with about half of the residuals positive and about half of them negative. Or perhaps we could say that on average, the residuals should be 0. A third way of saying the same thing is that the sum of the residuals should be equal to 0.
+
+However, the criterion that all residuals should sum to 0 is not sufficient. In Figure \ref{fig:lm_12} we see a straight line with a slope of 0 where the residuals sum to 0. However, this regression line does not make intuitive sense: it does not describe the structure in the data very well. Moreover, we see that the residuals are generally much larger than in Figure \ref{fig:lm_10}.
+
+<<lm_12,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Data on variables $X$ and $Y$ with an added straight line. The sum of the residuals equals 0.'>>=
+plot +
+  geom_segment(aes(xend = X, yend = mean(Y))) +
+  geom_abline(intercept = mean(Y), slope = 0, col = "blue")+
+  theme_minimal()
+@
+
+We therefore need a second criterion to find a nice straight line. We want the residuals to sum to 0, but also want the residuals to be as small as possible: the discrepancies between what the linear equation predicts (the $\widehat{Y}$-values) and the actual $Y$-values should be as small as possible.
+
+So now we have two criteria: we want the sum of the residuals to be 0 (about half of them negative, half of them positive), and we want the residuals to be as small as possible. We can achieve both of these when we use as our criterion the idea that the sum of the \textit{squared} residuals be as small as possible. Recall from Chapter \ref{chap:intro} that the sum of the squared deviations from the mean is closely related to the variance. So if the sum of the squared residuals is as small as possible, we know that the \textit{variance} of the residuals is as small as possible. Thus, as our criterion we can use the regression line for which the sum of the squared differences between predicted and observed $Y$-values is as small as possible. 
+
+Figure \ref{fig:lm_13} shows three different regression lines for the same data set. Figure \ref{fig:lm_14} shows the respective distributions of the residuals. For the first line, we see that the residuals sum to 0, for the residuals are on average 0 (the red vertical line). However, we see quite large residuals. The residuals for the second line are smaller: we see very small positive residuals, but the negative residuals are still quite large. We also see that the residuals do not sum to 0. For the third line, we see both criteria optimised: the sum of the residuals is zero and the residuals are all very small. We see that for regression line 3, the sum of squared residuals is at its minimum value. It can also be mathematically shown that if we minimise the sum of squared differences between the predicted and observed $Y$-values, they automatically show a mean of 0, satisfying the first criterion.
+
+
+
+<<lm_13,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Three times the same data set, but with different regression lines.'>>=
+
+data.frame(X = rep(X, 3), 
+       Y = rep(Y, 3), 
+       Z = as.factor(rep(c(1, 2, 3), each = length(X))),
+       interc = 
+         rep(c((mean(Y) - 0.5 * out$coef[2] * mean(X)), 
+               out$coef[1] + 100, 
+               out$coef[1]), 
+             each = length(X)),
+       slop = rep(c(0.5 * out$coef[2], 
+                    out$coef[2], 
+                    out$coef[2]), 
+                  each = length(X))) %>%
+  ggplot(aes(X, Y)) + 
+  geom_point() +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = seq(0, 100, 10), 
+                     minor_breaks = seq(0, 100, 10)) +
+  scale_y_continuous(breaks = seq(0, 20000, 500), 
+                     minor_breaks = seq(0, 20000, 500)) + 
+  facet_grid(~Z) + 
+  geom_abline(aes(intercept = interc, slope = slop), col = "blue", size = 1)+
+  theme_minimal()
+@
+
+<<lm_14,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Histogram of the residuals (errors) for three different regression lines, and the respective sums of squared residuals (SSR).'>>=
+pred1 <- (mean(Y) - 0.5 * out$coef[2] * mean(X)) + 0.5 * out$coef[2] * X
+pred2 <- 650 + out$coef[2] * X
+pred3 <- predict(out)
+predictions <- c(pred1, pred2, pred3)
+
+bestresidual <- out$residuals
+residual1 <- Y - pred1
+residual2 <- Y - pred2
+
+residual <- c(residual1, residual2, bestresidual)
+squares1 <- (residual1)^2 %>%
+  sum() %>%
+  round(0)
+squares2 <- residual2^2 %>%
+  sum() %>%
+  round(0)
+squares3 <- bestresidual^2 %>%
+  sum() %>%
+  round(0)
+dif <- -1 * (residual2 - bestresidual)[1]
+
+tibble(residual, 
+       z = as.factor(rep(c(1, 2, 3), each = length(X)))) %>%
+  ggplot(aes(x = residual)) +
+  geom_histogram(breaks = seq(-800, 800, 0.5 * dif)) +
+  facet_grid(~z) +
+  geom_label(x = -200, 
+             y = 50, 
+             label = rep(c(paste("SSR: ", squares1), 
+                           paste("SSR:  ", squares2), 
+                           paste("SSR:  ", squares3)), 
+                         each = length(X))) +
+  geom_vline(xintercept = 0, col = 2, size = 0.5, alpha = 0.3) 
+
+@
+
+In summary, when we want to have a straight line that describes our data best (i.e., the regression line), we'd like a line such that the residuals are on average 0 (i.e, sum to 0), and where we see the smallest residuals possible. We reach these criteria when we use the line in such a way that we have the lowest value for the sum of the squared residuals possible. This line is therefore called the least squares or OLS regression line.
+
+There are generally two ways of finding the intercept and the slope values that satisfy the Least Squares principle.
+
+\begin{enumerate}
+\item
+\textbf{Numerical search} Try some reasonable combinations of values for the intercept and slope, and for each combination, calculate the sum of the squared residuals. For the combination that shows the lowest value, try to tweak the values of the intercept and slope a bit to find even lower values for the sum of the squared residuals. Use some stopping rule otherwise you keep looking forever.
+\item
+\textbf{Analytical approach} For problems that are not too complex, like this linear regression problem, there are simple mathematical equations to find the combination of intercept and slope that gives the lowest sum of squared residuals. 
+
+\end{enumerate}
+
+
+Using the analytical approach, it can be shown that the Least Squares slope can be found by solving:
+
+\begin{eqnarray}
+\label{eq:ls_slope}
+\textrm{slope} = \frac{\sum(X_i - \widebar{X})(Y_i - \widebar{Y})}{\sum(X_i - \widebar{X})^2}
+\end{eqnarray}
+
+and the Least Squares intercept can be found by:
+
+\begin{eqnarray}
+\textrm{intercept} = \widebar{Y} - \textrm{slope} \times  \widebar{X} 
+\end{eqnarray}
+
+where $\widebar{X}$ and $\widebar{Y}$ are the means of the independent $X_i$ and dependent $Y_i$ observations, respectively. 
+
+In daily life, we do not compute this by hand but let computers do it for us, with software like for instance R.
+
+
+
+\bigskip
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{residual}: the difference between a certain data point (the \textit{actual} value) and what the linear equation predicts.
+
+\item \textbf{linear regression}: When we want to describe the behaviour of the dependent variable (the $Y$-variable on the vertical axis) on the basis of the independent variable (the $X$-value on the horizontal axis) by a straight line, linear regression is the process of finding such a straight line.
+
+\item \textbf{Least Squares principle}: In order to find the best regression line, you need a criterion. The Least Squares principle is such a criterion and specifies that the sum of the squares of the residuals should be as small as possible.
+
+\end{itemize}
+
+}
+}
+\bigskip
+
+
+
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% 
+% 
+% 
+% <<lm_15, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+% set.seed(123)
+% area <- runif(10, 30, 120) %>% round(0)
+% price <- rnorm(10, 0.9*area+80, 20) %>% round(0)
+% 
+% tibble(Area=area, Price=price, PredictedPrice = " ", Residual=" ", SquaredResidual=" ") %>%
+%         head() %>%
+%         xtable(caption="Home prices.", label="tab:lm_15") %>%
+%         print(include.rownames=F, caption.placement = "top")
+% 
+% out.price <- lm(price ~ area , data=tibble(area, price))
+% @
+% 
+% \item In Table \ref{tab:lm_15} you find a small data set on the price of homes with dependent variable price in kEuros and independent variable area in square meters. The least squares regression equation turns out to be $price = \Sexpr{out.price$coef[1]}+ \Sexpr{out.price$coef[2]}\times area$. Add a third column with the expected prices based on the regression equation ($\widehat{Y}$. Put the difference between the observed price and the expected price in the fourth column ($e$). Then compute the squared residuals and put those in the fifth column ($e^2)$. Take the sum of the squared residuals: How large is sum of the squared residuals?
+% 
+% 
+% \item See website \url{https://gallery.shinyapps.io/simple_regression/}, try to find the Least Squares regression line for the given data set by changing both intercept and slope. How large is the sum of the squared residuals for that optimal regression line?
+% 
+% 
+% \item Do this exercice with one or more of your fellow students. Look at the data set plotted in Figure \ref{fig:lm_16}. Try to find the regression line with the lowest sum of squared residuals possible.
+% 
+% <<lm_16,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Plot of housing data.'>>=
+% set.seed(1234)
+% x <- runif(5, 30, 120) %>% round(0)
+% y <- rnorm(5, area+80, 20) %>% round(0)
+% y <- c(15, 20, 10, 10, 5)
+% x <- x/10
+% 
+% tibble(x, y) %>%
+%         ggplot(aes(x, y)) +
+%         geom_point() +
+%         ylim(c(5,22))
+%  out <- lm(y~x)
+% @
+% 
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% 
+% \begin{enumerate}
+% 
+% \item The predicted prices, the residuals and the squared residuals are displayed in Table \ref{tab:lm_17}. The sum of the squared residuals equals \Sexpr{sum(out.price$residuals^2)}.
+% 
+% <<lm_17, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F>>=
+% tibble(Area=area, Price=price, PredictedPrice = predict(out.price), Residual=out.price$residuals, SquaredResidual=out.price$residuals^2) %>%
+%                 head() %>%
+%                 xtable(caption="Home prices.", label="tab:lm_17") %>%
+%                 print(include.rownames=F, caption.placement = "top")
+% @
+% \item
+% 
+% \item The lowest sum of squared residuals is \Sexpr{round(sum(out$residuals^2),0)}. This is the sum that you get with intercept \Sexpr{round(out$coef[1],1)} and slope \Sexpr{round(out$coef[2],1)}.
+% 
+% \end{enumerate}
+% 
+% 
+
+
+\section{Linear models}
+
+By performing a regression analysis of $Y$ on $X$, we try to predict the $Y$-value from a given $X$ on the basis of a linear equation. We try to find an intercept and a slope for that linear equation such that our prediction is 'best'. We define 'best' as the linear equation for which we see the lowest possible value for the sum of the squared residuals (least squares principle).
+
+Thus, the prediction for the $i$th value of $Y$ ($\widehat{Y_i}$) can be computed by the linear equation
+
+\begin{equation}
+\widehat{Y_i}= b_0 + b_1 X_i
+\end{equation}
+
+where we use $b_0$ to denote the intercept, $b_1$ to denote the slope and $X_i$ as the $i$th value of $X$. 
+
+In reality, the predicted values for $Y$ always deviate from the observed values of $Y$: there is practically always an error $e$ that is the difference between $\widehat{Y_i}$ and $Y_i$. Thus we have for the observed values of $Y$
+
+\begin{equation}
+Y_i = \widehat{Y_i} + e_i = b_0 + b_1 X_i + e_i
+\end{equation}
+
+Typically, we assume that the residuals $e$ have a normal distribution with a mean of 0 and a variance that is often unknown but that we denote by $\sigma^2_e$. Such a normal distribution is denoted by $N(0,\sigma^2_e)$. Taking the linear equation and the normally distributed residuals together, we have a \textit{model} for the variables $X$ and $Y$.
+
+
+\begin{eqnarray}
+\label{eq:linear_model1}
+Y_i &=& b_0 + b_1 X_i + e_i \\
+\label{eq:linear_model2}
+e_i &\sim& N(0,\sigma^2_e) 
+\end{eqnarray}
+
+A model is a specification of how a set of variables relate to each other. Note that the model for the residuals, the normal distribution, is an essential part of the model. The linear equation only gives you \textit{predictions} of the dependent variable, not the variable itself. Together, the linear equation and the distribution of the residuals give a full description of how the dependent variable \textit{depends} on the independent variable. 
+
+A model may be an adequate description of how variables relate to each other or it may not, that is for the data analyst to decide. If it is an adequate description, it may be used to predict yet unseen data on variable $Y$ (because we can't see into the future), or it may be used to draw some inferences on data that can't be seen, perhaps because of limitations in data collection. Remember Chapter \ref{chap:mean} where we made a distinction between sample data and population data. We could use the linear equation that we obtain using a sample of data to make predictions for data in the population. We delve deeper into that issue in Chapter \ref{chap:inf_lm}.
+
+The model that we see in Equations \ref{eq:linear_model1} and \ref{eq:linear_model2} is a very simple form of the \textit{linear model}. The linear model that we see here is generally known as the \textit{simple regression model}: the simple regression model is a linear model for one numeric dependent variable, an intercept, a slope for only one (hence 'simple') numeric independent variable, and normally distributed residuals. In the remainder of this book, we will see a great variety of linear models: with one or more independent variables, with numeric or with categorical independent variables, and with numeric or categorical dependent variables. All these models can be seen as extensions of this simple regression model. What they all have in common is that they aim to predict one dependent variable from one or more independent variables using a linear equation.
+
+
+% \section{Finding the OLS intercept and slope using SPSS}
+% 
+% <<lm_22,fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='Imaginary data set on age and conservatism scores in 102 men.'>>=
+% set.seed(1112)
+% age <- rnorm(102, 40, 10) %>% round(1)
+% conserv <- (5 - 0.02*age + rnorm(102, 0, 1)) %>% round(0)
+% dataset <- tibble(age, conserv)
+% dataset %>% 
+%   ggplot(aes(age, conserv))+
+%   geom_point() + 
+%   geom_smooth(method = "lm", se = F)
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(tibble(age, conserv),
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/simple.sav',
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/simple.sps',
+%               package = c("SPSS"))
+% model <- lm(conserv ~ age, data = dataset)
+% out <- lm(conserv ~ age, data = dataset)$coef
+% @
+% 
+% Figure \ref{fig:lm_22} shows an imaginary data set on age and conservatism scores on a 7-point scale in 102 men. The blue line is the least squares regression line. This line can be found with SPSS using the following UNIANOVA syntax:
+% 
+% \begin{verbatim}
+% UNIANOVA conserv WITH age
+% /PRINT parameter.
+% \end{verbatim}
+% 
+% In the syntax we first indicate the dependent variable (the one that we want to explain, which is in this case \textbf{conserv}), and then we indicate that we want to explain this variable with the independent variable \textbf{age}. In the next line we indicate that we want to see the intercept and slope parameters in the output.
+% 
+% SPSS will then show two tables. The first table will be discussed in later chapters. For now, we only look for the table with the Parameter Estimates, displayed in Figure \ref{fig:simple}. It tells us that the dependent variable is indeed \textbf{conserv}, and that there are two \textit{parameters} in our regression model: an intercept and a slope parameter for the variable \textbf{age}. Parameters are parts of a model that can vary from data set to data set, but that are not variables (variables vary within a data set, parameters do not). Here we use the linear model from Equation \ref{eq:linear_model1} where $b_0$, $b_1$ and $\sigma_e^2$ are parameters since they are different for different data sets. In the column with $B$ we find the least squares values for these parameters for this data set on age and conservatism that we are analysing here. The intercept has the value 4.904 (when rounded to 3 decimals) and the slope (for age) has the value -0.021. Thus, with this output, the linear equation for the regression equation can be filled in:
+% 
+% \begin{equation}
+% conserv = \Sexpr{round(out[1],3)} \Sexpr{round(out[2],3)} \times age + e
+% \end{equation}
+% 
+% With this equation we can predict values for conservatism for ages that are not even in the data set displayed in Figure \ref{fig:lm_22}. For instance, that plot does not show a man of age 70, but on the basis of the linear equation, the best bet would be that such a man would have a conservatism score of $\Sexpr{round(out[1],3)} \Sexpr{round(out[2],3)} \times 70= \Sexpr{round(out[1],3) + round(out[2],3) * 70}$.
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 26cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/simple.pdf}
+%     \end{center}
+%     \caption{SPSS output of a simple linear regression analysis.}
+%     \label{fig:simple}
+% \end{figure}
+% 
+% The OLS linear model parameters are in the $B$ column of the SPSS Parameter Estimates table, but there are also a number of other columns. These will be discussed in Chapters \ref{chap:confidence} and \ref{chap:hypothesis}. 
+
+
+\section{Finding the OLS intercept and slope using R}
+
+
+<<lm_23, fig.height = 3.5, echo = F, message = F, fig.cap = "Data set on number of cylinders (\\texttt{cyl}) and miles per gallon (\\texttt{mpg}) in 32 cars." >>=
+mtcars %>% as_tibble() %>% 
+  ggplot(aes(x = cyl, y = mpg)) +
+  geom_point() + 
+  geom_smooth(se = F, method = "lm") +
+  theme_minimal()
+model <- lm(mpg ~ cyl, data = mtcars)
+@
+
+
+Figure \ref{fig:lm_23} shows a data set on the relationship between the number of cylinders (\texttt{cyl}) and miles per gallon (\texttt{mpg}) in \Sexpr{length(mtcars[,1])} cars. The blue line is the least squares regression line. The coefficients for this line can be found with R using the following code:
+
+\begin{lstlisting}
+model <- mtcars %>%
+  lm(mpg ~ cyl, data = .)
+model 
+\end{lstlisting}
+
+In the syntax we first indicate that we start from the \texttt{mtcars} data set. Next, we use the \texttt{lm()} function to indicate that we want to apply the linear model to these data. Next, we say that we want to model the variable \texttt{mpg}. The $\sim$ ('tilde') sign means "is modelled by" or "is predicted by", and next we plug in the independent variable \texttt{cyl}. Thus, this code says we want to model the \texttt{mpg} variable by the \texttt{cyl} variable, or predict \texttt{mpg} scores by \texttt{cyl}. Next, because we already indicated we use the \texttt{mtcars} data set, the \texttt{data} argument for the \texttt{lm()} function should be left empty. Finally, we store the results in the object \texttt{model}.
+
+In the last line of code we indicate that we want to see the results, that we stored in \texttt{model}. 
+
+
+
+<<echo = T>>=
+model <- mtcars %>% 
+  lm(mpg ~ cyl, data = .)
+model
+@
+
+
+The output above shows us a repetition of the \texttt{lm()} analysis, and then two coefficients. These are the \textit{regression coefficients} that we wanted: the first is the intercept, and the second is the slope. These coefficients are the \textit{parameters} of the regression model. Parameters are parts of a model that can vary from data set to data set, but that are not variables (variables vary within a data set, parameters do not). Here we use the linear model from Equations \ref{eq:linear_model1} and \ref{eq:linear_model2} where $b_0$, $b_1$ and $\sigma_e^2$ are parameters since they are different for different data sets.
+
+The output does not look very pretty. Using the \texttt{broom} package, we can get the same information about the analysis, and more:
+
+<<>>=
+library(broom)
+model <- mtcars %>% 
+  lm(mpg ~ cyl, data = .)
+model %>% 
+  tidy()
+@
+
+R then shows two rows of values, one for the intercept and one for the slope parameter for \texttt{cyl}.  For now, we only look at the first two columns. In these columns we find the least squares values for these parameters for this data set on 32 cars that we are analysing here. 
+
+
+In the second column, called $estimate$, we see that the intercept parameter has the value \Sexpr{round(coef(model)[1], 1)} (when rounded to 1 decimal) and the slope has the value \Sexpr{round(coef(model)[2], 2)}. Thus, with this output, the linear equation for the regression equation can be filled in:
+
+\begin{equation}
+\texttt{mpg} = \Sexpr{round(coef(model)[1], 1)} \Sexpr{round(coef(model)[2], 2)} \times \texttt{cyl} + e
+\end{equation}
+
+
+With this equation we can predict values for \texttt{mpg} for number of cylinders that are not even in the data set displayed in Figure \ref{fig:lm_23}. For instance, that plot does not show a car with 2 cylinders, but on the basis of the linear equation, the best bet would be that such a car would run $\Sexpr{round(coef(model)[1], 1)} \Sexpr{round(coef(model)[2], 2)} \times 2 = \Sexpr{round(coef(model)[1], 1) + round(coef(model)[2], 2) * 2}$ miles per gallon.
+
+
+The OLS linear model parameters are in the \texttt{estimate} column of the R output, but there are also a number of other columns: standard error, statistic ($t$), and $p$-value, terms that we encountered earlier in Chapter \ref{chap:mean}. These columns will be discussed further in Chapter \ref{chap:inf_lm}. 
+
+
+
+
+\section{Pearson correlation}
+
+For any set of two numeric variables, we can determine the least squares regression line. However, it depends on the data set how well that regression line describes the data. Figure \ref{fig:lm_18} shows two different data sets on variables $X$ and $Y$. Both plots also show the least squares regression line, and they both turn out to be exactly the same: $Y=100+10X$.
+
+<<lm_18,fig.height=4, echo=FALSE, fig.align='center', fig.cap='Two data sets with the same regression line.'>>=
+set.seed(1234)
+X <- rep(seq(1, 100, 1), 2)
+Y <- rnorm(200, 100 + X * 10, 10)
+Y[101:200] <- Y[101:200] + rnorm(100, 0, 600)
+z <- rep(c("A", "B"), each = 100) %>% 
+  as.factor()
+
+tibble(X, Y, z) %>%
+  ggplot(aes(X, Y)) +
+  geom_point() +
+  facet_wrap(~z) + 
+  geom_abline(intercept = 100, slope = 10, col = 4, size = 1.5) +
+  theme_minimal()
+out <- lm(Y~X)
+@
+
+
+We see that the regression line describes data set A very well (left panel): the observed dots are very close to the line, which means that the residuals are very small. The regression line does a worse job for data set B (right panel) since there are quite large discrepancies between the observed $Y$-values and the predicted $Y$-values. Put differently, the regression equation can be used to predict $Y$-values in data set A very well, almost without error, whereas the regression line cannot be used to predict $Y$-values in data set B very precisely. The regression line is also the least squares regression line for data set B, so any improvement by choosing another slope or intercept is not possible.
+
+Francis Galton was the first to think about how to quantify this difference in the ability of a regression line to predict the dependent variable. Karl Pearson later worked on this measure and therefore it came to be called Pearson's correlation coefficient. It is a standardised measure, so that it can be used to compare different data sets.
+
+In order to get to Pearson's correlation coefficient, you first need to standardise both the independent variable, $X$, and the dependent variable, $Y$. You standardise scores by taking their values, subtract the mean from them, and divide by the standard deviation (see Chapter \ref{chap:intro}). So, in order to obtain a standardised value for $X=x$ we compute $z_X$,
+
+\begin{equation}
+z_X = \frac{x- \widebar{X}}{\sigma_X}
+\end{equation}
+
+and in order to obtain a standardised value for $Y=y$ we compute $z_Y$,
+
+\begin{equation}
+z_Y = \frac{y- \widebar{Y}}{\sigma_Y}.
+\end{equation}
+
+
+
+<<lm_19,fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='Two data sets, with different regression lines after standardisation.'>>=
+Z_X <- X %>%
+  scale() %>%
+  as.vector()
+Z_Y <- c()
+Z_Y[1:100] <- Y[1:100] %>%
+  scale() %>%
+  as.vector()
+Z_Y[101:200] <- Y[101:200] %>%
+  scale() %>%
+  as.vector()
+
+tibble(Z_X, Z_Y, z) %>%
+  ggplot(aes(Z_X, Z_Y)) +
+  geom_point() +
+  facet_wrap(~z) +
+  geom_smooth(method = "lm", se = F) +
+  theme_minimal()
+out1 <- lm(Z_Y[1:100] ~ Z_X[1:100])
+out2 <- lm(Z_Y[101:200] ~ Z_X[101:200])
+@
+
+Let's do this both for data set A and data set B, and plot the standardised scores, see Figure \ref{fig:lm_19}. If we then plot the least squares regression lines for the standardised values, we obtain different equations. For both data sets, the intercept is 0 because by standardising the scores, the means become 0. But the slopes are different: in data set A, the slope is \Sexpr{round(out1$coef[2],3)} and in data set B, the slope is \Sexpr{round(out2$coef[2],3)}.
+
+\begin{eqnarray}
+Z_Y = 0 + \Sexpr{round(out1$coef[2],3)} \times Z_X=\Sexpr{round(out1$coef[2],3)} \times Z_X \\
+Z_Y = 0 + \Sexpr{round(out2$coef[2],3)} \times Z_X=\Sexpr{round(out2$coef[2],3)} \times Z_X
+\end{eqnarray}
+
+
+These two slopes, the slope for the regression of standardized $Y$-values on standardized $X$-values, are the correlation coefficients for data sets A and B, respectively. For obvious reasons, the correlation is sometimes also referred to as the \textit{standardised slope coefficient} or \textit{standardised regression coefficient}.
+
+Correlation stands for the \textit{co-relation} between two variables. It tells you how well one variable can be predicted from the other. The correlation is bi-directional: the correlation between $Y$ and $X$ is the same as the correlation between $X$ and $Y$. For instance in Figure \ref{fig:lm_19}, if we would have put the $Z_X$-variable on the $Z_Y$-axis, and the $Z_Y$-variable on the $Z_X$-axis, the slopes would be exactly the same. This is true because the variances of the $Y$- and $X$-variables are equal after standardisation (both variances equal to 1).
+
+Since a slope can be negative, a correlation can be negative too. Furthermore, a correlation is always between -1 and 1. Look at Figure \ref{fig:lm_19}: the correlation between $X$ and $Y$ is \Sexpr{round(out1$coef[2],3)}. The dots are almost on a straight line. If the dots would all be exactly on the straight line, the correlation would be 1.
+
+<<lm_20,fig.height=6, message = F, echo=FALSE, fig.align='center', fig.cap='Various plots showing different correlations between variables X and Y.'>>=
+set.seed(111)
+X <- rnorm(800, 100, 5)
+Y[1:200] <- -2000 + 20 * X[1:200] + rnorm(100, 0, 170)
+Y[201:400] <- 400 - 5 * X[201:400] + rnorm(100, 0, 3)
+Y[401:600] <- -600 + rnorm(100, 0, 10)
+Y[601:800] <- 1000 - 16 * X[601:800] + rnorm(100, 0, 190)
+z1 <- rep(c(1, 2), each = 400)
+z2 <- rep(rep(c(1, 2), each = 200), 2)
+
+c1 <- cor(X[1:200], Y[1:200]) %>% round(2)
+c2 <- cor(X[201:400], Y[201:400]) %>% round(2)
+c3 <- cor(X[401:600], Y[401:600]) %>% round(2)
+c4 <- cor(X[601:800], Y[601:800]) %>% round(2)
+
+plot <- tibble(X, Y, z1, z2) %>%
+  ggplot(aes(X, Y)) +
+  geom_point(size = 0.5) +
+  facet_wrap(~ z1 + z2) + 
+  geom_smooth(method = "lm", se = F, size = 0.5) +
+  geom_label(x = 90, 
+             y = -1000, 
+             label = rep(c(paste(c1), paste(c2), paste(c3), paste(c4)), 
+                         each = 200)) +
+  theme_minimal() +
+  theme(strip.text = element_text(colour = "white", face = "bold")) +  
+  theme(strip.background = element_rect(colour = "white")) 
+plot
+  
+
+@
+
+
+Figure \ref{fig:lm_20} shows a number of scatter plots of $X$ and $Y$ with different correlations. Note that if dots are very close to the regression line, the correlation can still be close to 0: if the slope is 0 (bottom-left panel), then one variable cannot be predicted from the other variable, hence the correlation is 0, too.
+
+In summary, the correlation coefficient indicates how well one variable can be predicted from the other variable. It is the slope of the regression line if both variables are standardised. If prediction is not possible (when the regression slope is 0), the correlation is 0, too. If the prediction is perfect, without errors (no residuals) and with a slope unequal to 0, then the correlation is either -1 or +1, depending on the sign of the slope. The correlation coefficient between variables $X$ and $Y$ is usually denoted by $r_{XY}$ for the sample correlation and $\rho_{XY}$ (pronounced 'rho') for the population correlation.
+
+\section{Covariance}
+
+The correlation $\rho_{XY}$ as defined above is a standardised measure for how much two variables co-relate. It is standardised in such a way that it can never be outside the (-1, 1) interval. This standardisation happened through the division of $X$ and $Y$-values by their respective standard deviation. There exists also an unstandardised measure for how much two variables co-relate: the \textit{covariance}. The correlation $\rho_{XY}$ is the slope when $X$ and $Y$ each have variance 1. When you multiply correlation $\rho_{XY}$ by a quantity indicating the variation of the two variables, you get the covariance. This quantity is the product of the two respective standard deviations.
+
+The covariance between variables $X$ and $Y$, denoted by $\sigma_{XY}$, can be computed as:
+
+
+\begin{equation}
+\sigma_{XY} = \rho_{XY} \times \sigma_X \times \sigma_Y
+\end{equation}
+
+For example, if the variance of $X$ equals 49 and the variance of $Y$ equals 25, then the respective standard deviations are 7 and 5. If the correlation between $X$ and $Y$ equals 0.5, then the covariance between $X$ and $Y$ is equal to $0.5 \times 7 \times 5 = \Sexpr{0.5*7*5}$.
+
+Similar to the correlation, the covariance of two variables indicates by how much they co-vary. For instance, if the variance of $X$ is 3 and the variance of $Y$ is 5, then a covariance of 2 indicates that $X$ and $Y$ co-vary: if $X$ increases by a certain amount, $Y$ also increases. If you want to know how many standard deviations $Y$ increases if $X$ increases with one standard deviation, you can turn the covariance into a correlation by dividing the covariance by the respective standard deviations.
+
+\begin{equation}
+\rho_{XY}= \frac{\sigma_{XY}} { \sigma_X \sigma_Y}= \frac{2} { \sqrt{3} \sqrt{5}}=\Sexpr{round(2/(sqrt(3)*sqrt(5)),2)}
+\end{equation}
+
+Similar to correlations and slopes, covariances can also be negative.
+
+
+Instead of computing the covariance on the basis of the correlation, you can also compute the covariance using the data directly. The formula for the covariance is 
+
+
+\begin{eqnarray}
+\sigma_{XY} = \frac{\sum(X_i - \widebar{X})(Y_i - \widebar{Y})}{n}
+\end{eqnarray}
+
+so it is the mean of the squared cross-products of two variables.\footnote{Again, similar to what was said about the formula for the variance of a variable, on-line you will often find the formula $\frac{\sum(X_i - \widebar{X})(Y_i - \widebar{Y})}{n-1}$. The difference is that here we are talking about the definition of the covariance of two observed variables, and that elsewhere one talks about trying to estimate the covariance between two variables in the population. Similar to the variance, the covariance in a sample is a biased estimator of the covariance in the population. To remedy this bias, we divide the cross-products not by $n$ but by $n-1$} Note that the numerator bears close resemblance to the numerator of the equation that we use to find the least squares slope, see Equation \ref{eq:ls_slope}. This is not strange since both the slope and the covariance say something about the relationship between two variables. Also note that in the equation that we use to find the least squares slope the denominator bears close relationship to the formula for the variance, since $\sigma_X^2 = \frac{\sum(X_i - \widebar{X} )^2 }{n}$ (see Chapter \ref{chap:intro}). We could therefore rewrite Equation \ref{eq:ls_slope} that finds the least squares or OLS slope as:
+
+
+\begin{eqnarray}
+\textrm{slope}_{OLS} &=& \frac{\sum(X_i - \widebar{X})(Y_i - \widebar{Y})}{\sum(X_i - \widebar{X})^2} \label{eq:slope}\\
+ &=&     \frac{\sigma_{XY}\times n }{\sigma_X^2\times n } \nonumber\\
+ &=&    \frac{\sigma_{XY} }{\sigma_X^2 } \nonumber
+\end{eqnarray}
+
+This shows how all three quantities slope, correlation and covariance say something about the linear relationship between two variables. The slope says how much the dependent variable increases if the independent variable increases by 1, the correlation says how much of a standard deviation the dependent variable increases if the independent variable increases by one standard deviation (alternatively: the slope after standardisation), and the covariance is the mean cross-product of two variables (alternatively: the unstandardised correlation). 
+
+
+\section{Numerical example of covariance, correlation and least square slope}
+
+
+<< echo = F, results = "asis"  >>=
+set.seed(1234)
+X <- rnorm(5, 0, 1) %>% round(0)
+Y <- -X  + rnorm(length(X), 0, 1) %>% round(0)
+mean_Y <- mean(Y) %>% round(2)
+mean_X <- mean(X) %>% round(2)
+dev_Y <- Y-mean_Y %>% round(2)
+dev_X <- X-mean_X %>% round(2)
+dev_Y2 <- dev_Y^2 %>% round(2)
+dev_X2 <- dev_X^2 %>% round(2)
+crossprod <- dev_Y *dev_X %>% round(2)
+
+tibble(X, Y, "X - meanX" =  dev_X, "Y - meanY" = dev_Y, Crossproduct = crossprod) %>%
+  xtable(caption = "Computing cross-products for the covariance of two variables.", 
+         label = "tab:lm_118", 
+         digits=c(0, 0, 0, 2, 2, 2)) %>%
+  print(include.rownames = F, caption.placement = "top")
+
+@
+
+Table \ref{tab:lm_118} shows a small data set on two variables $X$ and $Y$ with 5 observations. The mean value of $X$ is \Sexpr{mean(X)} and the mean value of $Y$ is \Sexpr{mean(Y)}. If we subtract the respective mean from each observed value and multiply, we get a column of cross-products. For example, take the first row: $X-\widebar{X}= -1 - (-0.4) = -0.6$ and $Y-\widebar{Y}= 2 - (-0.2) = 2.20$. If we multiply these numbers we get the cross-product $-0.6 \times 2.20 = -1.32$. If we compute all cross-products and sum them, we get -6.40. Dividing this by the number of observations (5), yields the covariance: \Sexpr{sum(crossprod)/length(X)}.
+
+If we compute the variances of $X$ and $Y$ (see Chapter \ref{chap:intro}), we obtain \Sexpr{sum(dev_X^2)/length(X)} and \Sexpr{sum(dev_Y^2)/length(X)}, respectively. Taking the square roots we obtain the standard deviations: \Sexpr{sqrt(sum(dev_X^2)/length(X))} and \Sexpr{sqrt(sum(dev_Y^2)/length(X))}. Now we can calculate the correlation on the basis of the covariance as $\rho_{XY}= \frac{\sigma_{XY}}{\sigma_X\sigma_Y}=\frac{\Sexpr{sum(crossprod)/length(X)}}{\Sexpr{sqrt(sum(dev_X^2)/length(X))}  \times  \Sexpr{sqrt(sum(dev_Y^2)/length(X))}} = \Sexpr{round(sum(crossprod)/length(X)    /    sqrt(sum(dev_X^2)/length(X))  /  sqrt(sum(dev_Y^2)/length(X)),2)   }$.
+
+We can also calculate the least squares slope as $\frac{\sigma_{XY}}{\sigma^2_X}= \frac{\Sexpr{sum(crossprod)/length(X)}}{\Sexpr{sum(dev_X^2)/length(X)}} =  \Sexpr{round(lm(Y~X)$coef[2],2)}$.
+
+
+The original data are plotted in Figure \ref{fig:lm_cov1} together with the regression line. The standardised data and the corresponding regression line are plotted in Figure \ref{fig:lm_cov2}. Note that the slopes are different, and that the slope of the regression line for the standardised data is equal to the correlation. 
+
+<<lm_cov1,fig.height=3.5, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='Data example and the regression line.'>>=
+tibble(X, Y) %>% 
+  ggplot(aes(X, Y)) +
+  geom_point() +
+  geom_smooth(se = F, method = "lm") + 
+  ylim(c(-2, 2)) + 
+  xlim(c(-2, 2)) +
+  geom_segment(aes(x = 0, y = lm(Y~X)$coef[1], xend = 1, yend = lm(Y~X)$coef[1]),
+                  arrow = arrow(length = unit(0.5, "cm"))) + 
+  geom_label(aes(x = 1.25, y = -1.3, label = round(lm(Y~X)$coef[2],2))) + 
+  geom_label(aes(x = 0.5, y = lm(Y~X)$coef[1] + 0.2, label = 1)) + 
+  geom_segment(aes(x = 1, y = predict(lm(Y~X), tibble(X = 1)) - lm(Y~X)$coef[2]), 
+               xend = 1, yend = predict(lm(Y~X), tibble(X = 1)),
+                  arrow = arrow(length = unit(0.5, "cm"))) +
+  # theme(plot.background = element_rect(fill = "grey85")) +
+  theme_minimal()
+  
+
+@
+
+<<lm_cov2,fig.height=3.5, message = F, echo=FALSE, fig.align='center', fig.cap='Data example (standardised values) and the regression line.'>>=
+Z_X = scale(X)[1:5,1]
+Z_Y = scale(Y)[1:5,1]
+tibble(X, Y) %>% 
+  mutate(Z_X = scale(X)[1:5,1], 
+         Z_Y = scale(Y)[1:5,1]) %>% 
+  ggplot(aes(Z_X, Z_Y)) +
+  geom_point() +
+  geom_smooth(se = F, method = "lm") + 
+  ylim(c(-2, 2)) + 
+  xlim(c(-2, 2)) +
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0),
+               arrow = arrow(length = unit(0.5, "cm"))) +
+  geom_label(aes(x = 1.3, 
+                 y = -0.5, 
+                 label = round(sum(crossprod)/length(X)/sqrt(sum(dev_X^2)/length(X))/sqrt(sum(dev_Y^2)/length(X)),2))) +
+  geom_label(aes(x = 0.5, y = 0.2, label = 1)) +
+  geom_segment(aes(x = 1, 
+                   y = 0, 
+                   xend = 1, 
+                   yend = predict(lm(Z_Y~Z_X), tibble(Z_X = 1))),
+               arrow = arrow(length = unit(0.5, "cm"))) +
+  # theme(plot.background = element_rect(fill = "grey85")) +
+  theme_minimal()
+@
+
+
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% 
+% \item The correlation between brain size and intelligence in 9-year-old children equals 0.30. Suppose the variance in brain size equals 45 and the variance in intelligence 225. Compute the covariance.
+% 
+% 
+% 
+% \item The covariance between intelligence and extraversion equals 1. The variance of intelligence is 225 and the variance of extraversion is 9. What is the correlation?
+% 
+% 
+% 
+% 
+% \item Suppose the correlation between intelligence and extraversion is 0.10. What does this mean?
+% 
+% 
+% 
+% \item Suppose the correlation between intelligence and extraversion is -0.05. What does this mean?
+% 
+% 
+% 
+% 
+% \item Suppose the correlation between intelligence and extraversion is 0.30. What is the regression slope if the variance of intelligence is 225 and the variance of extraversion is 9?
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item
+% 
+% \begin{equation}
+% \sigma_{xy}= r_{xy} \times \sigma_x \sigma_y= 0.30 \times \sqrt{45}\times \sqrt{225}=\Sexpr{round(0.30*sqrt(45)*15)}
+% \end{equation}
+% 
+% 
+% 
+% \item
+% 
+% \begin{equation}
+% r_{xy}= \frac{\sigma_{xy}} { \sigma_x \sigma_y}= \frac{1} { \sqrt{225} \sqrt{9}}=\Sexpr{round(1/(15*3),2)}
+% \end{equation}
+% 
+% \item
+% If you increase intelligence by 1 standard deviation, then extraversion increases with a tenth of a standard deviation.
+% 
+% \item
+% If you increase intelligence by 1 standard deviation, then extraversion increases with 0.05 standard deviations.
+% 
+% \item
+% The correlation is 0.30, so if you increase intelligence by one standard deviation (which is $\sqrt{225}=15$), extraversion increases by 0.30 standard deviations (which equals $0.30 \times \sqrt{9}=0.90$). Therefore, if you increase intelligence by 15 points, you increase extraversion by 0.90 points. Thus if you increase intelligence by 1 point, you increase extraversion by $0.90/15=\Sexpr{round(0.9/15,2)}$ points. The slope for the regression of extraversion on intelligence is therefore \Sexpr{round(0.9/15,2)}.
+% 
+% 
+% \end{enumerate}
+
+
+\section{Correlation, covariance and slopes in R}
+
+
+Let's use the \texttt{mtcars} dataframe and compute the correlation between the number of cylinders (\texttt{cyl}) and miles per gallon (\texttt{mpg}). We do that with the function \texttt{cor()}:
+
+
+<<>>=
+mtcars %>% 
+  select(cyl, mpg) %>% 
+  cor()
+@
+
+In the output we see a correlation matrix. On the diagonal are the correlations of \texttt{cyl} and \texttt{mpg} with themselves, which are perfect (a correlation of 1). On the off-diagonal, we see that the correlation between \texttt{cyl} and \texttt{mpg} equals \Sexpr{cor(mtcars$cyl, mtcars$mpg)}. This is a strong negative correlation, which means that generally, the more cylinders a car has, the lower the mileage. We can also compute the covariance, with the function \texttt{cov}:
+
+<<>>=
+mtcars %>% 
+  select(cyl, mpg) %>% 
+  cov()
+@
+
+On the off-diagonal we see that the covariance between \texttt{cyl} and \texttt{mpg} equals \Sexpr{cov(mtcars$cyl, mtcars$mpg)}. On the diagonal we see the variances of \texttt{cyl} and \texttt{mpg}. Note that R uses the formula with $n-1$ in the denominator. If we want R to compute the (co-)variance using $n$ in the denominator, we have to write an alternative function ourselves:
+
+<<>>=
+cov_alt <- function(x, y){
+  X <- (x - mean(x)) # deviations from mean x
+  Y <- (y - mean(y)) # deviations from mean y
+  XY <- X %*% Y      # multiply each X with each Y and sum them
+  return(XY / length(x)) # divide by n
+}
+cov_alt(mtcars$cyl, mtcars$mpg)
+@
+
+To determine the least squares slope for the regression line of \texttt{mpg} on \texttt{cyl}, we divide the covariance by the variance of \texttt{cyl} (Equation \ref{eq:slope}):
+
+<<>>=
+cov(mtcars$cyl, mtcars$mpg) / var(mtcars$cyl)
+@
+
+Note that both \texttt{cov()} and \texttt{var()} use $n-1$. Since this cancels out if we do the division, it doesn't matter whether we use $n$ or $n-1$.
+
+If we first standardise the data with the function \texttt{scale()} and then compute the least squares slope, we get
+
+<<>>=
+z_mpg <- mtcars$mpg %>% scale()   # standardise mpg
+z_cyl <- mtcars$cyl %>% scale()  # standardise cyl
+
+cov(z_mpg, z_cyl) / var(z_cyl)
+cor(z_mpg, z_cyl)
+cov(z_mpg, z_cyl)
+@
+
+We see from the output that the slope coefficient for the standardised situation is equal to both the correlation and the covariance of the standardised values. 
+
+
+The data and the least squares regression line can be plotted using \texttt{geom\_smooth()}:
+
+
+<<fig.height = 3.5, warnings = F, message = F>>=
+mtcars %>% 
+  ggplot(aes(x = cyl, y = mpg)) +
+  geom_point() +  
+  geom_smooth(method = "lm", se = F)
+@
+
+
+
+
+
+\section{Explained and unexplained variance}
+
+So far in this chapter, we have seen relationships between two variables: one dependent variable and one independent variable. The dependent variable we usually denote as $Y$, and the independent variable we denote by $X$. The relationship was modelled by a linear equation: an equation with an intercept $b_0$ and a slope parameter $b_1$:
+
+
+\begin{equation}
+Y = b_0 + b_1 X
+\end{equation}
+
+Further, we argued that in most cases, the relationship between $X$ and $Y$ cannot be completely described by a straight line. Not all of the variation in $Y$ can be explained by the variation in $X$. Therefore, we have \textit{residuals} $e$, defined as the difference between the observed $Y$-value and the $Y$-value that is predicted by the straight line, (denoted by $\widehat{Y}$):
+
+\begin{equation}
+e = Y - \widehat{Y}
+\end{equation}
+
+Therefore, the relationship between $X$ and $Y$ is denoted by a regression equation, where the relationship is approached by a linear equation, plus a residual part $e$:
+
+\begin{equation}
+Y = b_0 + b_1 X + e
+\end{equation}
+
+The linear equation gives us only the predicted $Y$-value, $\widehat{Y}$:
+
+
+\begin{equation}
+\widehat{Y} = b_0 + b_1 X
+\end{equation}
+
+
+We've also seen that the residual $e$ is assumed to have a normal distribution, with mean 0 and variance $\sigma^2_e$:
+
+
+\begin{equation}
+e \sim N(0,\sigma^2_e)
+\end{equation}
+
+Remember that linear models are used to explain (or predict) the variation in $Y$: why are there both high values and low values for $Y$? Where does the variance in $Y$ come from? Well, the linear model tells us that the variation is in part explained by the variation in $X$. If $b_1$ is positive, we predict a relatively high value for $Y$ for a high value of $X$, and we predict a relatively low value for $Y$ if we have a low value for $X$. If $b_1$ is negative, it is of course in the opposite direction. Thus, the variance in $Y$ is in part explained by the variance in $X$, and the rest of the variance can only be explained by the residuals $e$.
+
+
+
+\begin{equation}
+\textrm{Var}(Y) = \textrm{Var}(\widehat{Y}) + \textrm{Var}(e) = \textrm{Var}(b_0 + b_1 X) + \sigma^2_e
+\end{equation}
+
+
+Because the residuals do not explain anything (we don't know where these residuals come from), we say that the \textit{explained} variance of $Y$ is only that part of the variance that is explained by independent variable $X$: $\textrm{Var}(b_0 + b_1 X)$. The \textit{unexplained} variance of $Y$ is the variance of the residuals, $\sigma^2_e$. The explained variance is often denoted by a ratio: the explained variance divided by the total variance of $Y$:
+
+
+\begin{equation}
+\textrm{Var}_{explained} = \frac{\textrm{Var}(b_0+b_1 X)}{\textrm{Var}(Y)} = \frac{\textrm{Var}(b_0+b_1 X)}{\textrm{Var}(b_0+b_1 X) + \sigma^2_e}
+\end{equation}
+
+From this equation we see that if the variance of the residuals is large, then the explained variance is small. If the variance of the residuals is small, the variance explained is large.
+
+
+\section{More than one predictor}
+
+In regression analysis, and in linear models in general, we try to make the explained variance as large as possible. In other words, we try to minimise the residual variance, $\sigma^2_e$. One way to do that is to use more than one independent variable. If not all of the variance in $Y$ is explained by $X$, then why not include multiple independent variables?
+
+
+Let's use an example with data on the weight of books, the size of books (area), and the volume of books. These data are available in R, and we will show how to perform the followint analyses in a later section. Let's try first to predict the weight of a book, \texttt{weight}, on the basis of the volume of the book, \texttt{volume}. Suppose we find the following regression equation and a value for $\sigma^2_e$:
+
+
+
+<<multi_1, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=F>>=
+set.seed(123456789)
+options(scipen = 999)
+
+rm(weight) # from chapter 1
+
+# (Taken from Maindonald, 2007, available in package DAAG)
+outbooks <- lm(weight ~ volume , data = allbacks)
+outbooks2 <- lm(weight ~ volume + area , data = allbacks)
+
+attach(allbacks) # in package DAAG
+
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+# write.foreign(allbacks,
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/multiple regression/books.sav',
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/multiple regression/books.sps',
+#               package = c("SPSS"))
+
+# n_inhabitants <- runif(100, 1000, 1000000)
+# n_pools <- rnorm(100, 4, 200)
+# e <- rnorm(100, 0, 60000)
+# n_houses <- 10 + 0.25 * n_inhabitants + 0.001* n_pools + e
+# out <- lm(n_houses~ n_inhabitants, data.frame(n_inhabitants, n_pools, n_houses))
+# out2 <- lm(n_houses~ n_inhabitants+ n_pools, data.frame(n_inhabitants, n_pools, n_houses))
+#
+# plot(n_inhabitants, n_houses)
+# plot(n_pools, n_houses)
+# plot(n_pools, n_inhabitants)
+
+@
+
+
+\begin{eqnarray}
+\texttt{weight} &=& \Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],2)} \times  \texttt{volume} + e \\
+e &\sim& N(0, \Sexpr{round(summary(outbooks)$sigma^2,0)})
+\end{eqnarray}
+
+
+In the data set, we see that the variance of the weight, $\textrm{Var}(\texttt{weight})$ is equal to \Sexpr{round(var(weight),0)}. Since we also know the variance of the residuals, we can solve for the variance explained by \texttt{volume}:
+
+
+\begin{eqnarray}
+\textrm{Var}(\texttt{weight}) =  \Sexpr{round(var(weight),0)}=   \textrm{Var}(\Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],1)} \times  \texttt{volume}) + \Sexpr{round(summary(outbooks)$sigma^2,0)} \nonumber\\
+\textrm{Var}(\Sexpr{round(outbooks$coef[1],1)} + \Sexpr{round(outbooks$coef[2],1)} \times  \texttt{volume}) = \Sexpr{round(var(weight),0)}- \Sexpr{round(summary(outbooks)$sigma^2,0)}= \Sexpr{round(var(weight),0)- round(summary(outbooks)$sigma^2,0)}\nonumber
+\end{eqnarray}
+
+So the proportion of explained variance is equal to $ \frac{\Sexpr{round(var(weight),0)- round(summary(outbooks)$sigma^2,0)}}{\Sexpr{round(var(weight),0)}}=\Sexpr{(round(var(weight),0)- round(summary(outbooks)$sigma^2,0))/round(var(weight),0)}$. This is quite a high proportion: nearly all of the variation in the weight of books is explained by the variation in volume.
+\\
+\\
+But let's see if we can explain even more variance if we add an extra independent variable. Suppose we know the area of each book. We expect that books with a large surface area weigh more. Our linear equation then looks like this:
+
+
+\begin{eqnarray}
+\texttt{weight} &=& \Sexpr{round(outbooks2$coef[1],1)} + \Sexpr{round(outbooks2$coef[2],2)} \times \texttt{volume} + \Sexpr{round(outbooks2$coef[3],1)} \times  \texttt{area} + e \\
+e &\sim& N(0, \Sexpr{round(summary(outbooks2)$sigma^2,0)})
+\end{eqnarray}
+
+How much of the variance in weight does this equation explain? The amount of explained variance equals the variance of \texttt{weight} minus the residual variance: $\Sexpr{round(var(weight),0)} - \Sexpr{round(summary(outbooks2)$sigma^2,0)} = \Sexpr{round(var(weight),0) - round(summary(outbooks2)$sigma^2,0)}$. The proportion of explained variance is then equal to $ \frac{\Sexpr{round(var(weight),0)- round(summary(outbooks2)$sigma^2,0)}}{\Sexpr{round(var(weight),0)}}=\Sexpr{(round(var(weight),0)- round(summary(outbooks2)$sigma^2,0))/round(var(weight),0)}$. So the proportion of explained variance has increased!
+
+Note that the variance of the residuals has decreased; this is the main reason why the proportion of explained variance has increased. By adding the extra independent variable, we can explain some of the variance that without this variable could not be explained! In summary, by adding independent variables to a regression equation, we can explain more of the variance of the dependent variable. A regression analysis with more than one independent variable we call \textit{multiple regression}. Regression with only one independent variable is called \textit{simple regression}.
+
+
+
+
+\section{R-squared}
+
+With regression analysis, we try to explain the variance of the dependent variable. With multiple regression, we use more than one independent variable to try to explain this variance. In regression analysis, we use the term \textit{R-squared} to refer to the proportion of explained variance, usually denoted with the symbol $R^2$. The unexplained variance is of course the variance of the residuals, $\textrm{Var}(e)$, usually denoted as $\sigma_e^2$. So suppose the variance of dependent variable $Y$ equals 200, and the residual variance in a regression equation equals say 80, then $R^2$ or the proportion of explained variance is $(200-80)/200=0.60$.
+
+\begin{eqnarray}\label{eq:Rsquared}
+R^2 = \sigma^2_{explained}/ \sigma^2_Y = (\sigma^2_Y-\sigma^2_{unexplained})/\sigma^2_Y = (\sigma^2_Y-\sigma^2_e)/\sigma^2_Y
+\end{eqnarray}
+
+This is the definition of R-squared at the population level, where we know the exact values of the variances. However, we do not know these variances, since we only have a \textit{sample} of all values. 
+
+We know from Chapter \ref{chap:mean} that we can take estimators of the variances $\sigma_Y^2$ and $\sigma^2_e$. We should not use the variance of $Y$ observed in the sample, but the unbiased estimator of the variance of $Y$ in the population
+
+
+\begin{eqnarray}
+\widehat{\sigma_Y^2} =  \frac{  \Sigma_i (Y_i-\widebar{Y})^2  }{n-1}
+\end{eqnarray}
+
+where $n$ is sample size (see Section \ref{sec:sample_size}).
+
+For $\sigma_e^2$ we take the unbiased estimator of the variance of the residuals $e$ in the population
+
+
+\begin{eqnarray}
+\widehat{\sigma_e^2} =  \frac{  \Sigma_i (e_i-\bar{e})^2  }{n-1} = \frac{  \Sigma_i e_i^2  }{n-1}
+\end{eqnarray}
+
+Here we do not have to subtract the mean from the residuals, because the mean is 0 by definition.
+
+If we plug these estimators into Equation \ref{eq:Rsquared}, we get
+
+
+\begin{eqnarray}
+\widehat{R^2} &=&  \frac {\widehat{\sigma_Y^2} - \widehat{\sigma_e^2}}{\widehat{\sigma_Y^2}}    =  \frac   { \frac{  \Sigma (Y_i-\widebar{Y})^2  }{n-1}- \frac{  \Sigma e_i^2  }{n-1}}{\frac{  \Sigma (Y_i-\widebar{Y})^2  }{n-1}} \nonumber\\
+&=& \frac{ \Sigma (Y_i-\widebar{Y})^2 - \Sigma e_i^2}{\Sigma (Y_i-\widebar{Y})^2} = \frac{ \Sigma (Y_i-\widebar{Y})^2}{\Sigma (Y_i-\widebar{Y})^2} - \frac{ \Sigma e_i^2}{\Sigma (Y_i-\widebar{Y})^2} \nonumber\\
+&=& 1 - \frac{SSR}{SST}
+\end{eqnarray}
+
+where SSR refers to the sum of the squared residuals (errors)\footnote{In the literature and online, sometimes you see SSR and sometimes you see SSE, both referring to the sum of the squared residuals}, and SST refers to the total sum of squares (the sum of the squared deviations from the mean for variable $Y$).
+
+As we saw in Section \ref{sec:least_squares}, in a regression analysis, the intercept and slope parameters are found by minimising the sum of squares of the residuals, SSR. Since the variance of the residuals is based on this sum of squares, in any regression analysis, the variance of the residuals is always as small as possible. The values of the parameters for which the SSR (and by consequence the variance) is smallest, are the least squares regression parameters. And if the variance of the residuals is always minimised in a regression analysis, the explained variance is always maximised!
+
+Because in any least squares regression analysis based on a sample of data, the explained variance is always maximised, we may overestimate the variance explained in the population data. In regression analysis, we therefore very often use an \textit{adjusted R-squared} that takes this possible overestimation (\textit{inflation}) into account. The adjustment is based on the number of independent variables and sample size.
+
+The formula is
+
+
+\begin{eqnarray}
+R^2_{adj}= 1 - (1-R^2)\frac{n-1}{n-p-1} \nonumber
+\end{eqnarray}
+
+where $n$ is sample size and $p$ is the number of independent variables. For example, if $R^2$ equals 0.10 and we have a sample size of 100, and 2 independent variables, the adjusted $R^2$ is equal to $1 - (1-0.10)\frac{100-1}{100-2-1}= 1 - (0.90)\frac{99}{97}=0.08$. Thus, the estimated proportion of variance explained at population level, corrected for inflation, equals 0.08. Because $R^2$ is inflated, the adjusted $R^2$ is never larger than the unadjusted R-squared.
+
+$$R^2_{adj} \leq R^2$$
+
+
+
+\section{Multiple regression in R}
+
+Let's use the book data and run a multiple regression in R. The data set is called \texttt{allbacks} and is available in the R package \texttt{DAAG} (you may need to install that package first). The syntax looks very similar to simple regression, except that we now specify two independent variables, \texttt{volume} and \texttt{area}, instead of one. We combine these two independent variables using the +-sign.
+
+\begin{lstlisting}
+library(DAAG)
+library(broom)
+model <- allbacks %>% 
+  lm(weight ~ volume + area, data = .)
+model %>% 
+  tidy()
+\end{lstlisting}
+
+Below we see the output:
+
+<<out_books_r>>=
+library(DAAG)
+library(broom)
+model <- allbacks %>% 
+  lm(weight ~ volume + area, data = .)
+model %>% 
+  tidy()
+@
+
+There we see an intercept, a slope parameter for \texttt{volume} and a slope parameter for \texttt{area}. Remember from Section \ref{sec:equations} that the intercept is the predicted value when the independent variable has value 0. This extends to multiple regression: the intercept is the predicted value when the independent variables all have value 0. Thus, the output tells us that the predicted weight of a book that has a volume of 0 and an area of 0, is 22.4. The slopes tell us that for every unit increase in \texttt{volume}, the predicted \texttt{weight} increases by 0.708, and for every unit increase in \texttt{area}, the predicted \texttt{weight} increases by 0.468.
+
+So the linear model looks like:
+
+
+\begin{eqnarray}
+\texttt{weight} =  22.4 + 0.708 \times \texttt{volume} + 0.468 \times \texttt{area} + e
+\end{eqnarray}
+
+Thus, the predicted weight of a book that has a volume of 10 and an area of 5, the expected weight is equal to $22.4 + 0.708 \times 10 + 0.468 \times 5 = \Sexpr{22.4 + 0.708 * 10 + 0.468 * 5}$.
+
+In R, the R-squared and the adjusted R-squared can be obtained by first making a summary of the results, and then accessing these statistics directly.
+
+\begin{lstlisting}
+sum <- model %>% summary()
+sum$r.squared
+sum$adj.r.squared
+\end{lstlisting}
+
+
+<<echo = T>>=
+sum <- model %>% summary()
+sum$r.squared
+sum$adj.r.squared
+@
+
+
+The output tells you that the R-squared equals 0.93 and the adjusted R-squared 0.92. The variance of the residuals can also be found in the summary object:
+
+<<echo = T>>=
+sum$sigma^2
+@
+
+
+
+
+\section{Multicollinearity}
+
+In general, if you add independent variables to a regression equation, the proportion explained variance, $R^2$, increases. Suppose you have the following three regression equations:
+
+\begin{eqnarray}
+\texttt{weight} &=& b_0 + b_1 \times  \texttt{volume} + e \\
+\texttt{weight} &=& b_0 + b_1 \times  \texttt{area} + e \\
+\texttt{weight} &=& b_0 + b_1 \times  \texttt{volume} + b_2 \times  \texttt{area} + e
+\end{eqnarray}
+
+If we carry out these three analyses, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared} if we only use \texttt{volume} as predictor, and an $R^2$ of \Sexpr{summary(lm(weight~ area, allbacks))$r.squared} if we only use \texttt{area} as predictor. So perhaps you'd think that if we take both \texttt{volume} and \texttt{area} as predictors in the model, we would get an $R^2$ of $\Sexpr{summary(lm(weight~ volume, allbacks))$r.squared}+\Sexpr{summary(lm(weight~ area, allbacks))$r.squared}= \Sexpr{summary(lm(weight~ volume, allbacks))$r.squared+summary(lm(weight~ area, allbacks))$r.squared}$. However, if we carry out the multiple regression with \texttt{volume} and \texttt{area}, we obtain an $R^2$ of \Sexpr{summary(lm(weight~ volume + area, allbacks))$r.squared}, which is slightly less! This is not a rounding error, but results from the fact that there is a correlation between the volume of a book and the area of a book. Here it is a tiny correlation of \Sexpr{round(cor(allbacks$area, allbacks$volume),3)}, but nevertheless it affects the proportion of variance explained when you use both these variables.
+
+
+Let's look at what happens when independent variables are strongly correlated. Table \ref{tab:multi_2} shows measurements on a breed of seals (only measurements on the first 6 seals are shown). These data are in the dataframe \texttt{cfseals} in the package \texttt{DAAG}. Often, the age of an animal is gauged from its weight: we assume that heavier seals are older than lighter seals. If we carry out a simple regression of \texttt{age} on \texttt{weight}, we get the output 
+
+
+<<>>=
+library(DAAG)
+data(cfseal) # available in package DAAG
+out1 <- cfseal %>% 
+  lm(age ~ weight , data = .)
+out1 %>% tidy()
+var(cfseal$age)  # total variance of age
+summary(out1)$sigma^2  # variance of residuals
+@
+
+resulting in the equation:
+
+
+<<multi_2, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+head(cfseal)[,c(1,2,3)] %>%
+  xtable(caption = "Part of Cape Fur Seal Data.", label = "tab:multi_2") %>%
+  print(include.rownames = F, caption.placement = "top")
+out1 <- lm(age ~ weight , data = cfseal)
+out2 <- lm(age ~ heart , data = cfseal)
+out3 <- lm(age ~ weight + heart , data = cfseal)
+@
+
+
+
+
+
+\begin{eqnarray}
+\texttt{age} &=& \Sexpr{round(out1$coef[1],1)} + \Sexpr{round(out1$coef[2],2)} \times  \texttt{weight} + e \\
+e &\sim& N(0, \Sexpr{round(summary(out1)$sigma^2,0)})
+\end{eqnarray}
+
+
+
+From the data we calculate the variance of \texttt{age}, and we find that it is \Sexpr{var(cfseal$age)}. The variance of the residuals is 200, so that the proportion of explained variance is $(\Sexpr{var(cfseal$age)}-200)/\Sexpr{var(cfseal$age)}  = \Sexpr{(var(cfseal$age)-200)/var(cfseal$age)}$.
+
+Since we also have data on the weight of the heart alone, we could try to predict the age from the weight of the heart. Then we get output
+
+<<>>=
+out2 <- cfseal %>% 
+  lm(age ~ heart , data = .)
+out2 %>% 
+  tidy()
+
+sum2 <- out2 %>% 
+  summary()
+sum2$sigma^2  # variance of residuals
+@
+
+
+that leads to the equation:
+
+
+
+\begin{eqnarray}
+\texttt{age} &=& \Sexpr{round(out2$coef[1],1)} + \Sexpr{round(out2$coef[2],2)} \times  \texttt{heart} + e \\
+e &\sim& N(0, \Sexpr{round(summary(out2)$sigma^2,0)})
+\end{eqnarray}
+
+
+
+
+Here the variance of the residuals is 307, so the proportion of explained variance is $(\Sexpr{var(cfseal$age)}-307)/\Sexpr{var(cfseal$age)}  = \Sexpr{(var(cfseal$age)-307)/var(cfseal$age)}$.
+
+
+Now let's see what happens if we include both total weight and weight of the heart into the linear model. This results in the following output 
+
+
+<<>>=
+out3 <- cfseal %>% 
+  lm(age ~ heart + weight , data = .)
+out3 %>% tidy()
+sum3 <- out3 %>% summary()
+sum3$sigma^2  # variance of residuals
+@
+
+
+
+with model equation:
+
+
+\begin{eqnarray}
+\texttt{age} &=& \Sexpr{round(out3$coef[1],1)}  \Sexpr{round(out3$coef[2],2)} \times  \texttt{heart} +  \Sexpr{round(out3$coef[3],2)} \times  \texttt{weight} + e \\
+e &\sim& N(0, \Sexpr{round(summary(out3)$sigma^2,0)})
+\end{eqnarray}
+
+
+
+
+
+Here we see that the regression parameter for \texttt{weight} has increased from 0.82 to 0.99. At the same time, the regression parameter for \texttt{heart} has decreased, has even become negative, from 0.11 to -0.03. From this equation we see that there is a strong relationship between the total weight and the age of a seal, but on top of that, for every unit increase in the weight of the heart, there is a very small decrease in the expected age. The slope for \texttt{heart} has become practically negligible, so we could say that on top of the effect of total weight, there is no remaining relationship between the weight of the heart and age. In other words, once we can use the total weight of a seal, there is no more information coming from the weight of the heart.
+
+This is because the total weight of a seal and the weight of its heart are strongly correlated: heavy seals generally have heavy hearts. Here the correlation turns out to be \Sexpr{round(cor(cfseal$weight, cfseal$heart),2)}, almost perfect! This means that if you know the total weight of a seal, you practically know the weight of its heart. This is logical of course, since the total weight is a composite of all the weights of all the parts of the animal: the total weight variable \textit{includes} the weight of the heart.
+
+Here we have seen, that if we use multiple regression, we should be aware of how strongly the independent variables are correlated. Highly correlated predictor variables do not add extra predictive power. Worse: they can cause problems in obtaining regression parameters because it becomes hard to tell which variable is more important: if they are strongly correlated (positive or negative), then they measure almost the same thing!
+
+When two predictor variables are perfectly correlated, either 1 or -1, regression is no longer possible, the software stops and you get a warning. We call such a situation \textit{multicollinearity}. But also if the correlation is close to 1 or -1, you should be very careful interpreting the regression parameters. If this happens, try to find out what variables are highly correlated, and select the variable that makes most sense.
+
+In our seal data, there is a very high correlation between the variables \texttt{heart} and \texttt{weight} that can cause computational and interpretation problems. It makes more sense to use only the total weight variable, since when seals get older, \textit{all} their organs and limbs grow larger, not just their heart.
+
+
+
+
+\section{Simpson's paradox}
+
+With multiple regression, you may uncover very surprising relationships between two variables, that can never be found using simple regression. Here's an example from Paul van der Laken\footnote{https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/}, who simulated a data set on the topic of Human Resources (HR).
+
+Assume you run a company with 1000 employees and you have asked all of them to fill out a Big Five personality survey. Per individual, you therefore have a score depicting their personality characteristic \texttt{Neuroticism}, which can run from 0 (not at all neurotic) to 7 (very neurotic). Now you are interested in the extent to which this \texttt{Neuroticism} of employees relates to their \texttt{salary} (measured in Euros per year).
+
+
+We carry out a simple regression, with \texttt{salary} as our dependent variable and \texttt{Neuroticism} as our independent variable. We then find the following regression equation:
+
+
+
+
+
+<<multi_3, fig.height=4, echo=FALSE, message = F, fig.align='center'>>=
+# options(scipen = 0)
+
+# https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/
+
+alpha <- 0.5
+set.seed(123)
+n <- 1000
+
+Neuroticism <- rnorm(n)
+Performance <- rnorm(n) + Neuroticism * 0.1
+
+Performance <- rescale(Performance, to = c(0, 100))
+# summary(Performance)
+Neuroticism <- rescale(Neuroticism, to = c(0, 7))
+# summary(Neuroticism)
+
+data <- data.frame(
+  Performance,
+  Neuroticism
+)
+
+options <- c("Technical", "Service")
+technical <-
+  (data$Performance > mean(data$Performance) &
+    data$Neuroticism > mean(data$Neuroticism)) |
+    (data$Performance < mean(data$Performance) &
+      data$Neuroticism < mean(data$Neuroticism))
+
+data$Job[technical] <- sample(options, sum(technical), T, c(0.6, 0.2))
+data$Job[is.na(data$Job)] <- sample(options, sum(is.na(data$Job)), T, c(0.2, 0.8))
+
+# p <- data %>% ggplot(aes(Neuroticism, Performance))
+# p + geom_point(alpha = alpha) + geom_smooth(method = 'lm')
+set.seed(123)
+n <- 1000
+
+Education <- rbinom(n, 2, 0.5)
+Neuroticism <- rnorm(n) + Education
+Salary <- Education * 2 + rnorm(n) - Neuroticism * 0.3
+
+Salary <- sample(10000:11000, 1) + rescale(Salary, to = c(0, 100000))
+# summary(Salary)
+Neuroticism <- rescale(Neuroticism, to = c(0, 7))
+# summary(Neuroticism)
+
+
+data <- tibble(Salary, Neuroticism, Education)
+
+out2 <- lm(Salary ~ Neuroticism + Education, data)
+out1 <- lm(Salary ~ Neuroticism, data)
+@
+
+\begin{equation}
+\texttt{salary} = \Sexpr{round(out1$coef[1],0)} + \Sexpr{round(out1$coef[2],0)} \times \texttt{Neuroticism} + e
+\end{equation}
+
+
+Figure \ref{fig:multi_4} shows the data and the regression line. From this visualisation it looks like Neuroticism relates \textit{positively} to their yearly salary: more neurotic people earn more salary than less neurotic people. More precisely, we see in the equation that for every unit increase on the \texttt{Neuroticism} scale, the predicted salary increases with \Sexpr{round(out1$coef[2],0)} Euros a year.
+
+
+<<multi_4, fig.height=3.5, echo=FALSE, message = F, fig.align='center', fig.cap="Simulated HR data set.">>=
+Education <- factor(Education, labels = c("0", "1", "2"))
+data <- tibble(Salary, Neuroticism, Education)
+p <- data %>% 
+  ggplot(aes(Neuroticism, Salary))
+p + 
+  geom_point(alpha = alpha) + 
+  geom_smooth(method = "lm", se = F)
+
+@
+
+Next we run a multiple regression analysis. We suspect that one other very important predictor for how much people earn is their educational background. The \texttt{Education} variable has three levels: 0, 1 and 2. If we include both \texttt{Education} and \texttt{Neuroticism} as independent variables and run the analysis, we obtain the following regression equation:
+
+\begin{equation}
+\texttt{salary} = \Sexpr{round(out2$coef[1],0)}  \Sexpr{round(out2$coef[2],0)} \times \texttt{Neuroticism} + \Sexpr{round(out2$coef[3],0)} \times \texttt{Education} + e
+\end{equation}
+
+Note that we now find a \textit{negative} slope parameter for the effect of \texttt{Neuroticism}! This implies there is a relationship in the data where neurotic employees earn \textit{less} than their less neurotic colleagues! How can we reconcile this seeming paradox? Which result should we trust: the one from the simple regression, or the one from the multiple regression?
+
+The answer is: neither. Or better: both! Both analyses give us different information.
+
+Let's look at the last equation more closely. Suppose we make a prediction for a person with a low educational background ($\texttt{Education}=0$). Then the equation tells us that the expected salary of a person with a neuroticism score of 0 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=0)),0)}, and of a person with a neuroticism score of 1 is around \Sexpr{round(predict(out2, data.frame(Education=0, Neuroticism=1)),0)}. That's an increase of \Sexpr{round(out2$coef[2],0)}, which is the slope for \texttt{Neuroticism} in the multiple regression. So for employees with low education, the more neurotic employees earn less! If we do the same exercise for average education and high education employees, we find exactly the same pattern: for each unit increase in neuroticism, the predicted yearly salary drops by \Sexpr{round(-1*out2$coef[2],0)} Euros.
+
+
+It is true that in this company, the more neurotic persons generally earn a higher salary. But if we take into account educational background, the relationship flips around. This can be seen from Figure \ref{fig:multi_5}: looking only at the people with a low educational background ($\texttt{Education}=0$, the red data points), then the more neurotic people earn less than their less neurotic colleagues with a similar educational background. And the same is true for people with an average education ($\texttt{Education}=1$, the green data points) and a high education ($\texttt{Education}=2$, the blue data points). Only when you put all employees together in one group, you see a positive relationship between \texttt{Neuroticism} and \texttt{salary}.
+
+
+<<multi_5, fig.height=3.5, echo=FALSE, message = F, fig.align='center', fig.cap="Same HR data, now with markers for different education levels.">>=
+p +
+  geom_point(aes(col = Education), alpha = alpha) +
+  geom_smooth(aes(col = Education), method = 'lm', se = F) +
+  theme(legend.background = element_rect(fill = "transparent"),
+        legend.justification = c(0, 1),
+        legend.position = c(0, 1)) +
+  scale_colour_brewer(palette = "Set1")
+rm(p)
+@
+
+Simpson's paradox tells us that we should always be careful when interpreting positive and negative correlations between two variables: what might be true at the total group level, might not be true at the level of smaller subgroups. Multiple linear regression helps us investigate correlations more deeply and uncover exciting relationships between multiple variables.
+
+Simpson's paradox helps us in interpreting the slope coefficients in multiple regression. In simple regression, when we only have one independent variable, we saw that the slope for an independent variable $A$ is the increase in the dependent variable if we increase variable $A$ by one unit. In multiple regression, we have multiple independent variables, say $A$, $B$ and $C$. The interpretation for the slope coefficient for variable $A$ is then the increase in the dependent variable if we increase variable $A$ by one unit, \textit{with the other independent variables $B$ and $C$ held constant}. For example, the slope for variable $A$ is the increase when we take particular values for variables $B$ and $C$, say $B = 5$ and $C = 7$.
+
+Multiple regression therefore plays an important part in studying causation. Suppose that a researcher finds in South-African beach data that on days with high ice cream sales there are also more shark attacks. Might this indicate that there is a causal relationship between ice cream sales and shark attacks? Might bellies full of ice cream be more attractive to sharks? Or when there are many shark attacks, might people prefer eating ice cream over swimming? Alternatively, there might be a third variable that explains both the shark attacks and the ice cream sales: temperature! Sharks attack during the summer when temperature is high, and that's also the time people eat more ice cream. There is no causal relationship, since if you only look at data from sunny summer days (holding temperature constant), you don't see a relationship between shark attacks and ice cream sales (just many shark attacks and high ice cream sales). And if you only look at cold wintry days, you also see no relationship (no shark attacks and no ice cream sales). But if you take \textit{all} days into account, you see a relationship between shark attacks and ice cream sales. Because this correlation is non-causal and explained by the third variable temperature, we call this correlation a \textit{spurious} correlation.
+
+This spurious correlation is plotted in Figure \ref{fig:sharks}. If you look at all the data points at once, you see a steep slope in the least squares regression line for shark attacks and ice cream sales. However, if you hold temperature constant by looking at only the light blue data points (high temperatures), there is no linear relationship. Neither is there a linear relationship when you only look at the dark blue data points (low temperatures).
+
+<<sharks, echo = F, warning = F, message = F, fig.height=3.5, fig.cap="A spurious correlation between the number of shark attacks and ice cream sales.">>=
+set.seed(12345)
+icecream_sales <- c(rpois(20, 3), rpois(20, 1000))
+temperature <- c(rnorm(20, 8, 2), rnorm(20, 27, 2))  %>% round(0)
+shark_attacks <- c(rpois(20, 10), rpois(20, 40))
+
+tibble(icecream_sales, temperature, shark_attacks) %>% 
+  ggplot(aes(x = shark_attacks, y = icecream_sales, col = temperature)) +
+  geom_point() + 
+  geom_smooth(se = F, method = "lm") +
+  xlab("Number of shark attacks per day") +
+  ylab("Number of ice creams sold per day")
+@
+
+
+
+% \section{Exercises}`
+% 
+% 
+% Two neighbours, Elsa and John, are chopping trees in the forest for their respective fireplaces. They pick their trees to chop down, based on the expected volume of wood they can get from that tree. However, Elsa and John disagree on what is the most important aspect of trees for selection. Elsa believes that the tallest tree will give the biggest volume of wood for the fireplace, but John believes that the tree with the largest girth gives the most volume of wood. Luckily there is a data set with three variables: Volume, Girth and Height.
+% 
+% 
+% \begin{enumerate}
+% \item What would the SPSS syntax look like to run a multiple regression, if you want to find out which predictor is most important for the volume of wood that comes from a tree?
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ....... WITH ........
+%   /DESIGN = ........
+%   /PRINT = PARAMETER R-Squared.
+% \end{verbatim}
+% 
+% 
+% \item Suppose you find the output in Table \ref{tab:multi_5}: what would your linear equation look like?
+% 
+% \begin{equation}
+% \dots \dots = \dots    \dots   \dots \dots \dots \dots+ e
+% \end{equation}
+% 
+% 
+% <<multi_6, fig.height=4, echo=FALSE, fig.align='center', results="asis">>=
+% data(trees)
+% out <- lm(Volume~ Girth + Height, data=trees) %>%
+%         xtable(caption="Regression table for predicting volume from height and girth.", label="tab:multi_5") %>%
+%         print(include.rownames=T, caption.placement = "top")
+% @
+% 
+% 
+% 
+% 
+% \item On the basis of the output, what would be the predicted volume for a tree with a height of 10 and a girth of 5?
+% 
+% \item On the basis of the output, what would be the predicted volume for a tree with a height of 5 and a girth of 10?
+% 
+% \item For each unit increase of height, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+% 
+% \item For each unit increase of girth, how much does the volume increase? Give the approximate 95\% confidence interval for this increase.
+% 
+% 
+% \item On the basis of the SPSS output, do you think Lisa is right in saying that height is an important predictor of volume? Explain your answer.
+% 
+% \item On the basis of the SPSS output, do you think John is right in saying that girth is an important predictor of volume? Explain your answer.
+% 
+% \item On the basis of the plots in Figures \ref{fig:multi_7} and \ref{fig:multi_8}, which do you think is the most reliable predictor for Volume: Height or Girth? Explain your answer.
+% 
+% \item How large is the proportion of variance explained in volume, by girth and height?
+% 
+% \item How would you summarize this multiple regression analysis in a research report?
+% 
+% \end{enumerate}
+% 
+% <<multi_7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between height and volume of a tree.' >>=
+% trees %>% ggplot(aes(Height, Volume)) + geom_point()
+% @
+% 
+% <<multi_8, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A scatterplot for the relationship between girth and volume of a tree.'>>=
+% trees %>% ggplot(aes(Girth, Volume)) + geom_point()
+% @
+% 
+% 
+% 
+
+
+

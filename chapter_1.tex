@@ -1,0 +1,738 @@
+\chapter{Variables, variation and co-variation} \label{chap:intro}
+
+
+\section{Units, variables, and the data matrix}
+
+
+
+Data is the plural of datum, and datum is the Latin translation of 'given'. That the world is round, is a given. That you are reading these lines, is a given, and that my dog's name is Philip, is a given. Sometimes we have a bunch of given facts (data), for example the names of all students in a school, and their marks for a particular course. We could put these data in a table, like the one in Table \ref{tab:data_1}. There we see information ('facts') about seven students. And of these seven students we know two things: their name and their grade. You see that the data are put in a matrix with seven (horizontal) rows and two (vertical) columns. Each row stands for one student, and each column stands for one property.
+
+In data analysis, we always put data in such a matrix format. In general, we put the objects of our study in rows, and their properties in columns. The objects of our study we call \textit{units}, and the properties we call \textit{variables}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(name, grade) \%>\% xtable(caption = "{}Data matrix with 7 units and 2 variables."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+Let's look at the first column in Table \ref{tab:data_1}. We see that it regards the variable \textbf{name}. We call the property \textbf{name} a variable, because it varies across our units (the students): in this case, every unit has a different value for the variable \textbf{name}. In sum, a variable is a property of units that shows different values for different units.
+
+The second column represents the variable \textbf{grade}. Grade is here a variable, because it takes different values for different students. Note that both Mark Zimmerman and Mohammed Solmaz have the same value for this variable.
+
+What we see in Table \ref{tab:data_1} is called a \textit{data matrix}: it is a matrix (a collection of rows and columns) that contains information on units (in the rows) in the form of variables (in the columns).
+
+A unit is something we'd like to say something about. For example, I might want to say something about students and how they score on a course. In that case, students are my \textit{units of analysis}.
+
+% Alternatively, I might want to say something about different companies: how they differ in size and how they differ in how they deal with their taxes. In that case, company is my \textit{unit of analysis}. Research data on companies might look like the data matrix in Table \ref{tab:data_2} with a different row for each company.
+%
+% <<data_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(123)
+% company<- c("McDoe", "Burger Queen", "Bram Ladaque", "Daisy's")
+% number.employees <- rpois(length(company), 6000)
+% data.frame(company, number.employees) %>%
+%         xtable(caption="Data matrix data on companies.", label="tab:data_2", digits=0   ) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+
+If my interest is in schools, the data matrix in Table \ref{tab:data_3} might be useful, which shows a different row for each school with a couple of variables. Here again, we see a variable for grade on a course, but now averaged per school. In this case, school is my unit of analysis.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in runif(length(school), 5, 7) \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(school, number\_students, grade\_average, teacher) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+\section{Multiple observations: wide format and long format data matrices}
+
+In many instances, units of analysis are observed more than once. This means that we have more than one observation for the \textit{same} variable for the \textit{same} unit of analysis. Storing this information in the rows and columns of a data matrix can be done in two ways: using \textit{wide format} or using \textit{long format}. We first look at wide format, and then see that generally, long format is to be preferred.
+
+Suppose we measure depression levels in four men four times during cognitive behavioural therapy. Sometimes you see data presented in the way of Table \ref{tab:data_7}, where there are four separate variables for depression level, one for each measurement: \textbf{depression\_1}, \textbf{depression\_2}, \textbf{depression\_3}, and \textbf{depression\_4}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(client, depression\_1, depression\_2, depression\_3, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(client, depression\_1, depression\_2, depression\_3, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+This way of representing data on a variable that was measured more than once is called \textit{wide format}. We call it \textit{wide} because we simply add columns when we have more measurements, which increases the width of the data matrix. Each new observation of the same variable on the same unit of analysis leads to a new column in the data matrix.
+
+Note that this is only one way of looking at this problem of measuring depression four times. Here, you can say that there are really four depression variables: there is depression measured at time point 1, there is depression measured at time point 2, and so on, and these four variables vary only across units of analysis. This way of thinking leads to a wide format representation.
+
+An alternative way of looking at this problem of measuring depression four times, is that depression is really only one variable and that it varies across units of analysis (some people are more depressed than others) and that it \textit{also} varies across time (at times you feel more depressed than at other times).
+
+Therefore, instead of adding columns, we could simply stick to one variable and only add rows. That way, the data matrix becomes longer, which is the reason that we call that format \textit{long format}. Table \ref{tab:data_8} shows the same information from Table \ref{tab:data_7}, but now in long format. Instead of four different variables, we have only one variable for depression level, and one extra variable \textbf{time} that indicates to which time point a particular depression measure refers to. Thus, both Tables \ref{tab:data_7} and \ref{tab:data_8} tell us that the second depression measure for client number 3 was 0.
+
+Now let's look at a slightly more complex example, where the advantage of long format becomes clear. Suppose we have data on weather forecasts for a number of specific days (days are our units of analysis), where the forecasts are given by two different forecasters: Dump and Taylor. We present the data in long format in Table \ref{tab:data_5}, and in wide format in Table \ref{tab:data_5b}.
+
+% <<data_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(12234)
+% date <- c("Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7")
+% hours.sunshine <- rnorm(length(date), 2, 1) %>% exp %>% round(1)
+% precipitation <- rpois(length(date), 2) %>% exp %>% round(1)
+% forecaster <- sample( c("Felicia Taylor", "Donald Dump") ,7  , replace=T)
+% data.frame(date, hours.sunshine, precipitation, forecaster) %>%
+%         xtable(caption="Data matrix on weather forecasts.", label="tab:data_4", digits=0   ) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(length(day), 2, 1) \%>\% exp() \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rpois(length(day), 2) \%>\% exp() \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'sunshine' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'precipitation' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(day, precipitation, sunshine, forecaster) \%>\% arrange(day, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(length(day), 2, 1) \%>\% exp \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rpois(length(day), 2) \%>\% exp \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'sunshine' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'precipitation' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(day, precipitation, forecaster) \%>\% arrange(day, forecaster) \%>\% : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(day, sunshine, forecaster) \%>\% arrange(day, forecaster) \%>\% : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in full\_join(P, S) \%>\% xtable(caption = "{}Data matrix on weather forecasts in wide format."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+One thing we notice when we compare the weather forecast data in long and wide format is the wording of the variable names: they tend to become very long in wide format. Imagine for example that we would have weather forecast data by several forecasters for two regions: South and North. Then one variable should be called \textbf{Precipitation.Taylor.North}, another variable should be called \textbf{Precipitation.Taylor.South}, another variable should be called \textbf{Precipitation.Dump.North}, and another variable should be called \textbf{Precipitation.Dump.South}. And what if we would have in addition separate forecasts for mornings and afternoons? Then we would have to have variables with names like \textbf{Precipitation.Taylor.North.am}, \textbf{Precipitation.Taylor.North.pm}, et cetera. Table \ref{tab:data_5c} shows an example of a weather forecast data set that is simply too complex to store in wide format: the variable names would become too horrible to print. In sum, if a data set becomes large and complex, it is much better stored in long format than in wide format, as in wide format the names of variables become too wordy to handle. Of course, a solution could be to use very short variable names like \textbf{v1} and \textbf{v2} and then keep track of their meaning in a log file, but that is rather inconvenient. SPSS does have a nice feature to keep variable names and variable meanings close but separate, but not all software packages do.
+
+The second thing we can say about the difference in data in long and wide format, is that it is much easier to add data in long format than it is in wide format. Imagine that we start with the data in wide format in Table \ref{tab:data_5b}. Suppose we get some new data on forecasts on wind speed. If we want to include that information in our data matrix, we would have to make two new variables: one for wind speed as predicted by Taylor and one for wind speed as predicted by Dump. In the case of long format, see Table \ref{tab:data_5}, we would only have to add one new variable \textbf{Wind.speed}. If in addition, we could obtain new data in terms of data coming from a third forecaster named Gibson, in the case of data in wide format we would have to add three new wordy variables: \textbf{Precip.Gibson}, \textbf{Sunshine.Gibson}, and \textbf{Wind.speed.Gibson}. In the case of long format, we would only have to add a few extra rows.
+
+
+
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in c("{}Jan 1"{}, "{}Jan 2"{}) \%>\% rep(each = 12): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in c("{}south"{}, "{}north"{}) \%>\% rep(each = 6) \%>\% rep(2): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in c("{}am"{}, "{}pm"{}) \%>\% rep(each = 2) \%>\% rep(6): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in c("{}Dec 31"{}, "{}Jan 1"{}) \%>\% rep(each = 4) \%>\% rep(3): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in c("{}Taylor"{}, "{}Dump"{}) \%>\% rep(2) \%>\% rep(6): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(length(day), 2, 1) \%>\% exp \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rpois(length(day), 2) \%>\% exp \%>\% round(1): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(day, region, time.of.day, day.of.forec, w.speed, precip, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+
+
+
+
+
+
+
+% Another example where we see several measures of the same variable for each unit of analysis is reaction times. In psychology experiments, reaction times are often measured on several trials. For example, if each participant's reaction time is measured on 8 trials, the data matrix might look like Table \ref{tab:data_6}.
+%
+% <<data_6, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(1234)
+% participant<- rep(c(1,2), each=8)
+% trial <- rep(1:8,2)
+% reaction.time <- rnorm(16, 7, 1) %>% exp %>% round(1)
+% sex <- rep(c("male","female"), each=8)
+%
+% data.frame(participant, trial, reaction.time, sex) %>%
+%         xtable(caption="Data matrix for reaction times.", label="tab:data_6", digits=0   ) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+%
+%
+% In short, the general rule is that in data matrices we have one row per unit. However, if one or more of the variables is measured more than once on the same unit of analysis, we simply add rows. We simply regard each measurement or each observation separately, and for each measurement/observation we use a different row. Each row is then a separate \textit{observation}. For example, during the first observation (row number 1), we saw participant number 1 performing on the first trial (trial = 1), and the reaction time was 328 milliseconds. We also know that during this first observation, the participant was male. Our second observation (row number 2) was participant 1 (the same unit of analysis but a different observation) performing on the second trial (trial = 2), with a reaction time of 1447 milliseconds, and the participant was still male. And so on for all the other rows in the data matrix.
+%
+% But there are other ways of tabulating data.
+
+A third reason for preferring long format over wide format is that in wide format there can sometimes be many zeros. Imagine a large well-known on-line shop where there are thousands of customers and thousands of products. If you want to keep track of which customer has bought which product, and you use a wide data matrix format, you have thousands of rows (customers) and thousands of columns (products). In the cells you can then keep track of how many of a certain product have been bought by a certain customer. The result would be a huge matrix like Table \ref{tab:customerwide} with a huge number of cells with the number 0 in them and only a very few cells with a number larger than 0.\footnote{A phenomenon called \textit{sparsity} or \textit{sparseness.}}
+
+ \begin{table}
+ \caption {Example customer and product data using wide data format. Customers are in rows, products are in columns. Each cell represents the number of products bought.} \label{tab:customerwide}
+ \begin{tabular}{lrrrrr}
+ CUSTOMER ID & AAiUUKDVV &  BJDuIKKHDFHJ & JJCIIUuICJI \\ \hline
+   \dots & \dots & \dots& \dots  &\dots\\
+  000000011 & 0& 0  & 0&\dots\\
+  000000012 & 0& 0  & 0&\dots\\
+  000000013 & 0& 0  & 0&\dots\\
+  000000014 &0 & 2  & 1&\dots\\
+  000000015 &0& 0  & 0&\dots\\
+  \dots & \dots & \dots & \dots&\dots\\
+ \end{tabular}
+ \end{table}
+
+In contrast, if you would use a long data matrix format, the data matrix would be much smaller, as you would not need space for all combinations of products and customers that do not exist. More importantly, there would be even space to include more information, like the date of purchase and the method of payment, see Table \ref{tab:customerlong}, something that would be practically impossible in wide format.
+
+ \begin{table}
+ \caption {Example customer and product data using long data format.} \label{tab:customerlong}
+ \begin{tabular}{lrrrrr}
+ CUSTOMER ID & Product Code &  Date of Purchase & Method of Payment  \\ \hline
+   \dots & \dots & \dots & \dots \\
+  000000014 & BJDuIKKHDFHJ & Jan 15 2018 & Mastercard \\
+  000000014 & BJDuIKKHDFHJ & May 17 2018 & Visacard  \\
+  000000014 & JJCIIUuICJI  & May 17 2018 & Visacard  \\
+  \dots & \dots & \dots& \dots \\
+ \end{tabular}
+ \end{table}
+
+A fourth reason for preferring long format over wide format is the most practical one for data analysis: when analysing data using linear models, software packages require your data to be in long format. In this book, all the analyses with linear models require your data to be in long format. However, we will also come across some analyses apart from linear models that require your data to be in wide format. If your data happen to be in the wrong format, rearrange your data first. Of course you should never do this by hand as this will lead to typing errors and would take too much time. Statistical software packages have helpful tools for rearranging your data from wide format to long format, and vice versa.
+
+
+
+
+% \subsection{Exercises}
+% 
+% 
+% \begin{enumerate}
+% 
+% \item In Table \ref{tab:taxes} you see data on two companies that paid taxes in 2016 and 2017. Are the data displayed in wide format or in long format? Explain.
+% 
+% <<data_19, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+% data.frame(company = c("Daisy's","Burger Queen"), 
+%            tax.2016 = c(569875, 98765433), 
+%            tax.2017 = c(8765447, 87865443)) %>%
+%   xtable(caption = "Paid taxes in 2016 and 2017.", 
+%          label = "tab:taxes", 
+%          digits = 0) %>%
+%   print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% \item Put the data in Table \ref{tab:taxes} in wide format if you think they are in long format, or in long format if they are in wide format. Hint: Look at the depression example for inspiration.
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item The data are in wide format. There is one variable, how much tax was paid, and that variable was observed twice for each unit of analysis.
+% 
+% 
+% \item An example of the data displayed in long format is displayed in Table \ref{tab:taxeslong}.
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% <<data_110, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+% data.frame(company=c("Daisy's","Burger Queen"), 
+%            tax.2016 = c(569875, 98765433), 
+%            tax.2017 = c(8765447, 87865443)) %>%
+%         gather(year, tax, tax.2016:tax.2017) %>%
+%         mutate(year = sapply(strsplit(year, split='.', fixed = T), function(x) x[2])) %>% 
+%         xtable(caption = "Paid taxes in 2016 and 2017.", 
+%                label = "tab:taxeslong", 
+%                digits = 0) %>%
+%         print(include.rownames = F, caption.placement = "top")
+% @
+
+\section{Wide and long format in R}
+
+\subsection{From wide to long}
+
+The relig\_income dataset stores counts based on a survey which (among other things) asked people about their religion and annual income:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# vignette("pivot")}
+\hlstd{relig_income}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'relig\_income' not found}}\end{kframe}
+\end{knitrout}
+
+This dataset contains three variables:
+\begin{enumerate}
+\item religion, stored in the rows,
+\item income spread across the column names, and
+\item count stored in the cell values.
+\end{enumerate}
+
+To put the values that we see in the columns into one single column, we use pivot\_longer():
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{relig_income} \hlopt{%>%}
+  \hlkwd{pivot_longer}\hlstd{(}\hlkwc{cols} \hlstd{=} \hlopt{-}\hlstd{religion,} \hlcom{# columns that need to be restructured}
+               \hlkwc{names_to} \hlstd{=} \hlstr{"income"}\hlstd{,} \hlcom{# name of new variable with old column names}
+               \hlkwc{values_to} \hlstd{=} \hlstr{"count"}\hlstd{)} \hlcom{# name of new variable with values}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in relig\_income \%>\% pivot\_longer(cols = -religion, names\_to = "{}income"{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+\begin{itemize}
+\item The \textit{cols} argument describes which columns need to be reshaped. In this case, it’s every column except religion.
+
+\item The \textit{names\_to} argument gives the name of the variable that will be created from the data stored in the column names, i.e. income.
+
+\item The \textit{values\_to} argument gives the name of the variable that will be created from the data stored in the cell value, i.e. count.
+
+\end{itemize}
+
+\subsection{From long to wide}
+
+
+The us\_rent\_income dataset contains information about median income and rent for each state in the US for 2017 (from the American Community Survey, retrieved with the tidycensus package).
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{us_rent_income}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'us\_rent\_income' not found}}\end{kframe}
+\end{knitrout}
+
+Here both estimate and moe are values columns, so we can supply them to values\_from:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{us_rent_income} \hlopt{%>%}
+  \hlkwd{pivot_wider}\hlstd{(}\hlkwc{names_from} \hlstd{= variable,}
+              \hlkwc{values_from} \hlstd{=} \hlkwd{c}\hlstd{(estimate, moe))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in us\_rent\_income \%>\% pivot\_wider(names\_from = variable, values\_from = c(estimate, : could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+
+\section{Measurement level}
+
+
+Data analysis is about variables and the relationships among them. In essence, data analysis is about describing how different values in one variable go together with different values in one or more other variables (co-variation). For example, if we have the variable age with values 'young' and 'old', and the variable happiness with values 'happy' and 'unhappy', we'd like to know whether 'happy' mostly comes together with either 'young' or 'old'. Therefore, data analysis is about variation and co-variation in variables.
+
+Linear models are important tools when describing co-varying variables. When we want to use linear models, we need to distinguish between different kinds of variables. One important distinction is about the measurement level of the variable: numeric, ordinal or categorical.
+
+
+\subsection{Numeric variables}
+
+Numeric variables have values that describe a measurable quantity as a number, like 'how many' or 'how much'. A numeric variable can be a \textit{count variable}, for instance the number of children in a classroom. A count variable can only consist of discrete, natural numbers: 0, 1, 2, 3, etcetera. But a numeric variable can also be a \textit{continuous variable}. Continuous variables can take any value from the set of real numbers, for instance values like -200.765, -9.78, -2, 0.001, 4, and 7.8. The number of decimals can be as large as the instrument of measurement allows. Examples of continuous variables include height, time, age, blood pressure and temperature. Note that in all these examples, \textit{quantities} (age, height, temperature) are expressed as the number of a particular \textit{measurement unit} (years, inches, degrees).
+
+Whether a numeric variable is a count variable or a continuous variable, it is always expressing a \textit{quantity}, and therefore numeric variables can be called \textit{quantitative} variables.
+
+
+
+% For both interval and ratio variables, the interval between one-unit distances is the same, for example the interval between one kilogram and two kilograms is the same as the interval between three kilograms and four kilograms: in both cases the interval (the difference) is one kilogram. The difference between two buildings and three buildings, is the same as the difference between four buildings and five buildings: in both cases the difference is one building.
+
+For numeric variables, there is a further distinction between \textit{interval variables} and \textit{ratio variables}. The distinction is rather technical. The difference between interval and ratio variables is that for ratio variables, the ratio between two measurement values is meaningful, and for interval variables it is not. An example of a ratio variable is height. You could measure height in two persons where one measures 1 meter and the other measures 2 meters. It is then meaningful to say that the second person is twice as tall as the first person. This is meaningful, because had we chosen a different measurement unit, the ratio would be the same. For instance, suppose we express the heights of the two persons in inches, we would get 39.37 and 78.74 inches respectively. The ratio remains 2: namely 78.74/39.37. The same ratio would hold for measurements in feet, miles, millimetres or even light years. Thus, whatever the unit of measurement you use, the ratio of height for these individuals would always be 2. Therefore, if we have a variable that measures height in meters, we are dealing with a ratio variable. 
+
+
+
+
+% Suppose we measure the temperature of two classrooms in degrees Celsius. 
+% This is true since for height we have a natural zero-point: a zero reflects the absence of height. 
+% 
+% Note that this interpretation cannot be used for temperature: zero degrees Fahrenheit does not imply the absence of temperature. Thus, for every numeric variable where there is a natural zero-point that expresses the absence of a quantity, ratios between values have meaning. That is the reason why they are called ratio variables.
+
+
+% A common case of this is temperature measured in degrees Fahrenheit or degrees Celcius.
+
+Now let's look at an example of an interval variable. Suppose we measure the temperature in two classrooms: one is 10 degrees Celsius and the other is 20 degrees Celsius. The ratio of these two temperatures is $20/10=2$, but does that ratio convey meaningful information? Could we state for example that the second classroom is twice as warm as the first classroom? The answer is no, and the reason is simple: had we expressed temperature in Fahrenheit, we would have gotten a very different ratio. Temperatures of 10 and 20 degrees Celsius correspond to 50 and 68 degrees Fahrenheit, respectively. These Fahrenheit temperatures have a ratio of 68/50=1.36. Based on the Fahrenheit metric, the second classroom would now be 1.36 times warmer than the first classroom. We therefore say that the ratio does not have a meaningful interpretation, since the ratio depends on the metric system that you use (Fahrenheit or Celsius). It would be strange to say that there is twice more warmth in classroom B than in classroom A, but only if you measure temperature in Celsius, not when you measure it in Fahrenheit!
+
+The reason why the ratios depend on the metric system, is because both the Celsius and Fahrenheit metrics have arbitrary zero-points. In the Celsius metric, 0 degrees does not mean that there is no warmth, nor is that implied in the Fahrenheit metric. In both metrics, a value of 0 is still warmer than a value of -1. 
+
+Contrasting this to the example of height: a height of 0 is indeed the absence of height, as you would not even be able to see a person with a height of 0, whatever metric you would use. Thus, the difference between ratio and interval variables is that ratio variables have a meaningful zero point where zero indicates the absence of the quantity that is being measured. This meaningful zero-point makes it possible to make meaningful statements about ratios (e.g., 4 is twice as much as 2) which gives ratio variables their name.
+
+What ratio and interval variables have in common is that they are both numeric variables, expressing quantities in terms of units of measurements. This implies that the distance between 1 and 2 is the same as the distances between 3 and 4, 4 and 5, etcetera. This distinguishes them from ordinal variables. 
+
+
+
+
+\subsection{Ordinal variables}
+
+Ordinal variables are also about quantities. However, the important difference with numeric variables is that ordinal variables are not measured in units. An example would be a variable that would quantify size, by stating whether a T-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state \textit{exactly} how much of that quantity is present in that T-shirt.
+
+Even though ordinal variables are not measured in specific units, you can still have a meaningful order in the values of the variable. For instance, we know that a large T-shirt is larger than a medium T-shirt, and a medium T-shirt is larger than a small T-shirt.
+
+Similar for age, we could code a number of people as young, middle-aged or old, but on the basis of such a variable we could not state by \textit{how much} two individuals differ in age. As opposed to numeric variables that are often continuous, ordinal variables are usually \textit{discrete}: there isn't an infinite number of levels of the variable. If we have sizes small, medium and large, there are no meaningful other values in between these values.
+
+Ordinal variables often involve subjective measurements. One example would be having people rank five films by preference from one to five. A different example would be having people assess pain: "On a scale of 1 to 10, how bad is the pain?"
+
+Ordinal variables often look numeric. For example, you may have large, medium and small T-shirts, but these values may end up in your data matrix as '3', '2' and '1', respectively. However, note that with a truly numeric variable there should be a unit of measurement involved (3 of what? 2 of what?), and that numeric implies that the distance between 3 and 2 is equal to the distance between 2 and 1. Here you would not have that information: you only know that a large T-shirt (coded as '3') is larger than a medium T-shirt (coded as '2'), but how large that difference is, and whether that difference is that same as the difference between a medium T-shirt ('2') is larger than a small T-shirt ('1'), you do not know. Therefore, even though we see numbers in our data matrix, the variable is called an ordinal variable. 
+
+
+\subsection{Categorical variables}
+
+Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. They have values that describe 'what type' or 'which category' a unit of belongs to. For example, a school could either be publicly funded or not, or a person could either have the Swedish nationality or not. A variable that indicates such a dichotomy between publicly funded 'yes' or 'no', or Swedish nationality 'yes' or 'no', is called a \textit{dichotomous} variable, and is a subtype of a categorical variable. The other subtype of a categorical variable is a \textit{nominal} variable. Nominal comes from the Latin \textit{nomen}, which means name. When you name the nationality of a person, you have a nominal variable. Table \ref{tab:data_9} shows an example of both a dichotomous variable (Swedish) that always has only two different values, and a nominal variable (Nationality), that can have as many different values as you want (usually more than two).
+
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(ID = 1:8, Swedish = rep(c("{}Yes"{}, "{}Yes"{}, "{}No"{}, "{}No"{}), : could not find function "{}\%>\%"{}}}\end{kframe}
+
+Another example of a nominal variable could be the answer to the question: "name the colours of a number of pencils". Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour. In addition, there is usually no logical order in the values of such variables, something that we do see with ordinal variables.
+
+
+
+\subsection{Treatment of variables in data analysis}
+For data analysis with linear models, you have to decide for each variable whether you want to treat it as numeric or as categorical.\footnote{In data analysis, it is possible to treat variables as ordinal, but only in more advanced models and methods than treated in this book.} The easiest choice is for numeric variables: numeric variables should always be treated as numeric.
+
+Categorical data should always be treated as categorical. However, the problem with categorical variables is that they often \textit{look} like numeric variables. For example, take the categorical variable country. In your data file, this variable could be coded with strings like "Netherlands", "Belgium", "Luxembourg", etc. But the variable could also be coded with numbers: 1, 2 and 3. In a codebook that belongs to a data file, it could be stated that 1 stands for "Netherlands", 2 for "Belgium", and 3 for "Luxembourg" (these are the value labels), but still in your data matrix your variable would look numeric. You then have to make sure that, even though the variable \textit{looks} numeric, it should be \textit{interpreted} as a categorical variable and therefore be \textit{treated} like a categorical variable.
+
+The most difficult problem involves ordinal variables: in linear models you can either treat them as numeric variables or as categorical variables. The choice is usually based on common sense and whether the results are meaningful. For instance, if you have an ordinal variable with 7 levels, like a Likert scale, the variable is often coded with numbers 1 through 7, with value labels 1="completely disagree", 2="mostly disagree", 3="somewhat disagree", 4="ambivalent", 5="somewhat agree", 6="mostly agree", and 7="completely agree". You could in this example choose to treat this variable like a categorical variable, recognizing that this is not a numeric variable as there is no measurement unit. However, if you feel this is awkward, you could choose to treat the variable as numeric, but be aware that this implies that you feel that the difference between 1 and 2 is the same as the difference between 2 and 3. In general, with ordinal data like Likert scales or sizes like, Small, Medium and Large, one generally chooses to use categorical treatment for low numbers of categories, say 3 or 4 categories, and numerical treatment for variables with many categories, say 5 or more. However, this should not be used as a rule of thumb: first think about the meaning of your variable and the objective of your data analysis project, and only then take the most reasonable choice. Often, you can start with numerical treatment, and if the analysis shows peculiar results\footnote{For instance, you may find that the assumptions of your linear model are not met, see Chapter \ref{chap:assumptions}.}, you can choose categorical treatment in secondary analyses.
+
+In the coming chapters, we will come back to the important distinction between categorical and numerical treatment (mostly in Chapter \ref{chap:categorical}). For now, remember that numeric variables are always treated as numeric variables, categorical variables are always treated as categorical variables (even when they appear numeric), and that for ordinal variables you have to think before you act.
+
+
+
+% \subsection{Exercises}
+% In the following, identify the type of variable in termes of numeric, ordinal, or categorical:
+% \begin{enumerate}
+% \item Age: \dots years
+% \item Exercise intensity: low, moderate, high
+% \item Size: \dots meters
+% \item Size: small, medium, large
+% \item Weight: \dots kilograms
+% \item Agreement: not agree, somewhat agree, agree
+% \item Agreement: totally not agree, somewhat not agree, neither disagree nor agree, somewhat agree, totally agree
+% \item Pain: 1, 2.. ..... , 99, 100, with 1="total absence of pain" and 100="the worst imaginable pain"
+% \item Quality of life: 1=extremely low, \dots, \dots, 7=extremely high
+% \item Colour: blue, green, yellow, other
+% \item Nationality: Chinese, Korean, Australian, Dutch, other
+% \item Gender: Female, Male, other
+% \item Gender: 0=Female, 1=Male
+% \item Number of shoes:
+% \item How would you describe count variables: are they always ratio variables or always interval variables?
+% \end{enumerate}
+% 
+% Answers:
+% 
+% \begin{enumerate}
+% \item Numeric
+% \item Ordinal
+% \item Numeric
+% \item Ordinal
+% \item Numeric
+% \item Ordinal
+% \item Technically this is an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of the agreement. However, given the number of categories and the small differences in meaning across adjacent categories, such variables are sometimes treated as numeric by using numbers 1, 2, 3, 4, 5 for the respective categories.
+% \item The numbers might trick you into thinking it is a numeric variable. However, again, this is technically an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of pain. However, given the large the number of categories, such variables are most often treated as numeric.
+% \item The numbers might trick you into thinking it is a numeric variable. But technically it is still an ordinal variable because there is no measurement unit and there is only a meaningful order. But again, given the large number of categories, such variables are often treated as numeric.
+% \item Categorical
+% \item Categorical
+% \item Categorical
+% \item The numbers might trick you into thinking it is a numeric variable. However, it is conceptually still a categorical variable as there is no measurement unit and there is no ordering.
+% \item Numeric, because you count the number of shoes. It is a discrete variable, but one can also imagine that 2.5 shoes is a meaningful value.
+% \item A count of 0 means the absence of the thing that is being counted. If one person has two balloons, and the other person has six balloons, it is meaningful to say that the second person has three times more balloons than the first person. Count variables are therefore always ratio variables.
+% \end{enumerate}
+% 
+% 
+% 
+
+
+
+
+
+\section{Frequency tables, frequency plots and histograms}
+
+Variables have different values. For example, age is a (numeric, ratio) variable: lots of people have different ages. Suppose we have an imaginary town with 1000 children. For each age measured in years, we can count the number of children who have that particular age. The results of the counting are in Table \ref{tab:frequency_1}. The number of observed children with a certain age, say 8 years, is called the \textit{frequency} of age 8. The table is therefore called a frequency table. Generally in a frequency table, values that are not observed are omitted (i.e., the frequency of children with age 16 is 0).
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(age) \%>\% group\_by(age) \%>\% summarise(frequency = n(), : could not find function "{}\%>\%"{}}}\end{kframe}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(age) \%>\% ggplot(aes(age)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+The data in the frequency table can also be represented using a frequency plot. Figure \ref{fig:distr_1} gives the same information, not in a table but in a graphical way. On the horizontal axis we see several possible values for age in years, and on the vertical axis we see the number of children (the count) that were observed for each particular age. Both the frequency table and the frequency plot tell us something about the \textit{distribution} of age in this imaginary town with 1000 children. For example, both tell us that the oldest child is 17 years old. Furthermore, we see that there are quite a lot of children with ages between 5 and 8, but not so many children with ages below 3 or above 14. The advantage of the table over the graph is that we can get the exact number of children of a particular age very easily. But on the other hand, the graph makes it easier to get a quick idea about the shape of the distribution, which is hard to make out from the table.
+
+% <<distr_1, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='A frequency distribution' >>=
+% set.seed(123)
+% numbers <- runif(20, 1,10) %>%  round(0)
+% data.frame(age) %>%
+%         ggplot(aes(numbers)) + geom_bar()  
+% +
+%         xlab('observed values') + ylab('count')+
+%         scale_x_continuous(breaks=seq(1,10))
+% @
+
+% Numeric variables have distributions. That means that if you put all the values you observed in order from low to high, you see a certain shape. For example, take the set of following numbers: numbers. If you plot these values on the horizontal axis, and how often they are observed (the \textit{frequency} or \textit{count}) on the vertical you get the frequency plot in Figure \ref{fig:distr_1}. Such a frequency plot is referred to as a \textit{bar chart}.
+
+% Often a \textit{histogram} is plotted. A histogram is very much like a frequency plot or bar chart, except that groups of values can be taken together. Such a group of values is called a \textit{bin}. Figure \ref{fig:distr_2} shows the same data, but uses only 5 bins: for the first bin, we take values of 1 and 2, for the second bin we take values 3 and 4 together, etcetera, until we take vales 9 and 10 for the fifth bin. For each bin, we compute how often we observe the values in that bin. Histograms are also for continous data, for instance if we have values like 3.4, 2,1, etcetera. All values within a bin are defined by their rounded value. For instance, in Figure \ref{fig:distr_2}, all possible values between 2.5 and 4.5 will end up in the second bin. The \textit{binwidth} is here 2: all values between 2.5 and 4.5 are taken to lie in the second bin, and the distance between these values is $4.5-2.5=2$.
+
+Instead of frequency plots, one often see \textit{histograms}. Histograms contain the same information as frequency plots, except that \textit{groups of values} are taken together. Such a group of values is called a \textit{bin}. Figure \ref{fig:distr_2} shows the same age data, but uses only 9 bins: for the first bin, we take values of age 0 and 1 together, for the second bin we take ages 2 and 3 together, etcetera, until we take ages 16 and 17 together for the last bin. For each bin, we compute how often we observe the ages in that bin.
+
+Histograms are very convenient for continuous data, for instance if we have values like 3.473, 2.154, etcetera. Or, more generally, for variables with values that have very low frequencies. Suppose that we had measured age not in years but in days. Then we could have had a data set of 1000 children where each and every child had a unique value for age. In that case, the length of the frequency table would be 1000 rows (each value observed only once) and the frequency plot would be very flat. By using age measured in years, what we have actually done is putting all children with an age less than 365 days into the first bin (age 0 years) and the children with an age of at least 365 but less than 730 days into the second bin (age 1 year). And so on. Thus, if you happen to have data with many many values with very low frequencies, consider binning the data, and using a histogram to visualise the distribution of your numeric variable.
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(age) \%>\% ggplot(aes(age)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+
+\section{Frequencies, proportions and cumulative frequencies and proportions}
+
+
+When we have for each observed age the frequency, we can calculate the \textit{relative frequency} or \textit{proportion} of children that have that particular age. For example, when we look again at the frequencies in Table \ref{tab:frequency_1} we see that there are two children who have age 0. Given that there are in total 1000 children, we know that the \textit{proportion} of people with age 0 equals $2/1000=0.002$. Thus, the proportion is calculated by taking the frequency and dividing it by the total number.
+
+
+We can also compute \textit{cumulative frequencies}. You get cumulative frequencies by accumulating (summing) frequencies. For instance, the cumulative frequency for the age of 3, is the frequency for age 3 plus all frequencies for younger ages. Thus, the cumulative frequency of age 3 equals 50 + 20 (for age 2) + 7 (for age 1) + 2 (for age 0) = 79. The cumulative frequencies for all ages are presented in Table \ref{tab:frequency_1}.
+
+We can also compute \textit{cumulative proportions}: if we take for each age the proportion of people who have that age \textit{or less}, we get the fifth column in Table \ref{tab:frequency_1}. For example, for age 2, we see that there are 20 children with an age of 2. This corresponds to a proportion of 0.020 of all children. Furthermore, there are 9 children who have an even younger age. The proportion of children with an age of 1 equals 0.007, and the proportion of children with an age of 0 equals 0.002. Therefore, the proportion of all children with an age of 2 or less equals $0.020+0.007+0.002=0.029$, which is called the cumulative proportion for the age of 2.
+
+
+
+\section{Quartiles, quantiles and percentiles}
+
+Suppose we want to split the group of 1000 children into 4 equally-sized subgroups, with the 25\% youngest children in the first group, the 25\% oldest children in the last group, and the remaining 50\% of the children in two equally sized middle groups. What ages should we then use to divide the groups? First, we can order the 1000 children on the basis of their age: the youngest first, and the oldest last. We could then use the concept of \textit{quartiles} (from quarter, a fourth) to divide the group in four. In order to break up all ages into 4 subgroups, we need 3 points to make the division, and these three points are called quartiles. The first quartile is the value below which 25\% of the observations fall, the second quartile is the value below which 50\% of the observations fall, and the third quartile is the value below which 75\% of the observations fall.\footnote{The fourth quartile would be the value below which \textit{all} values are, so that would be the largest value in the row (the age of the last child in the row).}
+
+Let's first look at a smaller but similar problem. For example, suppose your observed values are {10, 5, 6, 21, 11, 1, 7, 9}. You first order them from low to high so that you obtain {1, 5, 6, 7, 9, 10, 11, 21}. You have 8 values, so the first 25\% of your values are the first two. The highest value of these two equals 5, and this we define as our first quartile.\footnote{Note that we could also choose to use 6, because 1 and 5 are lower than 6. Don't worry, the method that we show here to compute quartiles is only one way of doing it. In your life, you might stumble upon alternative ways to determine quartiles. These are just arbitrary agreements made by human beings. They can result in different outcomes when you have small data sets, but usually not when you have large data sets.} We find the second quartile by looking at the values of the first 50\% of the observations, so 4 values. The first 4 values are 1, 5, 6, and 7. The last of these is 7, so that is our second quartile. The first 75\% of the observations are 1, 5 ,6 ,7 , 9, and 10. The value last in line is 10, so our fourth quartile is 10.
+
+The quartiles as defined here can also be found graphically, using cumulative proportions. Figure \ref{fig:quartile_1} shows for each observed value the cumulative proportion. It also shows where the cumulative proportions are equal to 0.25, 0.50 and 0.75. We see that the 0.25 line intersects the other line at the value of 5. This is the first quartile. The 0.50 line intersects the other line at a value of 7, and the 0.75 line intersects at a value of 10. The three percentiles are therefore 5, 7 and 10.
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(value) \%>\% count(value, name = "{}frequency"{}) \%>\% mutate(proportion = frequency/8) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+If you have a large data set, the graphical way is far easier than doing it by hand. If we plot the cumulative proportions for the ages of the 1000 children, we obtain Figure \ref{fig:quartile_2}. We see a nice S-shaped curve. We also see that the three horizontal quartile lines no longer intersect the curve at specific values, so what do we do? By eye-balling we can find that the first quartile is somewhere between 4 and 5. But which value should we give to the quartile? If we look at the cumulative proportion for an age of 4, we see that its value is slightly below the 0.25 point. Thus, the proportion of children with age 4 or younger is lower than 0.25. This means that the child that happens to be the 250th cannot be 4 years old. If we look at the cumulative proportion of age 5, we see that its value is slightly above 0.25. This means that the proportion of children that is 5 years old or younger is slightly more than 0.25. Therefore, of the the total of 1000 children, the 250th child must have age 5. Thus, by definition, the first quantile is 5. 
+The second quartile is somewhere between 6 an 7, so by using the same reasoning as for the first quartile we know that 50\% of the youngest children is 7 years old or younger. The third quartile is somewhere between 8 and 9 and this tells us that the youngest 75\% of the children is age 9 or younger. Thus, we can call 5, 7 and 9 our three quartiles.
+
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(age) \%>\% count(age, name = "{}frequency"{}) \%>\% mutate(proportion = frequency/1000) \%>\% : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+Alternatively, we could also use the frequency table (Table \ref{tab:frequency_1}). First, if we want to have 25\% of the children that are the youngest, and we know that we have 1000 children in total, we should have $0.25 * 1000=250$ children in the first group. So if were to put all the children in a row, ordered from youngest to oldest, we want to know the age of the 250th child.
+
+In order to find the age of this 250th child, and we look at Table \ref{tab:frequency_1}, we see that 29.7 \% of the children have an age of 5 or less (297 children), and 18.4 \% of the children have an age of 4 or less (184 children). This tells us that the 250th child must be 5 years old. Furthermore, if we want to find a cut-off age for the oldest 25\%, we see from the table, that 83.8\% of the children (838 children) have an age of 9 or less, and 73.0\% of the children (730) have an age of 8 or less. Therefore, the age of the 750th child (when ordered from youngest to oldest) must be 9.
+
+
+What we just did for quartiles, (i.e. 0.25, 0.50, 0.75) we can do for any proportion between 0 and 1. We then no longer call them quartiles, but \textit{quantiles}. A quantile is the value below which a given proportion of observations in a group of observations fall. From this table it is easy to see that a proportion of 0.606 of the children have an age of 7 or less. Thus, the 0.606 quantile is 7. One often also sees \textit{percentiles}. Percentiles are very much like quantiles, except that they refer to percentages rather than proportions. Thus, the 20th percentile is the same as the 0.20 quantile. And the 0.81 quantile is the same as the 81st percentile.
+
+The reason that quartiles, quantiles and percentiles are important is that they are very short ways of saying something about a distribution. Remember that the best way to represent a distribution is either a frequency table or a frequency plot. However, since they can take up quite a lot of space sometimes, one needs other ways to briefly summarise a distribution. Saying that "the third quartile is 454" is a condensed way of saying that "75\% of the values is either 454 or lower". In the next sections, we look at other ways of summarizing information about distributions.
+
+Another way in which quantiles and percentiles are used is to say something about \textit{individuals}, relative to a group. Suppose a student has done a test and she comes home saying she scored in the 76th percentile of her class. What does that mean? Well, you don't know her score exactly, but you do know that of her classmates, 76 percent had the same score or lower. That means she did pretty well, compared to the others, since only 24 percent had a higher score.
+
+% \subsection{Exercises}
+% 
+% <<frequency_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(123)
+% x <- rpois(200, 3)
+% data.frame(x) %>% 
+%   group_by(x) %>%
+%   summarise(frequency = n(),
+%             proportion = n()/200) %>%
+%   mutate(cum.proportion = cumsum(proportion)) %>%
+%   xtable(caption = "Freqency table for x, with proportions and cumulative proportions.", 
+%          label = "tab:frequency_2", 
+%          digits = 3) %>%
+%   print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% \begin{enumerate}
+% \item Look at Table \ref{tab:frequency_2}. Determine the 10th quantile for variable \textbf{x}.
+% 
+% \item Determine the 95th percentile.
+% 
+% \item Determine the first quartile.
+% 
+% \item Determine the second quartile.
+% 
+% \item Determine the 50th percentile.
+% 
+% \item Determine the third quantile.
+% 
+% \item Determine the 0.75 quantile.
+% 
+% \item Suppose we have the values {6,5,4,8,6,5,6,4,5,6,7,8}. Determine the third quartile.
+% 
+% \item Suppose we have the values {4,4,4,8,6,4,6,4,5,6,7,8}. Determine the third quartile.
+% 
+% \item From Figure \ref{fig:quartile_3}, determine the 30th, 40th and 90th percentiles.
+% 
+% <<quartile_3, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Cumulative proportions.', results='asis' >>=
+% 
+% value = rchisq(100, 4) %>% round()
+% tibble(value) %>% 
+%   group_by(value) %>%
+%   summarise (frequency = n(),
+%              proportion= n()/100) %>%
+%   mutate(cum.proportion = cumsum(proportion)) %>%
+%   ggplot(aes(value, cum.proportion)) +
+%   geom_line() + 
+%   geom_point() +
+%   scale_y_continuous(breaks = seq(0, 1, 0.1)) +
+%   scale_x_continuous(breaks = 0:17) +
+%   geom_hline(yintercept = c(0.30, 0.40, 0.90))
+% @
+% 
+% \item Suppose yesterday you did an IQ test, together with 999 other students. Today you hear that you scored 100 points. They tell you that the 8th percentile was a score of 80, and the 9th percentile was a score of 100. What does that tell you about your performance yesterday?
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item
+% 1
+% \item
+% 6
+% \item
+% 2
+% \item
+% 3
+% \item
+% 3
+% \item
+% 4
+% \item
+% 4
+% \item
+% ordered series: 445 556 666 788, last value of third quart: 6
+% \item
+% orderd series: 444 445 666 788, last value of third quart: 6
+% 
+% \item
+% 2, 2 and 7
+% 
+% \item
+% 
+% Nine percent of my fellow students scored the same or lower than I did on the exam, so 91 percent did better. I did not do so well.
+% 
+% \end{enumerate}
+% 
+
+
+
+
+
+\section{Measures of central tendency}
+
+The mean, the median and the mode are three different measures that say something about the \textit{central tendency} of a distribution. If you have a series of values: around which value do they tend to cluster?
+
+\subsection{The mean}
+Suppose we have the values 1, 2 and 3, then we compute the mean by first adding these numbers and then divide them by the number of values we have. In this case we have three values, so the mean is equal to $(1 + 2 + 3)/3 = 2$. In statistical formulas, the mean of a variable is indicated by a bar above that variable. So if our values of variable $y$ are 1, 2 and 3, then we denote the mean by $\bar{y}$ (pronounced as y-bar). When taking the sum of a set of values, statistical formulas show the summation sign $\Sigma$ (the Greek letter sigma). So we often see the following formula for the mean of a set of $n$ values for variable $y$:
+
+\begin{equation}
+\bar{y} = \frac{\Sigma_{i=1}^n y_i}{n}
+\end{equation}
+
+In words, in order to compute $\bar{y}$, we take every value for $y$ from $i=1$ to $i=n$ and sum them, and the result is divided by $n$.
+
+If we take another example, suppose we have variable $y$ with the values {6, -3, and 21}, then the mean of $y$, $\bar{y}$, equals:
+
+\begin{equation}
+\bar{y} = \frac {  \Sigma_{i=1}^n y} {n} =    \frac{y_1 + y_2 + y_3}{n} = \frac{6 + (-3) + 21}{3} = \frac{24}{3} = 8
+\end{equation}
+
+
+
+
+
+
+
+\subsection{The median}
+The mean is only one measure of central tendency. An alternative measure of central tendency is the median. The median is nothing but the middle value of an ordered series. Suppose we have the values 45, 567, and 23. Then what value lies in the middle when ordered? Let's first order them from small to large to get a better look. We then get 23, 45 and 567. Then it's easy to see that the value in the middle is 45.
+
+Suppose we have the values 45, 45, 45, 65, and 23. What is the middle value when ordered? We first order them again and see what value is in the middle: 23, 45, 45, 45 and 65. Obviously now 45 is the median. You can also see that half of the values is equal or smaller than this value, and half of the values is equal or larger than this value. The median therefore is the same as the second quartile.
+
+What if we have two values in the middle? Suppose we have the values 46, 56, 45 and 34. If we order them we get 34, 45, 46 and 56. Now there are two values in the middle: 45 and 46. In that case, we take the mean of these two middle values, so the median is 45.5. 
+
+When do you use a median and when do you use a mean? For numeric variables that have a more or less symmetric distribution (i.e., a frequency plot that is more or less symmetric), the mean is most often used. Actually, for distributions that are more or less symmetric the mean and median are very similar. For numeric variables that do not have a symmetric distribution, it is usually more informative to use the median. An example of such a situation is income. Figure \ref{fig:median} shows a typical distribution of yearly income. The distribution is highly asymmetric, it is severely skewed to the right. The bulk of the values are between 20,000 and 40,000, with only a very few extreme values on the high end. Even though there are only a few people with a very high income, the few high values have a huge effect on the mean.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(1000, 10, 0.4) \%>\% exp(): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in tibble(income) \%>\% ggplot(aes(income)): could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

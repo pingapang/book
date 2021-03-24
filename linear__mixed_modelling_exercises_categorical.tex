@@ -1,0 +1,141 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+
+
+\title{Exercises linear mixed modelling: categorical}
+\author{St\'ephanie M. van den Berg}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\maketitle
+
+
+
+
+
+\subsection{Exercises}
+
+Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are in Table \ref{tab:math_scores}.
+
+
+
+\begin{table}
+ \caption{Math test scores.}
+ \begin{tabular}{lrr}
+ student & colour & score \\ \hline
+ 001 & yellow & 60 \\
+ 001 & red & 66 \\
+ 001 & blue & 60 \\
+ 002 & yellow & 24 \\
+ 002 & red & 15 \\
+ 002 & blue & 30 \\
+ 003 & yellow & 90 \\
+ 003 & red & 90 \\
+ 003 & blue & 89 \\
+ 004 & yellow & 10 \\
+ 004 & red & 20 \\
+ 004 & blue & 15 \\
+ 005 & yellow & 23 \\
+ 005 & red & 13 \\
+ 005 & blue & 18 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+\label{tab:math_scores}
+\end{table}
+
+\begin{enumerate}
+\item If you want to test the hypothesis that the colour of the walls does not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be?
+\item In the output that would result from that syntax from question 1, would you look at a $t$-test or or an $F$-test? Explain your answer.
+\item How many degrees of freedom would you see for the denominator?
+\item Suppose you see this in the output for this colour experiment. How important are the individual difference in math performance in the population of students? Can you quantify the amount of clustering?
+
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.png}
+    \end{center}
+\end{figure}
+
+\end{enumerate}
+
+
+\subsection{Answers}
+
+\begin{enumerate}
+\item
+
+\begin{verbatim}
+MIXED score BY colour
+  /FIXED=colour
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+\end{verbatim}
+
+\item  $F$-test. There will be two dummy variable and I want to know if the effects of both of these are significantly different from 0. The $t$-tests  give me only information about the dummy variables separately. \\
+\item  2, because there are 3 different colours, which can be represented by 2 dummy-variables. \\
+\item  In the table with the data you generally see that students who score high in one room also score high in another room (for instance, students 001 and 003). Students who score low in one room also score low in another room (for instance students 002, 004 and 005). This clustering can be quantified using an intraclass correlation, in this case equal to $\frac{228}{228+270}=0.46$.
+\end{enumerate}
+
+
+\end{document}
+
+

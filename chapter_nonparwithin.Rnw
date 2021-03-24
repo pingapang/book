@@ -1,0 +1,634 @@
+\chapter{Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+
+
+\section{Checking assumptions}
+
+In previous chapters we discussed the assumptions of linear models and linear mixed models: linearity (in parameters), homoscedasticity (equal variance), normal distribution of residuals, normal distribution of random effects (relevant for linear mixed models only), and independence (no clustering unaccounted for). 
+
+
+
+
+The problem of non-linearity can sometimes be solved by introducing quadratic terms, by replacing a linear model $Y = b_0 + b_1 X + e$ by another linear model $Y = b_0 + b_1 X + b_2 X^2 + e$.
+
+If we have non-independence, then you can introduce either an extra fixed effect or a random effect for a clustering variable. For example, if you see that cars owned by low income families have much more mileage than cars owned by high income families, you can account for this by adding a fixed effect of an income variable as predictor. If you see that average mileage is rather similar within municipality but that average mileage can vary quite a lot across municipalities, you can introduce a random effect for municipality (if you have data say from 30 different municipalities). 
+
+Unequal variance of residuals and non-normal distribution of residuals are harder to tackle. Unequal variance can be tackled sometimes by using linear models with more advanced options that make corrections to standard errors and $p$-values that render inference more robust against model violations. Violations of normality are even a bigger problem. Non-normality can sometimes be solved by using generalised linear models (see Chapter \ref{chap:logistic}). A combination of non-normality and unequal variance can sometimes be solved by using a transformation of the data, for instance not analysing $Y = b_0 + b_1 X + e$ but analysing $\textrm{log}(Y)=  b_0 + b_1 X + e$ or $\sqrt{Y}= b_0 + b_1 X + e$.
+
+If these data transformations or advanced options don't work (or if you're not acquainted with them), and your data show non-equal variance and/or non-normally distributed residuals, there are non-parametric alternatives.  Here we discuss two: Friedman's test and Wilcoxon's signed rank test. We explain them using an imaginary data set on speed skating.
+\\
+\\
+Suppose we have data on 12 speed skaters that participate on the 10 kilometres distance in three separate championships in 2017-2018: the European Championships, the Winter Olympics and the World Championships. Your friend expects that speed skaters will perform best at the Olympic games, so there she expects the fastest times. You disagree and decide to test the null-hypothesis that average times are the same at the three occasions. You regard the data from 2017-2018 to be a random sample of all seasons in the past and future. In Figure \ref{fig:nonparmixed_1} we see a box plot of the data.
+
+% H_0: $\mu_{EC}=\mu_{WC}_\mu{WO}$
+
+
+<<nonparmixed_1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='Boxplot of the imaginary speed skating data.'>>=
+set.seed(01234)
+athlete <- rep (seq(1:12), 3) %>% as.factor()
+occasion <- rep(c("EuropeanChampionships","WorldChampionships","Olympics"), 
+                each = 6) %>% 
+  as_factor()
+time <- rnorm(36, log(1017), .002 ) %>%  exp() %>%   round(2)  -1000
+time <- time + rep( c(-0.2, 1, 0.2), each=12   )
+time[  which(time==max(time))   ] <- 28
+time[  which(time==min(time))   ] <- 27.9
+datalong <- data.frame(athlete, occasion, time) %>% 
+  dplyr::arrange(athlete)
+datawide <- datalong %>% 
+  tidyr::spread(occasion, time) %>% 
+  dplyr::arrange(athlete)
+# datawide <- datawide[, c(1, 2,4,3)]
+# names(datawide) <- c('patient','group','pre','post')
+# source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+# write.foreign(datalong,
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedspeedskate.sav',
+#               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedspeedskate.sps',
+#               package = c("SPSS"))
+datalong %>% 
+  ggplot( aes(x = occasion, y = time)  )  + 
+  geom_boxplot() + 
+  ylab("Time in minutes") + 
+  xlab("Occasion")
+@
+
+In order to test this null-hypothesis, we run a linear mixed model with dependent variable \texttt{time}, and independent variable \texttt{occasion}. We use random effects for the differences in speed across skaters. In Figure \ref{fig:nonparmixed_2} we see the residuals. From this plot we clearly see that the assumption of equal variance (homogeneity of variance) is violated: the variance of the residuals in the World Championships condition is clearly smaller than the variance of the European Championships condition. From the histogram of the residuals in Figure \ref{fig:nonparmixed_3} we also see that the distribution of the residuals is not bell-shaped: it is positively skewed (skewed to the right).
+
+<<nonparmixed_2, fig.height=3.5, echo=FALSE, fig.align='center', warning=F, fig.cap='Residuals of the speedskating data with a linear mixed model.'>>=
+res <- datalong %>%  lmer( time ~ occasion +  (1|athlete), data=. ) %>%
+        resid()
+datalong <- cbind(datalong, res)
+datalong %>% 
+  ggplot( aes(x=occasion, y=res)    ) + 
+  geom_point() + 
+  ylab("Residual") + 
+  xlab("Occasion")
+ @
+
+
+
+
+
+
+<<nonparmixed_3,fig.height=3.5, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Histogram of the residuals of the speedskating data with a linear mixed model.'>>=
+datalong %>% 
+  ggplot( aes( x=res )  ) + 
+  geom_histogram() + 
+  xlab("Residual") + 
+  ylab("Count")
+ @
+% \\
+% \\
+Since the assumptions of homogeneity of variance and of normally distributed residuals are violated\footnote{Remember that assumptions relate to the population, not samples: often-times your data set is too small to say anything about assumptions at the population level. Residuals for a data set of 8 persons might show very non-normal residuals, or very different variances for two subgroups of 4 persons each, but that might just be a coincidence, a random result because of the small sample size. If in doubt, it is best to use non-parametric methods.}, the results from the linear mixed model cannot be trusted. In order to answer our research question, we therefore have to resort to another kind of test. Here we discuss Friedman's test, a non-parametric test, for testing the null-hypothesis that the \textit{medians} of the three groups of data are the same (see Chapter \ref{chap:intro}). This Friedman test can be used in all situations where you have at least 2 levels of the within variable. In other words, you can use this test when you have data from three occasions, but also when you have data from 10 occasions or only 2. In a later section the Wilcoxon signed ranks test is discussed. This test is often used in social and behavioural sciences. The downside of Wilcoxon's test is that it can only handle data sets with 2 levels of the within variable. In other words, it can only be used when we have data from two occasions. Friedman's test is therefore more generally applicable than Wilcoxon's. We therefore advise to always go with the Friedman test, but for the sake of completeness, we will also explain the Wilcoxon test.
+
+
+
+
+
+\section{Friedman's test for $k$ measures}
+
+
+Similar to many other non-parametric tests for testing the equality of medians, Friedman's test is based on ranks. Table \ref{tab:nonparmixed_4} shows the speed skating data in wide format.
+
+
+<<nonparmixed_4, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
+datawide %>%
+  xtable(caption = "The speed skating data in wide format.", 
+         label = "tab:nonparmixed_4") %>%
+  print(include.rownames = F, 
+        caption.placement = "top")
+ @
+
+We rank all of these time measures by determining the fastest time, then the next to fastest time, etcetera, until the slowest time. But because the data in each row belong together (we compare individuals with themselves), we do the ranking \textit{row-wise}. For each athlete separately, we determine the fastest time (1), the next fastest time (2), and the slowest time (3) and put the ranks in a new table, see Table \ref{tab:nonparmixed_5}. There we see for example that athlete 1 had the fastest time at the European Championships (14.35, rank 1) and the slowest at the Olympics (16.42, rank 3).
+
+
+<<nonparmixed_5, fig.height=3.5, echo=FALSE, fig.align='center', results='asis'>>=
+ranks <- apply(datawide[, 2:4], 1,  function(x) rank(x) )
+datawideranks<- datawide
+datawideranks[, 2:4] <- t(ranks)
+datawideranks %>%
+  xtable(caption="Row-wise ranks of the speed skating data.",  
+         digits = c(0, 0, 0, 0, 0), 
+         label = "tab:nonparmixed_5") %>%
+  print(include.rownames = F,
+        caption.placement = "top")
+ @
+
+
+Next, we compute the sum of the ranks column-wise: the sum of the ranks for the European Championships data is \Sexpr{sum(datawideranks[2])}, for the Olympic data it's \Sexpr{sum(datawideranks[3])} and for the World Championships data it is \Sexpr{sum(datawideranks[4])}.
+
+From these sums we can gather that in general, these athletes showed their best times (many rank 1s) at the World Championships, as the sum of the ranks is lowest. We also see that in general these athletes showed their worst times (many rank 2s and 3s) at the European Championships, as the relevant column showed the highest sum of ranks.
+
+In order to know whether these sums of ranks are significantly different from each other, we may compute an $F_r$-value based on the following formula:
+
+
+\begin{equation}
+F_r = \left[  \frac{12}{nk(k+1)} \Sigma^k_{j=1} S_j^2      \right] - 3n (k+1)
+\end{equation}
+
+
+In this formula, $n$ stands for the number of rows (12 athletes), $k$ stands for the number of columns (3 occasions), and $S_j^2$ stands for the squared sum of column $j$ ($31^2$, $15^2$, and $26^2$, respectively). If we fill in these numbers, we get:
+
+\begin{eqnarray}
+F_r &=& \left[  \frac{12}{12 \times  3(3+1)} \times (\Sexpr{sum(datawideranks[2]) }^2 + \Sexpr{sum(datawideranks[3]) }^2 + \Sexpr{sum(datawideranks[4]) }^2)      \right] - 3 \times 12 (3+1) \nonumber \\
+  &=&   \left[  \frac{12}{144} \times  1862      \right] - 144 = 11.167  \nonumber
+\end{eqnarray}
+
+
+
+What can we tell from this $F_r$-statistic? In order to say something about significance, we have to know what values are to be expected under the null-hypothesis that there are no differences across the three groups of data. Suppose we randomly mixed up the data by taking all the speed skating times and randomly assigning them to the three contests and the twelve athletes, until we have a newly filled data matrix, for example the one in Table \ref{tab:nonparmixed_26}.
+
+<<nonparmixed_26, fig.height=3.5, echo=FALSE, fig.align='center', results='asis'>>=
+set.seed(234)
+r <- sample ( 1:    (dim(datawide[-1])[1]*dim(datawide[-1])[2]), replace=F)
+datawide_random1 <- datawide
+datawide_random1[-1] <- matrix(  as.matrix(datawide[-1])[r] , 
+                                 dim(datawide[-1])[1], 
+                                 dim(datawide[-1])[2]) %>%
+  as.data.frame()
+datawide_random1  %>%
+  xtable(caption="The raw skating data in random order.", 
+         label="tab:nonparmixed_26") %>%
+  print(include.rownames=F, 
+        caption.placement = "top")
+ @
+
+If we then compute $F_r$ for this data matrix, we get a different value. If we do this mixing up the data and computing $F_r$ say 1000 times, we get 1000 values for $F_r$, summarised in the histogram in Figure \ref{fig:nonparmixed_36}.
+
+%fig.cap='Histogram of 1000 possible values for F_r given that the null-hypothesis is true, for 12 speed skaters.'
+
+<<nonparmixed_36, fig.height=3.5, echo=FALSE, fig.align='center', warning=F, message=F,  fig.cap='Histogram of 1000 possible values for $F_r$ given that the null-hypothesis is true, for 12 speed skaters.' >>=
+set.seed(234)
+F_r <- c()
+for (i in 1:1000)
+{
+r <- sample ( 1:    (dim(datawide[-1])[1]*dim(datawide[-1])[2]), replace=F)
+datawide_random1 <- datawide
+datawide_random1[-1] <- matrix(  as.matrix(datawide[-1])[r] , dim(datawide[-1])[1], dim(datawide[-1])[2]) %>%  as.data.frame()
+
+ranks <- apply(datawide_random1[,2:4], 1,  function(x) rank(x) )
+datawideranks<- datawide_random1
+datawideranks[,2:4] <- t(ranks)
+sums <- apply(datawideranks[,2:4],2, sum )
+squaredsums <- sums^2
+SUM <- sum(squaredsums)
+F_r[i] <- 12 / (12*3*4) *SUM - 3*12 *4
+}
+data <- as.data.frame(F_r)
+data %>% ggplot( aes(F_r)  ) + 
+  geom_histogram()
+@
+
+So if the data are just randomly distributed over the three columns (and 12 rows) in the data matrix, we expect no systematic differences across the three columns and so the null-hypothesis is true. So now we know what the distribution of $F_r$ looks like when the null-hypothesis is true: more or less like the one in Figure \ref{fig:nonparmixed_36}. Remember that for the true data that we actually gathered (in the right order that is!), we found an $F_r$-value of 11.167 . From the histogram, we see that only very few values of 11.167  or larger are observed when the null-hypothesis is true. If we look more closely, we find that only \Sexpr{table(F_r>11.167 )[2]/length(F_r)*100}\% of the values are larger than 11.167 , so we have a two-tailed $p$-value of 0.004. The 95th percentile of these 1000 $F_r$-values is \Sexpr{quantile(F_r, 0.95)}, meaning that of the 1000 values for $F_r$, 5\% are larger than \Sexpr{quantile(F_r, 0.95)}. So if we use a significance level of 5\%, our observed value of 11.167  is larger than the critical value for $F_r$, and we conclude that the null-hypothesis can be rejected.
+
+Now this $p$-value of 0.004 and the critical value of \Sexpr{quantile(F_r, 0.95)} are based on our own computations\footnote{What we have actually done is a very simple form of \textit{bootstrapping} or \textit{permutation testing}: jumbling up the data set many times and in that way determining the distribution of a test-statistic under the null-hypothesis, in this case the distribution of $F_r$. For more on bootstrapping, see Davison, A.C. \& Hinkley, D.V. (1997). \textit{Bootstrap Methods and their Application}. Cambridge, UK: Cambridge.}. Actually there are better ways. One is to look up critical values of $F_r$ in tables, for instance in Kendall M.G. (1970) \textit{Rank correlation methods}. (fourth edition). The $p$-value corresponding to this $F_r$-value depends on $k$, the number of groups of data (here 3 columns) and $n$, the number of rows (12 individuals). If we look up that table, we find that for $k=3$ and $n=12$ the critical value of $F_r$ for a type I error rate of 0.05 equals 6.17. Our observed $F_r$-value of 11.167  is larger than that, therefore we can reject the null-hypothesis that the median skating times are the same at the three different championships. So we have to tell your friend that there are general differences in skating times at different contests, $F_r=11.167 , p < 0.05$, but it is not the case that the fastest times were observed at the Olympics.
+
+A third way to do null-hypothesis testing is to make an approximation of the distribution of $F_r$ under the null-hypothesis. Note that the distribution in the histogram in Figure \ref{fig:nonparmixed_36} is very strangely shaped. The reason is that the data set is quite limited. Suppose we have data not on 12 speed skaters, but on 120. If we then randomly mix up data again and compute 1000 different values for $F_r$, we get the histogram in Figure \ref{fig:nonparmixed_46}.
+
+
+<<nonparmixed_46, fig.height=3.5, echo=FALSE, fig.align='center', warning=F, message=F, fig.cap='Histogram of 1000 possible values for $F_r$ given that the null-hypothesis is true, for 120 speed skaters.'>>=
+
+set.seed(01234)
+athlete2 <- rep (seq(1:120), 3)  %>% as.factor()
+occasion2 <- rep(c("EuropeanChampionships","WorldChampionships","Olympics"), each=6) %>% 
+  as.factor()
+time2 <- rnorm(360, log(1017), .002 ) %>%  exp() %>%   round(2)  -1000
+time2 <- time2 + rep( c(-0.2, 1, 0.2), each=120   )
+time2[  which(time2==max(time2))   ] <- 28
+time2[  which(time2==min(time2))   ] <- 27.9
+datalong2 <- data.frame(athlete2, occasion2, time2) %>% 
+  dplyr::arrange(athlete2)
+datawide2 <- datalong2 %>% tidyr::spread(occasion2, time2) %>% 
+  dplyr::arrange(athlete2)
+
+
+F_r <- c()
+for (i in 1:1000)
+{
+r <- sample ( 1:    (dim(datawide2[-1])[1]*dim(datawide2[-1])[2]), replace=F)
+datawide_random12 <- datawide2
+datawide_random12[-1] <- matrix(  as.matrix(datawide2[-1])[r] , dim(datawide2[-1])[1], dim(datawide2[-1])[2]) %>%  as.data.frame()
+
+ranks2 <- apply(datawide_random12[,2:4], 1,  function(x) rank(x) )
+datawideranks2<- datawide_random12
+datawideranks2[,2:4] <- t(ranks2)
+sums2 <- apply(datawideranks2[,2:4],2, sum )
+squaredsums2 <- sums2^2
+SUM2 <- sum(squaredsums2)
+F_r[i] <- 12 / (120*3*4) *SUM2 - 3*120 *4
+}
+data <- as.data.frame(F_r)
+data %>% 
+  ggplot( aes(F_r)  ) + 
+  geom_histogram()
+@
+
+The shape becomes more regular. It also starts to resemble another distribution, that of the $\chi^2$ (chi-square). It can be shown that the distribution of the $F_r$ for a large number of rows in the data matrix, and at least 6 columns, approaches the shape of the $\chi^2$-distribution with $k-1$ degrees of freedom. This is shown in Figure \ref{fig:nonparmixed_56}.
+
+<<nonparmixed_56, fig.height=3.5, echo=FALSE, fig.align='center', warning=F, message=F, fig.cap='The distribution of $F_r$ under the null-hypothesis, overlain with a chi-square distribution with 2 degrees of freedom.'>>=
+data <- dplyr::tibble(
+  F_r = F_r,
+  chi = dchisq(F_r, df = 2)
+)
+
+data %>% 
+  ggplot(aes(x = F_r)) + 
+  geom_histogram(aes(y = ..density..)) + 
+  geom_line(aes(y = chi))
+ @
+
+The density of the $\chi^2$-distribution with 2 degrees of freedom approaches the histogram quite well, but not perfectly. In general, for large $n$ and $k>5$, the approximation is very good. In that way it gets easier to look up $p$-values for certain $F_r$-values, because the $\chi^2$-distribution is well-known\footnote{The $\chi^2$-distribution is based on the normal distribution: the $\chi^2$-distribution with $k$ degrees of freedom is the distribution of a sum of the squares of $k$ independent standard normal random variables.}, so we don't have to look up critical values for $F_r$ in old tables. For a significance level of 5\%, the critical value of a $\chi^2$ with 2 degrees of freedom is \Sexpr{round(qchisq(df=2, p=0.95), 3)}. We can see that in R with the following code:
+
+
+<<>>=
+# critical value for chi-square distribution
+# with 2 degrees of freedom and alpha = 0.05:
+qchisq(p = 0.95, df = 2)
+@
+
+
+This is close to the value in the table for $F_r$ in old books: 6.17. The part of the $\chi^2$-distribution with 2 degrees of freedom that is larger than the observed 11.167 is \Sexpr{round(pchisq(11.167 ,df=2, lower.tail=F),3)}, so our approximate $p$-value for our null-hypothesis is \Sexpr{round(pchisq(11.167 ,df=2, lower.tail=F),3)}.
+
+
+<<>>=
+# p-value for statistic of 11.167 based on
+# chi-square distribution with 2 degrees of freedom:
+pchisq(11.167, df = 2, lower.tail = F)
+@
+
+
+\section{How to perform Friedman's test in R}
+
+In order to let R do the calculations for you, you need first of all your data to be in long format. If your data happen to be in wide format, use the \texttt{pivot\_longer()} function to get the data in long format. Suppose your data is in wide format, as in Table \ref{tab:nonparmixed_4}. Then the following code turns the data into long format:
+
+
+<<eval = F>>=
+datawide %>% 
+  pivot_longer(cols = -athlete, names_to = "occasion", values_to = "time")
+@
+
+
+This creates the long format data matrix in Table \ref{tab:nonparmixed_7}:
+
+
+<<nonparmixed_7, fig.height=4, echo=FALSE, fig.align='center',results='asis' >>=
+
+datalong %>% 
+  head() %>% 
+  dplyr::select(-res) %>% 
+  xtable(caption = "The raw skating data in long data format.", 
+         label = "tab:nonparmixed_7") %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+We can then specify that we want Friedman's test by using the \texttt{friedman.test()} function and indicating which variables we want to use:
+
+<<>>=
+datalong %>% 
+  friedman.test(time ~ occasion | athlete, data = .)
+@
+
+This code says, "use \texttt{time} as dependent variable, \texttt{occasion} as independent variable, and the data are clustered within athletes (data with the same \texttt{athlete} ID number belong together)".
+
+In the output we see a chi-squared statistic, degrees of freedom, and an asymptotic (approximated) $p$-value. Why don't we see an $F_r$-statistic?
+
+The reason is, as discussed in the previous section, that for a large number of measurements (in wide format: columns) and a large number of individuals (in wide format: rows), the $F_r$ statistic tends to have the same distribution as a chi-square, $\chi^2$, with $k-1$ degrees of freedom. So what we are looking at in this output is really an $F_r$-value of 11.167  (exactly the same value as we computed by hand in the previous section). In order to approximate the $p$-value, this value of 11.167 is interpreted as a chi-square ($\chi^2$), which with 2 degrees of freedom has a $p$-value of 0.004.
+
+
+This asymptotic (approximated) $p$-value is the correct $p$-value if you have a lot of rows (large $n$) and at least 6 variables ($k>5$). If you do not have that, as we have here, this asymptotic $p$-value is only what it is: an approximation. However, this is only a problem when the approximate $p$-value is close to the pre-selected significance level $\alpha$. If $\alpha$ equals 0.05, an approximate $p$-value of 0.002 is much smaller than that, and we do not hesitate to call it significant, whatever its true value may be. If a $p$-value is very close to $\alpha$, it might be a good idea to look up the exact critical values for $F_r$ in online tables\footnote{https://www.jstor.org/stable/3315656?seq=1}. If your $F_r$ is larger than the critical value for a certain combination of $n$, $k$ and $\alpha$, you may reject the null-hypothesis.
+
+In the above case we can report:
+\begin{quotation}
+"A Friedman's test showed that speed skaters have significantly different median times on the 10 kilometre distance at the three types of contests, $F_r = 11.167 , p = .004$."
+\end{quotation}
+
+
+\section{Wilcoxon's signed ranks test for 2 measures}
+
+Friedman's test can be used for 2 measures, 3 measures or even 10 measures. As stated earlier, the well-known Wilcoxon's test can only be used for 2 measures. For completeness, we also discuss that test here. For that test we compare the measures at the Olympics and at the World Championships.
+\\
+\\
+For each athlete, we take the difference in skating times (Olympics - WorldChampionships) and call it $d$, see Table \ref{tab:nonparmixed_77}. Next we rank these $d$-values, irrespective of sign, and call these ranks \texttt{rank\_d}. From Table \ref{tab:nonparmixed_77} we see that athlete 12 shows the smallest difference in skating times ($d = 0.06$, rank = 1) and athlete 2 the largest difference ($d= 3.78$, rank = 12).
+
+<<nonparmixed_77, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
+
+
+datawide <- datalong %>% 
+  dplyr::select(-res) %>% 
+  spread(key = occasion, value = time) 
+
+
+datawide <- as_tibble(datawide)
+datawilcoxon <-
+  datawide[, c(1, 4, 3)] %>%
+  mutate(d = Olympics - WorldChampionships) %>%
+  mutate(rank_d = rank(abs(d))) %>%
+  mutate(ranksign = ifelse(d > 0, rank_d, -rank_d))
+datawilcoxon %>%
+  xtable(caption = "The raw skating data and the computations for Wilcoxon signed ranks test", 
+         label = "tab:nonparmixed_77") %>%
+  print(include.rownames = F, caption.placement = "top")
+ @
+
+Next, we indicate for each rank whether it belongs to a positive or a negative difference $d$ and call that variable \texttt{ranksign}.
+
+Under the null-hypothesis, we expect that some of the larger $d$-values are positive and some of them negative, in a fairly equal amount. If we sum the ranks having plus-signs and sum the ranks having minus-signs, we would expect that these two sums are about equal, but only if the null-hypothesis is true. If the sums are very different, then we should reject this null-hypothesis. In order to see if the difference in sums is too large, we compute them as follows:
+
+
+\begin{eqnarray}
+T^+ &=& 5+ 12 + 8 +10+6+11+4 +2 +7 +1 = \Sexpr{ sum (   datawilcoxon$ranksign[datawilcoxon$ranksign>0])     } \nonumber \\
+T^- &=& 3 + 9= \Sexpr{ -1 * sum (   datawilcoxon$ranksign[datawilcoxon$ranksign<0])     } \nonumber
+\end{eqnarray}
+
+
+
+To know whether $T^+$ is significantly larger than $T^-$, the value of $T^+$ can be looked up in a table, for instance in Siegel \& Castellan (1988). There we see that for $T^+$, with 12 rows, the probability of obtaining a $T^+$ of at least 66 is 0.0171. For a two-sided test (if we would have switched the columns of the two championships, we would have gotten a $T^-$ of 66 and a $T^+$ of 12!), we have to double this probability. So we end up with a $p$-value of $2 \times 0.0171=\Sexpr{2*0.0171}$.
+
+
+In the table we find no critical values for large sample size $n$, but fortunately, similar to the Friedman test, we can use an approximation using the normal distribution. It can be shown that for large sample sizes, the statistic $T^+$ is approximately normally distributed with mean
+
+
+\begin{equation}
+\mu = \frac{n(n+1)}{4}
+\end{equation}
+
+and variance:
+
+\begin{equation}
+\sigma^2= \frac {n(n+1)(2n+1)  }  {24}
+\end{equation}
+
+
+If we therefore standardise the $T^+$ by subtracting the $\mu$ and then dividing by the square root of the variance $\sqrt(\sigma^2)=\sigma$, we get a $z$-value with mean 0 and standard deviation 1. To do that, we use the following formula:
+
+\begin{equation}
+z = \frac{T^+ - \mu}{\sigma} =  \frac  { T^+ - n(n+1)/4} {\sqrt{n(n+1)(2n+1)/24}}
+\end{equation}
+
+
+Here $T^+$ is 66 and $n$ equals 12, so if we fill in the formula we get $z = \Sexpr{round( (66 - 39) / sqrt(162.5), 3)   }$. From the standard normal distribution we know that 5\% of the observations lie above 1.96 and below -1.96. So a value for $z$ larger than 1.96 or smaller than -1.96 is enough evidence to reject the null-hypothesis. Here our $z$-statistic is larger than 1.96, therefore we reject the null-hypothesis that the median skating times are the same at the World Championships and the Olympics. The $p$-value associated with a $z$-score of \Sexpr{ round((66 - 39) / sqrt(162.5), 3)} is \Sexpr{ round(pnorm((66 - 39) / sqrt(162.5), lower.tail=F)*2, 3)}.
+
+
+
+
+
+\section{How to perform Wilcoxon's signed ranks test in R}
+
+If you want R to perform the Wilcoxon test, your data needs to be in wide format. If your data are in long format, you can transform them with the function \texttt{pivot\_wider()}:
+
+<<eval = F>>=
+
+datawide <- datalong %>% 
+  pivot_wider(values_from = "time", names_from = "occasion")
+@
+
+
+Next, you use the \texttt{wilcoxon.test()} function. You select the two variables (occasions) that you would like to compare, and indicate that the Olympic and World Championship data are paired within rows (i.e., the Olympic and World championship data in one row belong to the same individual).
+
+<<>>=
+wilcox.test(datawide$Olympics, datawide$WorldChampionships, 
+            paired = TRUE)
+@
+
+
+The output shows a $V$-statistic, which corresponds to our $T^+$ above. The standard output yields an approximate $p$-value. This $p$-value is by default two-sided. Wilcoxon's $T^+$-statistic (or $V$) under the null-hypothesis approaches a normal distribution in case we have a large number of observations (many rows in wide format). If $n>15$, the approximation is good enough so that if we standardise this statistic, it can be interpreted as a $z$-score (standardised score with a normal distribution). That means that a $z$-score of 1.96 or larger or -1.96 or smaller can be regarded as significant at the 5\% significance level. Since the standard normal distribution is only an approximation, and we have $n=12$, it is safer here to look at the exact significance level. That can be done with the option \texttt{exact = TRUE}:
+
+<<>>=
+wilcox.test(datawide$Olympics, datawide$WorldChampionships, 
+            paired = TRUE, 
+            exact = TRUE)
+@
+
+
+
+
+In this case we see that the exact $p$-value is equal, to the fifth decimal, to the approximate $p$-value. Note that we use a two-sided test, to allow for the fact that random sampling could lead to a higher median for the Olympic Games or a higher median for the World Championships. We just want to know whether the null-hypothesis that the two medians differ can be rejected (in whatever direction) or not.
+\\
+\\
+
+
+Let's compare the output with the Friedman test, but then only use the relevant occasions in your code:
+
+<<>>=
+datalong %>% 
+  filter(occasion != "EuropeanChampionships") %>%
+  mutate(occasion = as.integer(occasion)) %>%
+  friedman.test(time ~ occasion | athlete, 
+                data = .)
+ 
+@
+
+Note that the \texttt{friedman.test()} function does not perform well if some variables are factors and you make a selection of the levels. Here we have the factor \texttt{occasion} with originally 3 levels. If the \texttt{friedman.test()} function only finds two of these in the data it is supposed to analyse, it throws an error. Therefore we turn factor variable \texttt{occasion} into an integer variable first. The \texttt{friedman.test()} function then turns this integer variable into a new factor variable with only 2 levels before the calculations. 
+
+In the output we see that the null-hypothesis of equal medians at the World Championships and the Olympic Games can be rejected, with an approximate $p$-value of 0.02.
+
+
+
+Note that both the Friedman and Wilcoxon tests come up with very similar $p$-values. Their rationales are also similar: Friedman's test is based on ranks and Wilcoxon's test is based on positive and negative differences between measures 1 and 2, so in fact ranks 1 and 2 for each row in the wide data matrix. Both can therefore be used in the case you have two measures. We recommend to use the Friedman test, since that test can be used in all situations where you have 2 or more measures per row. Wilcoxon's test can only be used if you have 2 measures per row.
+\\
+\\
+In sum, we can report in two ways on our hypothesis regarding similar skating times at the World Championships and at the Olympics:
+
+\begin{enumerate}
+
+\item
+
+\begin{quotation}
+"A Friedman test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $F_r = 5.33, p = .02$."
+\end{quotation}
+
+\item
+
+\begin{quotation}
+"A Wilcoxon signed ranks test showed a significant difference between the 10km skating times at the World Championships and at the Olympics, $T^+ = 66, p = .03$." 
+\end{quotation}
+
+\end{enumerate}
+
+How do we know whether the fastest times were at the World Championships or at the Olympics? If we look at the raw data in Table \ref{tab:nonparmixed_4}, it is not immediately obvious. We have to inspect the $T^+ = 66$ and $T^- = 12$ and consider what they represent: there is more positivity than negativity. The positivity is due to positive ranksigns that are computed based on $d = Olympics - WorldChampionships$, see Table \ref{tab:nonparmixed_77}. A positive difference $d$ means that the Olympics time was larger than the WorldChampionships time. A large value for time stands for slower speed.
+A positive ranksign therefore means that the Olympics time was larger (slower!) than the WorldChampionships time. A large \texttt{rank\_d} means that the difference between the two times was relatively large. Therefore, you get a large value of $T^+$ if the Olympic times are on the whole slower than the World Championships times, and/or when these positive differences are relatively large. When we look at the values of \texttt{ranksign} in Table \ref{tab:nonparmixed_77}, we notice that only two values are negative: one relatively large value and one relatively small value. The rest of the values are positive, both small and large, and these all contribute to the $T^+$ value. We can therefore state that the pattern in the data is that for most athletes, the Olympic times are slower than the times at the World Championships. 
+
+Of course, this is better visualised with a graph, see Figure \ref{fig:skating}. Easy to see that for 2 skaters, the times were fastest at the Olympics. The rest had their best time at the World Championships.
+
+
+<<skating, fig.height = 3.5, echo = F, message = F, fig.cap = "Skating times at the Olympics and the World Championships. Only two of the skaters show their fastest time at the Olympics.">>=
+datawide %>% 
+  mutate(faster_at_olympics = ifelse(Olympics - WorldChampionships < 0, 
+                                     TRUE, 
+                                     FALSE)) %>% 
+  pivot_longer(cols = -c(athlete, faster_at_olympics), 
+               names_to = "occasion", 
+               values_to = "time") %>% 
+  filter(occasion != "EuropeanChampionships") %>% 
+  ggplot(aes(x = occasion, y = time, col = faster_at_olympics)) +
+  geom_line(aes(group = athlete)) +
+  scale_colour_brewer(palette = "Set1")
+@
+
+
+
+\section{Ties}
+
+Many non-parametric tests are based on ranks. For example, if we have the data sequence {0.1, 0.4, 0.5, 0.2}, we give these values the ranks {1, 3, 4, 2}, respectively. But in many data cases, data sequences cannot be ranked unequivocally. Let's look at the sequence {0.1, 0.4, 0.4, 0.2}. Here we have 2 values that are exactly the same. We say then that we have \textit{ties}. If we have ties in our data like the 0.4 in this case, one very often used option is to arbitrarily choose one of the 0.4 values as smaller than the other, and then average the ranks. Thus, we rank the data into {1, 3, 4, 2} and then average the tied observations: {1, 3.5, 3.5, 2}. As another example, suppose we have the sequence {23, 54, 54, 54, 19}, we turn this into ranks {2, 3, 4, 5, 1} and take the average of the ranks of the tied observations of 54: {2, 4, 4, 4, 1}. These ranks corrected for ties can then be used to compute the test statistic, for instance Friedman's $F_r$ or Wilcoxon's $z$. However, in many cases, because of these corrections, a slightly different formula is to be used. So the formulas become a little bit different. This is all done in R automatically. If you want to know more, see Siegel and Castellan (1988). \textit{Non-parametric Statistics for the Behavioral Sciences}. New York: McGraw-Hill. 
+
+
+
+
+% \section{Exercises}
+% 
+% 
+% A researcher is interested in the relationship between mood and day of the week: are people generally moodier on Monday than on Wednesday or Friday?
+% 
+% Below we see the data on 4 people that rated their mood from 1 (very moody) to 10 (not moody at all) on three separate days in a week in February: Day 1 is Monday, day 2 is Wednesday and day 3 is Friday:
+% 
+% <<nonparmixed_8, fig.height=4, echo=FALSE, fig.align='center'>>=
+% set.seed(1234565910)
+% ID <- rep(c(1,2,3,4), each=3)
+% Day <- rep (c(1, 2, 3), 4)
+% Mood <- rpois(12, 5)
+% data <- data.frame(ID, Day, Mood)
+% data %>% kable()
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(data,
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sav',
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sps',
+%               package = c("SPSS"))
+% @
+% 
+% \begin{enumerate}
+% 
+% \item Put the data into wide format, and think of appropriate variable names
+% \\
+%  \\
+%  \begin{tabular}{llrrrr}
+%    & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% \item Rank these data row-wise: for each row determine the lowest mood (1), the second lowest mood (2) and the highest mood score (3)
+% \\
+%  \\
+%  \begin{tabular}{llrrrr}
+%    & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%   & \dots & \dots  & \dots & \dots  & \dots  \\
+%  \end{tabular}
+% \\
+% \\
+% \item Determine the column sums: the sum of the ranks for Monday, Wednesday and Friday.
+% \item How many rows do you have ($N$) and how many columns of data do you have ($k$)?
+% \item Compute $F_r$.
+% \item Copy the data into SPSS and run Friedman's test. Should you ask for an exact $p$-value? Provide the syntax.
+% \item Suppose you get the SPSS output in Figure \ref{fig:friedmanmood1}. What would your conclusion be regarding the research question about the relationship between moodiness and the day of the week?
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 21cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedmanmood1.pdf}
+%     \end{center}
+%     \caption{SPSS output of a Friedman test.}
+%     \label{fig:friedmanmood1}
+% \end{figure}
+% 
+% \item
+% In this data set, for which day did we observe the personal best mood? How many of the individuals showed their best mood on that day?
+% 
+% 
+% \item
+% A linear mixed model was run on this data set. When checking model assumptions, we saw the graphs in Figures \ref{fig:nonparmixed_11a} and \ref{fig:nonparmixed_11b}. Based on these, would you prefer to stick to the Friedman's test for this data set, or would you prefer to report a linear mixed model? Explain your answer.
+% 
+% 
+% <<nonparmixed_11a, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Residual plot after a linear mixed model analysis.'>>=
+% res <- data %>%  lmer( Mood ~ as.factor(Day) +  (1|ID), data=. ) %>%
+%         resid()
+% datalong <- cbind(data, res)
+% datalong %>% ggplot( aes(x=as.factor(Day), y=res)    ) + geom_point()  + xlab("Day") + ylab("Residual")
+% 
+%  @
+%  
+%  <<nonparmixed_11b, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Residual plot after a linear mixed model analysis.'>>=
+% datalong %>% ggplot( aes( x=res )  ) + geom_histogram() + xlab("Residual")
+%  @
+% 
+% 
+% \item Could you have performed a Wilcoxon test on these data? Why so, or why not?
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% 
+% \begin{enumerate}
+% 
+% \item
+% The raw data in wide format:
+% <<nonparmixed_9, fig.height=4, echo=FALSE, fig.align='center'>>=
+% data <- data %>% dplyr::arrange(ID)
+% datawide <- data %>% tidyr::spread(Day, Mood) %>% dplyr::arrange(ID)
+% names(datawide) <- c("ID", "Mood_1", "Mood_2", "Mood_3")
+% datawide %>% kable()
+% @
+% 
+% \item
+% The row-wise ranked data:
+% <<nonparmixed_10, fig.height=4, echo=FALSE, fig.align='center'>>=
+% ranks <- apply(datawide[,2:4], 1,  function(x) rank(x) )
+% datawideranks<- datawide
+% datawideranks[,2:4] <- t(ranks)
+% datawideranks %>% kable()
+%  @
+% \item Day 1: \Sexpr{sum(datawideranks[2]) }, Day 2: \Sexpr{sum(datawideranks[3])} and Day3: \Sexpr{sum(datawideranks[4])}.
+% \item $N=4$ and $k=3$
+% \item
+% 
+% \begin{eqnarray}
+% F_r &=& \left[  \frac{12}{4 \times  3(3+1)} \times (\Sexpr{sum(datawideranks[2]) }^2 + \Sexpr{sum(datawideranks[3]) }^2 + \Sexpr{sum(datawideranks[4]) }^2)      \right] - 3 \times 4 (3+1) \nonumber \\
+%   &=&   \left[  \frac{12}{48} \times  \Sexpr{sum(datawideranks[2])^2 +sum(datawideranks[3])^2+sum(datawideranks[4])^2  }      \right] - 48 = 1.50  \nonumber
+% \end{eqnarray}
+% 
+% \item
+% 
+% \begin{verbatim}
+% NPAR TESTS
+% /FRIEDMAN=  Mood_1   Mood_2    Mood_3
+% /METHOD=Exact.
+% \end{verbatim}
+% 
+% \item
+% \begin{quotation}
+% We found no significant effect of day of the week on mood, $F_r=1.50, p=0.65$, so the null-hypothesis of equal mood during the week is not rejected. Note however that the sample size was extremely small (12 data points), so even if there is a real relationship between mood and day of the week, there was little chance to find evidence of that in this data set.
+% \end{quotation}
+% 
+% \item The highest column sum of the ranks was found for day 2, which was Wednesday. So in this data set we saw that the four individuals generally showed their personal highest mood score on Wednesday. Actually, 2 persons out of 4 showed their highest score (rank 3) on Wednesday (ID=2 and ID=3).
+% 
+% \item The plots suggests that the variance of the residuals is very small for the second day, compared to the other two days. The distribution is also hardly normal. But it is hard to tell whether the assumptions are reasonable, since there are so few data points. It would therefore be safest to report a Friedman test.
+% 
+% \item A Wilcoxon test can only be performed on two measures, say Monday and Wednesday data, or Monday and Friday data. You could not test the null-hypothesis of the same moods on three days with a Wilcoxon test.
+% 
+% \end{enumerate}
+
+
+
+

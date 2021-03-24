@@ -1,0 +1,82 @@
+\chapter{Categorical predictor variables}\label{chap:categorical}
+
+
+
+\section{Dummy coding}
+As we have seen in Chapter \ref{chap:intro}, there are largely two different types of variables: numeric variables and categorical variables. Numeric variables say something about \textit{how much} of an attribute is in an object: for instance height (measured in inches) or heat (measured in degrees Celsius). Categorical variables say something about the quality of an attribute: for instance colour (red, green, yellow) or type of seating (aisle seat, window seat). We have also seen a third type of variable: ordinal variables. Ordinal variables are somewhat in the middle between numeric variables and categorical variables: they are about quantitative differences between objects (e.g., size) but the values are sharp disjoint categories (small, medium, large), and the values are not expressed using units of measurements.
+
+In the chapters on simple and multiple regression we saw that both the dependent and the independent variables were all numeric. The linear model used in regression analysis always involves a numeric dependent variable. However, in such analyses it is possible to use categorical independent variables. In this chapter we explain how to do that and how to interpret the results. 
+
+The basic trick that we need is \textit{dummy coding}. Dummy coding involves making one or more new variables, that reflects the categorization seen with a categorical variable. First we focus on categorical variables with only two categories (dichotomous variables). Later in this chapter, we will explain what to do with categorical variables with more than two categories (nominal variables). 
+
+Imagine we study bus companies and there are two different types of seating in buses: aisle seats and window seats. Suppose we ask 5 people, who have travelled from Amsterdam to Paris by bus during the last 12 months, whether they had an aisle seat or a window seat during their last trip, and how much they paid for the trip. Suppose we have the variables \texttt{person}, \texttt{seat} and \texttt{price}. Table \ref{tab:dummy_1} shows the anonymised data. There we see the dichotomous variable \texttt{seat} with values 'aisle' and 'window'. 
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in rnorm(5, 60, 5) \%>\% round(0): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(person, seat, price): object 'price' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.bus \%>\% head() \%>\% xtable(caption = "{}Bus trips to Paris."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+With dummy coding, we make a new variable that only has values 0 and 1, that conveys the same information as the \texttt{seat} variable. The resulting variable is called a \textit{dummy variable}. Let's call this dummy variable \texttt{window} and give it the value 1 for all persons that travelled in a window seat. We give the value 0 for all persons that travelled in an aisle seat. We can also call the new variable \texttt{window} a \textit{boolean variable} with TRUE and FALSE, since in computer science, TRUE is coded by a 1 and FALSE by a 0. Another name that is sometimes used is an \textit{indicator variable}. Whatever you want to call it, the data matrix including the new variable is displayed in Table \ref{tab:dummy_2}.
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.frame(person, seat, window, price): object 'price' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in data.bus \%>\% head() \%>\% xtable(caption = "{}Bus trips to Paris."{}, : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(predvars, data, env): object 'price' not found}}\end{kframe}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

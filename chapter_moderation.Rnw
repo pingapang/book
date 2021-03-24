@@ -1,0 +1,1233 @@
+
+\chapter{Moderation: testing interaction effects}\label{chap:moderation}
+
+
+
+
+
+\section{Interaction with one numeric and one dichotomous variable}
+
+Suppose there is a linear relationship between age (in years) and vocabulary (the number of words one knows): the older you get, the more words you know. Suppose we have the following linear regression equation for this relationship:
+
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = 205 + 500 \times \texttt{age} 
+\end{eqnarray}
+
+According to this equation, the expected number of words for a newborn baby (\texttt{age = 0}) equals 205. This may sound silly, but suppose this model is a very good prediction model for vocabulary size in children between 2 and 5 years of age. Then this equation tells us that the expected increase in vocabulary size is 500 words per year.
+
+This model is meant for everybody in the Netherlands. But suppose that one researcher expects that the increase in words is much faster in children from high socio-economic status (SES) families than in children from low SES families. He believes that vocabulary will be larger in higher SES children than in low SES children. In other words, he expects an effect of SES, over and above the effect of age:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + b_1 \times \texttt{age} + b_2 \times \texttt{SES}
+\end{eqnarray}
+
+This \textit{main effect} of \texttt{SES} is yet unknown and denoted by $b_2$. Note that this linear equation is an example of multiple regression.
+
+
+Let's use some numerical example. Suppose age is coded in years, and SES is dummy coded, with a 1 for high SES and a 0 for low SES. Let $b_2$, the effect of SES over and above age, be 10. Then we can write out the linear equation for low SES and high SES separately.
+
+
+\begin{eqnarray}
+low SES: \widehat{\texttt{vocab}} &=& 200 + 500 \times \texttt{age} + 10 \times 0  \\
+&=& 200 + 500 \times \texttt{age} \\
+high SES: \widehat{\texttt{vocab}} &=& 200 + 500 \times \texttt{age} + 10 \times 1  \\
+&=& (200+10) + 500 \times \texttt{age} \\
+&=& 210 + 500 \times \texttt{age}
+\end{eqnarray}
+
+Figure \ref{fig:summary_plot0} depicts the two regression lines for the high and low SES children separately. We see that the effect of SES involves a change in the intercept: the intercept equals 200 for low SES children and the intercept for high SES children equals $210$. The difference in intercept is indicated by the coefficient for SES. Note that the two regression lines are parallel: for every age, the difference between the two lines is equal to 10. For every age therefore, the predicted number of words is 10 words more for high SES children than for low SES children.
+
+
+<<summary_plot0, fig.height=3.5, echo=FALSE, fig.cap='Two regression lines: one for low SES children and one for high SES children.'>>=
+
+cars %>% 
+  ggplot( aes(speed,dist)) + 
+  geom_abline(intercept = 200, slope = 500) +
+  geom_abline(intercept = 250, slope = 500) + 
+  xlim(c(0,5)) + 
+  ylim(c(0,3000)) +
+  geom_text(aes(x = 3, y = 1400, label='SES=0')) +
+  geom_text(aes(x= 2.9, y = 2000, label='SES=1')) +
+  xlab('Age in years') + 
+  ylab('Vocabulary #words')
+@
+
+So far, this is an example of multiple regression that we already saw in Chapter \ref{chap:simple}. But suppose that such a model does not describe the data that we actually have, or does not make the right predictions based on on our theories. Suppose our researcher also expects that the \textit{yearly increase} in vocabulary is a bit lower than 500 words in low SES families, and a little bit higher than 500 words in high SES families. In other words, he believes that \texttt{SES} might \textit{moderate} (affect or change) the slope coefficient for \texttt{age}. Let's call the slope coefficient in this case $b_1$. In the above equation this slope parameter is equal to 500, but let's now let itself have a linear relationship with \texttt{SES}:
+
+\begin{eqnarray}
+b_1 = a + b_3 \times \texttt{SES}
+\end{eqnarray}
+
+In words: the slope coefficient for the regression of \texttt{vocab} on \texttt{age}, is itself linearly related to \texttt{SES}: we predict the slope on the basis of \texttt{SES}. We model that by including a slope $b_3$, but also an intercept $a$. Now we have \textit{two} linear equations for the relationship between \texttt{vocab}, \texttt{age} and \texttt{SES}:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} &=& b_0 + b_1 \times \texttt{age} + b_2 \times \texttt{SES}  \\
+b_1 &=& a + b_3 \times \texttt{SES}
+\end{eqnarray}
+
+We can rewrite this by plugging the second equation into the first one (substitution):
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + (a + b_3 \times \texttt{SES})  \times \texttt{age} + b_2 \times \texttt{SES} 
+\end{eqnarray}
+
+
+Multiplying this out gets us:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + a \times \texttt{age} + b_3 \times \texttt{SES}  \times \texttt{age} + b_2 \times \texttt{SES}
+\end{eqnarray}
+
+If we rearrange the terms a bit, we get:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + a \times \texttt{age} + b_2 \times \texttt{SES} + b_3 \times \texttt{SES}  \times \texttt{age}
+\end{eqnarray}
+
+Now this very much looks like a regression equation with one intercept and \textit{three} slope coefficients: one for \texttt{age} ($a$), one for \texttt{SES} ($b_2$) and one for $\texttt{SES} \times \texttt{age}$ ($b_3$).
+
+
+We might want to change the label $a$ into $b_1$ to get a more familiar looking form:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + b_1\times \texttt{age} + b_2 \times \texttt{SES} + b_3 \times \texttt{SES}  \times \texttt{age}
+\end{eqnarray}
+
+So the first slope coefficient is the increase in vocabulary for every year that \texttt{age} increases ($b_1$), the second slope coefficient is the increase in vocabulary for an increase of 1 on the \texttt{SES} variable ($b_2$), and the third slope coefficient is the increase in vocabulary for every increase of 1 on the \textit{product} of \texttt{SES} and \texttt{age} ($b_3$).
+\\
+What does this mean exactly?
+
+% If we look at this equation:
+% 
+% \begin{eqnarray}
+% b_1 = \alpha + b_3 \times SES
+% \end{eqnarray}
+% 
+% we see that a high positive value of $b_3$ increases the size of $b_1$, which is the effect of age on vocabulary.
+
+Suppose we find the following parameter values for the regression equation:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = 200 + 450 \times \texttt{age} + 125 \times \texttt{SES} + 100 \times \texttt{SES}  \times \texttt{age} \label{eq:vocab}
+\end{eqnarray}
+
+If we code low SES children as \texttt{SES = 0}, and high SES children as \texttt{SES = 1}, we can write the above equation into two regression equations, one for low SES children (\texttt{SES = 0}) and one for high SES children (\texttt{SES = 1}):
+
+\begin{eqnarray}
+low SES: \widehat{\texttt{vocab}} &=&  200 + 450 \times \texttt{age}   \\
+high SES: \widehat{\texttt{vocab}} &=& 200 + 450 \times \texttt{age} + 125  + 100   \times \texttt{age}\\
+&=& (200 + 125) + (450 + 100) \times \texttt{age} \nonumber\\
+&=& 325 + 550 \times \texttt{age} \nonumber
+\end{eqnarray}
+
+Then for low SES children, the intercept is 200 and the regression slope for age is 450, so they learn 450 words per year. For high SES children, we see the same intercept of 200, with an extra 125 (this is the main effect of SES). So effectively their intercept is now 325. For the regression slope, we now have $450 \times \texttt{age}+ 100   \times \texttt{age}$ which is of course equal to $550 \times \texttt{age}$. So we see that the high SES group has both a different intercept, and a different slope: the increase in vocabulary is 550 per year: somewhat steeper than in low SES children. So yes, the researcher was right: vocabulary increase per year is faster in high SES children than in low SES children.
+
+These two different regression lines are depicted in Figure \ref{fig:summary_plot}. It can be clearly seen that the lines have two different intercepts and two different slopes. That they have two different slopes can be seen from the fact that the lines are not parallel. One has a slope of 450 words per year and the other has a slope of 550 words per year. This difference in slope of 100 is exactly the size of the slope coefficient pertaining to the product $\texttt{SES} \times \texttt{age}$, $b_3$. Thus, the interpretation of the regression coefficient for a product of two variables is that it represents \textit{the difference in slope}.
+
+<<summary_plot, fig.height=3.5, echo=FALSE, fig.cap="Two regression lines for the relationship between \\texttt{age} and \\texttt{vocab}, one for low SES children (\\texttt{SES = 0}) and one for high SES children (\\texttt{SES = 1}).">>=
+cars %>% 
+  ggplot(aes(speed, dist)) + geom_abline(intercept = 200, slope = 450) +
+  geom_abline(intercept = 325, slope = 550) + xlim(c(0, 8)) + ylim(c(0, 4000)) +
+  geom_text(aes(x = 2, y = 600, label = "SES=0")) +
+  geom_text(aes(x = 2.7, y = 2250, label = "SES=1")) +
+  xlab("Age in years") + ylab("Vocabulary #words")
+@
+
+
+The observation that the slope coefficient is different for different groups is called an \textit{interaction effect}, or \textit{interaction} for short. Other words for this phenomenon are \textit{modification} and \textit{moderation}. In this case, \texttt{SES} is called the \textit{modifier variable}: it modifies the relationship between \texttt{age} on vocabulary. Note however that you could also interpret \texttt{age} as the modifier variable: the effect of \texttt{SES} is larger for older children than for younger children. In the plot you see that the difference between vocabulary for high and low SES children of age 6 is larger than it is for children of age 2.
+
+
+
+
+
+
+
+\section{Interaction effect with a dummy variable in R}
+
+Let's look at some example output for an R data set where we have a categorical variable that is not dummy-coded yet. The data set is on chicks and their weight during the first days of their lives. Weight is measured in grams. The chicks were given one of four different diets. Here we use only the data from chicks on two different diets 1 and 2. We select only the Diet 1 and 2 data. We store the Diet 1 and 2 data under the name \texttt{chick\_data}. When we have a quick look at the data with \texttt{glimpse()}, we see that \texttt{Diet} is a factor (\texttt{<fct>}).
+ 
+ 
+<<>>=
+chick_data <- ChickWeight %>% 
+  filter(Diet == 1 | Diet == 2)
+
+chick_data %>% 
+    glimpse()
+@
+
+
+
+
+<<summary_plot1, message = F, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap="The relationship between \\texttt{Time} and \\texttt{weight} in all chicks with either Diet 1 or Diet 2.">>=
+
+
+chick_data %>% 
+  ggplot(aes(x = Time, y = weight)) +
+  geom_smooth( method = "lm", se = F, col = "black") +
+  geom_point(aes(x = Time, y = weight, col = Diet)) +
+  scale_colour_brewer(palette = "Set1") 
+
+out <- chick_data %>% 
+  lm(weight ~ Time, data = .)
+  
+@
+
+The general regression of \texttt{weight} on \texttt{Time} is shown in Figure \ref{fig:summary_plot1}. This regression line for the entire sample of chicks has a slope of around \Sexpr{round(out$coef[2],0)} grams per day. Now we want to know whether this slope is the same for chicks in the Diet 1 and Diet 2 groups, in other words, do chicks grow as fast with Diet 1 as with Diet 2? We might expect that \texttt{Diet} \textit{moderates} the effect of \texttt{Time} on \texttt{weight}. We use the following code to study this $\texttt{Diet} \times \texttt{Time}$ interaction effect, by having R automatically create a dummy variable for the factor \texttt{Diet}. In the model we specify that we want a main effect of \texttt{Time}, a main effect of \texttt{Diet}, and an interaction effect of \texttt{Time} by \texttt{Diet}:
+
+
+
+<<>>=
+out <- chick_data %>% 
+  lm(weight ~ Time + Diet + Time:Diet, data = .)
+out %>% 
+  tidy(conf.int = TRUE)
+
+@
+
+
+In the regression table, we see the effect of the numeric \texttt{Time} variable, which has a slope of \Sexpr{round(out$coef[2], 2)}. For every increase of 1 in \texttt{Time}, there is a corresponding expected increase of \Sexpr{round(out$coef[2], 2)} grams in weight. Next, we see that R created a dummy variable \texttt{Diet2}. That means this dummy codes 1 for Diet 2 and 0 for Diet 1. From the output we see that if a chick gets Diet 2, its weight is \Sexpr{round(out$coef[3],2)} grams heavier (that means, Diet 2 results in a lower weight). 
+
+Next, R created a dummy variable \texttt{Time:Diet2}, by multiplying the variables \texttt{Time} and \texttt{Diet2}. Results show that this interaction effect is \Sexpr{round(out$coef[4],2)}.  
+
+
+These results can be plugged into the following regression equation:
+
+\begin{eqnarray}
+\widehat{\texttt{weight}} = \Sexpr{round(out$coef[1], 2)}  + \Sexpr{round(out$coef[2], 2)}  \times \texttt{Time}  \Sexpr{round(out$coef[3], 2)} \times \texttt{Diet2} + \Sexpr{round(out$coef[4], 2)} \times \texttt{Time} \times \texttt{Diet2} 
+\end{eqnarray}
+
+
+If we fill in 1s for the \texttt{Diet2} dummy variable, we get the equation for chicks with Diet 2:
+
+\begin{eqnarray} 
+\widehat{\texttt{weight}} &=& \Sexpr{round(out$coef[1], 2)} + \Sexpr{round(out$coef[2], 2)}  \times \texttt{Time}  \Sexpr{round(out$coef[3], 2)} \times 1 + \Sexpr{round(out$coef[4], 2)} \times \texttt{Time} \times 1  \nonumber \\
+   &=&      \Sexpr{round(out$coef[1], 2) + round(out$coef[3], 2)} + \Sexpr{round(out$coef[2], 2)+round(out$coef[4], 2)} \times \texttt{Time} 
+ \end{eqnarray}
+
+
+If we fill in 0s for the \texttt{Diet2} dummy variable, we get the equation for chicks with Diet 1:
+
+\begin{eqnarray} 
+\widehat{\texttt{weight}} &=& \Sexpr{round(out$coef[1], 2)} + \Sexpr{round(out$coef[2], 2)}  \times \texttt{Time}   
+ \end{eqnarray}
+
+When comparing these two regression lines for chicks with Diet 1 and Diet 2, we see that the slope for \texttt{Time} is \Sexpr{round(out$coef[4], 2)} steeper for Diet 2 chicks than for Diet 1 chicks. In this particular random sample of chicks, the chicks on Diet 1 grow \Sexpr{round(out$coef[2], 2)} grams per day (on average), but chicks on Diet 2 grow $\Sexpr{round(out$coef[2], 2)}+\Sexpr{round(out$coef[4], 2)}= \Sexpr{round(out$coef[2], 2)+round(out$coef[4], 2)}$ grams per day (on average). 
+
+
+We visualised these results in Figure \ref{fig:summary_plot2}. There we see two regression lines: one for the red data points (chicks on Diet 1) and one for the blue data points (chicks on Diet 2). These two regression lines are the same as those regression lines we found when filling in either 1s and 0s in the general linear model. Note that the lines are not parallel, like in Chapter \ref{chap:categorical}. Each regression line is the least squares regression line for the subsample of chicks on a particular diet.
+
+<<summary_plot2, message = F, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap="The relationship between \\texttt{Time} and \\texttt{weight} in chicks, separately for Diet 1 and Diet 2.">>=
+
+chick_data %>% 
+  ggplot(aes(x = Time, y = weight, col = Diet)) +
+  geom_smooth( method = "lm", se = F) +
+  geom_point(aes(x = Time, y = weight, col = Diet)) +
+  scale_colour_brewer(palette = "Set1") 
+
+@
+
+
+We see that the difference in slope is \Sexpr{round(out$coef[4], 2)} grams per day. This is what we observe in \textit{this} particular sample of chicks. However, what does that tell us about the difference in slope for chicks in general, that is, the population of all chicks? For that, we need to look at the confidence interval. In the regression table above, we also see the 95\% confidence intervals for all model parameters. The 95\% confidence interval for the $\texttt{Time} \times \text{Diet2}$ interaction effect is (\Sexpr{round(confint(out)[4, 1], 2)}, \Sexpr{round(confint(out)[4, 2], 2)}). That means that plausible values for this interaction effect are those values between \Sexpr{round(confint(out)[4, 1], 2)} and \Sexpr{round(confint(out)[4, 2], 2)}. 
+
+It is also possible to do null-hypothesis testing for interaction effects. One could test whether this difference of \Sexpr{round(out$coef[4], 2)} is possible \textit{if the value in the entire population of chicks equals 0}? In other words, is the value of \Sexpr{round(out$coef[4], 2)} significantly different from 0? 
+
+The null-hypothesis is 
+
+\begin{equation}
+H_0: \beta_{\texttt{Time} \times \texttt{Diet2}} = 0
+\end{equation}
+
+The regression table shows that the null-hypothesis for the interaction effect has a $t$-value of $t=2.92$, with a $p$-value of $3.73 \times 10^{-3} = 0.00373$. For research reports one always also reports the degrees of freedom for a statistical test. The (residual) degrees of freedom can be found in R by typing
+
+<<>>=
+out$df.residual
+@
+
+
+
+We can report that 
+
+\begin{quotation}
+"we reject the null-hypothesis and conclude that there is evidence that the $\texttt{Time} \times \texttt{Diet2}$ interaction effect is not 0, $t(336)= 2.92, p = .004$."
+\end{quotation}
+
+
+Summarising, in this section, we established that \texttt{Diet} moderates the effect of \texttt{Time} on \texttt{weight}: we found a significant diet by time interaction effect. The difference in growth rate is \Sexpr{round(out$coef[4], 2)} grams per day, with a 95\% confidence interval from \Sexpr{round(confint(out)[4, 1], 2)} to \Sexpr{round(confint(out)[4, 2], 2)}. In more natural English: diet has an effect on the growth rate in chicks. 
+
+In this section we discussed the situation that regression slopes might be different in two groups: the regression slope might be steeper in one group than in the other group. So suppose that we had a numerical predictor $X$ for a numerical dependent variable $Y$, we said that a particular dummy variable $Z$ \textit{moderated} the effect of $X$ on $Y$. This moderation was quantified by an \textit{interaction} effect. So suppose we have the following linear equation:
+
+
+\begin{eqnarray} 
+Y =  b_0 + b_1  \times X + b_2  \times Z + b_3 \times X \times Z + e \nonumber
+\end{eqnarray}
+
+Then, we call $b_0$ the intercept, $b_1$ the main effect of $X$, $b_2$ the main effect of $Z$, and $b_3$ the interaction effect of $X$ and $Z$ (alternatively, the $X$ by $Z$ interaction effect). 
+
+
+
+
+
+
+\section{Interaction effects with a categorical variable in R}
+
+
+In the previous section, we looked at the difference in slopes between two groups. But what we can do for two groups, we can do for multiple groups. The data set on chicks contains data on chicks with 4 different diets. When we perform the same analysis using all data in \texttt{ChickWeight}, we obtain the regression table
+
+
+<<>>=
+out <- ChickWeight %>% 
+  lm(weight ~ Time + Diet + Time:Diet, data = .)
+out %>% 
+  tidy(conf.int = TRUE)
+
+@
+
+
+The regression table for four diets is substantially larger than for two diets. It contains one slope parameter for the numeric variable \texttt{Time}, three different slopes for the factor variable \texttt{Diet} and three different interaction effects for the \texttt{Time} by \texttt{Diet} interaction.
+
+The full linear model equation is
+
+\begin{eqnarray}
+\widehat{\texttt{weight}} =
+\Sexpr{round(out$coef[1],2)} + \Sexpr{round(out$coef[2],2)} \times \texttt{Time}  \Sexpr{round(out$coef[3],2)} \times \texttt{Diet2}  \Sexpr{round(out$coef[4],2)} \times \texttt{Diet3}  \Sexpr{round(out$coef[5],2)} \times \texttt{Diet4} \nonumber\\
++ \Sexpr{round(out$coef[6],2)} \times \texttt{Time} \times \texttt{Diet2} + 
+\Sexpr{round(out$coef[7],2)} \times \texttt{Time} \times \texttt{Diet3} +
+\Sexpr{round(out$coef[8],2)} \times \texttt{Time} \times \texttt{Diet4} 
+\end{eqnarray}
+
+You see that R created dummy variables for Diet 2, Diet 3 and Diet 4. We can use this equation to construct a separate linear model for the Diet 1 data. Chicks with Diet 1 have 0s for the dummy variables \texttt{Diet2}, \texttt{Diet3} and \texttt{Diet4}. If we fill in these 0s, we obtain
+
+
+\begin{equation}
+\widehat{\texttt{weight}} =
+\Sexpr{round(out$coef[1],2)} + \Sexpr{round(out$coef[2],2)} \times \texttt{Time} 
+\end{equation}
+
+
+For the chicks on Diet 2, we have 1s for the dummy variable \texttt{Diet2} and 0s for the other dummy variables. Hence we have
+
+\begin{eqnarray}
+\widehat{\texttt{weight}} =
+\Sexpr{round(out$coef[1],2)} + \Sexpr{round(out$coef[2],2)} \times \texttt{Time}  \Sexpr{round(out$coef[3],2)} \times 1 +
+\Sexpr{round(out$coef[6],2)} \times \texttt{Time} \times 1 \nonumber\\
+= 
+\Sexpr{round(out$coef[1],2)} + \Sexpr{round(out$coef[2],2)} \times \texttt{Time}  \Sexpr{round(out$coef[3],2)}  +
+\Sexpr{round(out$coef[6],2)} \times \texttt{Time} \nonumber \\
+= (\Sexpr{round(out$coef[1],2)}   \Sexpr{round(out$coef[3],2)}) + (\Sexpr{round(out$coef[2],2)} + \Sexpr{round(out$coef[6],2)}) \times \texttt{Time} \nonumber\\
+= \Sexpr{round(out$coef[1],2) +  round(out$coef[3],2)} + \Sexpr{round(out$coef[2],2)+ round(out$coef[6],2)} \times \texttt{Time}
+\end{eqnarray}
+
+Here we see exactly the same equation for Diet 2 as in the previous section where we only analysed two diet groups. The difference between the two slopes in the Diet 1 and Diet 2 groups is again \Sexpr{round(out$coef[6], 2)}. The only difference for this interaction effect is the standard error, and therefore the confidence interval is also slightly different. We will come back to this issue in Chapter \ref{chap:advanced}. 
+
+For the chicks on Diet 3, we have 1s for the dummy variable \texttt{Diet3} and 0s for the other dummy variables. The regression equation is then
+
+\begin{eqnarray}
+\widehat{\texttt{weight}} =
+\Sexpr{round(out$coef[1],2)} + \Sexpr{round(out$coef[2],2)} \times \texttt{Time}   \Sexpr{round(out$coef[4],2)} \times 1  +
+\Sexpr{round(out$coef[7],2)} \times \texttt{Time} \times 1 \nonumber\\
+= (\Sexpr{round(out$coef[1],2)}  \Sexpr{round(out$coef[4],2)}) +
+(\Sexpr{round(out$coef[2],2)} + \Sexpr{round(out$coef[7],2)}) \times \texttt{Time}  \nonumber\\
+= \Sexpr{round(out$coef[1],2) + round(out$coef[4],2)} + 
+\Sexpr{round(out$coef[2],2) + round(out$coef[7],2)} \times \texttt{Time}
+\end{eqnarray}
+
+We see that the intercept is again different than for the Diet 1 chicks. We also see that the slope is different: it is now \Sexpr{round(out$coef[7],2)} steeper than for the Diet 1 chicks. This difference in slopes is exactly equal to the \texttt{Time} by \texttt{Diet3} interaction effect. This is also what we saw in the Diet 2 group. Therefore, we can say that an interaction effect for a specific diet group says something about how much steeper the slope is in that group, compared to the reference group. The reference group is the group for which all the dummy variables are 0. Here, that is the Diet 1 group. 
+
+Based on that knowledge, we can expect that the slope in the Diet 4 group is equal to the slope in the reference group (\Sexpr{round(out$coef[2], 2)}) plus the \texttt{Time} by \texttt{Diet4} interaction effect, \Sexpr{round(out$coef[8], 2)}, so \Sexpr{round(out$coef[8], 2) + round(out$coef[2], 2)}.
+
+We can do the same for the intercept in the Diet 4 group. The intercept is equal to the intercept in the reference group (\Sexpr{round(out$coef[1], 2)}) plus the main effect of the \texttt{Diet4} dummy variable, \Sexpr{round(out$coef[5], 2)}, which is \Sexpr{round(out$coef[5], 2) + round(out$coef[1], 2)}.
+
+The linear equation is then for the Diet 4 chicks:
+
+\begin{equation}
+\widehat{\texttt{weight}} = \Sexpr{round(out$coef[5], 2) + round(out$coef[1], 2)} + \Sexpr{round(out$coef[8], 2) + round(out$coef[2], 2)} \times \texttt{Time}
+\end{equation}
+
+
+The four regression lines are displayed in Figure \ref{fig:chicken_4}. The steepest regression line is the one for the Diet 3 chicks: they are the fastest growing chicks. The slowest growing chicks are those on Diet 1. The confidence intervals in the regression table tell us that the difference between the growth rate with Diet 4 compared to Diet 1 is somewhere between \Sexpr{round(confint(out)[8, 1], 2)} and \Sexpr{round(confint(out)[8, 2], 2)} grams per day.   
+
+
+<<chicken_4, echo = F, fig.height = 3.5, message = F, fig.cap = "Four different regression lines for the four different diet groups. " >>=
+ChickWeight %>% 
+  ggplot(aes(x = Time, y = weight, col = Diet)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = F) +
+  scale_colour_brewer(palette = "Set1") +
+  geom_jitter(width = 0.2)
+@
+
+Suppose we want to test the null hypothesis that all four slopes are the same. This implies that the \texttt{Time} by \texttt{Diet} interaction effects are all equal to 0. We can test this null hypothesis
+
+
+\begin{equation}
+H_0: \beta_{\texttt{Time} \times \texttt{Diet2}} = \beta_{\texttt{Time} \times \texttt{Diet2}} = \beta_{\texttt{Time} \times \texttt{Diet4}} = 0
+\end{equation}
+
+by running an ANOVA. That is, we apply the \texttt{anova()} function to the results of an \texttt{lm()} analysis:
+
+
+<<>>=
+out_anova <- out %>% 
+  anova() 
+out_anova %>% 
+  tidy()
+
+@
+
+
+In the output we see a \texttt{Time} by \texttt{Diet} interaction effect with 3 degrees of freedom. That term refers to the null-hypothesis that all three interaction effects are equal to 0. The $F$-statistic associated with that null-hypothesis equals \Sexpr{round(out_anova$F[3], 1)}. The residual degrees of freedom equals \Sexpr{out_anova$Df[4]}, so that we can report:
+
+\begin{quotation}
+"The slopes for the four different diets were significantly different from each other, $F(\Sexpr{out_anova$Df[3]},\Sexpr{out_anova$Df[4]}) = \Sexpr{round(out_anova$F[3], 1)}, MSE = \Sexpr{sprintf("%.0f", round(out_anova$'Mean Sq'[3], 0))}, p < .001$."
+\end{quotation}
+
+
+
+
+% \subsection{Exercises}
+% 
+% 
+% 
+% 
+% We have the following regression equation, with $y$ as dependent variable, $x$ as a numeric predictor variable, and a dummy variable $dummy$.
+% 
+% \begin{equation} 
+% y = 5.3 + 3.6  \times x + 3.8  \times dummy + 8.2  \times x  \times dummy + e \nonumber
+% \end{equation}
+% \begin{enumerate}
+% 
+% 
+% 
+% 
+% \item
+% Write down the regression equation in the case the dummy variable equals 0.
+% 
+% \item Write down the regression equation in the case the dummy variable equals 1.
+% \item What is the intercept if the dummy variable equals 0?
+% \item What is the intercept if the dummy variable equals 1?
+% \item What is the slope if the dummy variable equals 0?
+% \item What is the slope if the dummy variable equals 1?
+% \item How large is the difference in intercepts between the two groups?
+% \item Where can we find this value in the equation?
+% \item How large is the difference in slopes between the two groups?
+% \item Where can we find this value in the equation?
+% 
+% \end{enumerate}
+% 
+% 
+% 
+% We have the following regression equation, with $y$ as dependent variable, $x$ as a numeric predictor variable, and a dummy variable $dummy$.
+% 
+% \begin{equation} 
+% y = - 4.1 + 1.2  \times x - 6.5  \times dummy - 1.3 \times x \times dummy + e \nonumber
+% \end{equation}
+% 
+% \begin{enumerate}
+% 
+% 
+% \item 
+% Write down the regression equation in the case the dummy variable equals 0.
+% \item Write down the regression equation in the case the dummy variable equals 1.
+% \item What is the intercept if the dummy variable equals 0?
+% \item What is the intercept if the dummy variable equals 1?
+% \item What is the slope if the dummy variable equals 0?
+% \item What is the slope if the dummy variable equals 1?
+% \item How large is the difference in intercepts between the two groups? 
+% \item Where can we find this value in the equation?
+% \item How large is the difference in slopes between the two groups?\
+% \item Where can we find this value in the equation?
+% \end{enumerate}
+% Suppose we find the following linear equation:
+% 
+% \begin{equation} 
+% \widehat{mathscore} = 16.3 + 5.5  \times age - 0.8  \times sex - 1.2  \times age  \times sex  \nonumber
+% \end{equation}
+% \begin{enumerate}
+% 
+% \item 
+% What is the main effect of $age$ on mathscore? 
+% \item What is the main effect of the $sex$ on mathscore?
+% \item How large is the interaction effect of $age$ and $sex$ on mathscore?
+% \item What is the predicted mathscore for a girl of age 12, if sex is coded 1 for boys?
+% \item What is the predicted mathscore for a boy of age 22, if sex is coded 1 for boys?
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% \begin{enumerate}
+% \item 
+% \end{enumerate}
+% 
+% 
+
+
+
+
+\section{Interaction between two dichotomous variables in R}
+
+In the previous section we discussed the situation that regression slopes might be different in two four groups. In Chapter \ref{chap:categorical} we learned that we could also look at slopes for dummy variables. The slope is then equal to the difference in group means, that is, the slope is the increase in the group mean of one group compared to the reference group.
+
+Now we discuss the situation where we have two dummy variables, and want to do inference on their interaction. Does one dummy variable moderate the effect of the other dummy variable?
+
+Let's have a look at a data set on penguins. It can be found in the \texttt{palmerpenguins} package.
+
+<<>>=
+# install.packages("palmerpenguins")
+library(palmerpenguins)
+penguins %>% 
+  str ()
+@
+
+
+We see there is a \texttt{species} factor with three levels, and a \texttt{sex} factor with two levels. Let's select only the Adelie and Chinstrap species.
+
+<<>>=
+penguin_data <- penguins %>% 
+  filter(species %in% c("Adelie", "Chinstrap")) 
+@
+
+
+Suppose that we are interested in differences in flipper length across species. We then could run a linear model, with \texttt{flipper\_length\_mm} as the dependent variable, and \texttt{species} as independent variable.
+
+<<>>=
+out <- penguin_data %>% 
+  lm(flipper_length_mm ~ species, data = .)
+out %>% 
+  tidy(conf.int = TRUE)
+@
+
+The output shows that in this sample, the Chinstrap penguins have on average larger flippers than Adelie penguins. The confidence intervals tell us that this difference in flipper length is somewhere between \Sexpr{round(confint(out)[2, 1], 2)} and \Sexpr{round(confint(out)[2, 2], 2)}. But suppose that this is not what we want to know. The real question might be whether this difference is different for male and female penguins. Maybe there is a larger difference in flipper length in females than in males?
+
+This difference or change in the effect of one independent variable (\texttt{species}) as a function of another independent variable (\texttt{sex}) should remind us of \textit{moderation}: maybe sex moderates the effect of species on flipper length.
+
+In order to study such moderation, we have to analyse the \texttt{sex} by \texttt{species} interaction effect. By now you should know how to do that in R:
+
+
+<<>>=
+out <- penguin_data %>% 
+  lm(flipper_length_mm ~ species + sex + species:sex, data = .)
+out %>% 
+  tidy(conf.int = TRUE)
+@
+
+
+
+In the output we see an intercept of \Sexpr{round(out$coef[1])}. Next, we see an effect of a dummy variable, coding 1s for Chinstrap penguins (\texttt{speciesChinstrap}). We also see an effect of a dummy variable coding 1s for male penguins (\texttt{sexmale}). Then, we see an interaction effect of these two dummy effects. That means that this dummy variable codes 1s for the specific combination of Chinstrap penguins that are male (\texttt{speciesChinstrap:sexmale}).  
+
+
+
+
+
+\begin{eqnarray} 
+\widehat{\texttt{flipper\_length}} = \Sexpr{round(out$coef[1])} +
+\Sexpr{round(out$coef[2], 2)} \times \texttt{speciesChinstrap} +
+\Sexpr{round(out$coef[3], 2)} \times \texttt{sexmale} +
+\Sexpr{round(out$coef[4], 2)} \times \texttt{speciesChinstrap} \times \texttt{sexmale} \nonumber
+\end{eqnarray}
+
+From this we can make the following predictions. The predicted flipper length for female Adelie penguins is 
+
+\begin{equation}
+\Sexpr{round(out$coef[1])} +
+\Sexpr{round(out$coef[2], 2)} \times 0 +
+\Sexpr{round(out$coef[3], 2)} \times 0 +
+\Sexpr{round(out$coef[4], 2)} \times 0 \times 0 = \Sexpr{round(out$coef[1])}
+\end{equation}
+
+The predicted flipper length for male Adelie penguins is 
+
+\begin{eqnarray}
+\Sexpr{round(out$coef[1])} +
+\Sexpr{round(out$coef[2], 2)} \times 0 +
+\Sexpr{round(out$coef[3], 2)} \times 1 +
+\Sexpr{round(out$coef[4], 2)} \times 0 \times 1 \nonumber\\
+= \Sexpr{round(out$coef[1])} + \Sexpr{round(out$coef[3], 2)} = \Sexpr{round(out$coef[1]) +  round(out$coef[3], 2) } \nonumber\\
+\end{eqnarray}
+
+
+The predicted flipper length for female Chinstrap penguins is 
+
+\begin{eqnarray}
+\Sexpr{round(out$coef[1])} +
+\Sexpr{round(out$coef[2], 2)} \times 1 +
+\Sexpr{round(out$coef[3], 2)} \times 0 +
+\Sexpr{round(out$coef[4], 2)} \times 0 \times 0 \nonumber\\
+= \Sexpr{round(out$coef[1])} + \Sexpr{round(out$coef[2], 2)} = \Sexpr{round(out$coef[1]) + round(out$coef[2], 2)}
+\end{eqnarray}
+
+
+
+
+and the predicted flipper length for male Chinstrap penguins is 
+
+\begin{eqnarray}
+\Sexpr{round(out$coef[1])} +
+\Sexpr{round(out$coef[2], 2)} \times 1 +
+\Sexpr{round(out$coef[3], 2)} \times 1 +
+\Sexpr{round(out$coef[4], 2)} \times 1 \times 1 \nonumber\\
+= \Sexpr{round(out$coef[1])} + \Sexpr{round(out$coef[2], 2)} + \Sexpr{round(out$coef[3], 2)} + \Sexpr{round(out$coef[4], 2)} \nonumber\\
+= \Sexpr{round(out$coef[1]) + round(out$coef[2], 2) + round(out$coef[3], 2) + round(out$coef[4], 2)}
+\end{eqnarray}
+
+
+
+These predicted flipper lengths for each male/species combination are actually the group means. It is generally best to plot these means with a \textit{means and errors plot}. For that we first need to compute means by R. With \texttt{left\_join()} we add these means to the data set. These diamond-shaped means (\texttt{shape = 18}) are plotted with intervals that are twice (\texttt{mult = 2}) the standard error of those means (\texttt{geom = "errorbar"}).   
+
+<<warning = F, fig.height=3.5, message = F>>=
+
+left_join(penguin_data, # adding group means to the data set
+          penguin_data %>%
+            group_by(species, sex) %>%
+            summarise(mean = mean(flipper_length_mm))
+          ) %>% 
+  ggplot(aes(x = sex, y = flipper_length_mm, colour = species)) +
+  geom_jitter(position = position_jitterdodge(), # the raw data
+              shape = 1, 
+              alpha = 0.6) +
+  geom_point(aes(y = mean),    # the groups means
+             position = position_jitterdodge(jitter.width = 0), 
+             shape = 18, 
+             size = 5) +
+  stat_summary(fun.data = mean_se,  # computing errorbars
+               fun.args = list(mult = 2),
+               geom = "errorbar", 
+               width = 0.2, 
+               position = position_jitterdodge(jitter.width = 0), 
+               size = 1) + 
+  scale_color_brewer(palette = "Set1") 
+@
+
+This plot shows also the data on penguins with unknown sex (\texttt{sex = NA}). If we leave these out, we get
+
+<<warning = F, fig.height=3.5, message = F>>=
+
+left_join(penguin_data, # adding group means to the data set
+          penguin_data %>%
+            group_by(species, sex) %>%
+            summarise(mean = mean(flipper_length_mm))
+          ) %>% 
+  filter(!is.na(sex)) %>% 
+  ggplot(aes(x = sex, y = flipper_length_mm, colour = species)) +
+  geom_jitter(position = position_jitterdodge(), # the raw data
+              shape = 1, 
+              alpha = 0.6) +
+  geom_point(aes(y = mean),    # the groups means
+             position = position_jitterdodge(jitter.width = 0), 
+             shape = 18, 
+             size = 5) +
+  stat_summary(fun.data = mean_se,  # computing errorbars
+               fun.args = list(mult = 2),
+               geom = "errorbar", 
+               width = 0.2, 
+               position = position_jitterdodge(jitter.width = 0), 
+               size = 1) + 
+  scale_color_brewer(palette = "Set1") 
+@
+
+
+Comparing the Adelie and the Chinstrap data, we see that for both males and females, the Adelie penguins have smaller flippers than the Chinstrap penguins. Comparing males and females, we see that the males have generally larger flippers than females. More interestingly in relation to this chapter, the means in the males are farther apart than the means in the females. Thus, in males the effect of species is larger than in females. This is the interaction effect, and this difference in the difference in means is equal to \Sexpr{round(out$coef[4], 2)} in this data set. With a confidence level of 95\% we can say that the moderating effect of sex on the effect of species is probably somewhere between \Sexpr{round(confint(out)[4,1], 2)} and \Sexpr{round(confint(out)[4,2], 2)} mm in the population of all penguins.
+
+
+
+
+
+
+
+% In this equation, the predicted height for a female from country B equals $175$ and the predicted height for a male equals $175 + 15 \times 1 = 190$.\\
+% 
+% So it seems that in general, the people in the random sample from country B are taller than the people in the random sample from country A: both men and women show taller averages in country B. But we also see another difference between the two countries: the average difference between men and women is 10 cm in country A, but 15 cm in country B. So we can say that in these samples, the effect of sex on height is a little bit different in both countries. Now of course this difference could be a coincidence, a random result from sampling, or it could be a real thing in the populations. Suppose we'd like to know whether the effect of sex on height is different in the two countries at population level. We'd like to know whether country is a \textit{moderator} of the effect of age on height. So we use the following regression equation:
+% \\
+% \begin{eqnarray} 
+% \widehat{height} = b_0 + b_1  \times sex + b_2 \times country +  b_3 \times sex \times country  \nonumber
+% \end{eqnarray}
+% \\
+% and perform a regression analysis. 
+% 
+% The easiest option, as we have seen earlier, is to let SPSS do the dummy coding. Simply use the BY keyword to indicate that both country and sex are categorical variables. Additionally, include the multiplication in the DESIGN subcommand to indicate that you want to model an interaction effect:
+% 
+% \begin{verbatim}
+% UNIANOVA height BY sex country 
+% / DESIGN = sex country sex*country
+% / PRINT = parameter.
+% \end{verbatim}
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.7, trim={0cm 21.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups1.pdf}
+%     \end{center}
+%     \caption{Output with main effects of country and sex, and an interaction effect.}
+%      \label{fig:interactionheightcountrysex}
+% \end{figure}
+% 
+% In Figure \ref{fig:interactionheightcountrysex} we see the relevant output. Table \ref{tab:2countries} shows which variables SPSS has created automatically. Note that the column with the [country=A] * [sex=.00] variable is exactly the multiplication of the values from the [country=A] column with the corresponding values in the [sex=.00] column. Therefore, for the [country=A] * [sex=.00] variable, only those persons get a value of 1 that are both from country A \textit{and} are female (sex=0). 
+% 
+% 
+% \begin{table}
+%  \caption{Height of males and females in two countries A and B. Original variables sex and country, and the automatically created variables by the SPSS UNIANOVA syntax that are displayed in the output.}
+%  \begin{tabular}{lccrccc}
+%  ID & sex & country & height &  [country=A] & [sex=.00] &[country=A] * [sex=.00]      \\ \hline
+%  01 & 1 & A & 120 &  1 &0 & 0         \\
+%  02 & 0 & A & 160 &   1&1 & 1        \\
+%  03 & 0 & B & 121 &  0 &1& 0       \\
+%  04 & 1 & B & 125 &  0 &0 &0          \\
+%  05 & 1 & A & 140 &  1 &0 & 0       \\
+%  \dots & \dots & \dots & \dots &\dots   & \dots&  \dots       \\
+%  \end{tabular}
+%  \label{tab:2countries}
+%  \end{table}
+% 
+% 
+% 
+% We see that the intercept is 190. Then we see that the people from country A get an extra -15 cm, and that for those with sex equal to 0 get an additional -15 cm. Now that's interesting. Note that the variable sex was already a dummy variable: males were coded 1 and females were coded 0. Now, with our syntax using the BY keyword, SPSS created a new dummy variable called \textbf{[sex=.00]}. Now, all those who have a 0 for sex are coded 1 for the \textbf{[sex=.00]} variable! Thus effectively, we now have a dummy variable for being female. 
+% 
+% On top of that, those who come from country A \textit{and} have sex=0 (females), have an extra +5 cm. Thus, the expected height from women from country A equals $190-15-15+5=165$ cm. 
+% 
+% In order to get a proper overview of the meaning of the overview, it's best to write out a linear equation. If we ignore all the dummy variables for which the effects (slopes) are fixed to 0, and if we give more sensible names to the variables names [country=A] (countryA), [sex=.00] (female), and [country=A]*[sex=.00] (female*countryA), then we get the equation:
+% 
+% \begin{equation}
+% \widehat{height}= 190  - 15 female - 15 countryA + 5 female*countryA
+% \end{equation}
+% 
+% 
+% The expected height of a male (sex = 1) from country A is then $190  + 0 - 15 + 0 = 175$. The expected height of a female from country B is $190 -15 + 0 +0 =175$, and the expected height of a male from country B is $190 + 0 + 0 + 0 = 190$. 
+% 
+% The difference of the differences (the interaction effect) equals +5. We see that women from country A (for only those have a 1 for this variable!), have an extra height of +5 cm compared to all other persons. Interpretation of this interaction effect of +5 is best seen in a graph showing the means of the four groups, see Figure \ref{fig:country_sex1}. There we see that for both males and females, there is an effect of country in that country A has a lower mean than country B. However, when we look at the females in country A, they score \textit{relatively} higher, which makes the negative effect of country B less obvious.
+% 
+% <<country_sex1, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Average heights for males and females in countries A and B.">>=
+% 
+% data <- read_spss("/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples mixed linear model/interaction/interactionheight3groups.sav")
+% 
+% data$sex <- data$sex %>% 
+%   factor(labels = c("Female", "Male"))
+% 
+% data %>% 
+%   filter(country != "C") %>% 
+%   group_by(country, sex) %>% 
+%   summarise(mean_height = mean(height)) %>%  
+%   ggplot(aes(x = sex, y = mean_height, fill = country)) +
+%   geom_col(position = 'dodge')
+% 
+%         
+%         
+%         
+%         
+%         # group_by(sex, country) %>% 
+%         # summarise(height_mean = mean(height)) %>%
+%         # ggplot(aes(sex,height_mean,  group=country)) +
+%         # geom_point()+
+%         # geom_line(aes(linetype = country))+
+%         # ylab("Average height")
+% 
+% 
+% # sex <- c("male", "female","male", "female") %>%  as.factor()
+% # country <- c("A", "A", "B", "B") %>%  as.factor()
+% # means <- c( 175,155, 190  ,175)
+% # 
+% # tibble(sex, country,means) %>% ggplot( aes(x=sex, y=means, fill=country))  +
+% #         geom_point(aes(col=country)) +
+% #         xlab('Sex') + ylab('Average height in cm') +
+% #        scale_y_continuous(breaks=seq(0,200,10))
+% @
+% 
+% 
+% The data could also be represented in a different way, see Figure \ref{fig:country_sex2}. There we see that in both countries, the females score lower than the males. However, the females in country A score \textit{relatively} higher, which makes the negative effect of sex less obvious in country A. Thus, there are two ways of describing an interaction effect: either you look at the effect of country and see sex as a modifier variable, or you look at the effect of sex, and see country as a modifier. Both are describing the same interaction effect: the extra +5 cms for females from country A.
+% 
+% <<country_sex2, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Average heights in countries A and B for males and females.">>=
+% 
+% 
+% 
+% data %>% 
+%   filter(country != "C") %>% 
+%   group_by(country, sex) %>% 
+%   summarise(mean_height = mean(height)) %>%  
+%   ggplot(aes(x = country, y = mean_height, fill = sex)) +
+%   geom_col(position = 'dodge')
+% 
+% 
+% 
+% # data %>% filter(country != "C") %>% 
+% #         group_by(sex, country) %>% 
+% #         summarise(height_mean = mean(height)) %>% 
+% #         ggplot(aes(country,height_mean,  group=sex)) +
+% #         geom_point()+
+% #         geom_line(aes(linetype = sex))+
+% #         ylab("Average height")
+% 
+% # 
+% # sex <- c("male", "female","male", "female") %>%  as.factor()
+% # country <- c("A", "A", "B", "B") %>%  as.factor()
+% # means <- c( 175,155, 190  ,175)
+% # 
+% # tibble(sex, country,means) %>% ggplot( aes(x=country, y=means, fill=sex))  +
+% #         geom_point(aes(col=sex)) +
+% #         xlab('Country') + ylab('Average height in cm') +
+% #        scale_y_continuous(breaks=seq(0,200,10))
+% @
+% 
+% 
+% Earlier we saw that linear models with dummy variables described group means. Here the linear model described the group means of a small data sample. Whether there is an interaction effect at the \textit{population} level, at the level of all females and males from both countries, we can see from SPSS output. The relevant null-hypothesis is that there is no interaction effect. This means that the coefficient for the interaction effect is equal to 0 in the population:
+% 
+% \begin{equation}
+% H_0: \beta_{sex*country}=0
+% \end{equation}
+% 
+% If the effect that we find in the data sample is significant at your pre-set level of significance (i.e. $p < \alpha$), you reject the null-hypothesis and conclude that \textit{the difference between males and females in height is different in these two countries}. Or, equivalently, you conclude that \textit{the difference in height between the two countries is different for males and females}. If the effect is not significant, you do not reject the null-hypothesis.
+% 
+% From now on, we recommend using the BY syntax for categorical variables (and ordinal variables that you'd like to treat categorical rather than numerical). Only when you find the output hard to interpret, make your own dummy variables and use the WITH keyword.
+% 
+% 
+% 
+% 
+% 
+% % In the output we find the following values:
+% % \\
+% % \begin{eqnarray} 
+% % height = 165 + 10  \times sex + 10 \times country +  5 \times sex \times country + e \nonumber
+% % \end{eqnarray}
+% % \\
+% % So the predicted value for specific subgroups are the following:
+% % \\
+% %  \\
+% %  \\
+% %  \\
+% %  \begin{tabular}{lrrr}
+% %  Sex & Country & equation & predicted height\\ \hline
+% %  Female & A & $165+10  \times 0 + 10 \times 0 +  5 \times 0 \times 0 $ & 165\\
+% %  Male & A & $165+10  \times 1 + 10 \times 0 +  5 \times 1 \times 0 $ & 175\\
+% %  Female & B & $165+10  \times 0 + 10 \times 1 +  5 \times 0 \times 1 $ & 175\\
+% %  Male & B & $165+10  \times 1 + 10 \times 1 +  5 \times 1 \times 1 $ & 190\\
+% %  \end{tabular}
+% % \\
+% % \\
+% % \\
+% %  \\
+% % Note that we see exactly the same predicted values for the subgroups as we saw in the separate analyses for countries A and B. The interaction effect in this example is equal to 5: it means that the effect of sex (being a male) on height is 5 cm larger in country A than in country B. See that the difference in height between males and females is 10 cm in country A and 15 cm in country B. So the difference in the differences equals 5 cm. But note that you can also look at it from another angle: the difference between country A and B equals 10 cm for females, and 15 cm for males. So you can equally say that Sex moderates the effect of country: the effect of country is larger for males than for females, and this difference is again 5 cm. 
+% 
+% 
+% 
+
+
+
+% \subsection{More than two groups}
+% 
+% What happens when we have a categorical variable with more than two levels? Suppose we want to do the same study on height but now included data from country C. In Figure \ref{fig:country_sex3} we see the average heights that we observe in the sample data.
+% 
+% <<country_sex3, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Average weights for males and females in countries A, B and C.">>=
+% 
+% # data %>% group_by(sex, country) %>% 
+% #         summarise(height_mean = mean(height)) %>% 
+% #         ggplot(aes(country,height_mean,  group=sex)) +
+% #         geom_point()+
+% #         geom_line(aes(linetype = sex))+
+% #         ylab("Average height")
+% 
+% 
+% data %>% 
+%   group_by(country, sex) %>% 
+%   summarise(mean_height = mean(height)) %>%  
+%   ggplot(aes(x = country, y = mean_height, fill = sex)) +
+%   geom_col(position = 'dodge') 
+% 
+% 
+% # sex <- c("male", "female","male", "female","male", "female") %>%  as.factor()
+% # country <- c("A", "A", "B", "B", "C", "C") %>%  as.factor()
+% # means <- c( 175,155, 190  ,175, 171,173.8)
+% # 
+% # tibble(sex, country,means) %>% ggplot( aes(x=country, y=means, fill=sex))  +
+% #          geom_point(aes(col=sex)) +
+% #          xlab('Country') + ylab('Average height in cm') +
+% #         scale_y_continuous(breaks=seq(0,200,10))
+% @
+% 
+% Now we see a clear difference in the countries: the males are on average larger than the females, but this is only true for countries A and B. In country C the females are on average larger than the males. However, remember that this is based on a sample data. We'd like to know whether male-female differences in average height vary from country to country also in the population data. We therefore do an inferential data analysis using a linear model, including a sex by country interaction effect. Our null-hypothesis is 
+% 
+% \begin{equation}
+% H_0: \mu_{femaleA}-\mu_{maleA}=\mu_{femaleB}-\mu_{maleB}=\mu_{femaleC}-\mu_{maleC}
+% \end{equation}
+% 
+% 
+% With the next syntax you can run a regression analysis with a main effect of sex, a main effect of country and an interaction effect of sex by country in the following way.
+% 
+% \begin{verbatim}
+% UNIANOVA height BY country sex 
+% / design = sex country sex*country
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.7, trim={0cm 12cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups2.pdf}
+%     \end{center}
+%     \caption{Main effects of country (A, B, and C) and sex (0,1) and the country by sex interaction effects.}
+%      \label{fig:interactionheight3group}
+% \end{figure}
+% 
+% The SPSS output is in Figure \ref{fig:interactionheight3group}. In the Parameter Estimates table we see that 3 dummy variables have been computed for country automatically by SPSS. One for being in country A, and one for being in country B and one for country C. The effect for country C was fixed to 0 because it was redundant (with $K$ categories, you only need $K-1$ dummy variables, see Chapter \ref{chap:categorical}). Therefore country C is here used as the so-called reference category. 
+% 
+% Furthermore, we see that SPSS created 6 dummy variables for the interaction effect, one for each combination of sex (male and female) and country (A, B and C). Again, because of redundancy, only two of these are not fixed to 0. (Why this is so, will be explained later.) Again, if we ignore the redundant effects, and rename the variables we obtain the following equation:
+% 
+% 
+% \begin{eqnarray} 
+% \widehat{height} &=& 171 + 2.8  \times female + 4 \times CountryA +  19 \times CountryB \nonumber\\ 
+% &-& 12.8 \times CountryA \times female - 17.8 \times CountryB \times female  \nonumber
+% \end{eqnarray}
+% 
+% 
+% All observations done in country C for variables CountryA and CountryB are coded as 0. So let's do the math to get the predicted heights for each subgroup. Females are coded as 0 and males as 1, so a Female from country C gets the predicted value $171$. Let's do the computations for all subgroups:
+% 
+% 
+% \begin{table}
+% \caption{Expected heights for males and females in three countries.}
+%  \begin{tabular}{lrrr}
+%  Sex & Country & equation & height\\ \hline
+%  Female & A & $171+2.8  \times 0 +4 \times 1 + 19 \times 0 -  12.8 \times 1 \times 0 -  17.8 \times 0 \times 0 $ & 165\\
+%  Male & A & $171+2.8  \times 1 +4 \times 1 + 19 \times 0-  12.8 \times 1 \times 1 -  17.8 \times 0 \times 1 $ & 175\\
+%  Female & B & $171+2.8  \times 0 +4 \times 0 + 19 \times 1-  12.8 \times 0 \times 0 -  17.8 \times 1 \times 0 $ & 175\\
+%  Male & B & $171+2.8  \times 1 +4 \times 0 + 19 \times 1- 12.8 \times 0 \times 1 -  17.8 \times 1 \times 1 $ & 190\\
+%   Female & C & $171+2.8  \times 0 +4 \times 0 + 19 \times 0-  12.8 \times 0 \times 0 -  17.8 \times 0 \times 0 $ & 173.8\\
+%  Male & C & $171+2.8  \times 1 +4 \times 0 + 19 \times 0-  12.8 \times 0 \times 1 -  17.8 \times 0 \times 1 $ & 171\\
+%  \end{tabular}
+%  \label{tab:expie}
+%  \end{table}
+% 
+% Note that we now have very different values for the regression parameters than in the analysis with only countries A and B (see Figure \ref{fig:interactionheightcountrysex}), but nevertheless we end up with the same expected heights in Countries A and B. The difference in the parameter values stems from the fact that we have now treated country C as the reference category (coefficient fixed to 0), whereas in the previous two-country analysis, we treated country B as the reference category. 
+% 
+% Let's test the hypothesis of equal differences in heights between males and females across the three countries. In the output we see that the Country=A by female interaction effect is significant at 0.05: there is an extra height of -12.8 cms seen in females from country A, over and above the main effects of being female in general and being from country A. In other words, the effect of being female is smaller in country A than it is in Country C (the reference country). We also see this in the predicted means: male-female difference in country C is -2.8 (males shorter), but in country A it is +10 (males larger). 
+% 
+% In the output we also see that the CountryB by female interaction effect is significant at 0.05: the effect of being female is -17.8 cm in country B compared to Country C (the reference category). From the means we see that the male-female difference is 15 in country B, which is 17.8 cm more than the -2.8 in country C. So both these interaction effects are significant. Similarly to the previous chapter, we now have two coefficients to test one hypothesis, so again we should do an ANOVA $F$-test to test the hypothesis that male-female differences are the same across all three countries, or, equivalently, that country differences in height are the same in males and females.
+% 
+% 
+% Therefore, we should look at the Analysis of Variance (ANOVA) table (Tests of Between-Subjects Effects). There we see that for the country*sex interaction effect we have an $F$-value of 13.141. With 2 model degrees of freedom (number of interaction dummy variables) and 24 error degrees of freedom, the probability of getting an $F$-value of at least 13.141, given that the null-hypothesis is true, equals less than 0.001. Therefore we conclude that in the populations of countries A, B and C, the difference in height between males and females is significantly different, $F(2, 24)=13.141, MSE=16.033, p < 0.001$. Alternatively, but equivalently, we may conclude that the differences in height across the three countries, are significantly different for males than for females, $F(2, 24)=13.141, MSE=16.033, p < 0.001$.\footnote{Note that we never report $p=0.000$. A $p$-value is always greater than 0, no matter how small. Therefore, for very small values, we report $p < 0.001$.}. 
+% 
+
+
+% \subsection{Exercises}
+% 
+% From a sample of data on height, country (country A and country B), and weight, we get the following linear equation:
+% 
+% 
+% \begin{eqnarray}
+% \widehat{weight}= 40 + 30 \times CountryA + 0.4\times height + 0.1 \times CountryA\times height \nonumber
+% \end{eqnarray}
+% 
+% \begin{enumerate}
+% \item What is the expected weight for an individual from country A with a height of 1.5?\\
+% \item What is the expected weight for an individual from country B with a height of 1.0?\\
+% \item How large is the slope coefficient of height for the sample data from country A? \\
+% \item How large is slope coefficient of height for the sample data from country B?\\
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item 
+% \begin{eqnarray}
+% \widehat{weight}= 40 + 30 \times 1 + 0.4\times 1.5 + 0.1 \times 1\times 1.5 =70.75 \nonumber
+% \end{eqnarray}
+% 
+% \item
+% \begin{eqnarray}
+% \widehat{weight}= 40 + 30 \times 0 + 0.4\times 1.0 + 0.1 \times 0\times 1.0 =40.4\nonumber
+% \end{eqnarray}
+% 
+% 
+% \item{$0.4 + 0.1 = 0.5$}
+% 
+% \item{$0.4$}
+% 
+% 
+% \end{enumerate}
+
+
+\section{Moderation involving two numeric variables in R}
+
+In all previous examples, we saw at least one categorical variable. We saw that for different levels of a dummy variable, the slope of another variable varied. We also saw that for different levels of a dummy variable, the effect of another dummy variable varied. In this section, we look at how the slope of a numeric variable can vary, as a function of the level of another numeric variable. 
+
+As an example data set, we look at the \texttt{mpg} data frame, available in the \texttt{ggplot2} package. It contains data on 234 cars. Let's analyse the dependent variable \texttt{cty} (city miles per gallon) as a function of the numeric variables \texttt{cyl} (number of cylinders) and \texttt{displ} (engine displacement). First we plot the relationship between engine displacement and city miles per gallon. We use colours, based on the number of cylinders. We see that there is in general a negative slope: the higher the displacement value, the lower the city miles per gallon. 
+
+
+<<message = F, echo = T, fig.height = 3.5>>=
+mpg %>% 
+  ggplot(aes(x = displ, y = cty)) +
+  geom_point(aes(colour = cyl)) +
+  geom_smooth(method = "lm", se = F)
+@
+
+When we run separate linear models for the different number of cylinders, we get
+
+<<message = F, echo = T, fig.height = 3.5>>=
+mpg %>% 
+  ggplot(aes(x = displ, y = cty, colour = cyl, group = cyl)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+@
+
+We see that the slope is different, depending on the number of cylinders: the more cylinders, the less negative is the slope: very negative for cars with low number of cylinders, and slightly positive for cars with high number of cilinders. In other words, the slope increases in value with increasing number of cylinders. If we want to quantify this interaction effect, we need to run a linear model with an interaction effect.
+
+<<message = F>>=
+out <- mpg %>% 
+  lm(cty ~ displ + cyl + displ:cyl, data = .)
+out %>% 
+  tidy()
+@
+
+We see that the \texttt{displ} by \texttt{cyl} interaction effect is \Sexpr{round(out$coef[4], 3)}. It means that the slope of \texttt{displ} changes by \Sexpr{round(out$coef[4], 3)} for every unit increase in \texttt{cyl}. 
+
+For example, when we look at the predicted city miles per gallon with \texttt{cyl = 2}, we get the following model equation:
+
+\begin{eqnarray}
+\widehat{\texttt{cty}} &=& \Sexpr{round(out$coef[4], 1)} \Sexpr{round(out$coef[2], 3)}\times \texttt{displ} \Sexpr{round(out$coef[3], 3)} \texttt{cyl} + \Sexpr{round(out$coef[4], 3)} \times \texttt{displ} \times \texttt{cyl} \nonumber\\
+\widehat{\texttt{cty}} &=& \Sexpr{round(out$coef[4], 1)} \Sexpr{round(out$coef[2], 3)} \times \texttt{displ} \Sexpr{round(out$coef[3], 3)} \times 2 + \Sexpr{round(out$coef[4], 3)} \times \texttt{displ} \times 2 \nonumber\\
+\widehat{\texttt{cty}} &=& \Sexpr{round(out$coef[4], 1)} \Sexpr{round(out$coef[2], 3)} \times \texttt{displ} \Sexpr{round(2*out$coef[3], 3)}  + \Sexpr{round(2*out$coef[4], 3)} \times \texttt{displ} \nonumber\\
+\widehat{\texttt{cty}} &=& (\Sexpr{round(out$coef[4], 1)} \Sexpr{round(2*out$coef[3], 3)}) +  (\Sexpr{round(2*out$coef[4], 3)}\Sexpr{round(out$coef[2], 3)}) \times \texttt{displ}  \nonumber\\
+\widehat{\texttt{cty}} &=&  \Sexpr{round(out$coef[4], 1)+round(2*out$coef[3], 3)}   \Sexpr{round(2*out$coef[4], 3)+round(out$coef[2], 3)} \times \texttt{displ}
+\end{eqnarray}
+
+If we increase the number of cylinders from 2 to 3, we obtain the equation:
+
+\begin{eqnarray}
+\widehat{\texttt{cty}} &=& \Sexpr{round(out$coef[4], 1)} \Sexpr{round(out$coef[2], 3)} \times \texttt{displ} \Sexpr{round(out$coef[3], 3)} \times 3 + \Sexpr{round(out$coef[4], 3)} \times \texttt{displ} \times 3 \nonumber\\
+\widehat{\texttt{cty}} &=&  \Sexpr{round(out$coef[4], 1) + round(3*out$coef[3], 3)}   \Sexpr{round(3*out$coef[4], 3) + round(out$coef[2], 3)} \times \texttt{displ}
+\end{eqnarray}
+
+We see a different intercept and a different slope. The difference in the slope between 3 and 2 cylinders equals \Sexpr{round(coef(out)[4],3)}, which is exactly the interaction effect. If you do the same exercise with 4 and 5 cylinders, or 6 and 7 cylinders, you will always see this difference again. This parameter for the interaction effect just says that the best prediction for the change in slope when increasing the number of cylinders with 1, is \Sexpr{round(coef(out)[4],3)}. We can plot the predictions from this model in the following way:
+
+<<fig.height = 3.5, message = F>>=
+library(modelr)
+mpg %>% 
+  add_predictions(out) %>% 
+  ggplot(aes(x = displ, y = cty, colour = cyl)) +
+  geom_point() +
+  geom_line(aes(y = pred, group = cyl))
+@
+
+If we compare these predicted regression lines with those in the previous figure
+
+<<fig.height=3.5, message = F>>=
+mpg %>% 
+  add_predictions(out) %>% 
+  ggplot(aes(x = displ, y = cty, group = cyl)) +
+  geom_point() +
+  geom_line(aes(y = pred), colour = "black") +
+  geom_smooth(method = "lm", se = F)
+@
+
+we see that they are a little bit different. That is because in the model we treat \texttt{cyl} as numeric: for every increase of 1 in \texttt{cyl}, the slope changes by a fixed amount. When you treat \texttt{cyl} as categorical, then you estimate the slope separately for all different levels. You would then see multiple parameters for the interaction effect:
+
+<<message = F>>=
+out <- mpg %>% 
+  mutate(cyl = factor(cyl)) %>% 
+  lm(cty ~ displ + cyl + displ:cyl, data = .)
+out %>% 
+  tidy()
+@
+
+When \texttt{cyl} is turned into a factor, you see that cars with 4 cylinders are taken as the reference category, and there are effects of having 5, 6, or 8 cylinders. We see the same for the interaction effects: there is a reference category with 4 cylinders, where the slope of \texttt{displ} equals -5.96. Cars with 6 and 8 cylinders have different slopes: the one for 6 cylinders is 5.96 + 4.21 and the one for 8 cylinders is 5.96 + 6.39. The slope for cars with 5 cylinders can't be separately estimated because there is no variation in \texttt{displ} in the \texttt{mpg} data set.
+
+You see that you get different results, depending on whether you treat a variable as numeric or as categorical. Treated as numeric, you end up with a simpeler model with fewer parameters, and therefore a larger number of degrees of freedom. What to choose depends on the research question and the amount of data. In general, a model should be not too complex when you have relatively few data points. Whether the model is appropriate for your data can be checked by looking at the residuals and checking the assumptions.
+
+
+
+% \section{The number of non-redundant parameters in a linear model}
+% 
+% Let's go back to the example of heights for males and females in three countries. If we're interested in averages, there are 6 of them. These are displayed in Figure \ref{fig:country_sex3}, but we also display them in Table \ref{tab:expie}.
+% 
+% In Chapter \ref{chap:categorical} we saw that we can model two means using one single dummy variable. Thus, a variable \textbf{sex} with values 'male' and 'female' can be coded with a dummy variable \textbf{female} with values '0' and '1', respectively. Similarly, we saw that a variable \textbf{country} with three different values, 'A', 'B' and 'C', can be coded with 2 dummy variables. In general, any categorical variable with $K$ categories can be coded with $K-1$ dummy variables.
+% 
+% % Now with the two sexes and three countries, we have 6 means in total, so in essence we could code them with 5 dummy variables. We could for example look at the means in a way as presented in Table \ref{tab:} and take one of the means, for example the last one, as the reference category.
+% % 
+% % Suppose we would do that: how would we then intpret the results? The parameter table would show 5 different dummy effects withe 5 separate $p$-values. But then what? Which dummy effects should be taken together to test the null-hypothesis that there is no moderation? There is no longer an effect of country that is moderated by sex, or an effect of sex that is moderated by country. This can only be done if think of the means as presented in Table \ref{}.
+% 
+% First let's start with a model with only main effects of country and sex. The syntax for such a model is as follows.
+% 
+% \begin{verbatim}
+% UNIANOVA height BY country sex 
+% / design = sex country 
+% / print = parameter.
+% \end{verbatim}
+% 
+% Note that the syntax only leaves out the multiplication in the DESIGN subcommand. When we run this model, we get the output displayed in Figure \ref{fig:interactionheightcountrysexMAIN}
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.7, trim={0cm 24.2cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/height3groups3.pdf}
+%     \end{center}
+%     \caption{Output with main effects of country and sex.}
+%     \label{fig:interactionheightcountrysexMAIN}
+% \end{figure}
+% 
+% Table \ref{tab:country_sex5} presents the expected means based on this model with only main effects. When we compare these expected means with the observed means in Table \ref{tab:country_sex5} we see a clear discrepancy: our model makes predictions that do not match the observations in our sample data. This does not have to be a problem of course: our sample data are merely what they are, sample data. In reality we might be more interested in the population means. Our model might actually be a good reflection of what is true at the population level. 
+% 
+% Figure \ref{fig:country_sex4} shows the expected means based on main effects only. The actual observed means are represented in colour and the arrows represent the differences between the observed and the expected means for each subgroup. If you observe closely, you see that for each country separately, the deviation for the males is exactly opposite the deviation for the females. 
+% 
+% <<country_sex4, fig.height=4, echo=FALSE, fig.align='center', fig.cap="Expected weights for males and females in countries A, B and C on the basis of main effects only. The arrows represent the deviations from the observed means in the sample.">>=
+% 
+% pred <- data %>% 
+%         lm(height ~  country + sex , data=.) %>% predict
+% pred2 <- data %>% 
+%         lm(height ~  country+sex+country:sex , data=.) %>% predict
+% 
+% 
+% 
+% data %>% 
+%         mutate(pred=pred, pred2=pred2) %>% 
+%         group_by(country, sex) %>% summarise(mean_height=mean(pred), mean_height2=mean(pred2)) %>% 
+%         ggplot(aes(x=country,y=mean_height,group=sex)) + 
+%         geom_point()+
+%         geom_line(aes(linetype = sex)) +
+%         ylab("predicted average height") +
+%         geom_point(aes(y=mean_height2, col=sex), size=4) +
+%         geom_segment(aes(x=country, y=mean_height, xend=country, yend=mean_height2),  arrow=arrow(length=unit(0.25,"cm"), type="closed"))
+% 
+% @
+% 
+% <<country_sex5, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
+% 
+% 
+% 
+% data %>% 
+%         mutate(pred=pred, pred2=pred2) %>% 
+%         group_by(country, sex) %>% summarise(expected=mean(pred), observed=mean(pred2)) %>% 
+%         mutate(difference=expected-observed) %>% 
+%         ungroup %>% xtable(caption="Observed and predicted average height and the differences.", label="tab:country_sex5", digits=c(0,0,0,2,2,2)) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+% 
+% 
+% 
+% You see the same happening in the males and females in country B, and in the males and females in country C. Per country, the differences between observed and expected add up to 0. Interestingly, you see the same happening if you look horizontally: if you look only at the males, you see that the deviations for each country add up to 0, and the same happens when you look only at the females. 
+% 
+% Table \ref{tab:country_sex5} plots these deviations for each combination of sex and country. Now look again at the output of the model with the interaction effect in Table \ref{fig:interactionheight3group}. The interaction effect are exactly the same numbers, save a plus or minus sign. This gives a clear interpretation to the interaction effects: they are the deviations from the main effects. 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% \section{Interaction between two numeric variables}
+% 
+% Suppose we have data on current market value of housing properties. Suppose we also have data on 200 individuals, including their gross yearly income and the number of years spent in the national educational system. We'd like to see what the relationship is between income and education on the one hand, and the value of the house they live in on the other hand. Do richer people live in more valuable homes? Do people with more educational years live in more valuable homes? 
+% 
+% <<linearbylinear_1, fig.height=4, echo=FALSE, fig.align='center', message=F, results="asis", warning=F, fig.cap="Sample data on gross yearly income, number of educational years and home market value.">>=
+% set.seed(1234)
+% income <- runif(200, 10,90 )
+% education <- runif(200,12,20)
+% value <- 40000 + 20 * income * education + rnorm(200, 0, 10)
+% tibble(income, education, value) %>% 
+%         ggplot(aes(income, value), fill=education) +
+%         geom_point(aes(col=education)) +
+%         geom_abline(intercept =36230,slope=319 )+
+%         geom_abline(intercept =44062,slope=319 )
+% 
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(tibble(income, education, value) ,
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/interactionlbyl.sav',
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/interactionlbyl.sps',
+%               package = c("SPSS"))
+% @
+% 
+% 
+% Let's carry out a multiple regression analysis and find out. We use the syntax
+% 
+% \begin{verbatim}
+% UNIANOVA value WITH income  educatin
+% /DESIGN income  educatin 
+% /PRINT parameter.
+% \end{verbatim}
+% 
+% and find the output in Figure \ref{fig:interactionlbyl1}. 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/interactionlbyl1.pdf}
+%     \end{center}
+%     \caption{Main effects of income and educational years on home market value.}
+%     \label{fig:interactionlbyl1}
+% \end{figure}
+% 
+% Based on this output, the linear equation for the relation between income and home market value is 
+% \begin{equation}
+% \widehat{value}= 24482 + 319 income + 979 education
+% \end{equation}
+% 
+% If education equals 20, we get the equation
+% 
+% \begin{equation}
+% \widehat{value}= 24482 + 319 income + 979 * 20 = 44062 + 319 income
+% \end{equation}
+% 
+% If education equals 12, we get the equation 
+% 
+% \begin{equation}
+% \widehat{value}= 244821 + 319 income + 979 * 12 = 36230 + 319 income
+% \end{equation}
+% 
+% We see that for different values of education, the intercepts are different, but the slopes are equal. We can see the two regression lines in Figure \ref{fig:linearbylinear_1}. Somehow it does not seem to be a good model. For high income, we see relatively large differences between different levels of education. For low income we see small differences for educational years. Thus we could say that these sample data seem to suggest that the effect of educational years on the home market value is larger for high income people than for for low income people.
+% 
+% We could also look at it from a different angle. In Figure \ref{fig:linearbylinear_1} we see that the relationships between income and value is much steeper for people with many educational years (the light blue dots), than for people with few educational years (the dark dots).
+% 
+% Both observations seem to suggest a moderation effect. One could say that education moderates the relation between income and value, or one could say that income moderates the relation between educational years and value. We can therefore try a linear model that includes an interaction effect of income and education on home market value. 
+% 
+% The syntax is 
+% 
+% \begin{verbatim}
+% UNIANOVA value WITH income education
+% /DESIGN income  education income*education
+% /PRINT parameter.
+% \end{verbatim}
+% 
+% and the output is in Figure \ref{fig:interactionlbyl2}
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples"  "linear" "model/interactionlbyl2.pdf}
+%     \end{center}
+%     \caption{Main effects of income and educational years and their interaction effect on home market value.}
+%     \label{fig:interactionlbyl2}
+% \end{figure}
+% 
+% Based on this output, the linear equation for the relation between income and home market value is 
+% 
+% \begin{equation}
+% \widehat{value}= 40014 -0.4 income -.8 education + 20 income \times education
+% \end{equation}
+% 
+% If education equals 20, we get the equation
+% 
+% \begin{equation}
+% \widehat{value}= 40014 -0.4 income -.8 \times 20 + 20 income \times 20 = 39998 + 399.6 income
+% \end{equation}
+% 
+% If education equals 12, we get the equation 
+% 
+% \begin{equation}
+% \widehat{value}= 40014 - 0.4 income -.8 \times 12 + 20 income \times 12 = 40003.4 + 239.6 income
+% \end{equation}
+% 
+% Now we see that for different values of education, both the intercept and the slope are different. In Figure \ref{fig:linearbylinear_2} these two regression lines are plotted. These non-parallel lines seem to describe the data much better than the parallel lines in Figure \ref{fig:linearbylinear_1}. 
+% 
+% <<linearbylinear_2, fig.height=3.54, echo=FALSE, fig.align='center', message=T, results="asis", warning=F, fig.cap="Sample data on gross yearly income, number of educational years and home market value.">>=
+% 
+% tibble(income, education, value) %>% 
+%         ggplot(aes(income, value), fill=education) +
+%         geom_point(aes(col=education)) +
+%         geom_abline(intercept =39998,slope=399.6 )+
+%         geom_abline(intercept =40003.4,slope=239.6 )
+% 
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(tibble(income, education, value) ,
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/interactionlbyl.sav',
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear model/interactionlbyl.sps',
+%               package = c("SPSS"))
+% @
+% 
+% From the output, we also see that the interaction effect has a very small $p$-value. We can therefore reject the null-hypothesis that the effect of income on home market value is the same for all levels of education. More precisely, we can reject the null-hypothesis that the \textit{slope} of the regression line for value on income is the same for all levels of education. It seems that for people with many years of education, there is a stronger relationship between income and home market value than for people with fewer years of education. 
+% 

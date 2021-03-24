@@ -1,0 +1,72 @@
+---
+title: "Untitled"
+author: "Stéphanie van den Berg"
+date: "2/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(tidyverse)
+N <- 4
+intercept <- 0
+slope <- 0
+
+x <- runif(N, -10, 10)
+y <- intercept + slope * x + rnorm(N, 0, 1)
+se <- 0
+
+coefs <- matrix(NA, 5000, 2)
+for (i in 1:5000){
+x <- runif(N, -10, 10)
+y <- intercept + slope * x + rnorm(N, 0, 1)
+coefs[i, ] <- lm(y ~ x) %>% 
+      coef()
+se_ <- lm(y ~ x) %>% summary() %>% coef()
+se[i] <- se_[2, 2]
+    
+}
+
+t <- coefs/se
+
+df <- data.frame(y = coefs[,2])
+p <- ggplot(df, aes(sample = y) )
+p + stat_qq() + stat_qq_line()
+
+df <- data.frame(y = coefs[,2])
+p <- ggplot(df, aes(sample = y))
+p + stat_qq(, distribution = qt, dparams = list(df = N-2 )) + stat_qq_line()
+
+
+df <- data.frame(y = t[,2])
+p <- ggplot(df, aes(sample = y))
+p + stat_qq(, distribution = qt, dparams = list(df = N-2 )) + stat_qq_line()
+
+
+tibble(slope = coefs[,2]/median(se), intercept = coefs[,1], t = t[,2]) %>% 
+  ggplot(aes(x = slope, y = ..density..)) +
+  geom_density() +
+  geom_density(aes(x = t, y = ..density..), col = "red")
+
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

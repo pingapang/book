@@ -1,0 +1,196 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+
+
+\title{Exercises non-parametric methods for within designs}
+\author{St\'ephanie M. van den Berg}
+
+\begin{document}
+
+\maketitle
+
+
+<<libraries, echo=FALSE,  warning=FALSE, message=F>>=
+library(tidyverse)
+library(foreign)
+library(haven)
+library(lme4)
+library(xtable)
+library(scales)
+library(DAAG)
+library(ggthemes)
+library(latex2exp)
+library(broom)
+library(modelr)
+@
+
+
+
+\section{Exercises}
+
+
+A researcher is interested in the relationship between mood and day of the week: are people generally moodier on Monday than on Wednesday or Friday?
+
+Below we see the data on four people that rated their mood from 1 (very moody) to 10 (not moody at all) on three separate days in a week in February: Day 1 is Monday, day 2 is Wednesday and day 3 is Friday:
+
+<<nonparmixed_8, fig.height=4, echo=FALSE, fig.align='center'>>=
+set.seed(1234565910)
+ID <- rep(c(1,2,3,4), each=3)
+Day <- rep (c(1, 2, 3), 4)
+Mood <- rpois(12, 5)
+data <- data.frame(ID, Day, Mood)
+data %>% kable()
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(data,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples nonparmixed/nonparmixedmood.sps',
+              package = c("SPSS"))
+@
+
+\begin{enumerate}
+
+\item Put the data into wide format, and think of appropriate variable names
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Rank these data row-wise: for each row determine the lowest mood (1), the second lowest mood (2) and the highest mood score (3)
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Determine the column sums: the sum of the ranks for Monday, Wednesday and Friday.
+\item How many rows do you have ($N$) and how many columns of data do you have ($k$)?
+\item Compute $F_r$.
+\item Copy the data into SPSS and run Friedman's test. Should you ask for an exact $p$-value? Provide the syntax.
+\item Suppose you get the SPSS output in Figure \ref{fig:friedmanmood1}. What would your conclusion be regarding the research question about the relationship between moodiness and the day of the week?
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 21cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "nonparmixed/friedmanmood1.pdf}
+    \end{center}
+    \caption{SPSS output of a Friedman test.}
+    \label{fig:friedmanmood1}
+\end{figure}
+
+\item
+In this data set, for which day did we observe the personal best mood? How many of the individuals showed their best mood on that day?
+
+
+\item
+A linear mixed model was run on this data set. When checking model assumptions, we saw the graphs in Figures \ref{fig:nonparmixed_11a} and \ref{fig:nonparmixed_11b}. Based on these, would you prefer to stick to the Friedman's test for this data set, or would you prefer to report a linear mixed model? Explain your answer.
+
+
+<<nonparmixed_11a, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Residual plot after a linear mixed model analysis.'>>=
+res <- data %>%  lmer( Mood ~ as.factor(Day) +  (1|ID), data=. ) %>%
+        resid()
+datalong <- cbind(data, res)
+datalong %>% ggplot( aes(x=as.factor(Day), y=res)    ) + geom_point()  + xlab("Day") + ylab("Residual")
+
+ @
+
+ <<nonparmixed_11b, fig.height=4, echo=FALSE, fig.align='center', warning=F, message=FALSE, fig.cap='Residual plot after a linear mixed model analysis.'>>=
+datalong %>% ggplot( aes( x=res )  ) + geom_histogram() + xlab("Residual")
+ @
+
+
+\item Could you have performed a Wilcoxon test on these data? Why so, or why not?
+
+\end{enumerate}
+
+
+\subsection{Answers}
+
+
+\begin{enumerate}
+
+\item
+The raw data in wide format:
+<<nonparmixed_9, fig.height=4, echo=FALSE, fig.align='center'>>=
+data <- data %>% dplyr::arrange(ID)
+datawide <- data %>% tidyr::spread(Day, Mood) %>% dplyr::arrange(ID)
+names(datawide) <- c("ID", "Mood_1", "Mood_2", "Mood_3")
+datawide %>% kable()
+@
+
+\item
+The row-wise ranked data:
+<<nonparmixed_10, fig.height=4, echo=FALSE, fig.align='center'>>=
+ranks <- apply(datawide[,2:4], 1,  function(x) rank(x) )
+datawideranks<- datawide
+datawideranks[,2:4] <- t(ranks)
+datawideranks %>% kable()
+ @
+\item Day 1: \Sexpr{sum(datawideranks[2]) }, Day 2: \Sexpr{sum(datawideranks[3])} and Day3: \Sexpr{sum(datawideranks[4])}.
+\item $N=4$ and $k=3$
+\item
+
+\begin{eqnarray}
+F_r &=& \left[  \frac{12}{4 \times  3(3+1)} \times (\Sexpr{sum(datawideranks[2]) }^2 + \Sexpr{sum(datawideranks[3]) }^2 + \Sexpr{sum(datawideranks[4]) }^2)      \right] - 3 \times 4 (3+1) \nonumber \\
+  &=&   \left[  \frac{12}{48} \times  \Sexpr{sum(datawideranks[2])^2 +sum(datawideranks[3])^2+sum(datawideranks[4])^2  }      \right] - 48 = 1.50  \nonumber
+\end{eqnarray}
+
+\item
+
+\begin{verbatim}
+NPAR TESTS
+/FRIEDMAN=  Mood_1   Mood_2    Mood_3
+/METHOD=Exact.
+\end{verbatim}
+
+\item
+\begin{quotation}
+We found no significant effect of day of the week on mood, $F_r=1.50, p=0.65$, so the null-hypothesis of equal mood during the week is not rejected. Note however that the sample size was extremely small (12 data points), so even if there is a real relationship between mood and day of the week, there was little chance to find evidence of that in this data set.
+\end{quotation}
+
+\item The highest column sum of the ranks was found for day 2, which was Wednesday. So in this data set we saw that the four individuals generally showed their personal highest mood score on Wednesday. Actually, 2 persons out of 4 showed their highest score (rank 3) on Wednesday (ID=2 and ID=3).
+
+\item The plots suggests that the variance of the residuals is very small for the second day, compared to the other two days. The distribution is also hardly normal. But it is hard to tell whether the assumptions are reasonable, since there are so few data points. It would therefore be safest to report a Friedman test.
+
+\item A Wilcoxon test can only be performed on two measures, say Monday and Wednesday data, or Monday and Friday data. You could not test the null-hypothesis of the same moods on three days with a Wilcoxon test.
+
+\end{enumerate}
+
+
+
+\end{document}
+
+

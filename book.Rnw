@@ -1,0 +1,272 @@
+
+\documentclass[]{book}
+
+\usepackage[toc,page]{appendix}
+\usepackage{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}  
+\usepackage{hyperref}
+\usepackage[scale = 2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr} 
+\usepackage{longtable}
+
+
+
+\usepackage{color, colortbl} % coloured columns in tables, used in appendix
+\definecolor{Gray}{gray}{0.9}
+\newcolumntype{g}{>{\columncolor{Gray}}c}
+% https://texblog.org/2011/04/19/highlight-table-rowscolumns-with-color/
+
+% for use of /widebar:
+\usepackage{amsmath}
+\makeatletter
+\let\save@mathaccent\mathaccent
+\newcommand*\if@single[3]{%
+  \setbox0\hbox{${\mathaccent"0362{#1}}^H$}%
+  \setbox2\hbox{${\mathaccent"0362{\kern0pt#1}}^H$}%
+  \ifdim\ht0=\ht2 #3\else #2\fi
+  }
+%The bar will be moved to the right by a half of \macc@kerna, which is computed by amsmath:
+\newcommand*\rel@kern[1]{\kern#1\dimexpr\macc@kerna}
+%If there's a superscript following the bar, then no negative kern may follow the bar;
+%an additional {} makes sure that the superscript is high enough in this case:
+\newcommand*\widebar[1]{\@ifnextchar^{{\wide@bar{#1}{0}}}{\wide@bar{#1}{1}}}
+%Use a separate algorithm for single symbols:
+\newcommand*\wide@bar[2]{\if@single{#1}{\wide@bar@{#1}{#2}{1}}{\wide@bar@{#1}{#2}{2}}}
+\newcommand*\wide@bar@[3]{%
+  \begingroup
+  \def\mathaccent##1##2{%
+%Enable nesting of accents:
+    \let\mathaccent\save@mathaccent
+%If there's more than a single symbol, use the first character instead (see below):
+    \if#32 \let\macc@nucleus\first@char \fi
+%Determine the italic correction:
+    \setbox\z@\hbox{$\macc@style{\macc@nucleus}_{}$}%
+    \setbox\tw@\hbox{$\macc@style{\macc@nucleus}{}_{}$}%
+    \dimen@\wd\tw@
+    \advance\dimen@-\wd\z@
+%Now \dimen@ is the italic correction of the symbol.
+    \divide\dimen@ 3
+    \@tempdima\wd\tw@
+    \advance\@tempdima-\scriptspace
+%Now \@tempdima is the width of the symbol.
+    \divide\@tempdima 10
+    \advance\dimen@-\@tempdima
+%Now \dimen@ = (italic correction / 3) - (Breite / 10)
+    \ifdim\dimen@>\z@ \dimen@0pt\fi
+%The bar will be shortened in the case \dimen@<0 !
+    \rel@kern{0.6}\kern-\dimen@
+    \if#31
+      \overline{\rel@kern{-0.6}\kern\dimen@\macc@nucleus\rel@kern{0.4}\kern\dimen@}%
+      \advance\dimen@0.4\dimexpr\macc@kerna
+%Place the combined final kern (-\dimen@) if it is >0 or if a superscript follows:
+      \let\final@kern#2%
+      \ifdim\dimen@<\z@ \let\final@kern1\fi
+      \if\final@kern1 \kern-\dimen@\fi
+    \else
+      \overline{\rel@kern{-0.6}\kern\dimen@#1}%
+    \fi
+  }%
+  \macc@depth\@ne
+  \let\math@bgroup\@empty \let\math@egroup\macc@set@skewchar
+  \mathsurround\z@ \frozen@everymath{\mathgroup\macc@group\relax}%
+  \macc@set@skewchar\relax
+  \let\mathaccentV\macc@nested@a
+%The following initialises \macc@kerna and calls \mathaccent:
+  \if#31
+    \macc@nested@a\relax111{#1}%
+  \else
+%If the argument consists of more than one symbol, and if the first token is
+%a letter, use that letter for the computations:
+    \def\gobble@till@marker##1\endmarker{}%
+    \futurelet\first@char\gobble@till@marker#1\endmarker
+    \ifcat\noexpand\first@char A\else
+      \def\first@char{}%
+    \fi
+    \macc@nested@a\relax111{\first@char}%
+  \fi
+  \endgroup
+}
+
+
+
+% For correct tildes in R formulas:
+\usepackage[formats]{listings}
+\lstdefineformat{R}{~ = \( \sim \), 
+                    § = \( \_ \),
+                    ± = \( \\ \)}
+                    
+ 
+
+
+
+\lstset{basicstyle = \ttfamily, format = R, tabsize = 3, 
+                                showtabs = true, numbers = none}
+
+
+
+\pagestyle{fancy}
+% \fancyhf{}
+% \fancyhead[LE]{\leftmark}
+% \fancyhead[RO]{\rightmark}
+% \fancyfoot[C]{\thepage}
+
+
+
+% Title Page
+\title{Analysing data using linear models}
+
+
+\author{St\'ephanie M. van den Berg}
+\date{Fifth edition (R)\\ (\today)}
+
+
+
+\begin{document}
+
+
+
+
+\frontmatter
+
+\maketitle
+
+\pagestyle{empty}
+%% copyrightpage
+\begingroup
+\footnotesize
+\parindent 0pt
+\parskip \baselineskip
+
+
+Copyright \copyright \space 2018, 2021 by St\'ephanie M. van den Berg \\
+University of Twente\\
+Department of Learning, Data Analytics, and Technology\\
+Licensed under Creative Commons, see https://creativecommons.org/licenses/\\
+For source code and updates: github.com/pingapang/book\\
+Email: stephanie.vandenberg@utwente.nl\\
+\ccbyncsa
+
+   
+
+ 
+
+\begin{center}
+\begin{tabular}{ll}
+First edition:   & October 2018 \\
+Second edition:  & November 2018 \\
+Third edition:   & January 2019 \\
+Fourth edition:  & November 2019 \\
+Fifth edition:   & January 2021 \\
+\end{tabular}
+\end{center}
+
+
+
+
+\endgroup
+\clearpage
+
+
+
+
+
+
+
+<<libraries, echo=FALSE,  warning=FALSE, message=F>>=
+library(foreign)
+library(haven)
+library(lme4)
+library(xtable)
+library(scales)
+library(DAAG)
+library(ggthemes)
+library(latex2exp)
+library(broom)
+library(modelr)
+library(tidyverse)
+@
+
+
+
+
+\chapter*{Preface}
+This book is for bachelor students in social, behavioural and management sciences that want to learn how to analyse their data, with the specific aim to answer research questions. The book has a practical take on data analysis: how to do it, how to interpret the results, and how to report the results. All techniques are presented within the framework of linear models: this includes simple and multiple regression models, linear mixed models and generalised linear models. This approach is illustrated using R.
+
+
+
+\tableofcontents
+
+
+
+\mainmatter
+\pagestyle{plain}
+
+<<echo = F>>=
+old <- theme_update(
+  panel.background = element_blank(),
+  legend.key = element_blank(),
+  legend.background = element_blank(),
+  strip.background = element_rect(fill = "white", colour = "black"),
+  plot.background = element_rect(fill = "white"),
+  # panel.grid = element_blank(),
+  axis.line = element_line(color = "black"),
+  axis.ticks = element_line(color = "black"),
+  # strip.text = element_text(size = 16, color = myRed),
+  # axis.title.y = element_text(color = myRed, hjust = 0, face = "italic"),
+  # axis.title.x = element_text(color = myRed, hjust = 0, face = "italic"),
+  axis.text = element_text(color = "black")
+  # legend.position = "none"
+)
+@
+
+
+\Sexpr{knit_child('chapter_1.Rnw')} % exploring your data, descriptive statistics label intro
+
+
+\Sexpr{knit_child('chapter_inference_mean.Rnw')} % label mean
+
+\Sexpr{knit_child('chapter_proportion.Rnw')}   % label prop
+
+\Sexpr{knit_child('linear modelling introduction.Rnw')} % simple regression and multiple regression  label simple
+
+\Sexpr{knit_child('chapter_inference_lm.Rnw')}  % label inf_lm
+
+
+\Sexpr{knit_child('chapter_categorical.Rnw')} % label categorical
+
+
+
+\Sexpr{knit_child('chapter_assumptions.Rnw')} %
+\Sexpr{knit_child('chapter_nonparbetween.Rnw')} %
+\Sexpr{knit_child('chapter_moderation.Rnw')} % chap:moderation
+
+% \Sexpr{knit_child('chapter_contrasts.Rnw')} % advanced topics linear models
+% \Sexpr{knit_child('chapter_contrasts_R.Rnw')} % advanced topics linear models
+% % %% contrasts en post hoc zijn nog te lastig te volgen, en zorg dat data niet 1 2 3 is, maar met betere labels, strings. niet te veel stapjes met contrast equations.
+% %
+% %
+
+% % %
+% % % % %  MEDIATION   ANALYSIS
+% %
+\Sexpr{knit_child('chapter_mixed.Rnw')} % introduction linear mixed models
+% % \Sexpr{knit_child('chapter_mixed_alt.Rnw')} % introduction linear mixed models
+\Sexpr{knit_child('chapter_premidpostdesigns.Rnw')}
+\Sexpr{knit_child('chapter_nonparwithin.Rnw')} % Non-parametric alternatives for linear mixed models}\label{chap:nonpar2}
+% % 
+% % 
+\Sexpr{knit_child('chapter_logistic.Rnw')} % generalised linear models: logistic regression
+%  %
+ \Sexpr{knit_child('chapter_poisson_r.Rnw')} % generalised linear models: poisson models
+\Sexpr{knit_child('chapter_big_data_analytics.Rnw')}
+\Sexpr{knit_child("appendices.Rnw")}
+
+
+<<echo = F>>=
+theme_set(old)
+@
+
+
+\end{document}

@@ -1,0 +1,270 @@
+\chapter{Inference about a proportion}\label{chap:prop}
+
+
+
+
+\section{Sampling distribution of the sample proportion}
+
+
+
+So far, we focused on inference about a population mean: starting from a sample mean, what can we infer about the population mean? However, there are also other sample statistics we could focus on. We briefly touched on the variance in the sample and what it tells us about the population variance. In this section, we focus on inference regarding a proportion. 
+
+Let's go back to the example of the elephants in the zoo, and that the manager saw a damaged doorway. This is most likely caused by elephants that are taller than a certain height, making their heads bump the doorway when moving from one space to the other. Let's suppose the height of the doorway is 3.40 m and that the manager observes that of the 4 elephants in the zoo, 3 bump their head when passing the doorway. Suppose that the 4 elephants are randomly sampled from the entire population of elephants worldwide. What could we say based on these observations about the proportion of elephants worldwide that are taller than 3.40m?
+
+Let's again start from the population. Let's do the thought experiment that the population proportion of elephants taller than 3.40 m equals 0.6: 60\% of all the elephants in the world are taller than 3.40 m. Let's randomly pick 4 elephants from this population. We might get 2 tall elephants and 2 less tall elephants. This means we get a sample proportion of $\frac{2}{4} = 0.5$. If we do this sampling a lot of times, we obtain the \textit{sampling distribution of the sample proportion}. It is shown in Figure \ref{fig:sampling_proportion}. It is a discrete (non-continuous) distribution that is clearly not a normal distribution. But, as we know from the Central Limit Theorem (Chapter \ref{chap:mean}), it will become a normal distribution when sample size increases.
+
+Actually, the sampling distribution that we see in \ref{fig:sampling_proportion} is based on the \textit{binomial distribution}. Using the binomial distribution, we can calculate the probabilities of getting various sample proportions in a straightforward manner, without relying on the normal distribution. 
+
+
+\section{The binomial distribution}
+
+The binomial distribution gives us the probability of obtaining a certain number of elements, given how many elements there are in total and the population probability. In our case, the binomial distribution gives us the probability of having exactly 2 elephants taller than 3.40m, given that there are 4 elephants in our sample and the population proportion equals 0.6. Let's go through the reasoning step by step.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ggplot(tibble(proportion, prob), aes(x = factor(proportion), : could not find function "{}ggplot"{}}}\end{kframe}
+\end{knitrout}
+
+
+
+The proportion of tall elephants in the population is $p = 0.6$. The sample size equals $N = 4$. Let's begin with randomly picking the first elephant: what's the probability that we select an elephant that is taller than 3.40m? Well, that probability is equal to the proportion of 0.6. Next, what is the probability that the second elephant is taller than 3.40? Again, this is equal to 0.6. 
+
+Now something more complicated: what is the probability that both the first \textit{and} the second elephant are taller than 3.40? This is equal to $0.6 \times 0.60 = 0.36$. What is the probability that \textit{all} 4 elephants are taller than 3.40m? That is equal to $0.60^4 = 0.1296$. The probability that all 4 elephants are less tall than 3.40m is equal to $(1-0.6)^4 = 0.4^4=0.0256$. 
+
+The probablity for a mix of 2 elephants taller and 2 less tall is more difficult to compute. You might remember from high school that it involves \textit{combinations}. For example, the probability that the first 2 elephants are taller than 3.40, and the last 2 elephants less tall, is equal to $0.6^2 \times (1-0.6)^2 = 0.0576$, but there are many other ways in which we can find 2 elephants taller and 2 elephants less tall when we randomly and sequentially pick 4 elephants. There are in fact 6 different ways of randomly selecting 4 elephants where only 2 are tall. When we use A for a tall elephant and B for a less tell elephant, the 6 possible orderings are in fact: AABB, BBAA, ABAB, BABA, ABBA, and BAAB. 
+
+This number of permutations is calculated using the \textit{binomial coefficient}:
+
+\begin{equation}
+ {4\choose 2} = \frac{4!}{2!2!} = 6
+\end{equation}
+
+This number ${4\choose 2}$ is called the binomial coefficient. It can be calculated using \textit{factorials}: the exclamation mark $!$ stands for factorial. For instance, $5!$ ('five factorial') means $5\times 4 \times 3 \times 2 \times 1$. 
+
+
+In its general form, the binomial coefficient looks like:
+
+\begin{equation}
+ {N\choose r} = \frac{N!}{r!(N-r)!} 
+\end{equation}
+
+So suppose sample size $N$ is equal to 4 and $r$ equal to 2 (the number of tall elephants in the sample), we get:
+
+\begin{equation}
+{4\choose 2} = \frac{4!}{2!(N-r)!} = \frac{4!}{2!2!} =
+\frac{4\times 3 \times 2 \times 1}{2 \times 1 \times  2 \times 1} = 6
+\end{equation} 
+
+Going back to the elephant example, there are ${4\choose 2}=6$ possible ways of getting 2 tall elephants and 2 less tall elephants when we sequentially pick 4 elephants. Each of these possibilities has a probability of $0.6^2 \times (1-0.6)^2 = 0.0576$. This is explained in Table \ref{tab:permutations}. For instance, the probability of getting the ordering ABAB, is equal to the multiplication of the respective probabilities: $0.6 \times 0.4 \times 0.6 \times 0.4$. In the table you can see that the probability for any ordering is always 0.0576. Since any ordering will qualify as obtaining 2 tall elephants from a total of 4, we can sum these probabilities: the probablity of getting the ordering AABB \textit{or} BBAA \textit{or} ABAB \textit{or} BABA \textit{or} ABBA \textit{or} BAAB, is equal to $0.0576 + 0.0576 + 0.0576 + 0.0576 + 0.0576 + 0.0576 = 6 \times 0.0576 = 0.3456 $. Here 6 is the number of permutations, calculated as the binomial coefficient ${4\choose 2}$. We could therefore in general compute the probability of having 2 tall elephants in a sample of 4 as
+
+\begin{equation}
+ p(\#A = 2 | N = 4, p = 0.6) = {4\choose 2} \times 0.6^2 \times (1-0.6)^2 = 6 \times 0.0576 =
+ 0.3456
+\end{equation}
+
+
+The probability of ending up with 2 tall elephants in a sample of 4 elephants, in any order, and where the proportion of tall elephants in the population is 0.6, is therefore equal to 0.3456. 
+
+
+In the more general case, if you have a population with a proportion $p$ of As, a sample size of $N$, and you want to know the probablity of finding $r$ instances of A in your sample, it can be computed with the formula
+
+
+\begin{equation}
+ p(\#A = r | N, p) = {N\choose r} \times p^r \times (1-p)^{(N-r)} 
+\end{equation}
+
+When we calculate the probability of finding 0, 1, 2, 3, or 4 tall elephants in sample of 4 when the population proportion is 0.6, we obtain the \textit{binomial distribution} that is plotted in Figure \ref{fig:binomial}. It is exactly the same as the sampling distribution in Figure \ref{fig:sampling_proportion}, except that we plot the number of tall elephants in the sample on the $x$-axis, instead of the proportion. This means that we can use the binomial distribution to describe the sampling distribution of the sample proportion. To get the proportions, we simply divide the number of tall elephants in our sample by the total number of elephants ($N$) and we get Figure \ref{fig:sampling_proportion}. 
+
+
+
+
+
+
+\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in perm(rep(c("{}A"{}, "{}B"{}), 2)) \%>\% unique(): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in apply(permutations, 1, function(x) paste0(x, collapse = "{}"{})): object 'permutations' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in perm(rep(c(0.6, 0.4), 2)) \%>\% unique(): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in apply(ps, 1, function(x) paste0(x, collapse = "{} x "{})): object 'ps' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cbind(strings, p\_strings): object 'strings' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in matrix \%>\% as\_tibble() \%>\% mutate(probability = rep(c(0.6\textasciicircum{}2 * : could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in names(matrix)[1:2] <- c("{}ordering"{}, "{}computation of probability"{}): names() applied to a non-vector}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in matrix \%>\% arrange(ordering) \%>\% xtable(caption = "{}Four possible ways of selecting 2 tall elephants (A) and 2 less tall elephants (B), together with the probability for each selection."{}, : could not find function "{}\%>\%"{}}}\end{kframe}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ggplot(tibble(y, prob), aes(x = factor(y), y = prob)): could not find function "{}ggplot"{}}}\end{kframe}
+\end{knitrout}
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{sampling distribution of the sample proportion}: the distribution of proportions that you get when you randomly pick new samples from a population and for each sample compute the proportion.
+
+\item \textbf{binomial distribution}: a discrete distribution showing the probabilities of finding a certain number of successes ($r$), given sample size $N$ and population proportion $p$.
+
+\item \textbf{binominal coefficient}: a coefficient used to calculate binomial probabilities. It represents the number of ways in which you can find $r$ instances in a sample of size $N$. It is calculated as ${N\choose r} = \frac{N!}{r!(N-r)!}$.
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+\section{Confidence intervals}
+
+Based on what we know about the binomial distribution, we can do inference on proportions. In Chapter \ref{chap:mean} we saw that inference is very much based on the standard error (i.e., the standard deviation of the sampling distribution). We know that the variance of the binomial distribution can be easily calculated as $N \times p \times (1-p)$. Because we want to have the variance in proportions rather than in numbers, we have to divide this variance by $N$ to get the variance of proportions. Next, because the variance in a sampling distribution gets smaller with increasing $N$, we divide by $N$, in a similar way as we did for the sampling distribution of the sample mean in Chapter \ref{chap:mean}. We then have that the standard deviation of the sampling distribution (i.e., the standard error) is equal to 
+
+
+\begin{equation}
+\sigma_{\hat{p}} = \sqrt{\frac{p(1-p)}{N}}
+\end{equation}
+
+This standard error makes it easy to construct confidence intervals. We know from the Central Limit Theorem that if $N$ becomes infinitely large, the sampling distribution will be normal. When $N=50$, the sampling distribution is already close to normal, as is shown in Figure \ref{fig:sampling_50}. This fact, together with the standard error makes it easy to construct approximate confidence intervals.
+
+
+Suppose that we had 50 elephants in our zoo, and the manager observed that 42 of them bump their head against the doorway. That is a sample proportion of $\frac{42}{50}= 0.84$. When we want to have a range of likely values for the population proportion, we can construct a 95\% confidence interval around this sample proportion. Because we know that for the standard normal distribution, 95\% of the observations are between -1.96 and +1.96, we construct the 95\% confidence interval by multiplying 1.96 with the standard error, $\sigma_{\hat{p}} = \sqrt{\frac{p(1-p)}{N}}$.
+
+
+However, since we do not know the population proportion $p$, we have to estimate it. From theory, we know that an unbiased estimator for the population proportion is the sample proportion: $\hat{p} = \frac{42}{50}= 0.84$. Our estimate for the standard error is then $\sqrt{\frac{\hat{p}(1-\hat{p})}{N}} = 0.0518459$.
+
+If we use that value, we get the interval from $0.84 - 1.96 \times 0.0518459$ to $0.84 + 1.96 \times 0.0518459$: thus, our 95\% confidence interval for the population proportion runs from 0.738382 to 0.941618.
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ggplot(tibble(y, prob), aes(x = factor(y), y = prob)): could not find function "{}ggplot"{}}}\end{kframe}
+\end{knitrout}
+
+
+\section{Null-hypothesis concerning a proportion}
+
+Suppose that a researcher has measured all Tanzanian elephants and noted that a proportion of 0.6 was taller than 3.40. Sppose also that the manager in the zoo finds that 42 out of the 50 elephants bump their head and are therefore taller than 3.40. How can we know that the elephants could be a representative sample of Tanzanian elephants? 
+
+To answer this question with a yes or a no, we could apply the logic of null-hypothesis testing. Let the null-hypothesis be that the population proportion is equal to 0.6, and the alternative hypothesis that it is not equal to 0.6. 
+
+\begin{eqnarray}
+H_0: p = 0.6 \\
+H_A: p \neq 0.6
+\end{eqnarray}
+
+Is the proportion of 0.84 that we observe in the sample (the zoo) a probable value to find if the proportion of all Tanzanian is equal to 0.60? Then we do not reject the null-hypothesis, and believe that the zoo data could have been randomly selected from the Tanzanian population and are therefore representative. However, if the proportion of 0.84 is very unprobable given that the population proportion is 0.6, we reject the null-hypothesis and believe that the data are not representative.
+
+With null-hypothesis testing we always have to fix our $\alpha$ first: the probability that we are willing to accept for a type I error. We feel it is really important that the sample is representative of the population, so we definely do not want to make the mistake that we think the sample is representative (not rejecting the null-hypothesis) while it isn't ($H_A$ is true). This would be a type II error (check this for yourself!). If we want to minimize the probability a type II error ($\beta$), we have to pick a relatively high $\alpha$ (see Chapter \ref{chap:mean}), so let's choose our $\alpha = .10$. 
+
+Next, we have to choose a test statistic and determine critical values for it that go with an $\alpha$ of 0.10. Because we have a relatively large sample size of 50, we assume that the sampling distribution for a proportion of 0.60 is normal. From the standard normal distribution, we know that 90\% ($1-\alpha$!) of the values lie between $-1.6448536$ and $1.6448536$. If we therefore standardise our proportion, we have a measure that should show a standard normal distribution:
+
+\begin{equation}
+Z_p = \frac{p_s - p_0}{sd} 
+\end{equation}
+
+where $Z_p$ is the Z-score for a proportion, $p_s$ is the sample proportion, $p_0$ is the population proportion assuming $H_0$, and $sd$ is the standard deviation of the sampling distribution, which is the standard error. We then get
+
+\begin{equation}
+Z_p = \frac{0.84 - 0.6}{se} = \frac{0.24}{\sqrt{\frac{\hat{p}(1-\hat{p})}{N}}} = 0.24 / 0.0518459 = 4.6291005
+\end{equation}
+
+
+90\% of the values in any normal distribution lie between $\pm 1.6448536$ standard deviations away from the mean. The standard deviation of the sampling distribution is the standard error and can be estimated as $\sqrt{\frac{\hat{p}(1-\hat{p})}{N}} = 0.0518459$. We  then have
+
+\begin{equation}
+Z_p = \frac{p_s - p_0}{0.0518459} 
+\end{equation}
+
+\section{Inference on proportions using R}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{prop.test}\hlstd{(}\hlnum{42}\hlstd{,} \hlnum{50}\hlstd{,} \hlkwc{p} \hlstd{=} \hlnum{0.6}\hlstd{,} \hlkwc{correct} \hlstd{= T)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	1-sample proportions test with continuity correction
+## 
+## data:  42 out of 50, null probability 0.6
+## X-squared = 11.021, df = 1, p-value = 0.0009009
+## alternative hypothesis: true p is not equal to 0.6
+## 95 percent confidence interval:
+##  0.7033946 0.9236204
+## sample estimates:
+##    p 
+## 0.84
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{prop.test}\hlstd{(}\hlnum{42}\hlstd{,} \hlnum{50}\hlstd{,} \hlkwc{p} \hlstd{=} \hlnum{0.6}\hlstd{,} \hlkwc{correct} \hlstd{= F)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	1-sample proportions test without continuity correction
+## 
+## data:  42 out of 50, null probability 0.6
+## X-squared = 12, df = 1, p-value = 0.000532
+## alternative hypothesis: true p is not equal to 0.6
+## 95 percent confidence interval:
+##  0.7148578 0.9166258
+## sample estimates:
+##    p 
+## 0.84
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{binom.test}\hlstd{(}\hlnum{42}\hlstd{,} \hlnum{50}\hlstd{,} \hlkwc{p} \hlstd{=} \hlnum{0.6}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Exact binomial test
+## 
+## data:  42 and 50
+## number of successes = 42, number of trials = 50, p-value = 0.0004116
+## alternative hypothesis: true probability of success is not equal to 0.6
+## 95 percent confidence interval:
+##  0.7088737 0.9282992
+## sample estimates:
+## probability of success 
+##                   0.84
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+

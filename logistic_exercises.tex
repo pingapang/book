@@ -1,0 +1,419 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+
+
+\title{Exercises logodds and probabilities}
+\author{St\'ephanie M. van den Berg}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\maketitle
+
+
+
+
+
+
+\section{Exercises}
+
+\subsection{From probability to logodds:}
+
+Given:
+In the Netherlands, 51\% of the inhabitants is female.
+\begin{enumerate}
+
+\item
+If we randomly pick someone from this Dutch population, what is the probability that that person is female?
+
+
+\item
+If we randomly pick someone from this Dutch population, what are the odds that that person is female over being male? ( : )
+
+\item
+If we randomly pick someone from this Dutch population, what are the odds that that person is male over being female? ( : )
+
+\item
+What is the odds of randomly picking an inhabitant that is female, expressed as one number?
+
+\item
+What is the odds of randomly picking an inhabitant that is male, expressed as one number?
+
+
+\item
+What is the logodds of randomly picking an inhabitant that is female?
+
+\item
+What is the logodds of randomly picking an inhabitant that is male?
+
+
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+
+\item
+0.51
+
+
+\item
+51 to 49 (51:49).
+
+\item
+49:51.
+
+\item
+51/49=1.04
+
+\item
+49/51=0.96
+
+
+\item
+ln(51/49) = ln(1.04) = 0.04
+
+\item
+ln(49/51) = ln(0.96) = -0.04
+
+
+\end{enumerate}
+
+\subsection{From logoddss to probabilities:}
+
+Given:
+In the Netherlands, 51\% of the inhabitants are female. Females tend to get older than males, so if we predict sex by age, we should expect a higher probability of a female for older ages. Suppose we have the following linear model for the relationship between age (in years) and the logodds of being female:
+
+
+\begin{eqnarray}
+logodds_{female}=-0.01 + 0.01 \times age, \nonumber
+\end{eqnarray}
+
+\begin{enumerate}
+
+\item
+What is the predicted logodds of being female for a person of age 20?
+
+\item
+What is the predicted logodds of being female for a person of age 90?
+
+\item
+What is the predicted odds of being female for a person of age 20?
+
+\item
+What is the predicted odds of being female for a person of age 90?
+
+\item
+What are the predicted odds of being female for a person of age 20?
+
+\item
+What are the predicted odds of being female against being male for a person of age 90?
+
+\item
+What is the predicted probability of being female against being male for a person of age 20?
+
+\item
+What is the predicted probability of being female for a person of age 90?
+
+\item
+What is the predicted probability of being MALE for a person of age 90?
+
+
+\end{enumerate}
+
+Answers:
+
+\begin{enumerate}
+
+\item
+$-0.01 + 0.01 \times 20 = 0.19$
+
+\item
+$-0.01 + 0.01 \times 90 = 0.89$
+
+\item
+$exp(0.19)=1.21$
+
+\item
+$exp(0.89)=2.44$
+
+\item
+1.21 to 1, or 1.21:1
+
+\item
+2.44 to 1, or 2.44:1
+
+\item
+1.21/ (1.21 + 1)= 0.55
+
+\item
+2.44 / (2.44 + 1)= 0.71
+
+\item
+1 - 0.71 = 0.29
+
+
+\end{enumerate}
+
+\section{Some extra questions}
+A big data analyst constructs a model that predicts whether an account on Twitter belongs to either a real person or organisation, or to a bot.
+
+\begin{enumerate}
+
+\item
+For one account, a user of this model finds a logodds of 4.5 that the account belongs to a bot. What is the corresponding probability that the twitter account belongs to a bot? Give the calculation.
+
+\item
+For a short tweet with only a hyperlink, the probability that it comes from a bot is only 10\%. What is the logodds that corresponds to this probability? Give the calculation.
+
+
+\end{enumerate}
+
+
+
+Answers:
+\begin{enumerate}
+
+\item The logodds is 4.5, so the oddsratio is exp(4.5)=90.0.
+The odds of being a bot is then 90:1.
+The probability of being a bot is 90/ (90+1)= 0.99
+
+\item
+Out of 100 tweets with only a hyperlink, 10 are by bots and 90 are by real persons or organisations. So the odds of coming from a bot are 10:90. The odds is therefore 10/90 = 0.11. When we take the natural logarithm of this odds, we get the logodds: ln(0.11) = -2.21.
+
+\end{enumerate}
+
+
+\section{Logistic regression}
+
+
+% latex table generated in R 3.6.2 by xtable 1.8-4 package
+% Sat Mar 14 16:37:52 2020
+\begin{table}[ht]
+\centering
+\caption{Taking the train to Paris data.} 
+\label{tab:gen_12}
+\begin{tabular}{rrrrr}
+  \hline
+train & age & sex\_male & income & business \\ 
+  \hline
+  1 & 35.12 &   1 & 7544.00 &   1 \\ 
+    1 & 66.66 &   1 & 7096.00 &   0 \\ 
+    0 & 42.77 &   1 & 29261.00 &   1 \\ 
+    0 & 72.63 &   0 & 24977.00 &   0 \\ 
+    1 & 76.25 &   0 & 876.00 &   1 \\ 
+    0 & 19.87 &   1 & 126943.00 &   1 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+
+Using the train data in Table \ref{tab:gen_12}, we try to predict whether people take the train or not by their purpose of their trip: business or not.
+
+
+
+
+\begin{enumerate}
+
+\item
+
+What does the SPSS syntax look like? Note the data in Table \ref{tab:gen_12}.
+
+
+\item
+Suppose the results look like those in Figure \ref{fig:train2}. What is the predicted probability of taking the train for people that travel for business? Provide the calculations.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 24cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train2.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
+    \label{fig:train2}
+\end{figure}
+
+
+\item Suppose the results look like those in Figure \ref{fig:train2}. What is the predicted probability of taking the train for people that travel NOT for business? Provide the calculations.
+
+
+
+\item
+Suppose the results look like those in Figure \ref{fig:train3}. What is the predicted probability of taking the train for people that travel for business? Provide the calculations.
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.7, trim={0cm 23cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "logistic/train3.pdf}
+    \end{center}
+     \caption{SPSS output of a generalized linear model for predicting taking the train from purpose of the trip.}
+    \label{fig:train3}
+\end{figure}
+
+
+\item Suppose the results look like those in Figure \ref{fig:train3}. What is the predicted probability of taking the train for people that travel NOT for business? Provide the calculations.
+
+
+\item On the basis of this SPSS output, do business travellers tend to take the train more or less often than non-business travellers? Motivate your answer.
+
+
+\item
+Suppose in SPSS output for logistic regression, you find an intercept value of 0.5 with a standard error of 0.1. There is a corresponding Wald chi-square value of $25$. Explain where this Wald chi-square value comes from.
+
+\item
+
+Suppose we have data on coin flips as in Table \ref{tab:gen_13}:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\begin{tabular}{r|r|r|l}
+\hline
+ID & Heads & weight & type\\
+\hline
+1 & 0 & 2.7831226 & 5cents\\
+\hline
+2 & 1 & 0.8058492 & 10cents\\
+\hline
+3 & 1 & 3.1401581 & 1Euro\\
+\hline
+4 & 1 & 1.0156831 & 10cents\\
+\hline
+5 & 1 & 4.4503490 & 1Euro\\
+\hline
+\end{tabular}
+
+
+\end{knitrout}
+
+If we want to predict the outcome of the coin flip, on the basis of the type of coin, should we use a linear model, a linear mixed model, or a generalized linear model? Motivate your answer.
+\\
+\\
+If we want to predict the weight of the coin, on the basis of the type of the coin, should we use a linear model, a linear mixed model, or a generalized linear model? Motivate your answer.
+
+
+\end{enumerate}
+
+
+Answers:
+\begin{enumerate}
+
+
+\item
+It could look like this (using WITH, treating the independent variable as quantitative):
+
+\begin{verbatim}
+GENLIN train (REFERENCE=FIRST) WITH business
+  /MODEL business
+ DISTRIBUTION=BINOMIAL LINK=LOGIT
+  /PRINT CPS DESCRIPTIVES   SOLUTION.
+\end{verbatim}
+
+
+or like this (using BY, treating the independent variable as qualitative)
+
+\begin{verbatim}
+GENLIN train (REFERENCE=FIRST) BY business
+  /MODEL business
+ DISTRIBUTION=BINOMIAL LINK=LOGIT
+  /PRINT CPS DESCRIPTIVES   SOLUTION.
+\end{verbatim}
+
+
+\item
+People that travel for business score 1 on the business variable. So the predicted logodds for those people is $-1.155 - 0.050 \times 1 = -1.205$. The odds is the $exp(-1.205)=0.299692 $. So the odds of going by train are 0.30 to 1. This is equivalent to 3 to 10. So suppose we have 13 trips, 3 are by train and 10 are not by train. So the probability of a trip being by train equals $3/13=0.23$. Or logit(-1.205)=exp(-1.205)/(1+exp(-1.205))=0.3/1.3=0.23
+
+\item
+People that travel NOT for business score 0 on the business variable. So the predicted logodds for those people is $-1.155 - 0.050 \times 0 = -1.155$. The odds is the $exp(-1.155)=0.3150575 $. So the odds of going by train are 0.32 to 1. This is equivalent to 32 to 100. So suppose we have 132 trips, 32 are by train and 100 are not by train. So the probability of a trip being by train equals $32/132=0.24$.
+
+\item
+
+p=exp(-1.205)/(1+exp(-1.205))=0.3/1.3=0.23
+
+
+\item
+
+p=exp(-1.205+0.050)/(1+exp(-1.205+0.050))=
+exp(-1.155)/(1+exp(-1.155))=0.32/1.32=0.24
+
+
+
+\item
+Less often, since the slope for the dummy variable \textbf{[business=0]} is positive. Business trips are the reference category, and relative to that non-business trips get an extra slope of 0.050, so a higher logodds and therefore a higher probability. So if non-business trips have a higher probability of being by train, then business trips have a lower probablity of being by train. We also see that for the answers to the previous questions: the probability of taking the train for business trips is 0.23 and for non-business trips it is 0.24.
+
+
+\item
+See the formula in the text: $X^2 = \frac{B^2}{SE^2}=\frac{0.5^2}{0.1^2}= \frac{0.25}{0.01}=25$.
+
+
+\item
+
+
+If we want to predict the outcome of the coin flip, on the basis of the type of coin, we should use a generalized linear model, because the dependent variable is dichotomous (has only 2 values), so the residuals can never have a normal distribution.
+\\
+\\
+If we want to predict the weight of the coin, on the basis of the type of the coin, we should use a linear model, because the dependent variable is continuous.
+
+
+\end{enumerate}
+
+
+\end{document}
+
+

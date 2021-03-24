@@ -1,0 +1,1537 @@
+\chapter{Inference about a mean}\label{chap:mean}
+
+
+% 101.	Sampling distribution of a mean (required unit)
+% 
+% •	Know difference between population mean and sample mean 
+% •	Know what a sampling distribution of the sample mean is. 
+% •	Know that you one also can have a sampling distribution of a variance or standard deviation
+% •	Central limit theorem: if sample size is large enough, sampling distribution of a single parameter becomes normal, for any type of distribution (except Cauchy).
+% 
+
+
+<<mean_data, fig.height = 3, echo = FALSE, message = F, fig.cap = "Luteinising hormone levels measured in one female, 48 measures taken at 10-minute intervals." >>=
+
+
+
+data(lh)
+
+sample_mean <- mean(lh) %>% round(2)
+sd <- sd(lh) %>% round(2)
+
+
+# lh %>% head()
+
+# tibble(lh) %>% 
+#   xtable(caption = "Luteinising hormone levels measured in one female, 48 measures taken at 10-minute intervals.", 
+#          label = "tab:mean_data_01", 
+#          digits = c(1)) %>%
+#   print(include.rownames = F, caption.placement = "top")
+
+tibble(lh, measure = seq(1, length(lh))) %>% 
+  ggplot(aes(x = measure, y = lh)) +
+  scale_x_continuous(breaks = seq(1, 48, 1)) + 
+  scale_y_continuous(breaks = seq(1.3, 3.6, 0.2)) + 
+  geom_point() +
+  geom_line() +
+  ylab("Luteinising hormone (LH) level IU/L") +
+  geom_abline(intercept = sample_mean, slope = 0, col = "red") 
+  
+
+# data("ToothGrowth")
+# ToothGrowth %>% 
+#   filter(supp == "OJ" & dose == 2.0) %>% 
+#   select(len) %>% 
+#   xtable(caption = "Length of teeth data from Guinea pigs who got treated with 2 mg vitamin C daily in orange juice.", 
+#          label = "tab:mean_data_01", 
+#          digits = c(1)) %>%
+#   print(include.rownames = F, caption.placement = "top")
+# 
+
+elephant_pop_mean <- 3.25
+elephant_pop_var <- 0.14
+@
+
+
+\section{The problem of inference}
+
+The human body is heavily controlled by hormones. One of the hormones involved in a healthy reproductive system is luteinising hormone (LH). This hormone is present in both females and males, but with different roles. In females, a sudden rise in LH levels triggers ovulation (the release of an egg from an ovary). We have a data set on luteinising hormone (LH) levels in one anonymous female. The data are given in Figure \ref{fig:mean_data}. In this data set, we have 48 measures, taken at 10-minute intervals. We see that LH levels show quite some variation over time. Suppose we want to know the mean level of luteinising hormone level in this woman, how could we do that?
+
+The easiest way is to compute the mean of all the values that we see in this graph. If we do that here, we get the value \Sexpr{sample_mean}. That value is displayed as the red line in Figure \ref{fig:mean_data}. However, is that really the mean of the hormone levels during that time period? The problem is that we only have 48 measures; we do not have information about the hormone levels \textit{in between} measurements. We see some very large differences between two consecutive measures, which makes the level of hormone look quite unstable. We lack information about hormone levels in between measurements because we do not have data on that. We only have information about hormone levels at the times where we have observed data. For the other times, we have unobserved or missing data.
+
+Suppose that instead of the mean of the \textit{observed} hormone levels, we want to know the mean of \textit{all} hormone levels during this time period: not only those that are measured at 10-minute intervals, but also those that are not measured (unobserved/missing). 
+
+You could imagine that if we would measure LH not every 10 minutes, but every 5 minutes, we would have more data, and the mean of those measurements would probably be somewhat different than \Sexpr{sample_mean}. Similarly, if we would take measurements every minute, we again would obtain a different mean. Suppose we want to know what the true mean is: the mean that we would get if we would measure LH continuously, that is, an infinite number of measurements. Unfortunately we only have these 48 measures to go on. We would like to infer from these 48 measures, what the mean is of LH level \textit{had we measured continuously}.
+
+
+This is the problem of \textit{inference}: how to infer something about complete data, when you only see a small subset of the data. The problem of \textit{statistical inference} is when you want to say something about an imagined complete data set, the \textit{population}, when you only observe a relatively small portion of the data, the \textit{sample}. 
+
+In order to show you how to do that, we do a thought experiment. Imagine a huge data set on African elephants where we measured the height of each elephant currently living (today around 415,000 individuals). Let's imagine that for this huge data set, the mean and the variance are computed: a mean of 3.25 m and a variance of 0.14 (recall, from Chapter \ref{chap:intro}, that the variance is a measure of spread, based on the sums of squared differences between values and the mean). We call this data set of all African elephants currently living the \textit{population} of African elephants. 
+
+Now that we know that the actual mean equals 3.25 and the actual variance equals 0.14, what happens if we only observe 10 of these 415,000 elephants? In our thought experiment we randomly pick 10 elephants. Random means that every living elephant has an equal chance of being picked. This random \textit{sample} of 10 elephants is then used to compute a mean and a variance. Imagine that we do this exercise a lot of times: every time we pick a new random sample of 10 elephants, and you can imagine that each time we get slightly different values for our mean, but also for our variance. This is illustrated in Table \ref{tab:sample_data_01}, where we show the data from 5 different samples (in different columns), together with 5 different means and 5 different variances.
+
+What we see from this table is that the 5 \textit{sample means} vary around the population mean of \Sexpr{elephant_pop_mean}, and that the 5 variances vary around the population variance of \Sexpr{elephant_pop_var}. We see that therefore the mean based on only 10 elephants gives a rough approximation of the mean of \textit{all} elephants: the sample mean gives a rough approximation of the population mean. Sometimes it is too low, sometimes it is too high. The same is true for the variance: the variance based on only 10 elephants is a rough approximation, or \textit{estimate}, of the variance of \textit{all} elephants: sometimes it is too low, sometimes it is too high. 
+
+
+<<mean_sample_data, echo=FALSE, results = "asis", warning = F>>=
+
+population <- rnorm(n = 415000, 
+                    mean = elephant_pop_mean, 
+                    sd = sqrt(elephant_pop_var)) 
+
+sample_data <- matrix(NA, 10, 5)
+for (i in 1:5){
+  sample_data[ ,i] <- sample(population, 10, replace = F)
+}
+
+means <- apply(sample_data, 2, mean)
+sd <- apply(sample_data, 2, function(x) sqrt( sum((x - mean(x))**2)/length(x)))
+var <- apply(sample_data, 2, function(x)  sum((x - mean(x))**2)/length(x))
+
+results <- rbind(sample_data, means, var)
+row.names(results)[11:12] <- c("mean", "variance")
+row.names(results)[1:10] <- 1:10
+
+results %>% 
+  xtable(caption = "Imaginary data on elephant height when 5 random samples (columns) of 10 elephants (rows) are drawn from the population data.", 
+         label = "tab:sample_data_01", 
+         digits = c(2)) %>%
+  print(include.rownames = T, caption.placement = "top")
+
+@
+
+
+\section{Sampling distribution of mean and variance}
+
+How high and how low the sample mean can be, is seen in Figure \ref{fig:mean_mean_distribution_N10}. There you see a histogram of all sample means when you draw 10,000 different samples of each consisting of 10 elephants and for each sample compute the mean. This distribution is a \textit{sampling distribution}. More specifically, it is the sampling distribution of the sample mean. 
+
+The red vertical line indicates the mean of the population data, that is, the mean of 3.25 (the population mean). The blue line indicates the mean of all these sample means together (the mean of the sample means). You see that these lines practically overlap.  
+
+What this sampling distribution tells you, is that if you randomly pick 10 elephants from a population, measure their heights, and compute the mean, this mean is \textit{on average} a good estimate (approximation) of the mean height in the population. The mean height in the population is 3.25, and when you look at the sample means in Figure \ref{fig:mean_mean_distribution_N10}, they are generally very close to this value of 3.25. Another thing you may notice from Figure \ref{fig:mean_mean_distribution_N10} is that the sampling distribution of the sample mean looks symmetrical and resembles a normal distribution. 
+
+<<mean_mean_distribution_N10, fig.height=3, echo=FALSE, fig.cap = "A histogram of 10,000 sample means when the sample size equals 10.", warning = F>>=
+
+sample_data <- matrix(NA, 10, 10000)
+for (i in 1:10000){
+  sample_data[ ,i] <- sample(population, 10, replace = F)
+}
+
+means <- apply(sample_data, 2, mean)
+means10 <- means
+sd <- apply(sample_data, 2, 
+            function(x) sqrt( sum((x - mean(x))**2)/length(x))) 
+var <- apply(sample_data, 2, 
+             function(x)  sum((x - mean(x))**2)/length(x)) 
+
+tibble(means) %>% 
+  ggplot(aes(x = means)) + 
+  geom_histogram(bins = 25) +
+  geom_vline(xintercept = elephant_pop_mean, 
+             col = "red") + 
+  geom_vline(xintercept = mean(means), 
+             col = "blue") + 
+  xlim(c(2.75, 3.75)) + 
+  xlab("sample mean")
+@
+
+<<mean_var_distribution_N10, fig.height=3, echo=FALSE, fig.cap = "A histogram of 10,000 sample variances when the sample size equals 10. The red line indicates the population variance. The blue line indicates the mean of all variances observed in the 10,000 samples.", warning = F>>=
+
+tibble(var) %>% 
+  ggplot(aes(x = var)) + 
+  geom_histogram(bins = 25) +
+  geom_vline(xintercept = elephant_pop_var, 
+             col = "red") + 
+  geom_vline(xintercept = mean(var), 
+             col = "blue") +
+  xlim(c(0, 0.30)) +
+  xlab("sample variance")
+@
+
+
+Now let's look at the sampling distribution of the sample variance. Thus, every time we randomly pick 10 elephants, we not only compute the mean but also the variance. Figure \ref{fig:mean_var_distribution_N10} shows the sampling distribution. The red line shows the variance of the height in the population, and the blue line shows the mean variance observed in the 10,000 samples. Clearly, the red and blue line do not overlap: the mean variance in the samples is slightly lower than the actual variance in the population. We say that the sample variance underestimates the population variance a bit. Sometimes we get a sample variance that is lower than the population value, sometimes we get a value that is higher than the population value, but on average we are on the low side. 
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{population}: all values, both observed and unobserved 
+
+\item \textbf{population mean}: the mean of all values (observed and unobserved values)
+
+\item \textbf{sample}: a limited number of observed values
+
+\item \textbf{sample size}: the number of observed values
+
+\item \textbf{sample mean}: the mean of the values in the sample
+
+\item \textbf{random sample}: values that you observe when you randomly pick a subset of the population
+
+\item \textbf{random}: each value in the population has an equal probability of being observed
+
+\item \textbf{sampling distribution of the sample mean}: the distribution of means that you get when you randomly pick new samples from a population and for each sample compute the mean
+
+\item \textbf{sampling distribution of the sample variance}: the distribution of variances that you get when you randomly pick new samples from a population and for each sample compute the variance
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+
+
+
+\section{The effect of sample size}\label{sec:sample_size}
+
+What we have seen so far is that when the population mean is 3.25 m and we observe only 10 elephants, we may get a value for the sample mean of somewhere around 3.25, but on average, we're safe to say that the sample mean is a good approximation for the population mean. In statistics, we call the sample mean an \textit{unbiased estimator} of the population mean, as the expected value (the average value we get when we take a lot of samples) is equal to the population value. 
+
+Unfortunately the same could not be said for the variance: the sample variance is not an unbiased estimator for the population variance. We saw that on average, the values for the variances are too low. 
+
+Another thing we saw was that the distribution of the sample means looked symmetrical and close to normal. If we look at the sampling distribution of the sample variance, this was less symmetrical, see Figure \ref{fig:mean_var_distribution_N10}. It actually has the shape of a so-called $\chi^2$-(pronounced 'chi-square') distribution, which will be discussed in Chapters \ref{chap:nonpar1}, \ref{chap:nonpar2}, \ref{chap:logistic} and \ref{chap:poisson}. Let's see what happens when we do not take samples with 10 elephants each time, but 100 elephants. 
+\\
+\\
+Stop and think: What will happen to the sampling distributions of the mean and the variance? For instance, in what way will Figure \ref{fig:mean_mean_distribution_N10} change when we use 100 elephants instead of 10?
+\\
+\\
+Figure \ref{fig:mean_mean_distribution_N100} shows the sampling distribution of the sample mean. Again the distribution looks normal, again the blue and red lines overlap. The only difference with Figure \ref{fig:mean_mean_distribution_N10} is the spread of the distribution: the values of the sample means are now much closer to the population value of 3.25 than with a sample size of 10. That means that if you use 100 elephants instead of 10 elephants to estimate the population mean, on average you get much closer to the true value!
+\\
+\\
+Now stop for a moment and think: is it logical that the sample means are much closer to the population mean when you have 100 instead of 10 elephants?
+\\
+\\
+Yes, of course it is, with 100 elephants you have much more information about elephant heights than with 10 elephants. And if you have more information, you can make a better approximation (estimation) of the population mean.
+
+Figure \ref{fig:mean_var_distribution_N100} shows the sampling distribution of the sample variance. Compared to a sample size of 10, the shape of the distribution now looks more symmetrical and closer to normal. Second, similar to the distribution of the means, there is much less variation in values: all values are now closer to the true value of 0.14. And not only that: it also seems that the bias is less, in that the blue and the red lines are closer to each other. 
+
+Here we see three phenomena. The first is that if you have a statistic like a mean or a variance and you compute that statistic on the basis of randomly picked sample data, the distribution of that statistic (i.e., the sampling distribution) will generally look like a normal distribution if sample size is large enough. 
+
+% heftige nootnoot
+It can actually be proven that the distribution of the mean will become a normal distribution if sample size becomes large enough. This phenomenon is known as the Central Limit Theorem. It is true for any population, no matter what distribution it has.\footnote{This is true except for the case that you have fewer than 3 data points and for a few special cases, that you don't need to know about in this book.} Thus, this means that height in elephants itself does not have to be normally distributed, but the sampling distribution of the sample mean will be normal for large sample sizes (e.g., 100 elephants).
+
+The second phenomenon is that the sample mean is an unbiased estimator of the population mean, but that the variance of the sample data is not an unbiased estimator of the population variance. Let's denote the variance of the sample data as $S^2$. Remember from Chapter \ref{chap:intro} that the formula for the variance is
+
+
+\begin{eqnarray}
+S^2 = \mathrm{Var}(Y) = \frac{\Sigma (y_i - \bar{y})^2}{n}
+\end{eqnarray}
+
+We saw that the bias was large for small sample size and small for larger sample size. So somehow we need to correct for sample size. It turns out that the correction is a multiplication with $\frac{n}{n-1}$:
+
+\begin{eqnarray}
+s^2 = \frac{n}{n-1}{S^2}
+\end{eqnarray}
+
+where $s^2$ is the corrected estimator of population variance, $S^2$ is the variance observed in the sample, and $n$ is sample size. When we rewrite this formula and cancel out $n$, we get a more direct way to compute $s^2$: 
+
+\begin{eqnarray}
+s^2 = \frac{\Sigma (y_i - \bar{y})^2}{n-1}
+\end{eqnarray}
+
+Thus, if we are interested to know the variance or the standard deviation in the population, and we only have sample data, it is better to take the sums of squares and divide by $n-1$, and not by $n$. 
+
+
+% Box maken verschil variantie steekproef en variantieschatter
+% variance of the samplling distribution
+% distribution of the variance
+% misschien beter apart, variantie 
+
+
+
+
+\begin{eqnarray}
+\widehat{\sigma^2} = s^2 = \frac{\Sigma (y_i - \bar{y})^2}{n-1}
+\end{eqnarray}
+
+where $\widehat{\sigma^2}$ (pronounced 'sigma-squared hat') signifies the estimator of the population variance (the little hat stands for estimator or estimated value). 
+
+The third phenomenon is that if sample size increases, the variability of the sample statistic gets smaller and smaller: the values of the sample means and the sample variances get closer to their respective population values. We will delve deeper into this phenomenon in the next section. 
+
+
+
+<<mean_mean_distribution_N100, fig.height=3, echo=FALSE, fig.cap = "A histogram of 10,000 sample means when the sample size equals 100.", warning = F>>=
+sample_data <- matrix(NA, 100, 10000)
+for (i in 1:10000){
+  sample_data[ ,i] <- sample(population, 100, replace = F)
+}
+
+means <- apply(sample_data, 2, mean)
+var <- apply(sample_data, 2, function(x)  sum((x - mean(x))**2)/length(x))
+tibble(means) %>% 
+  ggplot(aes(x = means)) + 
+  geom_histogram(bins = 25) +
+  geom_vline(xintercept = elephant_pop_mean, col = "red") + 
+  geom_vline(xintercept = mean(means), col = "blue") +
+  xlim(c(2.75, 3.75))
+@
+
+<<mean_var_distribution_N100, fig.height=3, echo=FALSE, fig.cap = "A histogram of 10,000 sample variances when the sample size equals 100.", warning = F>>=
+
+tibble(var) %>% 
+  ggplot(aes(x = var)) + 
+  geom_histogram(bins = 25) +
+  geom_vline(xintercept = elephant_pop_var, col = "red") + 
+  geom_vline(xintercept = mean(var), col = "blue")+
+  xlim(c(0, 0.30))
+@
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{Central Limit Theorem}: says that the sampling distribution of the sample mean will be normally distributed for infinitely large sample sizes. 
+
+\item \textbf{estimator}: a quantity that you compute based on sample data, that you hope says something about a quantity in the population data. For instance, you can use the sample mean and hope that it is close to the population mean. You use the sample mean as an approximation of the population mean.
+
+\item \textbf{estimate}: the actual value that you get when computing an estimator. For instance, we can use the sample mean as the estimator of the population mean. The formula for the sample mean is $\frac{\Sigma y_i}{n}$ so this formula is our estimator. Based on a sample of 10 values, you might get a sample mean of 3.5. Then 3.5 is the estimate for the population mean.
+
+
+\item \textbf{unbiased estimator}: an estimator that has the population value as expected value (the mean that you get when averaging over many samples). For example, the sample mean is an unbiased estimator for the population mean because if you draw an infinite number of samples, the mean of the sample means will be equal to the population mean.
+
+\item \textbf{biased estimator}: an estimator that does not have the population value as expected value. For example, the variance calculated using a sample is a biased estimator for the population variance because if you draw an infinite number of samples, the mean of the variances will not be equal to the population variance.
+
+
+\item $S^2$: the variance of the values in the sample, computed by taking the sum of squares and divide by sample size $n$.
+
+\item $s^2$: an unbiased estimator for the population variance, often confusingly called the 'sample variance', computed by taking the sum of squares and divide by $n-1$.
+
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+% 102.	Standard error and t-distribution (required unit)
+% 
+% •	Know what a standard error is, what it represents, and how to compute it, given the formula based on the sample data.
+% •	Know that if you compute the ratio estimated.mean/standard error, its sampling distribution is not normal but a t-distribution. 
+% •	Know what is meant by degrees of freedom in the context of a sample mean and a sample sd.
+% 
+
+
+
+
+
+\section{The standard error}
+
+In Chapter \ref{chap:intro} we saw that a measure for spread and variability was the variance. In the previous section we saw that with sample size 100, the variability of the sample mean was much lower than with sample size 10. Let's look at this more closely. 
+
+When we look at the sampling distribution in Figure \ref{fig:mean_mean_distribution_N10} with sample size 10, we see that the means lie between \Sexpr{round(min(means10), 2)} and \Sexpr{round(max(means10), 2)}. If we compute the standard deviation of the sample means, we obtain a value of \Sexpr{round(sqrt( sum( (means10-mean(means10))**2  )/length(means10)), 3)}. This standard deviation of the sample means is technically called the \textit{standard error}, in this case the \textit{standard error of the mean}. It is a measure of how uncertain we are about a population mean when we only have sample data to go on. 
+\
+\
+Think about this: why would we associate a large standard error with very little certainty?
+\
+\
+In this case we have only 10 data points for each sample, and it turns out that the standard error of the mean is a function of both the sample size $n$ and the population variance $\sigma^2$. 
+
+\begin{equation}
+\sigma_{\bar{y}} =  \sqrt{\frac{\sigma^2}{n}}  
+\end{equation}
+
+Here, the population variance equals 0.14 and sample size equals 10, so the $\sigma_{\bar{y}}$ equals $\sqrt{\frac{0.14}{10}} = \Sexpr{round(sqrt(elephant_pop_var/10),3)}$, close to our observed value. If we fill in the formula for a sample size of 100, we obtain a value of 0.037. This is a much smaller value for the spread and this is indeed observed in Figure \ref{fig:mean_mean_distribution_N100}. Figure \ref{fig:se_sample_size} shows the standard error of the mean for all sample sizes between 1 and 200. 
+
+In sum, the standard error of the mean is the standard deviation of the sample means, and serves as a measure of the uncertainty about the population mean. The larger the sample size, the smaller the standard error, the closer a sample mean is expected to be around the population mean, the more certain we can be about the population mean. 
+
+Similar to the standard error of the mean, we can compute the standard error of the variance. This is more complicated -- especially if the population distribution is not normal -- and we do not treat it here. Software can do the computations for you, and later in this book you will see examples of the standard error of the variance.
+
+Summarising the above: when we have a population mean, we usually see that the sample mean is close to it, especially for large sample sizes. If you do not understand this yet, go back before you continue reading.
+
+
+The larger the sample size, the closer the sample means are to the population means. If you turn this around, if you don't know the population mean, you can use a large sample size, calculate the sample mean, and then you have a fairly good estimate for the population. This is useful for our problem of the LH levels, where we have 48 measures. The mean of the 48 measurements could be a good approximation of the mean LH level in general.
+
+As an indication of how close you are to the population mean, the standard error can be used. The standard error of the mean is the standard deviation of the sampling distribution of the sample mean. The smaller the standard error, the more confident you can be that your sample mean is close to the population mean. In the next section, we look at this more closely. If we use our sample mean as our best guess for the population mean, what would be a sensible range of other possible values for the population mean, given the standard error?
+
+
+<<se_sample_size, fig.height=3, echo=FALSE, fig.cap="Relationship between sample size and the standard error of the mean, when the population variance equals 0.14.", warning = F>>=
+
+s <- sqrt(elephant_pop_var)
+n <- seq(3, 200, 1)
+se <- s /sqrt(n)
+
+tibble(se, n) %>% 
+  ggplot(aes(x = n, y = se)) + 
+  geom_point(size = 0.5) +
+  xlab("sample size") + 
+  ylab("standard error of the mean")
+
+@
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{standard error of the mean}: the standard deviation of the distribution of sample means (the sampling distribution of the sample mean). Says something about how spread out the values of the sample means are. It can be used to quantify the uncertainty about the population mean when we only have the sample mean to go on.
+
+\item \textbf{standard error of the variance}: the standard deviation of the sampling distribution of the sample variance. Says something about how spread out the values of the sample variances are. It can be used to quantify the uncertainty about the population variance when we only have the variance of the sample values to go on.
+
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+% 103.	Confidence intervals
+% 	
+% •	Given sample mean and sample variance, can compute 95\% confidence intervals for the population mean, (by looking up various 
+% •	Databegrip,
+% •	Reasonable values.
+% •	Breed small, welke punten zittern er wel niet in, positief negatief,
+% •	critical t-values in a table). 
+% •	Can interpret a confidence interval.
+% 
+% 
+
+
+
+\section{Confidence intervals}
+
+% lastig, veel dingen tegelijk.
+
+If we take a sample mean as our best guess of the population mean, we know that we are probably a little bit off. If we have a large standard error we know that the population mean could be very different from our best guess, and if we have a small standard error we know that the true population mean is pretty close to our best guess, but could we quantify this in a better way? Could we give a range of plausible values for the population mean?
+
+In order to do that, let's go back to the elephants: the true population mean is 3.25 m with variance 0.14. What would possible values of sample means look like if sample size is 4? Of course it would look like the sampling distribution of the sample mean with a sample size of 4. Its mean would be the population mean of 3.25 and its standard deviation would be equivalent to the standard error, computed as a function of the population variance and sample size, in our case $\sqrt{\frac{0.14}{4}}= 0.19$. Now imagine that for a bunch of samples we compute the sample means. We know that the means for large sample sizes will look more or less like a normal distribution, but how about for a small sample size like $n=4$? If it would look like a normal distribution too, then we could use the knowledge about the standard normal distribution to say something about the distribution of the sample means. 
+
+
+For the moment, let's assume the sample size is not 4, but 4000. From the Central Limit Theorem we know that the distribution of sample means is almost identical to a normal distribution, so let's assume it is normal. From the normal distribution, we know that 68\% of the observations lies between 1 \textit{standard deviation} below and 1 \textit{standard deviation} above the mean (see Section \ref{sec:normal} and Figure \ref{fig:distr_4}). If we would therefore standardise our sample means, we could say something about their distribution given the standard error, since the standard error is the standard deviation of the sampling distribution. Thus, if the sampling distribution looks normal, then we know that 68\% of the sample means lies between one \textit{standard error} below the population mean and one \textit{standard error} above the population mean. 
+
+So suppose we take a large number of samples from the population, compute means and variances for each sample, so that we can compute standardised scores. Remember from Chapter \ref{chap:intro} that a standardised score is obtained by subtracting an observed score from the mean and divide by the standard deviation:
+
+\begin{equation}
+z_y = \frac{y - \bar{y}}{sd_y}
+\end{equation}
+
+If we apply standardisation of the sample means, we get the following: for a given sample mean $\bar{y}$ we subtract the population mean $\mu$ and divide by the standard deviation of the sample means (the standard error):
+
+
+\begin{equation}
+z_{\bar{y}} = \frac{\bar{y} - \mu}{\sigma_{\bar{y}}}
+\end{equation}
+
+
+If we then have a bunch of standardised sample means, their distribution should have a standard normal distribution with mean 0 and variance 1. We know that for this standard normal distribution, 68\% of the values lie between -1 and +1, meaning that 68\% of the values in a non-standardised situation lie between -1 and +1 standard deviations from the mean (see Section \ref{sec:normal}). That implies that 68\% of the sample means lie between -1 and +1 standard deviations (standard errors!) from the population mean. Thus, 68\% of the sample means lie between $-1 \times \sigma_{\bar{y}}$ and $+1 \times \sigma_{\bar{y}}$ from the population mean $\mu$. If we have sample size 4000, $\sigma_{\bar{y}}$ is equal to $\sqrt{\frac{0.14}{4000}} = \Sexpr{sqrt(0.14/4000)}$ and $\mu = 3.25$, so that 68\% of the sample means lie between \Sexpr{3.25 - sqrt(0.14/4000)} and \Sexpr{3.25 + sqrt(0.14/4000)}.
+
+This means that we also know that $100-68=32$\% of the sample means lie farther away from the mean: that it occurs in only 32\% of the samples that a sample mean is smaller than \Sexpr{3.25 - sqrt(0.14/4000)} and larger than \Sexpr{3.25 + sqrt(0.14/4000)}. Taking this a bit further, since we know that 95\% of the values in a standard normal distribution lie between -1.96 and +1.96 (see Section \ref{sec:normal}), we know that it happens in only 5\% of the samples that the sample mean is smaller than $3.25 - 1.96 \times \sqrt{\frac{0.14}{4000}} = \Sexpr{3.25 - 1.96 *sqrt(0.14/4000)}$ or larger than $3.25 + 1.96 \times \sqrt{\frac{0.14}{4000}} = \Sexpr{3.25 + 1.96 *sqrt(0.14/4000)}$. Another way of putting this is that it happens in only 95\% of the samples that a sample mean is at most $1.96 \times \sqrt{\frac{0.14}{4000}}$ away from the population mean 3.25. This distance of 1.96 times the standard error is called the \textit{margin of error} (MoE). Here we focus on the margin of error that is based on 95\% observations of the observations seen in the normal distribution:
+
+\begin{equation}
+MoE_{0.95} = z_{0.95} \times \sigma_{\bar{y}} = 1.96 \times \sigma_{\bar{y}}
+\end{equation}
+
+where $z_{0.95}$ is the standardised value $z$ for which holds that 95\% of the values are between $\mu- z$ and $\mu+ z$ (i.e., 1.96). 
+
+Knowing the population mean, we know that it is very improbable (5\%) that a sample mean is farther away from the population mean than this margin of error. The next step is tricky, so pay close attention. If we know the population mean, we can construct an interval based on the margin of error for where we expect sample means to lie. In the above case, knowing that the population mean is 3.25, and we use an MoE based on 95\%, we expect that 95\% of the sample means will lie between $3.25 - \textrm{MoE}$ and $3.25 + \textrm{MoE}$. 
+
+But what if we don't know the population mean, but do know the sample mean? We could use the same interval but centred around the sample mean instead of the population mean. Thus, we have a 95\% interval if we take the sample mean as the centre and the MoE around it. Suppose that we randomly draw 4000 elephants and we obtain a sample mean of $\bar{y} = 3.26$, then we construct the 95\% interval as running from $\bar{y} - MoE = 3.26 - MoE$ to $\bar{y} + MoE = 3.26 + MoE$. The margin of error is based on the standard error, which is in turn dependent on the population variance. If we don't know that, we have to estimate it from the sample. So suppose we find a sample variance $s^2 = 0.15$, we get the 95\% interval from $\bar{y} - MoE = 3.26 - 1.96 \times \sqrt{\frac{0.15}{4000}}$ to $\bar{y} + MoE = 3.26 + 1.96 \times \sqrt{\frac{0.15}{4000}}$.
+
+Such an interval, centred around the \textit{sample} mean, is called a \textit{confidence interval}. Because it is based on 95\% of the sampling distribution (centred around the \textit{population} mean) it is called a 95\% confidence interval. 
+
+One way of thinking about this interval is that it represents 95\% of the sample means \textit{had the population mean been equal to the sample mean}. For example, a 95\% interval around the sample mean of 3.26 represents 95\% of the sample means that you would get if you would take many random samples from a population distribution with mean 3.26: the middle 95\% of the sampling distribution for a population mean of 3.26.
+
+\bigskip
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+A 95\% confidence interval contains 95\% of the sample means \textit{had  the  population  mean  been  equal  to  the  sample  mean}. Its construction is based on the estimated sampling distribution of the sample mean.
+
+}%
+}
+
+
+\bigskip
+
+
+The idea is illustrated in Figure \ref{fig:confidence_interval_explained}. There you see two sampling distributions: one for if the population mean is 3.25 (blue) and one for if the population mean is 3.26 (black). Both are normal distributions because sample size is large, and both have the same standard error that can be estimated using the sample variance. Whatever the true population mean, we can estimate the margin of error that goes with 95\% of the sampling distribution. We can then construct an interval that stretches the length of about twice (i.e., 1.96) the margin of error around any value. We can do that for the real population mean (in blue), but the problem that we face in practice is that we don't know the population mean. We do know the sample mean, and if we centre the interval around that value, we get what is called the 95\% confidence interval. We see that it ranges from \Sexpr{round(3.26 - 1.96 * sqrt(0.15/4000), 3)} to \Sexpr{round(3.26 + 1.96 * sqrt(0.15/4000), 3)}. This we can use as a range of plausible values for the unknown population mean. With some level of 'confidence' we can say that the population mean is somewhere in this interval.
+
+Note that when we say: the 95\% confidence interval runs from \Sexpr{round(3.26 - 1.96 * sqrt(0.15/4000), 3)} to \Sexpr{round(3.26 + 1.96 * sqrt(0.15/4000), 3)}, we cannot say, we are 95\% sure that the population mean is in there. 'Confidence' is not the same as probability. We'll talk about this in a later section. First, we look at the situation where sample size is small so that we cannot use the Central Limit Theorem.
+
+
+
+
+
+
+<<confidence_interval_explained, echo = F, fig.height = 3.5, fig.cap = "Illustration of the construction of a 95{\\%} confidence interval. Suppose we find a sample mean of 3.26 and a sample variance of 0.15, with $n = 4000$. The black curve represents the sampling distribution if the population mean would be 3.26 and a variance of 0.15. In reality, we don't know the population mean, it could be 3.25 or any other value. The sampling distribution for 3.25 is shown by the blue curve. Whatever the case, the length of an interval that contains 95{\\%} of the sample means is always the same: twice the margin of error. This interval centred around the sample mean, is called the 95{\\%} confidence interval.">>=
+z <- seq(3.22, 3.29, 0.0005)
+
+MoE <- 1.96 * sqrt(0.15/4000)
+
+tibble(z) %>%  
+  ggplot(aes(x = z)) +
+  stat_function(fun = dnorm, 
+                args = list(mean = 3.25, sd = sqrt(0.15/4000)), 
+                col = "lightblue") +
+  stat_function(fun = dnorm, 
+                args = list(mean = 3.26, sd = sqrt(0.15/4000))) +
+  scale_x_continuous(breaks = seq(min(z), max(z), 0.01)) + 
+  geom_segment(aes(x = 3.25 - MoE, xend= 3.25 + MoE, y = 10, yend = 10), 
+               col = "lightblue") +
+  geom_segment(aes(x = 3.26 - MoE, xend= 3.26 + MoE, y = 11, yend = 11), 
+               col = "black") +
+  geom_segment(aes(x = 3.26 - MoE, xend= 3.26 - MoE, y = 11, yend = 0), 
+               col = "black", linetype = 2) +
+  geom_segment(aes(x = 3.26 + MoE, xend= 3.26 + MoE, y = 11, yend = 0), 
+               col = "black", linetype = 2) +
+  geom_vline(xintercept = 3.25, col = "lightgrey") +
+  geom_vline(xintercept = 3.26, col = "lightgrey") +
+  xlab("Height in m") +
+  ylab("density") +
+  geom_text(aes(label = "MoE", x = 3.255, y = 13)) +
+  geom_text(aes(label = "MoE", x = 3.265, y = 13))
+
+@
+
+
+\section{The $t$-statistic}
+
+
+In the previous section, we constructed a 95\% confidence interval based on the standard normal distribution. We know from the standard normal distribution that 95\% of the values are between -1.96 and +1.96. We used the standard normal distribution because the sampling distribution will look normal if sample size is large. We took the example of a sample size of 4000, and then this approach works fine, but remember that the actual sample size was 4. What if sample size is not large? Let's see what the sampling distribution looks like in that case.
+
+Remember from the previous section that we standardised the sample means.
+
+$$z_{\bar{y}} =  \frac{\bar{y}- \mu}{\sigma_{\bar{y}}}$$
+
+and that $z_{\bar{y}}$ has a standard normal distribution. But, this only works if we have a good estimate of $\sigma_{\bar{y}}$, the standard error. If sample size is limited, our estimate is not perfect. You can probably imagine that if you take one sample of 4 randomly selected elephants, you get one value for the estimated standard error ($\sqrt{\frac{s^2}{n}}$), and if you take another sample of 4 elephants, you get a slightly different value for the estimated standard error. Because we do not always have a good estimate for $\sigma_{\bar{y}}$, the standardisation becomes a bit more tricky. Let's call the standardised sample mean $t$ instead of $z$:
+
+$$ t_{\bar{y}_i} =  \frac{\bar{y}_i - \mu}{\sqrt{\frac{s^2_i}{n}}}  $$
+
+Thus, a standardised sample mean for sample $i$, will be constructed using an estimate for the standard error by computing the sample variance $s^2$ for sample $i$. 
+
+If you standardise every sample mean, each time using a slighly different standard deviation, and you plot a histogram of the $t$-values, you do not get a standard normal distribution, but a slightly different one.  
+
+
+In summary: if you know the standard error (because you know the population variance), the standardised sample means will show a normal distribution. If you don't know the standard error, you have to estimate it based on the sample variance. If sample size is really large, you can estimate the population variance pretty well, and the sample variances will be very similar to each other. In that case, the sampling distribution will look very much like a normal distribution. But if sample size is relatively small, each sample will show a different sample variance, resulting in different standard error estimates. If you standardise each sample mean with a different standard error, the sampling distribution will not look normal. This distribution is called a $t$-distribution. The difference between this distribution and the standard normal distribution is shown in Figure \ref{fig:t3}. The blue curve is the standard normal distribution, the red curve is the distribution we get if we have sample size 4 and we compute $ t_{\bar{y}_i} =  \frac{\bar{y}_i - \mu}{\sqrt{\frac{s^2_i}{n}}}  $ for many different samples.
+
+
+
+<<t3, fig.height=3, echo=FALSE, warning = F, message = F, fig.align='center', fig.cap="Distribution of \\textit{t} with sample size 4, compared with the standard normal distribution.">>=
+x <- seq(-5, 5, 0.1)
+tibble(x) %>%  
+  ggplot(aes(x = x)) +
+  stat_function(fun = dnorm,
+                args = list(mean = 0, sd = 1),
+                aes(colour = "normal"))  +
+  stat_function(fun = dt, 
+                args = list(df = 3), 
+                aes(colour = "t")) +
+  scale_color_manual("Distribution", values = c("blue", "red")) +
+  ylab("density") + 
+  xlim(c(-5, 5)) + 
+  xlab(" ") +
+  scale_x_continuous(breaks = seq(-5, 5, 1))
+@
+
+When you compare the two distributions, you see that compared to the normal curve, there are fewer observations around 0 for the $t$-distribution: the density around 0 is lower for the red curve than for the blue curve. That's because there are more observations far away from 0: in the tails of the distributions, you see a higher density for the red curve ($t$) than for the blue curve (normal). They call this phenomenon 'heavy-tailed': relatively more observations in the tails than around the mean.
+
+
+That the $t$-distribution is heavy-tailed has important implications. From the standard normal distribution, we know that 5\% of the observations lie more than 1.96 away from the mean. But since there are relatively more observations in the tails of the $t$-distribution, 5\% of the values lie farther away from the mean than 1.96. This is illustrated in Figure \ref{fig:t3_shaded}. If we want to construct a 95\% confidence interval, we can therefore no longer use the 1.96 value. 
+
+<<t3_shaded, fig.height=3, echo=FALSE, warning = F, message = F, fig.align='center', fig.cap="Distribution of \\textit{t} with sample size 4, compared with the standard normal distribution. Shaded areas represent 2.5{\\%} of the respective distribution.">>=
+x <- seq(-5, 5, 0.1)
+tibble(x) %>%  
+  ggplot(aes(x = x)) +
+  stat_function(fun = dnorm,
+                args = list(mean = 0, sd = 1),
+                aes(colour = "normal"))  +
+  stat_function(fun = dt, 
+                args = list(df = 3), 
+                aes(colour = "t")) +
+  scale_color_manual("Distribution", values = c("blue", "red")) +
+  ylab("density") + 
+  xlim(c(-5, 5)) + 
+  xlab(" ") +
+  geom_area(aes(x = ifelse(x > 1.96, x, NA), 
+                y = dnorm(ifelse(x > 1.96, x, NA))), 
+            colour = "blue", fill = "blue", alpha = 0.5) +
+  geom_area(aes(x = ifelse(x < -1.96, x, NA), 
+                y = dnorm(ifelse(x < -1.96, x, NA))), 
+            colour = "blue", fill = "blue", alpha = 0.5) +
+  geom_area(aes(x = ifelse(x > qt(.975, df = 3), x, NA), 
+                y = dt(ifelse(x > qt(.975, df = 3), x, NA), df = 3)), 
+            colour = "red", fill = "red", alpha = 0.5) +
+  geom_area(aes(x = ifelse(x < qt(.025, df = 3), x, NA), 
+                y = dt(ifelse(x < qt(.025, df = 3), x, NA), df = 3)), 
+            colour = "red", fill = "red", alpha = 0.5) +
+  scale_x_continuous(breaks = seq(-5, 5, 1))
+
+@
+
+
+
+
+
+
+With this $t$-distribution, 95\% of the observations lie between -3.18 and +3.18. Of course, that is in the standardised situation. If we move back to our scale of elephant heights with a sample mean of 3.26, we have to transform this back to elephant heights. So -3.18 times the standard error away from the mean of 3.26, is equal to $3.26 - 3.18 \times \sqrt{\frac{0.15}{4}} = \Sexpr{3.26 - 3.18 * sqrt(0.15/4)}$, and +3.18 times the standard error away from the mean of 3.26, is equal to $3.26 + 3.18 \times \sqrt{\frac{0.15}{4}} = \Sexpr{3.26 + 3.18 * sqrt(0.15/4)}$. So the 95\% interval runs from \Sexpr{round(3.26 - 3.18 * sqrt(0.15/4), 2)} to \Sexpr{round(3.26 + 3.18 * sqrt(0.15/4), 2)}. This interval is called the 95\% confidence interval, because 95\% of the sample means will lie in this interval, if the population mean would be 3.26.
+
+Notice that the interval includes the population mean of 3.25. If we would interpret this interval around 3.26 as containing plausible values for the population mean, we see that in this case, this is a fair conclusion, because the true value 3.25 lies within this interval.
+
+
+\section{Interpreting confidence intervals}
+
+The interpretation of confidence intervals is very difficult, and it often goes wrong, even in many textbooks on the matter.
+
+One thing that should be very clear is that a confidence interval is constructed \textit{as if you know the population mean and variance}, which, of course, you don't. We assume that the population mean is a certain value, say $\mu=m_0$, we assume that the standard error of the mean is equal to $\sigma_{\bar{y}}$, and we know that if we would look at many many samples and compute standardised sample means (by using sample means $\bar{y}$ and sample variances $s^2$), their distribution would be a $t$-distribution. Based on that $t$-distribution, we know in which interval 95\% of the standardised sample means would lie and we use that to compute the margin of error and to construct an interval around the sample mean that we actually obtain. A lot of this reasoning is imagination: imagining that you know the population mean and the population variance. Then you imagine what sample means would be reasonable to find and what sample variances. But of course, it's in fact the opposite: you only know the mean and variance of \textit{one} sample and you want to know what are plausible values for the population mean.
+
+You have to bear this reversal in mind when interpreting the 95\% confidence interval around a sample mean. Many people state the following: with 95\% probability, the 95\% confidence interval contains the population mean. This is wrong. It is actually the opposite: the 95\% interval around the population mean contains 95\% of the sample means. 
+
+If you know the population mean $\mu$, then 95\% of the confidence intervals that you construct around the sample means that you get from random sampling will contain the mean $\mu$. This is illustrated in Figure \ref{fig:confints95}. Suppose we take $\mu = 3.25$. Then if we imagine that we take 100 random samples from this population distribution, we can calculate 100 sample means and 100 sample variances. If we then construct 100 confidence intervals around these 100 sample means, we obtain the confidence intervals displayed in Figure \ref{fig:confints95}. We see that 95 of these intervals contain the value 3.25, and 5 of them don't: only in samples 1, 15, 20, 28 and 36, the interval does not contain 3.25.
+
+It can be mathematically shown that given a certain population mean, when taking many, many samples and constructing 95\% confidence intervals, you can expect 95\% of them will contain that population mean. That does \textit{not} mean however that given a sample mean with a certain 95\% interval, that interval contains the population mean with a probability of 95\%. It only means that were this procedure of constructing confidence intervals to be repeated on numerous samples, the fraction of calculated confidence intervals that contain the true population mean would tend toward 95\%. If you only do it once (you obtain a sample mean and you calculate the 95\% confidence interval) it either contains the population mean or it doesn't: you cannot calculate a probability for this. In the statistical framework that we use in this book, one can only say something about the probability of data occurring given some population values: 
+
+\bigskip
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textit{Given} that the population value is 3.25, and if you take many, many independent samples from the population, you can expect that 95\% of the confidence intervals constructed based on resulting sample means will contain that population value of 3.25. 
+
+}%
+}
+
+\bigskip
+
+
+% 
+% <<>>=
+% mu <- c(rep(3.25, 80), rep(3.26, 20))
+% value_in_interval <- c(rep("Yes", 0.95 * 80) , rep("No", 0.05 * 80), 
+%                        rep("Yes", 0.90 * 20) , rep("No", 0.10 * 20))
+% table(value_in_interval, mu) %>% 
+%   xtable(caption = "Cross-tabulation of the true population mean (3.25 or 3.26) and whether 3.25 is in the 95{\\%} confidence interval around the sample mean.", 
+%          label = "tab:cross-table_95", 
+%          digits = 0) %>%
+%   print(include.rownames = T, caption.placement = "top")
+% 
+% @
+% 
+
+
+
+
+
+
+
+
+
+Using this insight, we therefore conclude that the fact we see the value of 3.25 in our 95\% confidence interval around 2.9, gives us some reason to believe ('confidence') that 3.25 could also be a plausible candidate for the population mean. 
+
+Summarising, if we find a sample mean of say 2.9, we know that 2.9 is a reasonable guess for the population mean (it's an unbiased estimator). Moreover, if we construct a 95\% confidence interval around this sample mean, this interval contains other plausable candidates for the population mean. However, it might be possible that the true population mean is not included.
+
+
+
+<<confints95, echo = F, fig.height = 11, fig.align='center', fig.cap='Confidence intervals.'   >>=
+
+N_samples <- 100
+set.seed(291)
+t3 <- rt(N_samples, 3)
+t2 <- 3.25 + (t3 + qt(0.975, 3)) *0.09
+t1 <- 3.25 + (t3 - qt(0.975, 3)) *0.09
+y <- seq(1,N_samples,length.out = N_samples)
+yend <- y
+x <- seq(-0,6,length.out = N_samples )
+tibble(t1, t2, y, yend, x) %>% 
+  ggplot(aes(x = x)) +
+  geom_segment(aes(x = t1, xend= t2, y = y, yend = yend))  +
+  scale_y_continuous(breaks = 1:N_samples) +
+  ylab("sample") +
+  geom_vline(xintercept = 3.25, col = "blue") +
+  scale_x_continuous(breaks = seq(2.6, 3.8, 0.1))
+
+@
+
+
+
+
+\section{$t$-distributions and degrees of freedom}
+
+The standardised deviation of a sample mean from a hypothesised population mean has a $t$-distribution. This happens when the population variance is not known, and we therefore have to estimate the standard error based on the sample variance. Because of this uncertainty about the population variance and consequently the standard error, the standardised score does not have a normal distribution but a $t$-distribution.
+
+In the previous section we saw the distribution for the case that we had a sample size of 4. With such a small sample size, we have a very inaccurate estimate of the population variance. The sample variance $s^2$ will be very different for every new sample of size 4. But if sample size increases, our estimates for the population variance will become more precise, and they will show less variability. This results in the sampling distribution to become less heavy-tailed, until it closely resembles the normal distribution for very large sample sizes. 
+
+This means that the shape of the sampling distribution is a $t$-distribution but that the shape of this $t$-distribution depends on sample size. More precisely, the shape of the $t$-distribution depends on its so-called \textit{degrees of freedom} (explained below). Degrees of freedom are directly linked to the sample size. Degrees of freedom can be as small as 1, very large like 250, or infinitely larger. The $t$-distribution with many degrees of freedom like 2500, is practically indistinguishable from a normal distribution. However for a relatively low number of degrees of freedom, the shape is very different: relatively more observations are in the tails of the distribution and less so in the middle, compared to the normal distribution, see Figure \ref{fig:inf_8b}. 
+
+
+
+The shape of the $t$-distribution is determined by its degrees of freedom: the higher the degrees of freedom, the more it resembles the normal distribution. So which $t$-distribution do we have to use when we are dealing with sample means and we want to infer something about the population mean, and what are degrees of freedom? As stated already above, the degrees of freedom is directly related to sample size: sample size determines the degrees of freedom of the $t$-distribution that we need. Degrees of freedom stands for the amount of information that we have and of course that depends on how many data values we have. In its most general case, the number of degrees of freedom is the number of values in the final calculation of a statistic that are free to vary. More specifically in our case, the degrees of freedom for a statistic like $t$ are equal to the number of independent scores that go into the estimate, minus the number of parameters used as intermediate steps in the estimation of the parameter itself.
+
+
+In the example above we had information about 4 elephants (4 values), so our information content is 4. However, remember that when we construct our $t$-value, we have to first compute the sample mean in order to compute the sample variance $s^2$. But, suppose you know the sample mean, you don't have to know all the 4 values anymore. Suppose the heights of the first three elephants are 3.24, 3.25 and 3.26, and someone computes the mean of all four elephants as 3.25, then you automatically know that the fourth elephant has a height of 3.25 (why?). Thus, once you know the mean of $n$ elephants, you can give imaginary values for the heights of only $n-1$ elephants, because given the other heights and the mean, it is already determined. 
+
+The same is true for the $t$-statistic: once you know 3 elephant heights and statistic $t$, then you know the height of the fourth elephant automatically.
+
+
+
+Because we assume the mean in our computation of $s^2$ (we fix it) we loose one information point, leaving 3. The shape of the standardised scores of fictitious new samples then looks like a $t$-distribution with 3 degrees of freedom. 
+
+Generally, if we have a sample size of $n$ and the population variance is unknown, the shape of the standardised sample means (i.e., $t$-scores) of fictitious new samples is that of a $t$-distribution with $n-1$ degrees of freedom.
+
+
+
+
+
+<<inf_8b,fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='Difference in the shapes of the standard normal distribution and \\textit{t}-distributions with 1, 3 and 9 degrees of freedom.'>>=
+x <- seq(-3, 3, 0.1)
+tibble(x) %>%  
+  ggplot(aes(x = x)) +
+  stat_function(fun = dnorm, 
+                args = list(mean = 0, sd = 1), 
+                aes(colour = "normal"))  +
+  stat_function(fun = dt, 
+                args = list(df = 1), 
+                aes(colour = "t, df = 1")) +
+  stat_function(fun = dt, 
+                args = list(df = 3), 
+                aes(colour = "t, df = 3")) +
+  stat_function(fun = dt, 
+                args = list(df = 9), 
+                aes(colour = "t, df = 9")) +
+  scale_color_manual("Distribution", 
+                     values = c("black", "red", "blue", "green")) +
+  ylab("density") + 
+  xlim(c(-5, 5)) + 
+  xlab(" ")
+
+@
+
+
+
+
+
+
+\section{Constructing confidence intervals}
+
+In previous sections we discussed the 95\% confidence interval, because it is the most widely used interval. But other intervals are also seen, for instance 99\% confidence intervals or 90\% confidence intervals. A 99\% confidence interval is wider than a 95\% confidence interval, which in turn is wider than a 90\% confidence interval. The width of the confidence interval also depends on the sample size. Here we show how to construct 90\%, 99\% and other intervals, for different sample sizes. 
+
+As we discussed for the 95\% interval above, we looked at the $t$-distribution of 3 degrees of freedom because we had a sample size of 4 elephants. Suppose we have a sample size of 200, then we would have to look at a $t$-distribution of $200-1 = 199$ degrees of freedom. Table \ref{tab:t_table} shows information about a couple of $t$-distributions with different degrees of freedom. In the first column, cumulative probabilities are given, and the next column gives the respective quantiles. For instance, the column 'norm' shows that a cumulative proportion of 0.025 is associated with a quantile of -1.96 for the standard normal distribution. This means that for the normal distribution, 2.5\% of the observations are smaller than -1.96. In the same column we see that the quantile 1.96 is associated with a cumulative probability of 0.975. This means that 97.5\% of the observations in a normal distribution are smaller than 1.96. This implies that 100\% - 97.5\% = 2.5\% of the observations are larger than 1.96. Thus, if 2.5\% of the observations are larger than 1.96 and 2.5\% of the observations are smaller than -1.96, then 5\% of the observations are outside the interval (-1.96, 1.96), and 95\% are inside this interval.
+
+From Table \ref{tab:t_table}, we see that for such a 95\% interval, we have to use the values -1.96 and 1.96 for the normal distribution, but for the $t$-distribution we have to use other values, depending on the degrees of freedom. We see that for 3 degrees of freedom, we have to use the values -3.18 and 3.18, and for 199 degrees of freedom the values -1.97 and +1.97. This means that for a $t$-distribution with 3 degrees of freedom, 95\% of the observations lie in the interval from -3.18 to 3.18. Similarly, for a $t$-distribution with 199 degrees of freedom, the values for cumulative probabilities 0.025 and 0.975 are -1.97 and 1.97 respectively, so we can conclude that 95\% of the observations lie in the interval from -1.97 to 1.97. 
+
+Now instead of looking at 95\% intervals for the $t$-distribution, let's try to construct a 90\% confidence interval around an observed sample mean. With a 90\% confidence interval, 10\% lies outside the interval. We can divide that equally to 5\% on the low side and 5\% on the high side. We therefore have to look at cumulative probabilities 0.05 and 0.95 in Table \ref{tab:t_table}. The corresponding quantiles for the normal distribution are -1.64 and 1.64, so we can say that for the normal distribution, 90\% of the values lie in the interval (-1.64, 1.64). For a $t$-distribution with 9 degrees of freedom, we see that the corresponding values are -1.83 and 1.83. Thus we conclude that with a $t$-distribution with 9 degrees of freedom, 90\% of the observed values lie in the interval (-1.83, 1.83). 
+
+However, now note that we are not interested in the values of the $t$-distribution, but in likely values for the population mean. The standard normal and the $t$-distribution are standardised distributions. In order to get values for the confidence interval around the sample mean, we have to unstandardise the values. The value of 1.83 above means "1.83 standard errors away from the mean (the sample mean)". So suppose we find a sample mean of 3, with a standard error of 0.5, then we say that a 90\% confidence interval for the population mean runs from $3 - 1.83 \times 0.5$ to $3 + 1.83 \times 0.5$, so from \Sexpr{round(3 - 1.83 * 0.5, 3)} to \Sexpr{round(3 + 1.83 * 0.5, 3)}. 
+
+
+Follow these steps to compute a $x$\% confidence interval:
+
+\bigskip
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Constructing confidence intervals}
+\begin{enumerate}
+\item  Compute the sample mean $\bar{y}$.
+\item  Estimate the population variance $s^2 = \frac{\Sigma_i (y_i-\bar{y})}{n-1}$.
+\item  Estimate the standard error $\hat{\sigma}_{\bar{y}} = \sqrt{\frac{s^2}{n}}$.
+\item  Compute degrees of freedom as $n-1$.
+\item  Look up $t_{\frac{1-x}{2}}$. Take the $t$-distribution with the right number of degrees of freedom and look for the critical $t$-value for the confidence interval: if $x$ is the confidence level you want, then look for quantile $\frac{1-x}{2}$. Then take its absolute value. That's your $t_{\frac{1-x}{2}}$. 
+\item Compute margin of error (MoE) as $\textrm{MoE} = t_{\frac{1-x}{2}} \times \hat{\sigma}_{\bar{y}}$.
+\item Subtract and sum the sample mean with the margin of error: $(\bar{y} - \textrm{MoE}, \bar{y} + \textrm{MoE})$.
+
+\end{enumerate}
+}
+}
+
+\bigskip
+
+Note that for a large number of degrees of freedom, the values are very close to those of the standard normal.
+
+
+
+<<critical_t_values, echo=FALSE, fig.align='center',results='asis' >>=
+probs <- c(0.0005, 0.001, 0.005, 0.01, 0.025, 0.05, 
+           0.10, 0.90, 0.95, 0.975, 0.99, 0.995, 0.999, 0.9995)
+norm <- qnorm(probs)
+t199 <- qt(probs, df = 199)
+t99  <- qt(probs, df = 99)
+t9   <- qt(probs, df =  9)
+t5   <- qt(probs, df =  5)
+t3   <- qt(probs, df =   3)
+tibble(probs, norm, t199, t99, t9, t5, t3) %>%
+  xtable(caption = "Quantiles for the standard normal and several $t$-distributions.", 
+         label = "tab:t_table", 
+         digits = c(0, 4, 2, 2, 2, 2, 2, 2)
+  ) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+\section{Obtaining a confidence interval for a population mean in R}
+
+
+Suppose we have values on miles per gallon (\texttt{mpg}) in a sample of 32 cars, and we wish to construct a 99\% confidence interval for the population mean. We can do that in the following manner. We take all the \texttt{mpg} values from the \texttt{mtcars} data set, and set our confidence level to 0.99 in the following manner:
+
+<<>>=
+mtcars$mpg %>% mean()
+t.test(mtcars$mpg, conf.level = 0.99)$conf.int
+@
+
+It shows that the 99\% confidence interval runs from 17.2 to 23.0. In a report we can state:
+
+\begin{quotation}
+"In a our sample of 32 cars, we found a mean mileage of 20.1 miles per gallon. The 99\% confidence interval for the mean miles per gallon in the population of cars runs from 17.2 to 23.0 miles per gallon."
+\end{quotation}
+
+or, somewhat shorter:
+
+\begin{quotation}
+"Based on our sample of 32 cars, we found an estimate for the mean mileage in the population of 20.1 miles per gallon (99\% CI: 17.2, 23.0)."
+\end{quotation}
+
+
+The \texttt{t.test()} function does more than simply constructing confidence intervals. That is the topic of the next section.
+
+% 104.	Null-hypothesis testing for a population mean (required unit)
+% 
+% •	Know what is meant by a null-hypothesis and alternative hypothesis. 
+% •	Can state a null-hypothesis regarding a population mean.
+% 
+% 
+% •	Can perform a null-hypothesis test by hand concerning a population mean, a given sample mean and sd and given sample size on the basis of a table with critical t-values.
+% •	Know difference between one-sided and two-sided testing.
+% 
+% 
+% 
+
+
+\section{Null-hypothesis testing}
+
+Suppose a professor of biology claims, based on years of measuring the height of elephants in Tanzania, that the mean height of elephants in Tanzania is 3.38 m. Suppose that you come up with data on a relatively small number of South-African elephants and the professor would like to know whether the two groups of elephants have the same population mean. Do both the Tanzanian and South-African populations have the same mean of 3.38, or is there perhaps a difference in the means? A difference in means could indicate that there are genetic differences between the two elephant populations. The professor would like to base her conclusion on your sample of data, and you assume that the professor is right in that the population mean of Tanzanian elephants is 3.38 m.
+
+One way of addressing a question like this is to look at the confidence interval for the South-African mean. Suppose you construct a 95\% confidence interval. Based on a sample mean of 3.27, a sample variance $s^2$ of 0.14 and a sample size of 40, you calculate that the interval runs from \Sexpr{ round(3.27 - qt(0.975, df = 39) * sqrt(0.14/40), 2)} to \Sexpr{ round(3.27 + qt(0.975, df = 39) * sqrt(0.14/40), 2)}. Based on that interval, you can conclude that 3.38 is a reasonable value for the population mean, and that it could well be that the both the Tanzanian and South-African populations have the same mean height of 3.38 m.
+
+However, as we have seen in the previous section, there are many confidence intervals that we could compute. If instead of the 95\% confidence interval, we would compute a 90\% confidence interval, we would end up with an interval that runs from \Sexpr{ round(3.27 - qt(0.95, df = 39) * sqrt(0.14/40), 2)} to \Sexpr{ round(3.27 + qt(0.95, df = 39) * sqrt(0.14/40), 2)}. In that case, the Tanzanian population mean is no longer included in the confidence interval for the South-African population mean, and we'd have to conclude that the populations have different means.
+
+What interval to choose? Especially if you have questions like "Do the two populations have the same mean" and you want to have a clear yes or no answer, then \textit{null-hypothesis testing} might be a solution. With null-hypothesis testing, a null-hypothesis is stated, after which you decide based on sample data whether or not the evidence is strong enough to reject that null-hypothesis. In our example, the null-hypothesis is that the South-African population mean has the value 3.38 (the Tanzanian mean). We write that as follows:
+
+\begin{equation}
+H_0: \mu_{SA} = 3.38
+\end{equation}
+
+We then look at the data on South-African elephants that could give us evidence that is either in line with this hypothesis or not. If it is not, we say that we reject the null-hypothesis.
+
+
+
+The objective of null-hypothesis testing is that we either reject the null-hypothesis, or not. This is done using the data from a sample. In the null-hypothesis procedure, we simply assume that the null-hypothesis is true, and \textit{compare the sample data with data that would result if the null-hypothesis were true}.
+
+So, let's assume the null-hypothesis is true. In our case that means that the mean height of all South-African elephants is equal to that of all Tanzanian elephants, namely 3.38 m. Next, we compare our actual observed data with data that would \textit{theoretically} result from a population mean of 3.38. What would sample data theoretically look like if the population mean is 3.38? In the previous sections, we learned what possible sample means would look like. Thus, let's focus on the sample mean.\footnote{The sample mean is called a \textit{sufficient statistic} for the population mean. That means, if you want to know something about the population mean, the only information you need to get from the sample data is the mean of the sample values. Knowing the exact values does not give you extra information: the sample mean \textit{suffices}. The proof for this is beyond this book.}
+
+Based on what we learned about the sampling distribution of the sample mean, we know that possible values for the sample mean come from this distribution. It is more or less a normal distribution with mean 3.38, but what the variance is (the standard error), we don't know. We'd have to take a guess, based on the sample data that we have. Based on the sample data, we could compute the sample variance $s^2$, and then estimate the standard error as $\hat{\sigma}_{\bar{y}} = \sqrt{\frac{s^2}{n}}$. However, as we saw earlier, because we have to estimate the standard error, the sample means are no longer normally distributed, but $t$-distributed. 
+
+Suppose we observe 40 South-African elephants, and we obtain a sample mean of 3.27 and a sample variance $s^2$ of 0.14. The hypothesised population mean is 3.38. We know that the sampling distribution is a $t$-distribution because we do not know the population variance. To know the shape of the sampling distribution, we need three things: the mean of the sampling distribution (assuming the population mean is 3.38), the standard deviation (or variance) of the distribution, and the exact shape of the $t$-distribution (the degrees of freedom). The mean is easy: that is equal to the hypothesised population mean of 3.38 (why?). The standard deviation (standard error) is more difficult, but we can use the sample data to estimate it. We compute it using the sample variance: $\hat{\sigma}_{\bar{y}} = \sqrt{\frac{s^2}{n}} = 0.059$. And the last bit is easy: the degrees of freedom is simply sample size minus 1: $40-1 = 39$.
+
+We plot this sampling distribution of the sample mean in Figure \ref{fig:hypothesis_test_unstandardised}. This figure tells us that if the null-hypothesis is really true and that the South-African mean height is 3.38, and we would take many different random samples of 40 elephants, we would see only sample means between 3.20 and 3.35. Other values are in fact possible, but very unlikely. But how likely is our observed sample mean of 3.27: do we feel that it is a likely value to find if the population mean is 3.38, or is it rather unlikely? 
+
+What do you think? Think this over for a bit before you continue to read.
+
+
+In fact, every unique value for a sample mean is rather unlikely. If the population mean is 3.38, it will be very improbable that you will find a sample mean of exactly 3.38, because by sheer chance it could also be 3.39, or 3.40 or 3.37. But relatively speaking, those values are all more likely to find than more deviant values. The density curve tells you that values \textit{around} 3.38 are more likely than values around 3.27 or 3.50, because the density is higher around the value of 3.38 than around those other values.
+
+What to do?
+
+The solution is to define \textit{regions} for sample means where we think the sample mean is no longer probable under the null-hypothesis, and a region where it is probable enough to believe that the null-hypothesis could be true. 
+
+For example, we could define an \textit{acceptance region} where 95\% of the sample means would fall if the null-hypothesis is true, and a \textit{rejection region} where only 5\% of the sample means would fall if the null-hypothesis is true. Let's put the rejection region in the tails of the distribution, where the most extreme values can be found (farthest away from the mean). We put half of the rejection region in the left tail and half of it in the right tail of the distribution, so that we have two regions that each covers 2.5\% of the sampling distribution. These regions are displayed in Figure \ref{fig:hypothesis_test_unstandardised_rejection}. The red ones are the rejection regions, and the green one is the acceptance region (covering 95\% of the area).
+
+
+
+Why 5\%, why not 10\% or 1\%? Good question. It is just something that is accepted in a certain group of scientists. In the social and behavioural sciences, researchers feel that 5\% is a small enough chance. In contrast, in quantum mechanics, researchers feel that 0.000057\% is a small enough chance. Both values are completely arbitrary. We'll dive deeper into this arbitrary chance level in a later section. For now, we continue to use 5\%.
+
+From Figure \ref{fig:hypothesis_test_unstandardised_rejection} we see that the sample mean that we found for your 40 South-African elephants (3.27) does not lie in the red rejection region. We see that 3.27 lies well within the green section where we decide that sample means are likely to occur when the population is 3.38. Because this is likely, we think that the null-hypothesis is plausible: if the population mean is 3.38, it is plausible to expect a sample mean of 3.27, because in 95\% of random samples we would see a sample mean between 3.255 and 3.500. The value 3.27 is a very reasonable value and we therefore do not reject the null-hypothesis. We conclude therefore that it could well be that both Tanzanian and South-African elephants have the same average height of 3.38, that is, we do not have any evidence that the population mean is \textit{not} 3.38.
+
+This is the core of null-hypothesis testing for a population mean: 1) you determine a null-hypothesis that states that the population mean has a certain value, 2) you figure out what kind of sample means you would get if the population mean would have that value, 3) you check whether the sample mean that you actually have is far enough from the population mean to say that it is unlikely enough to result from the hypothesised population mean. If that is the case, then you reject the null-hypothesis, meaning you don't believe in it. If it is likely to result from the hypothesised population, you do not reject the null-hypothesis: there is no reason to suspect that the null-hypothesis is false.
+
+
+
+<<hypothesis_test_unstandardised,fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='The sampling distribution under the null-hypothesis that the South-African population mean is 3.38. The blue line represents the sample mean for our observed sample mean of 3.27.'>>=
+
+x <- seq(-3, 3, 0.1) 
+density <- dt(seq(-3, 3, 0.1), df = 39) 
+x <- x * 0.0591608 + 3.38
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  geom_line() +
+  ylab("density") + 
+  xlab("sample mean") +
+  geom_vline(xintercept = 3.27, col = "blue") +
+  geom_text(aes(x= 3.27, y = 0, label ="3.27")) + 
+  geom_vline(xintercept = 3.38, col = "black") +
+  geom_text(aes(x= 3.38, y = 0, label ="3.38")) +
+  scale_x_continuous(breaks = seq(3.175, 3.575, 0.025), limits = c(3.175, 3.575))
+  
+@
+
+
+<<hypothesis_test_unstandardised_rejection,fig.height=4, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='The sampling distribution under the null-hypothesis that the South-African population mean is 3.38. The red area represents the range of values for which the null-hypothesis is rejected (rejection region), the green area represents the range of values for which the null-hypothesis is not rejected (acceptance region).'>>=
+
+se = 0.0591608
+x <- seq(-3, 3, length.out = 550) 
+density <- dt(x, df = 39) 
+x <- x * se + 3.38
+
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  geom_line() +
+  ylab("density") + 
+  xlab("sample mean") +
+  geom_vline(xintercept = 3.27, col = "blue") +
+  geom_text(aes(x= 3.27, y = -0.015, label ="3.27")) + 
+  geom_vline(xintercept = 3.38, col = "black") +
+  geom_text(aes(x= 3.38, y = -0.015, label ="3.38")) +
+  geom_area(aes(x = ifelse(x > (3.38-5*se) & x  < (3.38 + qt(0.025, 39)*se), x, NA)), 
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x < (3.38+5*se) & x  > (3.38 + qt(0.975, 39)*se), x, NA)), 
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x > (3.38 + qt(0.025, 39)*se) & x < (3.38 + qt(0.975, 39)*se), x, NA)), 
+              alpha = 0.5, fill = "green", col = "green") +
+  geom_text(aes(label = "2.5 %", x = 3.38 + qt(0.99, 39)*se), y = 0.012) +
+  geom_text(aes(label = "2.5 %", x = 3.38 + qt(0.01, 39)*se), y = 0.012) +
+  scale_x_continuous(breaks = seq(3.175, 3.575, 0.025), limits = c(3.175, 3.575))
+  
+
+@
+
+
+
+\section{Null-hypothesis testing with $t$-values}
+
+In the above example, we looked explicitly at the sampling distribution for a hypothesised value for the population mean. By determining what the distribution would look like (determining the mean, standard error and degrees of freedom), we could see whether a certain sample mean would give enough evidence to reject the null-hypothesis. 
+
+In this section we will show how to do this hypothesis testing more easily by first standardising the problem. The trick is that we do not have to make a picture of the sampling distribution every time we want to do a null-hypothesis test. We simply know that its shape is that of a $t$-distribution with degrees of freedom equal to $n-1$. $t$-distributions are standardised distributions, always with a mean of 0. They are the distribution of standardised $t$-statistics, where a sample mean is standardised by subtracting the population mean and dividing the result by the standard error. 
+
+Let's do this standardisation for our observed sample mean of 3.27. With a population mean of 3.38 and a standard error of $\hat{\sigma}_{\bar{y}} = \sqrt{\frac{s^2}{n}} = \sqrt{\frac{0.14}{40}} = 0.059$, we obtain:
+
+
+
+\begin{equation}
+t = \frac{3.27-3.38}{0.059} = -1.864
+\end{equation}
+
+
+
+We can then look at a $t$-distribution of $40-1 = 39$ degrees of freedom to see how likely it is that we find such a $t$-score if the null-hypothesis is true. The $t$-distribution with 39 degrees of freedom is depicted in Figure \ref{fig:t-test}. Again we see the population mean represented, now standardised to a $t$-score of 0 (why?), and the observed sample mean, now standardised to a $t$-score of -1.864. As you can see, this graph gives you the same information as the sampling distribution in Figure \ref{fig:hypothesis_test_unstandardised_rejection}. The advantage of using standardisation and using the $t$-distribution is that we can now easily determine whether or not an observed sample mean is somewhere in the red zone or in the green zone, without making a picture. 
+
+We have to find the point in the $t$-distribution where the red and green zones meet. These points in the graph are called \textit{critical values}. From Figure \ref{fig:t-test} we can see that these critical values are around -2 and 2. But where exactly? This information can be looked up in the $t$-tables that were discussed earlier in this chapter. We plot such a table again in Table \ref{tab:t_table2}. A larger version is given in Appendix \ref{app:t}. 
+
+In such a table, you can look up the 2.5th percentile. That is, the value for which 2.5\% of the $t$-distribution is equal or smaller. Because we are dealing with a $t$-distribution with 39 degrees of freedom, we look in the column t39, and then in the row with cumulative probability 0.025 (equal to 2.5\%), we see a value of \Sexpr{round(qt(0.025, 39),2)}. This is the critical value for the lower tail of the $t$-distribution. To find the critical value for the upper tail of the distribution, we have to know how much of the distribution is lower than the critical value. We know that 2.5\% is higher, so it must be the case that the rest of the distribution, $100-2.5 = 97.5$\% is lower than that value. This is the same as a probability of 0.975. If we look for the critical value in the table, we see that it is \Sexpr{round(qt(0.975, 39),2)}. Of course this is the opposite of the other critical value, because the $t$-distribution is symmetrical. 
+
+Now that we know that the critical values are -2.02 and +2.02, we know that for our standardised $t$-score of -1.864 we are still in the green area, so we do not reject the null-hypothesis. We don't need to draw the distribution any more. For any value, we can directly compare it to the critical values. And not only for this example of 40 elephants and a sample mean of 3.27, but for any combination. 
+
+Suppose for example that we would have had a sample size of 10 elephants, and we would have found a sample mean of 3.28 with a slightly different sample variance, $s^2 = 0.15$. If we want to test the null-hypothesis again that the population mean is 3.38 based on these results, we would have to do the following steps:
+
+\bigskip
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Null-hypothesis testing}
+\begin{enumerate}
+\item Estimate the standard error $\hat{\sigma}_{\widebar{Y}} = \sqrt{\frac{s^2}{n}}$.
+\item Calculate the $t$-statistic $t =  \frac{\widebar{Y} - \mu}{\hat{\sigma}_{\widebar{Y}}}$, $\mu$ is the population mean under the null-hypothesis.
+\item Determine the degrees of freedom, $n - 1$.
+\item Determine the critical values for lower and upper tail of the appropriate $t$-distribution, using Appendix \ref{app:t}.
+\item If the $t$-statistic is between the two critical values, then we're in the green, we still believe the null-hypothesis is plausible.
+\item If the $t$-statistic is not between the two critical values, we are in the red zone and we reject the null-hypothesis. 
+\end{enumerate}
+
+}}
+
+\bigskip
+
+
+
+So let's do this for our hypothetical result:
+
+\begin{enumerate}
+\item Estimate the standard error: $\sqrt{\frac{0.15}{10}} = \Sexpr{sqrt(0.15/10)}$
+\item Calculate the $t$-statistic: $t = \frac{3.28-3.38}{\Sexpr{sqrt(0.15/10)}} = \Sexpr{(3.28-3.38)/sqrt(0.15/10)}$
+\item Determine the degrees of freedom: sample size minus 1 equals 9
+\item In Table \ref{tab:t_table2} we look for the row with probability 0.025 and the column for t9. We see a value of \Sexpr{round(qt(0.025, 9), 2)}. The other critical value then must be \Sexpr{round(qt(0.975, 9), 2)}.
+\item The $t$-statistic of \Sexpr{(3.28-3.38)/sqrt(0.15/10)} lies between these two critical values, so these sample data do not lead to a rejection of the null-hypothesis that the population mean is 3.38. In other words, these data from 10 elephants do not give us reason to doubt that the population mean is 3.38.
+
+\end{enumerate}
+
+
+
+
+<<t-test,fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='A \\textit{t}-distribution with 39 degrees of freedom to test the null-hypothesis that the South-African population mean is 3.38. The blue line represents the \\textit{T}-score for our observed sample mean of 3.27.'>>=
+
+x <- seq(-3, 3, length.out = 387)
+density <- dt(x, df = 39)
+
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  stat_function(fun = dt, 
+                args = list(df = 39)) +
+  geom_area(aes(x = ifelse((x >= -3) & (x < qt(0.025, df = 39)) , x, NA)), 
+            alpha =0.5, fill = "red", col = "red") + 
+  geom_area(aes(x = ifelse(x < 5 & x  > qt(0.975, 39), x, NA)), 
+            alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x >= qt(0.025, 39) & x <= qt(0.975, 39), x, NA)),
+            alpha = 0.5, fill = "green", col = "green") +
+  xlab("t") +
+  geom_vline(xintercept = -1.864, col = "blue") +
+  geom_text(aes(x= -1.89, y = -0.015, label ="-1.864")) +
+  geom_text(aes(label = "2.5 %", x = qt(0.99, 39), y = 0.012)) +
+  geom_text(aes(label = "2.5 %", x = qt(0.01, 39), y = 0.012)) 
+
+  
+
+@
+
+
+<<critical_t_values2, echo=FALSE, fig.align='center',results='asis' >>=
+probs <- c(0.0005, 0.001, 0.005, 0.01, 0.025, 0.05, 
+           0.10, 0.90, 0.95, 0.975, 0.99, 0.995, 0.999, 0.9995)
+norm <- qnorm(probs)
+t199 <- qt(probs, df = 199)
+t99  <- qt(probs, df =  99)
+t47  <- qt(probs, df =  47)
+t39  <- qt(probs, df =  39)
+t9   <- qt(probs, df =   9)
+t5   <- qt(probs, df =   5)
+t3   <- qt(probs, df =   3)
+tibble(probs, norm, t199, t99, t47, t39, t9, t5, t3) %>%
+  xtable(caption = "Quantiles for the standard normal and several $t$-distributions.", 
+         label = "tab:t_table2", 
+         digits = c(0, 4, 2, 2, 2, 2, 2, 2, 2, 2)
+  ) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+
+\section{The $p$-value}\label{sec:p-values}
+
+What we saw in the previous section was the classical null-hypothesis testing procedure: calculating a $t$-statistic and determine whether or not this $t$-score is in the red zone or green zone, by comparing them to critical values. In the old days, this was done by hand: the calculation of $t$ and looking up the critical values in tables published in books.
+
+These days we have the computer do the work for us. If you have a data set, a program can calculate the $t$-score for you. However, when you look at the output, you actually never see whether this $t$-score leads to  a rejection of the null-hypothesis or not. The only thing that a computer prints out is the $t$-score, the degrees of freedom, and a so-called $p$-value. In this section we explain what a $p$-value is and how you can use it for null-hypothesis testing.
+
+
+Let's go back to our example in the previous section, where we found a sample mean height of 3.28 with only 10 elephants. We computed the $t$-score and obtained -0.82. We illustrate this result in Figure \ref{fig:p-value} where the red line indicates the $t$-score. By comparing this $t$-value with the critical values, we could decide that we do not reject the null-hypothesis. However, if you would do this calculation with a computer program like R, we would get the following result:
+
+\begin{lstlisting}
+t = -0.82, df = 9, p-value = 0.434
+\end{lstlisting}
+
+
+
+<<p-value,fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='Illustration of what a $p$-value is. The total blue area represents the probability that under the null-hypothesis, you find a more extreme value than the $t$-score or its opposite. The blue area covers a proportion of .217 + .217 = .434 of the $t$-distribution. This amounts to a $p$-value of .434.'>>=
+
+x <- seq(-3, 3, length.out = 387)
+density <- dt(x, df = 39)
+p <- 0.434
+
+T <- (3.28-3.38)/sqrt(0.15/10) 
+T <- round(T, 2)
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  stat_function(fun = dt, 
+                args = list(df = 39)) +
+  geom_area(aes(x = ifelse(x > T & x < -T, x, NA)),
+            alpha = 0.5, fill = "green", col = "green") +
+  geom_area(aes(x = ifelse((x >= -3) & (x < T) , x, NA)), 
+            alpha =0.5, fill = "blue", col = "blue") + 
+  geom_area(aes(x = ifelse(x < 3 & x  > -T, x, NA)), 
+            alpha = 0.5, fill = "blue", col = "blue") +
+  xlab("t") +
+  geom_vline(xintercept = T, col = "red") +
+  geom_text(aes(x = T, y = -0.015, label = paste("t = ", T, sep = ""))) +
+  geom_text(aes(x = -2, y = +0.015, label = paste(round(p/2, 3)))) +
+  geom_text(aes(x = 2, y = +0.015, label = paste(round(p/2, 3)))) +
+  geom_text(aes(x = 0, y = +0.015, label = 0.566))
+
+  
+
+@
+
+
+Figure \ref{fig:p-value} shows what this $p$-value of \Sexpr{p} means. The green area in the middle represents the probability that a $t$-score lies between -0.82 and +0.82. That probability is shown in the figure as 0.567, so 56.7\%. The left blue region represents the probability that if the null-hypothesis is true, the $t$-score will be less than -0.82. That probability is 0.217, so 21.7\%. Because of symmetry, the probability that the $t$-score is more than 0.82 is also 0.217. The blue regions together therefore represent the probability that you find a $t$-score of less than -0.82 or more than 0.82, and that probability equals 0.217 + 0.217 = \Sexpr{p}. Therefore, the probability that you find a $t$-value of $\pm 0.82$ or more extreme equals \Sexpr{p}. This probability is called the $p$-value. 
+
+Why is this value useful?
+
+
+Let's imagine that we find a $t$-score of exactly equal to one of the critical values. The critical value for a sample size of 10 animals related to a cumulative proportion of 0.025 equals \Sexpr{round(qt(0.025, 9), 2)} (see Table \ref{tab:t_table2}). Based on this table, we know that the probability of a $t$-value of \Sexpr{round(qt(0.025, 9), 2)} or lower equals 0.025. Because of symmetry, we also know that the probability of a $t$-value of \Sexpr{round(qt(0.975, 9), 2)} or higher also equals 0.025. This brings us to the conclusion that the probability of a $t$-score of $\pm \Sexpr{round(qt(0.975, 9), 2)}$ or more extreme, is equal to $0.025+0.025 = 0.05 = 5\%$. Thus, when the $t$-score is equal to the critical value, then the $p$-value is equal to 5\%. You can imagine that if the $t$-score becomes more extreme than the critical value the $p$-value will become less than 5\%, and if the $t$-score becomes less extreme (closer to 0), the $p$-value becomes larger.
+
+In the previous section, we said that if a $t$-score is more extreme than one of the critical values (i.e., when it doesn't have a value between them) then we reject the null-hypothesis. Thus, a $p$-value of 5\% or less means that we have a $t$-score more extreme than the critical values, which in turn means we have to reject the null-hypothesis. Thus, based on the computer output, we see that the $p$-value is larger than 0.05, so we do not reject the null-hypothesis.
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+
+
+\item critical value: the minimum (or maximum) value that a $t$-score should have to be in the red zone (the rejection region). If a $t$-value is more extreme than a critical value, then the null-hypothesis is rejected. The red zone is often chosen such that a $t$-score will be in that zone 5\% of the time, assuming that the null-hypothesis is true.
+
+\item $p$-value: indicates the probability of finding a $t$-value equal or more extreme than the one found, assuming that the null-hypothesis is true. Often a $p$-value of 5\% or smaller is used to support the conclusion that the null-hypothesis is not tenable. This is equivalent to a rejection region of 5\% when using critical values.
+
+
+\end{itemize}
+
+}
+}
+\bigskip
+
+
+Let's apply this null-hypothesis testing to our luteinising hormone (LH) data. Based on the medical literature, we know that LH levels for women in their child-bearing years vary between 0.61 and 56.6 IU/L. Values vary during the menstrual period. If values are lower than normal, this can be an indication that the woman suffers from malnutrition, anorexia, stress or a pituitary disorder. If the values are higher, this is an indication that the woman has gone through menopause.
+
+We're going to use the LH data presented earlier in this chapter to make a decision whether the woman has a healthy range of values for a woman in her child-bearing years by testing the null-hypothesis that the mean LH level in this woman is the same as the mean of LH levels in healthy non-menopausal women.
+
+First we specify the null-hypothesis. Suppose we know that the mean LH level in this woman should be equal to 2.54, given her age and given the timing of her menstrual cycle. Thus our null-hypothesis is that the mean LH in our particular woman is equal to 2.54:
+
+
+\begin{equation}
+H_0: \mu = 2.54
+\end{equation}
+
+
+Next, we look at our sample mean and see whether this is a likely or unlikely value to find under this null-hypothesis. The sample mean is 2.40. To know whether this is a likely value to find, we have to know the standard error of the sampling distribution, and we can estimate this by using the sample variance. The sample variance $s^2 = \Sexpr{var(lh)}$ and we had 48 measures, so we estimate the standard error as $\hat{\sigma}_{\bar{y}} = \sqrt{\frac{s^2}{n}} = \sqrt{\frac{\Sexpr{var(lh)}}{48}} = \Sexpr{round(sqrt(var(lh)/48),2)}$. We then apply standardisation to get a $t$-value:
+
+\begin{equation}
+t = \frac{2.40 - 2.54}{\Sexpr{round(sqrt(var(lh)/48),2)}} = \Sexpr{(mean(lh)-2.54) / round(sqrt(var(lh)/48),2)} 
+\end{equation}
+
+Next, we look up in a table whether this $t$-value is extreme enough to be considered unlikely under the null-hypothesis. In Table \ref{tab:t_table2}, we see that for 47 degrees of freedom, the critical value for the 0.025 quantile equals \Sexpr{round(qt(0.025, df = 47),2)}. For the 0.975 quantile it is \Sexpr{round(qt(0.975, df = 47),2)}. Our observed $t$-value of \Sexpr{(mean(lh)-2.54) / round(sqrt(var(lh)/48),2)} lies within this range. This means that a sample mean of 2.40 is likely to be found when the population mean is 2.54, so we do not reject the null-hypothesis. We conclude that the LH levels are healthy for a woman her age.  
+
+When we report the results from a null-hypothesis test, we often talk about \textit{significance}. When the results show that the null-hypothesis can be rejected, we talk about a \textit{statistically significant} result. When the null-hypothesis cannot be rejected, we call the results non-significant. Note that this says nothing about the importance or size of the results.   
+
+In a report, you could state:
+
+\begin{quotation}
+"We tested the null-hypothesis that the mean LH level is 2.54. Taking a sample of 48 measurements, we obtained a mean of 2.40. A $t$-test showed that this sample mean was not significantly different from 2.54, $t(47) = \Sexpr{(mean(lh)-2.54) / round(sqrt(var(lh)/48),2)}, p > .05$."
+\end{quotation}
+
+
+
+
+We can do the null-hypothesis testing also with a computer. Let's analyse the data in R and do the computations with the following code. First we load the LH data:
+
+
+<<>>=
+data(lh)
+@
+
+Next, we test whether the population mean could be 2.54:
+
+<<>>=
+t.test(lh, mu = 2.54)
+@
+
+
+In the output we see that the $t$-value is equal to -1.7584, similar to our -1.75. We see that the number of degrees of freedom is 47 ($n-1$) and that the $p$-value equals 0.08518. This $p$-value is larger than 0.05, so we do \textit{not} reject the null-hypothesis that the mean LH level in this woman equals 2.54. Her LH level is healthy.
+
+In a report, the convention is to report the exact $p$-value. We can omit the 0 in front of the decimal sign since a $p$-value is always between 0 and 1 (i.e., .09 instead of 0.09)
+
+\begin{quotation}
+"We tested the null-hypothesis that the mean LH level is 2.54. Taking a sample of 48 measurements, we obtained a mean of 2.40. A $t$-test showed that this sample mean was not significantly different from 2.54, $t(47) = \Sexpr{(mean(lh)-2.54) / round(sqrt(var(lh)/48),2)}, p = .09$."
+\end{quotation}
+
+\section{One-sided versus two-sided testing}
+
+In the previous section, we tested a null-hypothesis in order to find evidence that an observed sample mean was either too large or too small to result from random sampling. For example, in the previous section we saw that the observed LH levels were not too low and we did not reject the null-hypothesis. But had the LH levels been too high or too low, then we would have rejected the null-hypothesis. 
+
+
+In the reasoning that we followed, there were actually two hypotheses: the null-hypothesis that the population mean was exactly 2.54, and the \textit{alternative hypothesis} that the population is not exactly 2.54:
+
+\begin{eqnarray}
+H_0: \mu = 2.54 \\
+H_A: \mu \neq 2.54
+\end{eqnarray}
+
+
+This kind of null-hypothesis testing is called \textit{two-sided} or \textit{two-tailed} testing: we look at two critical values, and if the computed $t$-score is outside this range (i.e., somewhere in the two tails of the distribution), we reject the null-hypothesis.
+
+The alternative to two-sided testing is \textit{one-sided} or \textit{one-tailed} testing. Sometimes before an analysis you already have an idea of what direction the data will go. For instance, imagine a zoo where they have held elephants for years. These elephants always were of Tanzanian origin, with a mean height of 3.38. Lately however, the manager observes that the opening that connects the indoor housing with the outdoor housing gets increasingly damaged. Since the zoo recently acquired 4 new elephants of South-African origin, the manager wonders whether South-African elephants are on average taller than the Tanzanian elephants. 
+To figure out whether South-African elephants are on average taller than the Tanzanian average of 3.38 or not, the manager decides to apply null-hypothesis testing. She has two hypotheses: null-hypothesis $H_0$ and \textit{alternative hypothesis} $H_A$:
+
+\begin{eqnarray}
+H_0: \mu_{SA} = 3.38 \\
+H_A: \mu_{SA} > 3.38
+\end{eqnarray}
+
+This set of hypotheses leaves out one option: the South-African mean might be lower than the Tanzanian one. Therefore, one often writes the set of hypotheses like this:
+
+\begin{eqnarray}
+H_0: \mu_{SA} \leq 3.38 \\
+H_A: \mu_{SA} > 3.38
+\end{eqnarray}
+
+
+She next tests the null-hypothesis, more specifically the one where $\mu_{SA} = 3.38$. From the damaged doorway she expects the sample mean to be higher than 3.38, but is it high enough to serve as evidence that the population mean is also higher than 3.38? She decides that when the sample mean is in the rejection zone in the right tail of the sampling distribution, then she will decide that the null-hypothesis is not true, but that the alternative hypothesis must be true. 
+
+This is illustrated in Figure \ref{fig:hypothesis_test_unstandardised_rejection_onetailed}. It shows the sampling distribution if we happen to have 4 new South-African elephants, with a sample mean of 3.45 and a standard error of 0.059. In red, we see the rejection region: if the sample mean happens to be in that zone we decide to reject the null-hypothesis. Similar to two-tailed testing, we decide that an area of 5\% is small enough to suggest that the null-hypothesis is not true. Note that in two-tailed testing, this area of 5\% was divided equally into the upper tail and the lower tail of the distribution, but with one-tailed testing we put it all in the tail where we expect to find the sample mean based on a theory or a hunch.
+
+In this sampling distribution, based on 3 degrees of freedom, we see that the sample mean is not in the red zone -- the rejection region -- therefore we do not reject the null-hypothesis. We conclude that based on this random sample of 4 elephants, there is no evidence to suggest that South-African elephants are on average taller than Tanzanian elephants.
+
+
+<<hypothesis_test_unstandardised_rejection_onetailed,fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='The sampling distribution under the null-hypothesis that the South-African population mean is 3.38. In one-tailed testing, the rejection area is located in only one of the tails. The red area represents the range of values for which the null-hypothesis is rejected (rejection region), the green area represents the range of values for which the null-hypothesis is not rejected (acceptance region).'>>=
+
+se = 0.0591608
+x <- seq(-4, 4, length.out = 550) 
+density <- dt(x, df = 3) 
+x <- x * se + 3.38
+
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  geom_line() +
+  ylab("density") + 
+  xlab("sample mean") +
+  geom_vline(xintercept = 3.45, col = "blue") +
+  geom_text(aes(x= 3.45, y = -0.015, label ="3.45")) + 
+  geom_vline(xintercept = 3.38, col = "black") +
+  geom_text(aes(x= 3.38, y = -0.015, label ="3.38")) +
+  geom_area(aes(x = ifelse(x < (3.38+5*se) & x  > (3.38 + qt(0.95, 3)*se), x, NA)), 
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x < (3.38 + qt(0.95, 3)*se), x, NA)), 
+              alpha = 0.5, fill = "green", col = "green") +
+  geom_text(aes(label = "5 %", x = 3.38 + qt(0.97, 3)*se), y = 0.012) +
+  scale_x_continuous(breaks = seq(3.175, 3.585, 0.025), limits = c(3.175, 3.585))
+  
+
+@
+
+
+The same procedure can be done with standardisation. We compute the $t$-statistic as 
+
+\begin{equation}
+t = \frac{3.45 - 3.38}{0.059} = \Sexpr{round((3.45 - 3.38) / 0.059,2)} 
+\end{equation}
+
+In Table \ref{tab:t_table2} we have to look up where the red zone starts: that is for the 0.95 quantile, because below that value lies 95\% (green zone) and above it 5\% (the red zone). We see that the 95th percentile for a $t$-distribution with 3 degrees of freedom is equal to \Sexpr{round(qt(0.95, df = 3))}. Our $t$-value \Sexpr{round((3.45 - 3.38) / 0.059,2)} is less than that, so that we do not reject the null-hypothesis. 
+
+A third way is to compute a one-tailed $p$-value. This is illustrated in Figure \ref{fig:p_value_onetailed}. The one-tailed $p$-value for a $t$-statistic of 1.19 and 3 degrees of freedom turns out to be 0.16. That is the proportion of the $t$-distribution that is blue. That means that if the null-hypothesis is true, you will find a $t$-value of 1.19 or larger in 16\% of the cases. Because this proportion is more than 5\%, we do not reject the null-hypothesis.
+
+
+
+<<p_value_onetailed, fig.height=3, warning = F, message = F, echo=FALSE, fig.align='center', fig.cap='The sampling distribution under the null-hypothesis that the South-African population mean is 3.38. For one-tailed testing, the rejection area is located in only one of the tails. The green area represents the probability of seeing a $t$-value smaller than 1.19, the blue are represents the probability of seeing a $t$-value larger than 1.19. The latter probability is the $p$-value.'>>=
+
+x <- seq(-4.5, 4.5, length.out = 387)
+density <- dt(x, df = 3)
+
+
+T <- round((3.45 - 3.38) / 0.059,2)
+
+p <- pt(T, df = 3)
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  stat_function(fun = dt, 
+                args = list(df = 3)) +
+  geom_area(aes(x = ifelse(x < T, x, NA)),
+            alpha = 0.5, fill = "green", col = "green") +
+  # geom_area(aes(x = ifelse((x >= -3) & (x < T) , x, NA)), 
+  #           alpha =0.5, fill = "blue", col = "blue") + 
+  geom_area(aes(x = ifelse(x < 4.5 & x  > T, x, NA)), 
+            alpha = 0.5, fill = "blue", col = "blue") +
+  xlab("t") +
+  geom_vline(xintercept = T, col = "blue") +
+  geom_text(aes(x = T+ 0.02, y = -0.015, label = paste("t = ", T, sep = ""))) +
+  geom_text(aes(x = -1, y = +0.015, label = paste(round(p, 3)))) +
+  geom_text(aes(x = 2, y = +0.015, label = paste(round(1-p, 3)))) 
+
+  
+@
+
+
+\section{One-tailed testing applied to LH levels}
+
+
+As we have seen, LH levels that are too high are indicative of menopause, a normal transition for women. However, LH levels that are too low are indicative of an illness or malnutrition. In that case, it is important that the source of this malnutrition or the specific illness is diagnosed. You could therefore say that if LH levels are too low, a red flag should be put up, whereas if the LH levels are normal or higher, then there is usually no reason to worry. 
+
+LH levels can therefore be used to construct a diagnostic red flag decision system. If normal or high, then nothing happens, if too low, then something should be done. We could formulate these two alternative states of reality as two hypotheses:
+
+
+\begin{eqnarray}
+H_0: \mu_{LH} \geq 2.54 \\
+H_A: \mu_{LH} <  2.54
+\end{eqnarray}
+
+We decide beforehand that if a $t$-value is too far out in the left tail of the distribution, the LH levels are too low. We again use 5\% of the area of the $t$-distribution. This decision process is illustrated in Figure \ref{fig:LH_one-tailed} where we see a critical $t$-value of \Sexpr{round(qt(0.05, df = 47), 2)} when we we have 47 degrees of freedom (see Table \ref{tab:t_table2}). 
+
+
+<<LH_one-tailed, fig.height = 3, echo = F, warning = F, fig.cap="One-tailed decision process for deciding whether the average LH level in a woman is too low.">>=
+x <- seq(-4.5, 4.5, length.out = 387)
+density <- dt(x, df = 3)
+
+
+T <- round(qt(0.05, df = 47), 2)
+
+p <- pt(T, df = 47)
+
+tibble(x, density) %>%  
+  ggplot(aes(x = x, y = density)) +
+  stat_function(fun = dt, 
+                args = list(df = 3)) +
+  geom_area(aes(x = ifelse(x > T, x, NA)),
+            alpha = 0.5, fill = "green", col = "green") +
+  geom_area(aes(x = ifelse((x >= -4.5) & (x < T) , x, NA)),
+            alpha =0.5, fill = "red", col = "red") +
+  # geom_area(aes(x = ifelse(x < 4.5 & x  > T, x, NA)), 
+  #           alpha = 0.5, fill = "blue", col = "blue") +
+  xlab("t") +
+  geom_vline(xintercept = T, col = "red") +
+  geom_text(aes(x = T+0.0345, y = -0.015, label = paste("Critical t = ", T, sep = ""))) +
+  geom_text(aes(x = -2.5, y = +0.015, label = paste(round(p, 3)))) +
+  geom_text(aes(x = 1, y = +0.015, label = paste(round(1-p, 3)))) 
+
+@
+
+
+We calculate our $t$-value and find -1.75, see section \ref{sec:p-values}. We see that this $t$-value is smaller than the critical value -1.68, so it is in the red rejection area. This is the area that we use for the rejection of the null-hypothesis, so based on these data we decide that the mean LH level in this woman is abnormally low. 
+
+
+Importantly, note that when we applied two-tailed hypothesis testing, we decided to \textit{not} reject the null-hypothesis, whereas here with one-tailed testing, we decide to reject the null-hypothesis. All based on the same data, and the same null-hypothesis. The difference lies in the choice of the alternative hypothesis. When doing one-tailed testing, we put all of the critical region in only one tail of the $t$-distribution. This way, it becomes easier to reject a null-hypothesis, if the mean LH level is indeed lower than normal. However, it could also be easier to make a mistake: if the mean LH level is in fact normal, we could make a mistake in thinking that the sample mean is deviant, where it is actually not. Making mistakes in inference is the topic of the next section.
+
+It is generally advised to use two-tailed testing rather than one-tailed testing. The reason is that in hypothesis testing, it is always the null-hypothesis that is being used as the starting point: what would the sample means (or their standardised versions: $t$-scores) look like if the null-hypothesis is true? Based on a certain null-hypothesis, say population mean $\mu$ equals 2.54, sample means could be as likely higher or lower than the population mean (since the sampling distribution is symmetrical). Even if you suspect that $\mu$ is actually lower, based on a very good theory, you would help yourself too much to falsify the null-hypothesis by putting the rejection area only in the left tail of the distribution. And what do you actually do if you find a sample mean that is in the far end of the right tail? Do you still accept the null-hypothesis? That would not make much sense. It is therefore better to just stick to the null-hypothesis, and see whether the sample mean is far enough removed to reject the null-hypothesis. If the sample mean is in the anticipated tail of the distribution, that supports the theory you had, and if the sample mean is in the opposite tail, it does not support the theory you had. 
+
+Compare one-tailed and two-tailed testing in R using the LH data. By default, R applies two-tailed testing. R gives the following output:
+
+<<>>=
+t.test(lh, mu = 2.54)
+@
+
+If you want one-tailed testing, where you expect that the mean LH level is lower than 2.54, you do that in the following manner\footnote{If you expect that the LH level will higher than 2.54, you use "greater" instead of "less".}:
+
+<<>>=
+t.test(lh, mu = 2.54, alternative = "less")
+@
+
+With one-tailed testing, you can report:
+
+\begin{quotation}
+"We tested the null-hypothesis that the mean LH level is 2.54, against the alternative hypothesis that the mean LH level is less than 2.54. Taking a sample of 48 measurements, we obtained a mean of 2.40. A one-tailed $t$-test showed that this sample mean was significantly less than 2.54, $t(47) = \Sexpr{(mean(lh)-2.54) / round(sqrt(var(lh)/48),2)}, p = .04$."
+\end{quotation}
+
+
+
+When you compare the $p$-values, you see that the $p$-value using one-tailed testing is half the size of the $p$-value using two-tailed testing (.04259 vs .08518). Based on the previous sections, you should know why the $p$-value is halved! (Because the $t$-distribution is symmetrical and you placed all of the 5\% rejection area only on the left of the $t$-distribution). In the second output, using a critical $p$-value of 5\% you would reject the null-hypothesis, whereas in the first output, you would not reject the null-hypothesis. Using one-tailed testing could lead to a big mistake: thinking that the sample mean is deviant enough to reject the null-hypothesis, while the null-hypothesis is actually true. We delve deeper into such mistakes in the next section. 
+
+
+% 105.	Type I and type II errors (required unit)
+% 
+
+
+
+
+
+% •	Can explain what is meant by a type I error and a type II error.
+% •	Can perform null-hypothesis test on the basis of a confidence interval.
+% •	Can perform a one-sample t-test in R, find the confidence interval, interpret the p-value.
+% 
+% •	Given sample mean and sample variance, can compute various confidence intervals for the population mean, (by looking up various critical t-values in a table). 
+% 
+%
+
+\section{Type I and type II errors}
+
+In the preceding sections, we have used the value of 5\% a lot of times. We deemed that this was a fairly low probability, that allows us to take the decision to reject the null-hypothesis. We looked at the distribution of sample means, given that there was a certain population mean, and we looked at how often we can expect a sample mean that is smaller or larger than certain critical values. These critical values were based on 5\% of the area of the sampling distribution. With two-tailed testing, this 5\% was divided over the two extreme tails of the sampling distribution, and with one-tailed testing, this 5\% rejection area was put in the tail end where we expected the population to be according to the alternative hypothesis (based on theory).
+
+In this null-hypothesis testing procedure there is always the risk that we take the wrong decision. Let's return to our elephant example where we had the null-hypothesis that the population mean for South-African elephants equals 3.38. The alternative two-sided hypothesis was that the population mean was \textit{not} equal to 3.38. After calculating the standard error, we calculated the $t$-score. We said that we reject the null-hypothesis when the obtained $t$-score was somewhere in the extreme ends of the tail: more specifically, in the rejection area that made up 5\% of the area of the $t$-distribution. That means that if the null-hypothesis is true, there is a 5\% probability that we find such a $t$-score. In that case we reject the null-hypothesis. But that could be the wrong decision: if the null-hypothesis is true it will happen in 5\% of the cases that a $t$-score will be in the 5\% rejection region. We then reject the null-hypothesis while it is actually true! Such a mistake is called a Type I error. In this case, type I error rate is 5\%. It is a \textit{conditional probability}. Conditional probabilities are probabilities that start from some given information. In this case, the given information is that the null-hypothesis is true: \textit{given} that the null-hypothesis is true, it is the probability that we reject the null-hypothesis. Because we do not like to make mistakes, we want to have the probability of a mistake as low as possible.
+
+In the social and behavioural sciences, one thinks that a probability of 5\% is low enough to take the risk of making the wrong decision. As stated earlier, in quantum mechanics one is even more careful, using a probability of 0.000057 \%. So why don't we also use a much lower probability of making a type I error? The answer is that we do not want to make another type of mistake: a type II error. A type II error is the mistake that we make when we do \textit{not} reject the null-hypothesis, while it is not true. Taking the example of the elephants again, suppose that the population mean is \textit{not} equal to 3.38, but the $t$-score is not in the rejection area, so we believe that the population mean is 3.38. This is then the wrong decision. The type of mistake we then make is a type II error.
+
+
+Let's take this example further. Suppose we have a two-tailed decision process, where we compare two hypotheses about South-African elephants: either their mean height is equal to 3.38 ($H_0$), or it is not ($H_A$). We compute the $t$-statistic and determine the critical values based on 5\% area in the tails of the $t$-distribution. This means that we allow ourselves to make a mistake in 5\% of the cases: the probability that we find a $t$-score in one of the 2.5\% tails equals 2.5\% + 2.5\% = 5\%. This is the probability of a type I error. Note that we chose this value deliberately. This 5\% we call $\alpha$ ('alpha'): it is the relative frequency we allow ourselves to make a type I error. We say then that our $\alpha$ is fixed to 0.05, or 5\%. This means that if the null-hypothesis is true, the probability that the $t$-statistic will be in in the tails will be 5\%.
+
+Then what is the probability of a type II error? A type II error is based on the premise that the alternative hypothesis is true. That alternative hypothesis states that the population mean is \textit{not} equal to 3.38. Given that, what is the probability that we do not reject the null-hypothesis?
+
+This is impossible to compute, because the alternative hypothesis is very vaguely stated: it could be anything, as long as it is not 3.38. Let's make it a bit easier and state that the alternative hypothesis states that the population mean equals 3.42.
+
+
+\begin{eqnarray}
+H_0: \mu_{SA} = 3.38 \\
+H_A: \mu_{SA} =  3.42
+\end{eqnarray}
+
+
+
+
+<<type_II_error,fig.height=4, warning = F, echo=FALSE, fig.align='center', fig.cap='Two sampling distributions, one for a population mean of 3.38 (null-hypothesis) and one for a population mean of 3.42 (alternative hypothesis). The red areas represent the probability of a type I error, the dark green area the probability of a type II error. The blue areas represent the probability of making the (correct) decision that the null-hypothesis is not true when it is indeed not true.'>>=
+
+
+se = 0.0591608
+x <- seq(-3, 3, length.out = 550)
+x_A <- seq(-3, 3, length.out = 550)
+density <- dt(x, df = 39)
+x <- x * se + 3.38
+density_A <- dt(x_A, df = 39)
+x_A <- x_A * se + 3.42
+
+tibble(x, density) %>%
+  ggplot(aes(x = x, y = density)) +
+  geom_line() +
+  geom_line(aes(x = x_A, y = density_A)) +
+  ylab("density") +
+  xlab("sample mean") +
+  # geom_vline(xintercept = 3.27, col = "blue") +
+  # geom_text(aes(x= 3.27, y = -0.015, label ="3.27")) +
+  # geom_vline(xintercept = 3.38, col = "black") +
+  # geom_text(aes(x= 3.38, y = -0.015, label ="3.38")) +
+  geom_area(aes(x = ifelse(x > (3.38-5*se) & x  < (3.38 + qt(0.025, 39)*se), x, NA)),
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x < (3.38+5*se) & x  > (3.38 + qt(0.975, 39)*se), x, NA)),
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x > (3.38 + qt(0.025, 39)*se) & x < (3.38 + qt(0.975, 39)*se), x, NA)),
+              alpha = 0.5, fill = "green", col = "green") +
+  geom_text(aes(label = "2.5 %", x = 3.38 + qt(0.99, 39)*se), y = 0.012) +
+  geom_text(aes(label = "2.5 %", x = 3.38 + qt(0.01, 39)*se), y = 0.012) +
+  scale_x_continuous(breaks = seq(3.18, 3.58, 0.05), limits = c(3.18, 3.58)) +
+  geom_area(aes(x = ifelse(x_A > (3.38-5*se) & x_A  < (3.38 + qt(0.025, 39)*se), x_A, NA),
+                y = density_A),
+            alpha = 0.5, fill = "blue", col = "blue") +
+  geom_area(aes(x = ifelse(x_A < (3.38+5*se) & x_A  > (3.38 + qt(0.975, 39)*se), x_A, NA)),
+            alpha = 0.5, fill = "blue", col = "blue") +
+  geom_area(aes(x = ifelse(x_A > (3.38 + qt(0.025, 39)*se) & x_A < (3.38 + qt(0.975, 39)*se), x_A, NA),
+                y = density_A),
+              alpha = 0.5, fill = "darkgreen", col = "black")
+
+
+@
+
+
+If the population mean height is equal to 3.42, what would sample means look like? That's easy, that is the sampling distribution of the sample mean. The mean of that sampling distribution would be 3.42. This is illustrated in Figure \ref{fig:type_II_error}. The left curve is the sampling distribution for a population mean of 3.38. The red area represents the probability of a type I error. The right curve is the sampling distribution for a population mean of 3.42. The blue area represents the probability of rejecting the null-hypothesis. This is because if the sample mean is smaller than \Sexpr{3.38 - qt(0.975, 39)*se} or larger than \Sexpr{3.38 + qt(0.975, 39)*se}, the sample mean is in the rejection area of the null-hypothesis testing and the null-hypothesis will therefore be rejected. The probability of this happening given that the \textit{alternative} hypothesis is true ($H_A = 3.42$), is represented by the area under that curve: the blue area. If we determine the two blue areas in Figure \ref{fig:type_II_error}, we end up with $\Sexpr{round(pt(qt(0.025, 39), ncp = (3.42-3.38)/se, df = 39 ), 3)} + \Sexpr{round(1 - pt(qt(0.975, 39), ncp = (3.42-3.38)/se, df = 39  ), 3)} = \Sexpr{round(pt(qt(0.025, 39), ncp = (3.42-3.38)/se, df = 39 ), 3) + round(1 - pt(qt(0.975, 39), ncp = (3.42-3.38)/se, df = 39  ), 3)}$. This is the probability of rejecting the null-hypothesis while it is not true, so this is no mistake at all. We would make a mistake when the alternative hypothesis is true, and we would \textit{not} reject the null-hypothesis. This is represented by the dark green area. That area is equal to 1 minus the blue area: $1- \Sexpr{round(pt(qt(0.025, 39), ncp = (3.42-3.38)/se, df = 39 ), 3) + round(1 - pt(qt(0.975, 39), ncp = (3.42-3.38)/se, df = 39  ), 3)} = \Sexpr{1-0.101}$.
+
+
+<<type_II_error_2,fig.height=4, warning = F, echo=FALSE, fig.align='center', fig.cap='Two sampling distributions, one for a population mean of 3.38 (null-hypothesis) and one for a population mean of 3.42 (alternative hypothesis). The red areas represent the probability of a type I error, the dark green area the probability of a type II error. The blue area represents the probability of making the (correct) decision that the null-hypothesis is not true when it is indeed not true.'>>=
+
+
+se = 0.0591608
+x <- seq(-4, 4, length.out = 550)
+x_A <- seq(-4, 4, length.out = 550)
+density <- dt(x, df = 39)
+x <- x * se + 3.38
+density_A <- dt(x_A, df = 39)
+x_A <- x_A * se + 3.42
+
+tibble(x, density) %>%
+  ggplot(aes(x = x, y = density)) +
+  geom_line() +
+  geom_line(aes(x = x_A, y = density_A)) +
+  ylab("density") +
+  xlab("sample mean") +
+  # geom_vline(xintercept = 3.27, col = "blue") +
+  # geom_text(aes(x= 3.27, y = -0.015, label ="3.27")) +
+  # geom_vline(xintercept = 3.38, col = "black") +
+  # geom_text(aes(x= 3.38, y = -0.015, label ="3.38")) +
+  geom_area(aes(x = ifelse(x > (3.38-5*se) & x < (3.38 + qt(0.005, 39)*se), x, NA)),
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x < (3.38+5*se) & x > (3.38 + qt(0.995, 39)*se), x, NA)),
+              alpha = 0.5, fill = "red", col = "red") +
+  geom_area(aes(x = ifelse(x > (3.38 + qt(0.005, 39)*se) & x < (3.38 + qt(0.995, 39)*se), x, NA)),
+              alpha = 0.5, fill = "green", col = "green") +
+  geom_text(aes(label = "0.5 %", x = 3.38 + qt(0.995, 39)*se), y = 0.012) +
+  geom_text(aes(label = "0.5 %", x = 3.38 + qt(0.005, 39)*se), y = 0.012) +
+  scale_x_continuous(breaks = seq(3.18, 3.58, 0.05), limits = c(3.18, 3.58)) +
+  geom_area(aes(x = ifelse(x_A > (3.38-5*se) & x_A < (3.38 + qt(0.005, 39)*se), x_A, NA)),
+            alpha = 0.5, fill = "blue", col = "blue") +
+  geom_area(aes(x = ifelse(x_A < (3.38+5*se) & x_A > (3.38 + qt(0.995, 39)*se), x_A, NA)),
+            alpha = 0.5, fill = "blue", col = "blue") +
+  geom_area(aes(x = ifelse(x_A > (3.38 + qt(0.005, 39)*se) & x_A < (3.38 + qt(0.995, 39)*se), x_A, NA),
+                y = density_A),
+              alpha = 0.5, fill = "darkgreen", col = "black")
+
+
+@
+
+
+
+When we have to make a definite decision about a population mean, the null-hypothesis framework can be used for that. Usually we don't want to make type I error mistakes, so we pick a low probability like 5\% for the tails of the sampling distribution under the $H_0$. This value is called $\alpha$: if the null-hypothesis is true, we don't want to reject it, so we allow this to happen in only 5\% of the cases. One chooses $\alpha$ before collecting the data. You have to be careful with this choice of $\alpha$ though because it directly affects the probability of making a type II error. This probability is denoted by $\beta$ ('beta'): how often does it happen that if the alternative hypothesis is true, we do not reject the null-hypothesis. This relationship is illustrated in Figure \ref{fig:type_II_error_2}. There, an $\alpha$ of 1\% is chosen, using both tails (a two-tailed null-hypothesis test). You immediately see that the blue areas have also become smaller, and that by consequence the dark green area becomes larger: the probability of a type II error. 
+
+Thus, the $\alpha$ should be chosen wisely: if it is too large, you run a high risk of a type I error. But if it is too low, you run a high risk of a type II error. Let's think about this in the context of our luteinising hormone problem. 
+
+We saw that if the LH level is low, this could be an indication of malnutrition or a disease and the patient should have further checks to see what the problem is. But if the LH level is normal or above normal, there is no disease and no further checks are required. Again we take the null-hypothesis that the mean LH level in this woman equals 2.54. What would be a type I error in this case, and what would be a type II error?
+
+The type I error is the mistake of rejecting the null-hypothesis while it is in fact true. Thus, the woman's mean LH level is 2.54, but by coincidence, the mean of the 48 measurements that we have turns out to be in the rejection area of the sampling distribution. If this happens we make the mistake that we do a lot of tests with this woman to find out what's wrong with her, while in fact she is perfectly healthy! How bad would such a mistake be? It would certainly lead to extra costs, but also a lot of the woman's time. She would also probably start worrying that something is wrong with her. So we definitely don't want this to happen. We can minimise the risk of a type I error by choosing a low $\alpha$.
+
+The type II error is the mistake of \textit{not} rejecting the null-hypothesis while it is in fact not true. Thus, the woman's mean LH level is lower than 2.54, but by coincidence, the sample mean of the 48 measurements that we have turns out to be in the acceptance area of the sampling distribution. This means that the woman's LH level does not seem to be abnormal, and the woman is sent home. How bad would such a mistake be? Well, pretty bad because the woman's hormone level is not normal, but everybody thinks that she is OK. She could be very ill but nothing is found in further tests, because there are no further tests. So we definitely don't want this to happen. We can minimise the risk of a type II error by choosing a higher $\alpha$.
+
+So here we have a conflict, and we have to make a balanced choice for $\alpha$: too low we run the risk of type II errors, too high we run the risk of a type I error. Then you have to decide what is worse: a type I mistake or a type II mistake. In this case, you could defend that sending the woman home while she is ill, is worse than spending money on tests that are actually not needed. Then you would choose a rather high $\alpha$, say 10\%. That means that if you have several women who are in fact healthy, 10\% of them would receive extra testing. This is a fairly high percentage, but you are more sure that women with an illness will be detected and receive proper care. 
+
+But if you think it is most important that you don't spend too much money and that you don't want women to start worrying when it is not needed, you can pick a low $\alpha$ like 1\%: then when you have a lot of healthy women, only 1\% of them will receive unnecessary testing.
+
+
+
+
+\bigskip
+
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+\textbf{Overview}
+\begin{itemize}
+
+\item \textbf{Type I error}: the mistake of rejecting the null-hypothesis, while it is true
+
+\item \textbf{Type II error}: the mistake of not rejecting the null-hypothesis, while it is not true
+
+
+\item \textbf{$\alpha$}: the relative frequency we allow ourselves to make a type I error
+
+\item \textbf{$\beta$}: the relative frequency of making a type II error
+
+\end{itemize}
+
+}%
+}
+
+
+\bigskip
+
+
+
+
+
+
+
+
+
+
+
+
+% 106.	Inference for a proportion (optional unit)
+% 
+% •	Can compute the standard error for a proportion.
+% •	Can compute a confidence interval for a proportion.
+% •	Can state a null-hypothesis regarding a population proportion.
+% •	Can perform a null-hypothesis test by hand concerning a population proportion, a given sample proportion and given sample size on the basis of a table with critical z-values.
+% •	Can perform a proportion test in R and interpret the p-value.
+% 
+
+

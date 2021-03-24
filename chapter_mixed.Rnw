@@ -1,0 +1,606 @@
+
+\chapter{Linear mixed modelling: introduction}\label{chap:mixed}
+
+
+\section{Fixed effects and random effects}
+In the simplest form of linear modelling, we have one dependent numeric variable, one intercept and one or more independent variables. Let's look at a simple regression equation where dependent variable $Y$ is predicted by an intercept $b_0$ and a linear effect of independent variable $X$ with regression slope parameter $b_1$, and an error term $e$, where we assume that the error term $e$ comes from a normal distribution. 
+
+
+\begin{eqnarray}
+Y = b_0 + b_1 X + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+Using this model, we know that for a person with a value of 5 for $X$, we expect $Y$ to be equal to $b_0 + b_1 \times 5$. As another example, if $Y$ is someone's IQ score, $X$ is someone's brain size in cubic millilitres, $b_0$ is equal to 70, and $b_1$ is equal to 0.1, we expect on the basis of this model that a person with a brain size of 1500 cubic millimetres has an IQ score of $70 + 0.01 \times 1500$, which equals 85.
+\\
+\\
+Now, for any model the predicted values usually are not the same as the observed values. If the model predicts on the basis of my brain size that my IQ is 140, my true IQ might be in fact 130. This discrepancy is termed the residual: the observed $Y$, minus the predicted $Y$, or $\widehat{Y}$, so in this case the residual is $Y - \widehat{Y}=130-140= -10$.
+\\
+\\
+Here we have the model for the relationship between IQ and brain size.
+
+\begin{eqnarray}
+\texttt{IQ} = 70 + 0.1 \times \texttt{Brain size} + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+Note that in this model, the values of 70 and 0.1 are \textit{fixed}, that is, we use the same intercept and the same slope for everyone. You use these values for any person, for Henry, Jake, Liz, and Margaret. We therefore call these effects of intercept and slope \textit{fixed effects}, as they are all the same for all units of analysis. In contrast, we call the $e$ term, the random error term or the residual in the regression, a \textit{random effect}. This is because the error term is \textit{different for every unit}. We don't know the specific values of these random errors or residuals for every person, but nevertheless, we assume that they come from a distribution, in this case a normal distribution with mean 0 and an unknown variance. This unknown variance is given the symbol $\sigma^2$. 
+
+Here are a few more examples. 
+
+\begin{enumerate}
+\item Suppose we study a number of schools, and for every school we use a simple linear regression equation to predict the number of students (dependent variable) on the basis of the number of teachers (independent variable). For every unit of analysis (in this case: school), the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect). 
+
+\item Suppose we study reaction times, and for every measure of reaction time -- a trial -- we use a simple linear regression equation to predict reaction time in milliseconds on the basis of the characteristics of the stimulus. Here, the unit of analysis is trial, and for every trial, the intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+
+\item Suppose we study a number of students, and for every student we use a simple linear regression equation to predict the math test score on the basis of the number of hours of study the student puts in. Here, the unit of analysis is student, and for every student, the  intercept and the regression slope are the same (fixed effects), but the residuals are different (random effect).
+
+
+\end{enumerate}
+
+Let's focus for now on the last example. What happens when we have a lot of data on students, but the students come from different schools? Suppose we want to predict average grade for every student, on the basis of the number of hours of study the student puts in. We again could use a simple linear regression equation. 
+
+\begin{eqnarray}
+Y = b_0 + b_1 \texttt{hourswork} + e \\
+e \sim N(0, \sigma^2)
+\end{eqnarray}
+
+
+
+That would be fine if all schools would be all very similar. But suppose that some schools have a lot of high scoring students, and some schools have a lot of low scoring students? Then school itself would also be a very important predictor, apart from the number of hours of study. One could say that the data are \textit{clustered}: math test scores coming from the same school are more similar than math test scores coming from different schools. When we do not take this into account, the residuals will not show independence (see Chapter \ref{chap:assumptions} on the assumptions of linear models).
+
+One thing we could therefore do to remedy this is to include school as a categorical predictor. We would then have to code this school variable into a number of dummy variables. The first dummy variable called \texttt{school1} would indicate whether students are in the first school (\texttt{school1 = 1}) or not (\texttt{school1 = 0}). The second dummy variable $\texttt{school2}$ would indicate whether students are in the second school (\texttt{school2 = 1}) or not (\texttt{school2 = 0}), etcetera. You can then add these dummy variables to the regression equation like this:
+
+\begin{eqnarray}
+Y = b_0 + b_1 \texttt{hourswork} + b_2 \texttt{school1} + b_3 \texttt{school2} + b_4 \texttt{school3} + \dots + e  \nonumber\\
+e \sim N(0, \sigma^2)  \nonumber
+\end{eqnarray}
+
+In the output we would find a large number of effects, one for each dummy variable. For example, if the students came from 100 different schools, you would get 99 fixed effects for the 99 dummy variables. However, one could wonder whether this is very useful. As stated earlier, fixed effects are called fixed because they are the same for every unit of research, in this case every student. But working with 99 dummy variables, where students mostly score 0, this seems very much over the top. In fact, we're not even interested in these 99 effects. We're interested in the relationship between test score and hours of work, meanwhile taking into account that there are test score differences across schools. The dummy variables are only there to account for differences across schools; the prediction for one school is a little bit higher or lower than for another school, depending on how well students generally perform in each school. 
+
+We could therefore try an alternative model, where we treat the school effect as $random$: we assume that every school has a different average test score, and that these averages are normally distributed. We call these average test score deviations \textit{school effects}:
+
+\begin{eqnarray}
+Y = b_0 + b_1 \texttt{hourswork} + \texttt{schooleffect} + e \\
+\texttt{schooleffect} \sim N(0, \sigma_s^2)\\
+e \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+So in this equation, the intercept is fixed, that is, the intercept is the same for all observed test scores. The regression coefficient $b_1$ for the effect of hours of work is also fixed. But the schooleffect is random, since it is different for every school. The residual $e$ is also random, being different for every student. It could also be written like this:
+
+\begin{eqnarray}
+Y = (b_0  + \texttt{schooleffect}) + b_1 \texttt{hourswork} + e  \label{eq:mix1}  \\
+\texttt{schooleffect} \sim N(0, \sigma_s^2)\\
+e \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+
+This representation emphasises that for every school, the intercept is a little bit different: for school A the intercept might be $b_0 + 2$, and for school B the intercept might be $b_0 - 3$.
+
+So, equation \ref{eq:mix1} states that every observed test score is 
+
+\begin{enumerate}
+\item partly influenced by an intercept that is random, with a certain average $b_0$ and variance $\sigma_s^2$, that is dependent on which school students are in, 
+\item partly influenced by the number of hours of work, an effect that is the same no matter what school a student is in (fixed), and
+\item partly influenced by unknown factors, indicated by a random residual $e$ coming from a normal distribution with variance $\sigma^2_e$.
+\end{enumerate}
+
+To put it more formally: test score $Y_{ij}$, that is, the test score from student $j$ in school $i$, is the sum of an effect of the school $b_0 + \texttt{schooleffect}_i$ (the average test score in school $i$), plus an effect of hours of work,  $b_1 \times \texttt{hourswork}$, and an unknown residual $e_{ij}$ (a specific residual for the test score for student $j$ in school $i$).
+
+\begin{eqnarray}
+Y_{ij} = b_0 + \texttt{schooleffect}_i + b_1 \texttt{hourswork} + e_{ij} \\
+\texttt{schooleffect}_i \sim N(0, \sigma_s^2)\\
+e_{ij} \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+So in addition to the assumption of residuals that have a normal distribution with mean 0 and variance $\sigma_e^2$, we also have an assumption that the school averages have a normal distribution, in this case with mean $b_0$ and variance $\sigma_s^2$.
+\\
+\\
+Let's go back to the example of reaction times. Suppose in an experiment we measure reaction time in a large number of trials. We want to know whether the size of the stimulus (large or small) has an effect on reaction time. Let's also suppose that we carry out this experiment with 20 participants, where every participant is measured during 100 trials: 50 large stimuli and 50 small stimuli, in random order. Now probably, some participants show generally very fast responses, and some participants show generally very slow responses. In other words, the average reaction time for the 100 trials may vary from participant to participant. This means that we can use participant as an important predictor of reaction times. To take this into account we can use the following linear equation:
+
+
+\begin{eqnarray}
+Y_{ij} = b_0 + \texttt{speed}_i + b_1 \texttt{size} + e_{ij} \\
+\texttt{speed}_i \sim N(0, \sigma_s^2)\\
+e_{ij} \sim N(0, \sigma_e^2),
+\end{eqnarray}
+
+where $Y_{ij}$, is the reaction time $j$ from participant $i$, $(b_0 + \texttt{speed}_i)$ is a random intercept representing the average speed for each participant $i$ (where $b_0$ is the overall average across all participants and $\texttt{speed}_i$ the random deviation for each and every participant), $b_1$ is the fixed effect of the size of the stimulus. Unknown residual $e_{ij}$ is a specific residual for the reaction time for trial $j$ of participant $i$.
+
+The reason for introducing random effects is that when your observed data are clustered, for instance student scores clustered within schools, or trial response times are clustered within participants, you violate the assumption of independence: two reaction times from the same person are more similar than two reaction times from different persons. Two test scores from students from the same school may be more similar than two scores from students in different schools (see Chapter \ref{chap:assumptions}). When this is the case, when data are clustered, it is very important to take this into account. When the assumption of independence is violated, you are making wrong inference if you use an ordinary linear model, the so-called general linear model (GLM). With clustered data, it is therefore necessary to work with an extension of the general linear model or GLM, the \textit{linear mixed model}. The above models for students' test scores across different schools and reaction times across different participants, are examples of \textit{linear mixed models}. The term \textit{mixed} comes from the fact that the models contain a mix of both fixed and random effects. GLMs only contain fixed effects, apart from the random residual.
+
+If you have clustered data, you should take this clustering into account, either by using the grouping variable as a categorical predictor or by using a random factor in a linear mixed model. As a rule of thumb: if you have fewer than 10 groups, consider a fixed categorical factor; if you have 10 or more groups, consider a random factor. Two other rules you can follow are: Use a random factor if the assumption of normally distributed group differences is tenable. Use a fixed categorical factor if you are actually interested in the \textit{size} of group differences.
+
+Below, we will start with a very simple example of a linear mixed model, one that we use for a simple pre-post intervention design.
+
+
+
+\section{Pre-post intervention designs}
+
+
+Imagine a study where we hope to show that aspirin helps reduce headache. We ask 100 patients to rate the severity of their headache before they use aspirin (on a scale from 1 - 100), and to rate the severity again 3 hours after taking 500 mg of aspirin. These patients are randomly selected among people who read the NY Times and suffer from regular headaches. So here we have clustered data: we have 100 patients, and for each patient we have two scores, one before (pre) and one after (post) the intervention of taking aspirin. Of course, overall headache severity levels tend to vary from person to person, so we might have to take into account that some patients have a higher average level of pain than other patients. 
+ 
+ 
+ \begin{table}
+ \caption{Headache measurements in NY Times readers suffering from headaches.}
+ \begin{tabular}{lrr}
+ patient & pre & post \\ \hline
+ 001 & 55 & 45 \\
+ 002 & 63 & 50 \\
+ 003 & 66 & 56 \\
+ 004 & 50 & 37 \\
+ 005 & 63 & 50 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+ \label{tab:headache_wide}
+\end{table}
+
+<<analysisprepost1a, fig.height=3, echo=FALSE, fig.align='center', fig.cap="Scatterplot of pre and post headache levels.">>=
+pre <- c(55,63,66,50,63)
+post<- c(45,50,56,37,50)
+tibble(pre,post) %>% 
+  ggplot(aes(pre,post)) + 
+  geom_point()
+@
+
+
+The data could be represented in different ways, but suppose we have the data matrix in Table \ref{tab:headache_wide} (showing only the first five patients). What we observe in that table is that the severity seems generally lower after the intervention than before the intervention. But you may also notice that the severity of the headache also varies across patients: some have generally high scores (for instance patient 003), and some have generally low scores (for example patient 001). Therefore, the headache scores seem to be clustered, violating the assumption of independence. We can quantify this clustering by computing a correlation between the pre-intervention scores and the post-intervention scores. We can also visualise this clustering by a scatter plot, see Figure \ref{fig:analysisprepost1a}. Here it appears that there is a strong positive correlation, indicating that the higher the pain score before the intervention, the higher the pain score after the intervention. 
+
+There is an alternative way of representing the same data. Let's look at the same data in a new format in Table \ref{tab:analysisprepost1}. In Chapter \ref{chap:intro} we saw that this representation is called long format.
+
+<<analysisprepost1, fig.height=4, echo=FALSE, fig.align='center', results='asis'>>=
+set.seed(1234)
+patient <- rep(seq(1:100), 2)
+measure <- rep(c(1, 2), each = 100) %>% as.factor()
+# time <- as.factor(time)
+headache1 <- rnorm(100, 60, 5)
+headache2 <- headache1 + rnorm(100, -10, 3)
+headache1 <- headache1 + rnorm(100, 0, 3)
+headache <- c(headache1, headache2)
+headache <- round(headache, 0)
+data <- data.frame(patient, measure, headache) %>% dplyr::arrange(patient)
+# source("/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R")
+# write.foreign(data,
+#   "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepost.sav",
+#   "/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdata.sps",
+#   package = c("SPSS")
+# )
+data %>%
+  head(10) %>%
+  xtable(
+    caption = "Headache severity measures in long format.",
+    label = "tab:analysisprepost1",
+    digits = c(0, 0, 0, 0)
+  ) %>%
+  print(include.rownames = F, caption.placement = "top")
+        
+@
+%  \\
+%  \\
+%  \begin{tabular}{lrr}
+%  patient & intervention & severity \\ \hline
+%  001 & pre & 80 \\
+%  001 & post & 65 \\
+%  002 & pre & 34 \\
+%  002 & post & 25 \\
+%  003 & pre & 23 \\
+%  003 & pre & 15 \\
+%  004 & post & 90 \\
+%  004 & pre & 70 \\
+%  005 & post & 23 \\
+%  005 & pre & 13 \\
+%  \dots & \dots & \dots \\
+%  \end{tabular}
+% \\
+% \\
+By representing the data in long format we acknowledge that there is really only one dependent measure: headache severity. The other two variables indicate that this variable varies across both patients and time point (pre intervention and post intervention). There is therefore a variable \texttt{measure} that indicates whether the headache severity was measured pre intervention (\texttt{measure = 1}) or post intervention (\texttt{measure = 2}). 
+
+Here we might consider applying a simple linear regression model, using \texttt{headache} as the dependent variable and \texttt{measure} (1st or 2nd) as a categorical predictor. However, since we know that there is a correlation between the pre and post severity measures, we know that measures also systematically vary across patients: some score high on average and some score low on average. The assumption of independence is therefore not tenable. Thus we have to run a linear model, including not only an effect of \texttt{measure} but also an effect of \texttt{patient}. We then have to decide between fixed effects or random effects for these variables. 
+
+Let's first look at the variable \texttt{measure}. Since we are really interested in the effect of the intervention, that is, we want to know how large the effect of aspirin is, we use a fixed effect for the time effect (the variable \texttt{measure}). Moreover, the variable \texttt{measure} has only two levels, which is another reason to opt for a fixed effect. 
+
+Then for the patient effect, we see that we have 100 patients. Are we really interested by how much the average pain level in say patient 23 differs from the average pain level in say patient 45? No, not really. We only want to acknowledge that the individual differences exist, we want to take them into account in our model so that our inference regarding the confidence intervals and hypothesis testing is correct. We therefore prefer to assume random effects, assuming they are normally distributed. We therefore end up with a fixed effect for \texttt{measure} and a random effect for \texttt{patient} resulting in the following model:
+
+
+\begin{eqnarray}
+Y_{ij} = b_0 + \texttt{patient}_i + b_1 \texttt{measure2} + e_{ij} \\
+\texttt{patient}_i \sim N(0, \sigma_p^2)\\
+e_{ij} \sim N(0, \sigma_e^2)
+\end{eqnarray}
+
+where $Y_{ij}$ is the $j$th headache severity score (first or second) for patient $i$, $(b_0 + \texttt{patient}_i)$ is the average amount of headache before aspirin that patient $i$ deviates from the mean, \texttt{measure2} is a dummy variable, and $b_1$ is the effect of the intervention (by how much the severity changes from pre to post). We assume that the average pain level for each patient shows a normal distribution with average $b_0$ and variance $\sigma^2_p$. And of course we assume that the residuals show a normal distribution.
+\\
+\\
+An analysis with this model can be done with the R package \texttt{lme4}. That package contains the function \texttt{lmer()} that works more or less the same as the \texttt{lm()} function that we saw earlier, but requires the addition of at least one random variable. Below, we run a linear mixed model, with dependent variable \texttt{headache}, a regular fixed effect for the categorical variable \texttt{measure}, and a random effect for the categorical variable \texttt{patient}.
+
+
+
+<<>>=
+library(lme4)
+out <- data %>%
+  lmer(headache ~ measure + (1|patient), data = .) 
+summary(out)
+@
+
+
+In the output we see the results. We're mainly focused on the fixed effect of the intervention: does aspirin reduce headache? Where it says 'Fixed effects:' in the output, we see the linear model coefficients, with an intercept of around 59 and a negative effect of the intervention dummy variable \texttt{measure2}, around $-10$. We see that the dummy variable was coded 1 for the second measure (after taking aspirin). So, for our dependent variable \texttt{headache}, we see that the expected headache severity for the observations with a 0 for the dummy variable \texttt{measure2} (that is, measure 1, which is \textit{before} taking aspirin), is equal to $59 - (10) \times 0 = 59$. 
+
+Similarly, we see that the expected headache severity for the observations with a 1 for the dummy variable \texttt{measure2} (that is, \textit{after} taking aspirin), is equal to $59 - (10) \times 1 = 49 - 10 = 49$. So, expected pain severity is 10 points lower after the intervention than before the intervention. Whether this difference is significant is indicated by a $t$-statistic. We see here that the average headache severity after taking an aspirin is significantly different from the average headache severity before taking an aspirin, $t = -25.46$. However, note that we do not see a $p$-value. That's because the degrees of freedom are not clear, because we also have a random variable in the model. The determination of the degrees of freedom in a linear mixed model is a complicated matter, with different choices, the discussion of which is beyond the scope of this book.
+
+However, we do know that for whatever the degrees of freedom really are, a $t$-statistic of -25.46 will always be in the far tail of the $t$-distribution, see Appendix \ref{app:t}. So we have good reason to conclude that we have sufficient evidence to reject the null-hypothesis that headache levels before and after aspirin intake are the same. 
+
+If we do not want to test a null-hypothesis, but want to construct a confidence interval, we run into the same problem that we do not know what $t$-distribution to use. Therefore we do not know with what value the standard error of 0.40 should be multiplied to compute the margin of error. We could however use a coarse rule of thump and say that the critical $t$-value for a 95\% confidence interval is more or less equal to 2 (see Appendix \ref{app:t}). If we do that, then we get the confidence level for the effect of aspirin: between $-10.36 - 2 \times 0.4069 = \Sexpr{round(-10.36 - 2 * 0.4069, 2)}$ and $-10.36 + 2 \times 0.4069 = \Sexpr{round(-10.36 + 2 * 0.4069, 2)}$. 
+
+Taking into account the direction of the effect and the confidence interval for this effect, we might therefore carefully conclude that aspirin reduces headache in the population of NY Times readers with headache problems, where the reduction is around 10 points on a 1...100 scale (95\% CI: 9.55 -- 11.17). 
+\\
+\\
+Now let's look at the output regarding the random effect of \texttt{patient} more closely. The model assumed that the individual differences in headache severity in the 100 patients came from a normal distribution. How large are these individual differences actually? This can be gleaned from the 'Random effects:' part of the R output. The 'intercept' (i.e., the patient effect in our model) seems to vary with a variance of 27, which is equivalent to a standard deviation of $\sqrt{27}$ which is around 5.2. What does that mean exactly? Well let's look at the equation again and fill in the numbers:
+
+\begin{eqnarray}
+Y_{ij} = b_0 + \texttt{patient}_i + b_1 \texttt{measure2} + e_{ij} \\
+Y_{ij} = 59 + \texttt{patient}_i - 10 \texttt{measure2} + e_{ij} \\
+patient_i \sim N(0, 27)\\
+e_{ij} \sim N(0, 8)
+\end{eqnarray}
+
+Since R used the the headache level before the intervention as the reference category, we conclude that the average pain level before taking aspirin is 59. However, not everybody's pain level before taking aspirin is 59: people show variance (variation). The pain level before aspirin varies with a variance of 27, which is equivalent to a standard deviation of around 5.2. Figure \ref{fig:resultsprepost1} shows how much this variance actually is. It depicts a normal distribution with a mean of 59 and a standard deviation of 5.2.
+
+
+<<resultsprepost1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap="Distribution of headache scores before taking aspirin, according to the linear mixed model.">>=
+set.seed(1234)
+interval <- seq(0:100)
+density <- dnorm(interval, mean = 59, sd = 5.2)
+data.frame(interval, density) %>% 
+ggplot(aes (x = interval, y = density)) + 
+  geom_line() + 
+  xlab("headache")
+@
+
+So \textit{before} taking aspirin, most patients show headache levels roughly between 50 and 70. More specifically, if we would take the middle 95\% by using plus or minus twice the standard deviation, we can estimate that 95\% of the patients shows levels between $59 - 2 \times 5.2 = 48.6$ and $59 + 2 \times 5.2 = 69.4$.
+\\
+\\
+Now let's look at the levels \textit{after} taking aspirin. The average headache level is equal to $59 - 10 = 49$. So 95\% of the patients shows headache levels between $49 - 2 \times 5.2 = 38.6$ and $49 + 2 \times 5.2 = 59.4$ before taking aspirin. 
+\\
+\\
+Together these results are visualised in Figure \ref{fig:resultsanalysisprepost2}. In this plot you see there is variability in headache levels before taking aspirin, and there is variation in headache levels after taking aspirin. We also see that these distributions have the same spread (variance): in the model we assume that the variability in headache before aspirin is equal to the variability after aspirin (homoscedasticity). The distributions are equal, except for a horizontal shift: the distribution for headache after aspirin is the same as the distribution before aspirin, except for a shift to the left of about 10 points. This is of course the effect of aspirin in the model, the $b_1$ parameter in our model above.  
+
+<<resultsanalysisprepost2, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap="Distribution of headache scores before and after taking aspirin, according to the linear mixed model.">>=
+set.seed(1234)
+interval <- seq(0:100)
+density1 <- dnorm(interval, mean = 59, sd = 5.2)
+density2 <- dnorm(interval, mean = 49, sd = 5.2)
+data_dens <- data.frame(interval,density1, density2)
+ggplot(data_dens, aes(x = interval, y = density1), show.legend = F) + 
+  geom_line(show.legend = F, col = "blue") + 
+  xlab("headache") + 
+  ylab("density") +
+  geom_line(aes(y = density2), col = 'black', show.legend = F) +
+  geom_label(aes(x = 70, y = 0.06), 
+             col = 'blue', 
+             label = 'before aspirin', 
+             show.legend = F) +
+  geom_label(aes(x = 40, y = 0.06), 
+             col = 'black', 
+             label = '3 hrs after aspirin', 
+             show.legend = F) 
+@
+
+
+
+The fact that the two distributions before and after aspirin show the same spread (variance) was an inherent assumption in our model: we only have one random effect for patient in our output with one variance ($\sigma^2_p$). If the assumption of equal variance (homoscedasticity) is not tenable, then one should consider other linear mixed models. But this is beyond the scope of this book. The assumption can be checked by plotting the residuals, using different colours for residuals from before taking aspirin and for residuals from after taking aspirin. 
+
+<<fig.height = 3.5>>=
+library(modelr)
+data %>% 
+  add_residuals(out) %>%
+  add_predictions(out) %>% 
+  ggplot(aes(x = pred, y = resid, colour = measure)) +
+  geom_point() +
+  xlab("Predicted headache") +
+  ylab("Residual") +
+  scale_colour_brewer(palette = "Set1") # use nice colours
+@
+
+Alternatively one could create a box plot. 
+
+<<fig.height = 3.5>>=
+data %>% 
+  add_residuals(out) %>%
+  ggplot(aes(x = measure, y = resid)) +
+  geom_boxplot() +
+  xlab("Measure") +
+  ylab("Residual") 
+@
+
+The plots show that the variation in the residuals is about the same for pre and post aspirin headache levels (box plot)  and for all predicted headache levels (scatter plot). This satisfies the assumption of homogeneity of variance. 
+
+If all assumptions are satisfied, you are at liberty to make inferences regarding the model parameters. We saw that the effect of aspirin was estimated at about 10 points with a rough 95\% confidence interval, that was based on the rule of thumb of 2 standard errors around the estimate. For people that are uncomfortable with such quick and dirty estimates, it is also possible to use Satterthwaite's approximation of the degrees of freedom. You can obtain these, once you load the package \texttt{lmerTest}. After loading, your \texttt{lmer()} analysis will yield (estimated) degrees of freedom and the $p$-values associated with the $t$-statistics and those degrees of freedom. 
+
+
+<<message = F>>=
+library(lmerTest)
+out <- data %>%
+  lmer(headache ~ measure + (1|patient), data = .) 
+summary(out)
+@
+
+The degrees of freedom for effect of \texttt{measure} is 99. If we look in Appendix \ref{app:t} or check using R, we see that the critical $t$-value with 99 degrees of freedom for a 95\% confidence interval is equal to 1.98. That's very close to our rough estimate of 2.
+
+<<>>=
+qt(0.975, df = 99)
+@
+
+If we calculate the 95\% confidence interval using the new critical value, we obtain $59 - 1.98 \times 5.2 = 48.7$ and $59 + 1.98 \times 5.2 = 69.3$. That's only a minor difference with what we saw before.
+
+\section{Parameter estimation in linear mixed models}
+
+Remember that when we discussed linear regression in Chapter \ref{chap:simple}, the regression coefficient was estimated using the principle of ordinary least squares (OLS). We also saw that in order to obtain the estimates, we simply could fill in formulas (the analytical approach). 
+Unfortunately, the estimation of parameters in linear mixed models is not that easy. There are two possibilities, both dependent on a numerical search algorithm, explained in Chapter \ref{chap:simple}. The default in R is a method called REML, that stands for Restricted Maximum Likelihood. The other option is ML, standing for Maximum Likelihood. This book will not go into the intricacies of these methods, but we can give some general rule of when to use which method. 
+Whenever the main interest of a study is on the variances of the random effects, REML is the way to go. For instance, suppose that in the aspirin study, the most important part of the analysis is to say something about the individual differences in headache, and you want to estimate the variance of these individual differences in the population. 
+On the other hand, if the main research question is about the fixed effects, the way to go is to use ML. For instance, in the aspirin study, main interest is in the effect that aspirin has on patients in the population. In that case, you want to deviate from the default option. That can be done in the following way. 
+
+
+<<>>=
+model <- data %>% 
+  lmer(headache ~ measure + (1|patient), REML = FALSE, data = .)
+summary(model)
+@
+
+In the output you can see "Linear mixed model fit by maximum likelihood". In this case, this is the output that we would be most interested in: we were interested in the effect of aspirin on headache, and this was modelled as a fixed effect of variable \texttt{measure} on the dependent variable. We only included the random patient variable in order to deal with the dependency in the data. We were never interested in the size of $\sigma^2_p$. My guess is that in the behavioural, management and social sciences, interest is practically always in the fixed effects. Therefore it is generally advised to add \texttt{REML = FALSE} when you use the \texttt{lmer()} function. 
+
+
+\section{Reporting on a linear mixed model for pre-post data}
+
+When you want to write down the results from a linear mixed model, it is important to explain what the model looked like, in terms of fixed and random effects. Usually it is not necessary to mention whether you used REML or ML, or what method you used to determine degrees of freedom (e.g., Satterthwaite's method).
+
+If you would have to report on the aspirin study illustrated above, you could write down the results as follows:
+
+
+\begin{quotation}
+"In order to estimate the effect of aspirin, headache measures were collected in 100 patients: one measure before aspirin intake and one measure after aspirin intake. The data were analysed using a linear mixed model, with a fixed effect for measure (before/after) and a random effect for patient. The results showed that the average headache score was 10.36 (SE = 0.40) points lower after aspirin intake than before intake." 
+\end{quotation}
+
+
+
+
+If you want to include a confidence interval, you need to know the degrees of freedom for the aspirin effect. The ML output says 100. The critical $t$-value for a 95\% confidence interval can be found by typing:
+
+<<>>=
+qt(0.975, df = 100)
+@
+
+The 95\% confidence interval therefore runs from $10.36 - 1.98 \times 0.40$ to $10.36 + 1.98 \times 0.40$, that is, from 9.57 to 11.15. We therefore can report:
+
+\begin{quotation}
+"The results showed that the average headache score was 10.36 (SE = 0.40, 95\% CI: 9.57, 11.15) points lower after aspirin intake than before intake." 
+\end{quotation}
+
+If the objective of the study was to test the null-hypothesis that the effect of aspirin equals 0, then you could report:
+
+
+\begin{quotation}
+"In order to test the null-hypothesis that the effect of aspirin on headache equals 0, headache measures were collected in 100 patients: one measure before aspirin intake and one measure after aspirin intake. The data were analysed using a linear mixed model, with a fixed effect for measure (before/after) and a random effect for patient. The results showed that the null-hypothesis could be rejected, $t(100) = -25.59, p < .001$. Headache level after aspirin intake ($M = 49.32$) was significantly lower than headache level before aspirin intake ($M = 59.68$)." 
+\end{quotation}
+
+Usually no mention is made of the variance of the random effects, if it is not relevant to the research question.
+
+% \subsection{Exercises}
+% 
+% Suppose an intervention study looked at the effect of therapy on depression levels. A random sample of patients were measured before and after the therapy. Given the following equation, based on output of the statistical software package R. The dummy variable \textit{measure} was coded 0 for before therapy and 1 for after therapy.
+% 
+% 
+% <<analysisprepostexample1, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+% set.seed(1234)
+% patient <- rep (seq(1:100), 2)
+% measure <- rep( c( 1,2), each=100)
+% # time <- as.factor(time)
+% depression1 <-  rnorm(100, 8, 1)
+% depression2 <-  depression1 + rnorm(100, -2, 3)
+% depression1 <- depression1 +  rnorm(100, 0, 3)
+% depression = c(depression1, depression2)
+% depression <- round(depression,0)
+% data <- data.frame(patient, measure, depression) %>%  dplyr::arrange(patient)
+% out  <- lme4::lmer(depression ~ measure + (1|patient) , data=data)
+% # summary(out)
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(data, 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostdepression.sav', 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostdepression.sps',
+%               package = c("SPSS"))
+% @
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostdepression.pdf}
+%     \end{center}
+% \end{figure}
+% 
+% 
+% Look at the output below. You see information about random effects and you see information about fixed effects. 
+% 
+% \begin{enumerate}
+% \item What is the intercept of the model?\\
+% \item  What is the slope coefficient for the measure variable?\\
+% \item  What is the variance of the residuals? What is the standard deviation?\\
+% \item  What is the variance of the individual differences among patients? What is the standard deviation?\\
+% \item  Fill in the values in the linear mixed model below:
+% 
+% \begin{eqnarray}
+% depression_{ij} = \dots + patient_i + \dots \times measure + e_{ij} \\
+% patient_i \sim N(0, \sigma_p^2 = \dots)\\
+% e_{ij} \sim N(0, \sigma_e^2 = \dots)
+% \end{eqnarray}
+% 
+% 
+% \item  What can you say about the average depression level before therapy? \\
+% \item  What can you say about the average depression level after therapy?\\
+% \item  How much variance in depression level before therapy does this model predict? What is the standard deviation? \\
+% \item  Between what values do depression levels before therapy in the middle 95\% of patients show?\\
+% \item  How much variance in depression level after therapy does this model predict? What is the standard deviation? \\
+% \item  Between what values do depression levels after therapy in the middle 95\% of patients show?\\
+% \item  Does therapy help to alleviate depression in patients? You may use an approximation to construct a confidence interval.
+% 
+% \item A researcher has two groups of patients: one group receives medicine and one group receives therapy. The null-hypothesis is that depression levels after medicine are as high as depression levels after therapy. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer.
+% 
+% \item  A researcher studies one group of students: they first get lectures from teacher A and then they get lectures from teacher B. The null-hypothesis is that the average teacher evaluation for teacher A is the same as the average teacher evaluation for teacher B. Do we analyse these data with an ordinary linear model, or with a linear mixed model? Explain your answer. 
+% 
+% 
+% \item  For a study to the effect of light on mood, we have data on 100 teachers They were asked to rate their mood on a cloudy day and asked to rate their mood on a sunny day. We have the variable \textbf{mood}, the dummy variable \textbf{sunny} and we want to include a random effect for \textbf{teacher} From the three syntaxes below, choose the one that is most suitable for your analysis and fill in the blanks.
+% 
+% 
+% \begin{verbatim}
+% MIXED ...  WITH ...
+%   /FIXED=...
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(...) COVTYPE(VC).
+% \end{verbatim}
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ... WITH ... 
+% / design = ...
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \begin{verbatim}
+% UNIANOVA ... BY ... 
+% / design = ...
+% / print = parameter.
+% \end{verbatim}
+% 
+% 
+% \item  A researcher wants to know whether students in green classrooms (colour = 1) perform better than students in yellow classrooms (colour = 2). The following data were collected (showing only a part):
+% 
+% <<analysisprepostexample2, fig.height=4, echo=FALSE, fig.align='center'>>=
+% set.seed(1234)
+% student <- rep (seq(1:100), 1)
+% colour <- rep( c( 1,2), each=1)
+% # time <- as.factor(time)
+% performance <-  rnorm(100, 8, 1)
+% 
+% performance <- round(performance,2)
+% data <- data.frame(student, colour, performance) 
+% data[1:10,] %>% kable()
+% @
+% 
+% Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+% 
+% \item  A researcher wants to know whether students in dark classrooms (brightness = 0) perform better than students in bright classrooms (brightness = 1). The following data were collected (showing only a part):
+% 
+% 
+% <<analysisprepostexample3, fig.height=4, echo=FALSE, fig.align='center'>>=
+% set.seed(0234)
+% student <- rep (seq(1:100), each=2)
+% brightness <- rep( c( 0,1), each=1)
+% # time <- as.factor(time)
+% performance <-  rnorm(100, 8, 1)
+% 
+% performance <- round(performance,2)
+% data <- data.frame(student, brightness, performance) %>%  dplyr::arrange(student)
+% data[1:10,] %>% kable()
+% @
+% 
+% Would you use an ordinary linear model or a linear mixed model to analyze these data? Explain your answer.
+% 
+% <<analysisprepostexample4, fig.height=4, echo=FALSE, fig.align='center', warning=FALSE>>=
+% set.seed(0123)
+% employee <- rep (seq(1:100), 2)
+% green <- rep( c( 0,1), each=100)
+% sunny <- rbinom(200, 1, 0.5)
+% # time <- as.factor(time)
+% creativity1 <-  rnorm(100, 60, 5)
+% creativity2 <-  creativity1 + rnorm(100, -5, 3)
+% creativity1 <- creativity1 +  rnorm(100, 0, 3)
+% creativity = c(creativity1, creativity2)
+% creativity <- round(creativity,0)
+% data <- data.frame(employee, green, sunny , creativity) %>%  dplyr::arrange(employee)
+% source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+% write.foreign(data, 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/prepostcreativity.sav', 
+%               '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/prepost/getdataprepostcreativity.sps',
+%               package = c("SPSS"))
+% @
+% 
+% \item 
+% A landscaper believes that people get more creative once the environment becomes greener. She measures creativity before and after the introduction of new trees around the office building in a random sample of employees. Because creativity can also be influenced by the weather she also uses a dummy variable \textbf{sunny} to correct for these effects. Whether creativity is measured before or after the introduction of the trees is indicated by the variable \textbf{green} that is coded green=1 for after the introduction and green=0 for before the introduction. The model that she therefore runs in SPSS is the following:
+% 
+% \begin{verbatim}
+% MIXED creativity  WITH green sunny
+%   /FIXED= green sunny
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(employee) COVTYPE(VC).
+% \end{verbatim}
+% 
+% We get the following output: 
+% 
+% \begin{figure}[h]
+%     \begin{center}
+%        \includegraphics[scale=0.8, trim={0cm 20cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/prepost/prepostcreativity.pdf}
+%     \end{center}
+% \end{figure}
+% 
+% Write a short paragraph describing these results and the conclusions in APA format.
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsubsection{Answers:}
+% 
+% \begin{enumerate}
+% 
+% \item  \Sexpr{summary(out)$coef[ 1,1 ]} \\
+% \item  \Sexpr{summary(out)$coef[ 2,1 ]} \\
+% \item  \Sexpr{8.31},\Sexpr{2.88} \\
+% \item  \Sexpr{1.79},\Sexpr{1.34} \\
+% 
+% \item 
+% \begin{eqnarray}
+% depression_{ij} = \Sexpr{summary(out)$coef[1,1]} + patient_i + (\Sexpr{summary(out)$coef[2,1]}) \times measure + e_{ij} \\
+% patient_i \sim N(0, \sigma_p^2 = 1.79)\\
+% e_{ij} \sim N(0, \sigma_e^2 = 8.31)
+% \end{eqnarray}
+% 
+% 
+% 
+% 
+% \item  \Sexpr{summary(out)$coef[1,1]}\\
+% \item  \Sexpr{summary(out)$coef[ 1,1 ]} + \Sexpr{summary(out)$coef[ 2,1 ]}  = \Sexpr{summary(out)$coef[1,1]+summary(out)$coef[2,1] }\\
+% % Ad 8: SD = 1.34, variance is 1.34^2= 1.80$. \\
+% \item  1.78, 1.33 \\
+% 
+% \item  $10.57 \pm 2 \times 1.34 = {7.89, 13.25}$\\
+% 
+% \item  1.78, 1.33 \\
+% 
+% \item  $(10.57 -2.28)  \pm  2 \times 1.34 = {5.61, 10.79 }   $\\
+% 
+% \item  For the effect of therapy (the measure variable), we see a $b$-value of \Sexpr{summary(out)$coef[2,1]} with a standard error of \Sexpr{summary(out)$coef[2,2]}, so if we use the +/-2 rule to compute a 95\% confidence interval, we get $[ -2.28 - 2\times 0.41 , -2.28 + 2\times 0.41]  = [ -3.1 ,  -1.46]$. The 95\% interval does NOT contain the value 0 so we can reject the null-hypothesis that the effect of therapy is zero. Therefore, we conclude that therapy has an influence on depression. In this case we saw a decrease in depression levels after therapy.
+% 
+% \item  Two groups of patients are studied, and for each patient we have only one measure. Because we only have one measure for each unit of observation we conduct an ordinary linear model.
+% 
+% \item  One group of students is studied, and for each student we have two evaluations: one for teacher A and one for teacher B. Because we have more than one measure for each unit of observation, we have to use a linear mixed model. 
+% 
+% \item 
+% 
+% \begin{verbatim}
+% MIXED mood  WITH sunny
+%   /FIXED=sunny
+%   /PRINT=DESCRIPTIVES  SOLUTION
+%   /RANDOM=intercept | SUBJECT(teacher) COVTYPE(VC).
+% \end{verbatim}
+% 
+% \item  it seems as if each student was only measured once, there is no clustering, so we can use an ordinary linear model.
+% 
+% \item  it seems as if each student was measured twice, in both dark and bright conditions, so we use a linear mixed model to account for clustering.
+% 
+% \item  
+% \begin{quotation}
+% 
+% A linear mixed model was run to test the effect of green surroundings on creativity. The analysis was corrected for the effects of weather (sunny or not sunny) and random effects for employees. The results showed a significant but negative effect of the introduction of trees on creativity: creativity was on average 4.5 points lower after the introduction, $t(98)=-10.47, p < 0.001$. This effect was present over and above the effect of the weather which by itself had also an effect, where creativity was 1.28 points lower on sunny days than on not cloudy days, $t(98)=-2.32, p=0.02$. We conclude that the introduction of trees has a negative influence on creativity in the employees that worked in the building studied in this research. 
+% 
+% \end{quotation}
+% 
+% \end{enumerate}
+

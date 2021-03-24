@@ -1,0 +1,103 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+
+
+\title{Exercises linear mixed modelling: categorical}
+\author{St\'ephanie M. van den Berg}
+
+\begin{document}
+
+\maketitle
+
+
+<<libraries, echo=FALSE,  warning=FALSE, message=F>>=
+library(tidyverse)
+library(foreign)
+library(haven)
+library(lme4)
+library(xtable)
+library(scales)
+library(DAAG)
+library(ggthemes)
+library(latex2exp)
+library(broom)
+library(modelr)
+@
+
+
+\subsection{Exercises}
+
+Suppose you let a sample of students do a math test in three different rooms: one with yellow walls, one with red walls and one with blue walls. All students do the math test three times, once in every room. The data are in Table \ref{tab:math_scores}.
+
+
+
+\begin{table}
+ \caption{Math test scores.}
+ \begin{tabular}{lrr}
+ student & colour & score \\ \hline
+ 001 & yellow & 60 \\
+ 001 & red & 66 \\
+ 001 & blue & 60 \\
+ 002 & yellow & 24 \\
+ 002 & red & 15 \\
+ 002 & blue & 30 \\
+ 003 & yellow & 90 \\
+ 003 & red & 90 \\
+ 003 & blue & 89 \\
+ 004 & yellow & 10 \\
+ 004 & red & 20 \\
+ 004 & blue & 15 \\
+ 005 & yellow & 23 \\
+ 005 & red & 13 \\
+ 005 & blue & 18 \\
+ \dots & \dots & \dots \\
+ \end{tabular}
+\label{tab:math_scores}
+\end{table}
+
+\begin{enumerate}
+\item If you want to test the hypothesis that the colour of the walls does not affect math test scores, and at the same time you want to take into account that some students are generally better at math than others, what would the SPSS syntax be?
+\item In the output that would result from that syntax from question 1, would you look at a $t$-test or or an $F$-test? Explain your answer.
+\item How many degrees of freedom would you see for the denominator?
+\item Suppose you see this in the output for this colour experiment. How important are the individual difference in math performance in the population of students? Can you quantify the amount of clustering?
+
+
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.5]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "mixed" "linear" "model/pre-mid-post" "design/exercise2_correlation.png}
+    \end{center}
+\end{figure}
+
+\end{enumerate}
+
+
+\subsection{Answers}
+
+\begin{enumerate}
+\item
+
+\begin{verbatim}
+MIXED score BY colour
+  /FIXED=colour
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(student) COVTYPE(VC).
+\end{verbatim}
+
+\item  $F$-test. There will be two dummy variable and I want to know if the effects of both of these are significantly different from 0. The $t$-tests  give me only information about the dummy variables separately. \\
+\item  2, because there are 3 different colours, which can be represented by 2 dummy-variables. \\
+\item  In the table with the data you generally see that students who score high in one room also score high in another room (for instance, students 001 and 003). Students who score low in one room also score low in another room (for instance students 002, 004 and 005). This clustering can be quantified using an intraclass correlation, in this case equal to $\frac{228}{228+270}=0.46$.
+\end{enumerate}
+
+
+\end{document}
+
+

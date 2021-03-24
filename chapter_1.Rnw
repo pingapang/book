@@ -1,0 +1,1867 @@
+\chapter{Variables, variation and co-variation} \label{chap:intro}
+
+
+\section{Units, variables, and the data matrix}
+
+
+
+Data is the plural of datum, and datum is the Latin translation of 'given'. That the world is round, is a given. That you are reading these lines, is a given, and that my dog's name is Philip, is a given. Sometimes we have a bunch of given facts (data), for example the names of all students in a school, and their marks for a particular course. We could put these data in a table, like the one in Table \ref{tab:data_1}. There we see information ('facts') about seven students. And of these seven students we know two things: their name and their grade. You see that the data are put in a matrix with seven (horizontal) rows and two (vertical) columns. Each row stands for one student, and each column stands for one property.
+
+In data analysis, we nearly always put data in such a matrix format. In general, we put the objects of our study in rows, and their properties in columns. The objects of our study we call \textit{units}, and the properties we call \textit{variables}.
+
+<<data_1, fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+set.seed(123)
+name<- c("Mark Zimmerman", "Daisy Doe", "Mohammed Solmaz", "Monique Gambin", 
+         "Inga Svensson", "Piet van der Keuken", "Floor de Vries")
+grade <- rpois(length(name), 6)
+data.frame(name, grade) %>%
+  xtable(caption = "Data matrix with 7 units and 2 variables.", 
+         label = "tab:data_1", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+Let's look at the first column in Table \ref{tab:data_1}. We see that it regards the variable \texttt{name}. We call the property \texttt{name} a variable, because it varies across our units (the students): in this case, every unit has a different value for the variable \texttt{name}. In sum, a variable is a property of units that shows different values for different units.
+
+The second column represents the variable \texttt{grade}. Grade is here a variable, because it takes different values for different students. Note that both Mark Zimmerman and Mohammed Solmaz have the same value for this variable.
+
+What we see in Table \ref{tab:data_1} is called a \textit{data matrix}: it is a matrix (a collection of rows and columns) that contains information on units (in the rows) in the form of variables (in the columns).
+
+A unit is something we'd like to say something about. For example, I might want to say something about students and how they score on a course. In that case, students are my \textit{units of analysis}.
+
+% Alternatively, I might want to say something about different companies: how they differ in size and how they differ in how they deal with their taxes. In that case, company is my \textit{unit of analysis}. Research data on companies might look like the data matrix in Table \ref{tab:data_2} with a different row for each company.
+%
+% <<data_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(123)
+% company<- c("McDoe", "Burger Queen", "Bram Ladaque", "Daisy's")
+% number.employees <- rpois(length(company), 6000)
+% data.frame(company, number.employees) %>%
+%         xtable(caption="Data matrix data on companies.", label="tab:data_2", digits=0   ) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+
+If my interest is in schools, the data matrix in Table \ref{tab:data_3} might be useful, which shows a different row for each school with a couple of variables. Here again, we see a variable for grade on a course, but now averaged per school. In this case, school is my unit of analysis.
+
+<<data_3, fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+set.seed(123)
+school <- seq(1, 8)
+number_students <- rpois(length(school), 6)
+grade_average <- runif(length(school), 5, 7) %>% 
+  round(1)
+teacher <- c("Alice Monroe", "Daphne Stuart", "Stephanie Morrison", 
+             "Clark Davies","David Sanchez Gomez", "Metin Demirci", 
+             "Frederika Karlsson", "Advika Agrawal")
+data.frame(school, number_students, grade_average, teacher) %>%
+  xtable(caption = "Data matrix on schools.", 
+         label = "tab:data_3", 
+         digits = c(0, 0, 0, 1, 0)) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+\section{Data matrices in R}
+
+In R, data matrices are called data frames. A data frame consists of different vectors, one vector for each variable, and each vector contains values. Each vector/variable is stored as a column in a data frame. In the tidyverse version of R that we use in this book, we work with a particular form of a data frame: a tibble. Below we see some R code that creates a tibble: we first load the \texttt{tidyverse} package, then we create the vectors \texttt{studentID}, \texttt{course}, \texttt{grade}, and \texttt{shirtsize}, and then combine these 4 vectors into a tibble.
+
+<<echo = T, message = F>>=
+library(tidyverse)
+studentID <- seq(4132211, 4132215) 
+course <- c("Chemistry", "Physics", "Math", "Math", "Chemistry")
+grade <- c(4, 6, 3, 6, 8)
+shirtsize <- c("medium", "small", "large", "medium", "small")
+tibble(studentID, course, shirtsize, grade)
+@
+
+From the output, you see that the tibble has dimensions $5 \times 4$: that means it has 5 rows (units) and 4 columns (variables). Under the variable names, it can be seen how the data are stored. The variable \texttt{studentID} is stored as a numeric variable, more specifically as an integer (\texttt{<int>}). The \texttt{course} variable is stored as a character variable (\texttt{<chr>}), because the values consist of text. The same is true for \texttt{shirtsize}. The last variable, \texttt{grade}, is stored as \texttt{<dbl>} which stands for 'double'. Whether a numeric variable is stored as integer or double depends on the amount of computer memory that is allocated to a variable. Double variables have a decimal part (e.g., 2.0), integers don't (e.g., 2).
+
+
+
+
+
+\section{Multiple observations: wide format and long format data matrices}
+
+In many instances, units of analysis are observed more than once. This means that we have more than one observation for the \textit{same} variable for the \textit{same} unit of analysis. Storing this information in the rows and columns of a data matrix can be done in two ways: using \textit{wide format} or using \textit{long format}. We first look at wide format, and then see that generally, long format is to be preferred.
+
+Suppose we measure depression levels in four men four times during cognitive behavioural therapy. Sometimes you see data presented in the way of Table \ref{tab:data_7}, where there are four separate variables for depression level, one for each measurement: \texttt{depression\_1}, \texttt{depression\_2}, \texttt{depression\_3}, and \texttt{depression\_4}.
+
+<<data_7, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+set.seed(1234)
+client <- 1:4
+depression_1 <- rpois(4, 8)
+depression_2 <- rpois(4, 4)
+depression_3 <- rpois(4, 8)
+depression_4 <- rpois(4, 4)
+
+data.frame(client, depression_1, depression_2,depression_3, depression_4) %>%
+  xtable(caption = "Data matrix with depression levels in wide format.", 
+         label = "tab:data_7", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+<<data_8, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+
+data.frame(client, depression_1, depression_2,depression_3, depression_4) %>%
+  gather(time, depression, depression_1:depression_4) %>%
+  mutate(time = sapply(strsplit(time, split = '_', fixed = T), function(x) x[2])) %>%
+  arrange(client) %>%
+  xtable(caption = "Data matrix with depression levels in long format.", 
+         label = "tab:data_8", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+This way of representing data on a variable that was measured more than once is called \textit{wide format}. We call it \textit{wide} because we simply add columns when we have more measurements, which increases the width of the data matrix. Each new observation of the same variable on the same unit of analysis leads to a new column in the data matrix.
+
+Note that this is only one way of looking at this problem of measuring depression four times. Here, you can say that there are really four depression variables: there is depression measured at time point 1, there is depression measured at time point 2, and so on, and these four variables vary only across units of analysis. This way of thinking leads to a wide format representation.
+
+An alternative way of looking at this problem of measuring depression four times, is that depression is really only one variable and that it varies across units of analysis (some people are more depressed than others) and that it \textit{also} varies across time (at times you feel more depressed than at other times).
+
+Therefore, instead of adding columns, we could simply stick to one variable and only add rows. That way, the data matrix becomes longer, which is the reason that we call that format \textit{long format}. Table \ref{tab:data_8} shows the same information from Table \ref{tab:data_7}, but now in long format. Instead of four different variables, we have only one variable for depression level, and one extra variable \texttt{time} that indicates to which time point a particular depression measure refers to. Thus, both Tables \ref{tab:data_7} and \ref{tab:data_8} tell us that the second depression measure for client number 3 was 0.
+
+Now let's look at a slightly more complex example, where the advantage of long format becomes clear. Suppose the depression measures were taken on different days for different clients. Client 1 was measured on Monday, Tuesday, Wednesday and Thursday, while client 2 was measured on Thursday, Friday, Saturday and Sunday. If we would put that information into a wide format table, it would look like Figure \ref{tab:data_81}, with missing values for measures on Monday thru Wednesday for client 2, and missing values for measures on Friday thru Sunday for patient 1. 
+
+
+
+<<data_81, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+
+data.frame(client, depression_1, depression_2,depression_3, depression_4) %>%
+  head(2) %>% 
+  gather(time, depression, depression_1:depression_4) %>%
+  arrange(client) %>% 
+  mutate(day = c("Monday", "Tuesday", "Wednesday", "Thursday", "Thursday", "Friday", "Saturday", "Sunday")) %>%
+  select(-time) %>% 
+  pivot_wider(names_from = day, values_from = c(depression)) %>% 
+  xtable(caption = "Data matrix with depression levels in wide format.", 
+         label = "tab:data_81", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+Table \ref{tab:data_82} shows the same data in long format. The data frame is considerably smaller. Imagine that we would also have weather data for the days these patients were measured: whether it was cloudy or sunny, whether it rained or not, and what the maximum temperature was. In long format, storing that information is easy, see Table \ref{tab:data_83}. Try and see if you can think of a way to store that information in a wide table!
+
+
+<<data_82, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+
+data.frame(client, depression_1, depression_2,depression_3, depression_4) %>%
+  head(2) %>% 
+  gather(time, depression, depression_1:depression_4) %>%
+  arrange(client) %>% 
+  mutate(day = c("Monday", "Tuesday", "Wednesday", "Thursday", "Thursday", "Friday", "Saturday", "Sunday")) %>%
+  select(-time) %>% 
+  xtable(caption = "Data matrix with depression levels in long format.", 
+         label = "tab:data_82", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+<<data_83, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+
+data.frame(client, depression_1, depression_2,depression_3, depression_4) %>%
+  head(2) %>% 
+  gather(time, depression, depression_1:depression_4) %>%
+  arrange(client) %>% 
+  mutate(day = c("Monday", "Tuesday", "Wednesday", "Thursday", "Thursday", "Friday", "Saturday", "Sunday")) %>%
+  mutate(maxtemp = c(23, 24, 23, 25, 25, 22, 21, 22)) %>% 
+  mutate(rain = c("rain", "no rain", "rain", "no rain", "no rain", "no rain", "rain", "no rain"  )) %>% 
+  select(-time) %>% 
+  xtable(caption = "Data matrix with depression levels in wide format, including data on the time of measurement.", 
+         label = "tab:data_83", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+
+
+% Suppose we have data on weather forecasts for a number of specific days (days are our units of analysis), where the forecasts are given by two different forecasters: Dump and Taylor. We present the data in long format in Table \ref{tab:data_5}, and in wide format in Table \ref{tab:data_5b}.
+% 
+% % <<data_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% % set.seed(12234)
+% % date <- c("Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7")
+% % hours.sunshine <- rnorm(length(date), 2, 1) %>% exp %>% round(1)
+% % precipitation <- rpois(length(date), 2) %>% exp %>% round(1)
+% % forecaster <- sample( c("Felicia Taylor", "Donald Dump") ,7  , replace=T)
+% % data.frame(date, hours.sunshine, precipitation, forecaster) %>%
+% %         xtable(caption="Data matrix on weather forecasts.", label="tab:data_4", digits=0   ) %>%
+% %         print(include.rownames=F, caption.placement = "top")
+% % @
+% 
+% <<data_5, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(12234)
+% day <- c("Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7")
+% sunshine <- rnorm(length(day), 2, 1) %>% exp() %>% round(1)
+% precipitation <- rpois(length(day), 2) %>% exp() %>% round(1)
+% forecaster <- sample(c("Taylor", "Dump"), 7, replace = T)
+% forecaster <- c(forecaster, ifelse(forecaster=="Taylor","Dump","Taylor"))
+% day <- rep(day,2)
+% sunshine <- c(sunshine, rnorm(length(day)/2, 2, 1) %>% 
+%                 exp() %>% 
+%                 round(1))
+% precipitation <- c(precipitation, rpois(length(day)/2, 2) %>% 
+%                      exp() %>% 
+%                      round(1))
+% data.frame(day, precipitation, sunshine, forecaster) %>%
+%   arrange(day, forecaster) %>%
+%   xtable(caption = "Data matrix on weather forecasts.", 
+%          label = "tab:data_5", 
+%          digits = 0) %>%
+%   print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% <<data_5b, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis', message=F >>=
+% set.seed(12234)
+% day<- c("Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7")
+% sunshine <- rnorm(length(day), 2, 1) %>% exp %>% round(1)
+% precipitation <- rpois(length(day), 2) %>% exp %>% round(1)
+% forecaster <- sample( c("Taylor", "Dump") ,7  , replace=T)
+% forecaster <- c(forecaster, ifelse(forecaster=="Taylor","Dump","Taylor"))
+% day <- rep(day,2)
+% sunshine <- c(sunshine, rnorm(length(day)/2, 2, 1) %>% exp() %>% round(1))
+% precipitation <- c(precipitation, rpois(length(day)/2, 2) %>% exp() %>% round(1))
+% 
+% 
+% P <- data.frame(day,  precipitation, forecaster) %>%
+%         arrange(day, forecaster) %>%
+%         spread(forecaster, precipitation) %>%
+%         transmute(day = day, precip.Taylor = Taylor, precip.Dump = Dump)
+% S <- data.frame(day,  sunshine, forecaster) %>%
+%         arrange(day, forecaster) %>%
+%         spread(forecaster, sunshine) %>%
+%         transmute(day = day, sunshine.Taylor = Taylor, sunshine.Dump = Dump)
+% 
+% full_join(P,S)  %>%
+%         xtable(caption = "Data matrix on weather forecasts in wide format.", 
+%                label = "tab:data_5b", 
+%                digits = 0) %>%
+%         print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% 
+% One thing we notice when we compare the weather forecast data in long and wide format is the wording of the variable names: they tend to become very long in wide format. Imagine for example that we would have weather forecast data by several forecasters for two regions: South and North. Then one variable should be called \textbf{Precipitation.Taylor.North}, another variable should be called \textbf{Precipitation.Taylor.South}, another variable should be called \textbf{Precipitation.Dump.North}, and another variable should be called \textbf{Precipitation.Dump.South}. And what if we would have in addition separate forecasts for mornings and afternoons? Then we would have to have variables with names like \textbf{Precipitation.Taylor.North.am}, \textbf{Precipitation.Taylor.North.pm}, et etcetera. Table \ref{tab:data_5c} shows an example of a weather forecast data set that is simply too complex to store in wide format: the variable names would become too horrible to print. In sum, if a data set becomes large and complex, it is much better stored in long format than in wide format, as in wide format the names of variables become too wordy to handle. Of course, a solution could be to use very short variable names like \textbf{v1} and \textbf{v2} and then keep track of their meaning in a log file, but that is rather inconvenient. SPSS does have a nice feature to keep variable names and variable meanings close but separate, but not all software packages do.
+% 
+% The second thing we can say about the difference in data in long and wide format, is that it is much easier to add data in long format than it is in wide format. Imagine that we start with the data in wide format in Table \ref{tab:data_5b}. Suppose we get some new data on forecasts on wind speed. If we want to include that information in our data matrix, we would have to make two new variables: one for wind speed as predicted by Taylor and one for wind speed as predicted by Dump. In the case of long format, see Table \ref{tab:data_5}, we would only have to add one new variable \textbf{Wind.speed}. If in addition, we could obtain new data in terms of data coming from a third forecaster named Gibson, in the case of data in wide format we would have to add three new wordy variables: \textbf{Precip.Gibson}, \textbf{Sunshine.Gibson}, and \textbf{Wind.speed.Gibson}. In the case of long format, we would only have to add a few extra rows.
+% 
+% 
+% 
+% 
+% 
+% <<data_5c, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(12234)
+% day <- c("Jan 1", "Jan 2") %>%  
+%   rep(each = 12)
+% region <- c("south","north")  %>%  
+%   rep(each = 6) %>% 
+%   rep(2)
+% time.of.day <- c("am","pm") %>% 
+%   rep(each = 2) %>%  
+%   rep(6)
+% 
+% day.of.forec <- c("Dec 31", "Jan 1") %>% 
+%   rep(each = 4) %>% 
+%   rep(3)
+% forecaster <- c("Taylor", "Dump") %>% 
+%   rep(2) %>% 
+%   rep(6)
+% 
+% sunsh <- rnorm(length(day), 2, 1) %>% 
+%   exp %>% 
+%   round(1)
+% precip <- rpois(length(day), 2) %>% 
+%   exp %>% 
+%   round(1)
+% w.speed <- runif(length(day),1, 6)
+% 
+% # hours.sunshine <- c(hours.sunshine, rnorm(length(day)/2, 2, 1) %>% exp %>% round(1))
+% # precipitation <- c(precipitation, rpois(length(day)/2, 2) %>% exp %>% round(1))
+% data.frame(day, region, time.of.day, day.of.forec, w.speed, precip, sunsh, forecaster) %>%
+%   xtable(caption = "Data matrix on weather forecasts.", 
+%          label = "tab:data_5c", 
+%          digits = 0) %>%
+%   print(include.rownames = F, 
+%         caption.placement = "top")
+% @
+% 
+% 
+% 
+
+
+
+
+
+
+% Another example where we see several measures of the same variable for each unit of analysis is reaction times. In psychology experiments, reaction times are often measured on several trials. For example, if each participant's reaction time is measured on 8 trials, the data matrix might look like Table \ref{tab:data_6}.
+%
+% <<data_6, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(1234)
+% participant<- rep(c(1,2), each=8)
+% trial <- rep(1:8,2)
+% reaction.time <- rnorm(16, 7, 1) %>% exp %>% round(1)
+% sex <- rep(c("male","female"), each=8)
+%
+% data.frame(participant, trial, reaction.time, sex) %>%
+%         xtable(caption="Data matrix for reaction times.", label="tab:data_6", digits=0   ) %>%
+%         print(include.rownames=F, caption.placement = "top")
+% @
+%
+%
+% In short, the general rule is that in data matrices we have one row per unit. However, if one or more of the variables is measured more than once on the same unit of analysis, we simply add rows. We simply regard each measurement or each observation separately, and for each measurement/observation we use a different row. Each row is then a separate \textit{observation}. For example, during the first observation (row number 1), we saw participant number 1 performing on the first trial (trial = 1), and the reaction time was 328 milliseconds. We also know that during this first observation, the participant was male. Our second observation (row number 2) was participant 1 (the same unit of analysis but a different observation) performing on the second trial (trial = 2), with a reaction time of 1447 milliseconds, and the participant was still male. And so on for all the other rows in the data matrix.
+%
+% But there are other ways of tabulating data.
+
+% A third reason for preferring long format over wide format is that in wide format there can sometimes be many zeros. Imagine a large well-known online shop where there are thousands of customers and thousands of products. If you want to keep track of which customer has bought which product, and you use a wide data matrix format, you have thousands of rows (customers) and thousands of columns (products). In the cells you can then keep track of how many of a certain product have been bought by a certain customer. The result would be a huge matrix like Table \ref{tab:customerwide} with a huge number of cells with the number 0 in them and only a very few cells with a number larger than 0.\footnote{A phenomenon called \textit{sparsity} or \textit{sparseness.}}
+% 
+%  \begin{table}
+%  \caption {Example customer and product data using wide data format. Customers are in rows, products are in columns. Each cell represents the number of products bought.} \label{tab:customerwide}
+%  \begin{tabular}{lrrrrr}
+%  CUSTOMER ID & AAiUUKDVV &  BJDuIKKHDFHJ & JJCIIUuICJI \\ \hline
+%    \dots & \dots & \dots& \dots  &\dots\\
+%   000000011 & 0& 0  & 0&\dots\\
+%   000000012 & 0& 0  & 0&\dots\\
+%   000000013 & 0& 0  & 0&\dots\\
+%   000000014 &0 & 2  & 1&\dots\\
+%   000000015 &0& 0  & 0&\dots\\
+%   \dots & \dots & \dots & \dots&\dots\\
+%  \end{tabular}
+%  \end{table}
+% 
+% In contrast, if you would use a long data matrix format, the data matrix would be much smaller, as you would not need space for all combinations of products and customers that do not exist. More importantly, there would be even space to include more information, like the date of purchase and the method of payment, see Table \ref{tab:customerlong}, something that would be practically impossible in wide format.
+% 
+%  \begin{table}
+%  \caption {Example customer and product data using long data format.} \label{tab:customerlong}
+%  \begin{tabular}{lrrrrr}
+%  CUSTOMER ID & Product Code &  Date of Purchase & Method of Payment  \\ \hline
+%    \dots & \dots & \dots & \dots \\
+%   000000014 & BJDuIKKHDFHJ & Jan 15 2018 & Mastercard \\
+%   000000014 & BJDuIKKHDFHJ & May 17 2018 & Visacard  \\
+%   000000014 & JJCIIUuICJI  & May 17 2018 & Visacard  \\
+%   \dots & \dots & \dots& \dots \\
+%  \end{tabular}
+%  \end{table}
+
+Thus, storing data in long format is often more efficient in terms of storage of information. Another reason for preferring long format over wide format is the most practical one for data analysis: when analysing data using linear models, software packages require your data to be in long format. In this book, all the analyses with linear models require your data to be in long format. However, we will also come across some analyses apart from linear models that require your data to be in wide format. If your data happen to be in the wrong format, rearrange your data first. Of course you should never do this by hand as this will lead to typing errors and would take too much time. Statistical software packages have helpful tools for rearranging your data from wide format to long format, and vice versa.
+
+
+
+
+% \subsection{Exercises}
+% 
+% 
+% \begin{enumerate}
+% 
+% \item In Table \ref{tab:taxes} you see data on two companies that paid taxes in 2016 and 2017. Are the data displayed in wide format or in long format? Explain.
+% 
+% <<data_19, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+% data.frame(company = c("Daisy's","Burger Queen"), 
+%            tax.2016 = c(569875, 98765433), 
+%            tax.2017 = c(8765447, 87865443)) %>%
+%   xtable(caption = "Paid taxes in 2016 and 2017.", 
+%          label = "tab:taxes", 
+%          digits = 0) %>%
+%   print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% \item Put the data in Table \ref{tab:taxes} in wide format if you think they are in long format, or in long format if they are in wide format. Hint: Look at the depression example for inspiration.
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item The data are in wide format. There is one variable, how much tax was paid, and that variable was observed twice for each unit of analysis.
+% 
+% 
+% \item An example of the data displayed in long format is displayed in Table \ref{tab:taxeslong}.
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% <<data_110, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+% data.frame(company=c("Daisy's","Burger Queen"), 
+%            tax.2016 = c(569875, 98765433), 
+%            tax.2017 = c(8765447, 87865443)) %>%
+%         gather(year, tax, tax.2016:tax.2017) %>%
+%         mutate(year = sapply(strsplit(year, split='.', fixed = T), function(x) x[2])) %>% 
+%         xtable(caption = "Paid taxes in 2016 and 2017.", 
+%                label = "tab:taxeslong", 
+%                digits = 0) %>%
+%         print(include.rownames = F, caption.placement = "top")
+% @
+
+\section{Wide and long format in R}
+
+Making a data matrix longer or wider can be done with the functions \texttt{pivot\_longer()} and \texttt{pivot\_wider()}, respectively. These functions are part of the \texttt{tidyr} package, and available when you load the \texttt{tidyverse} collection of packages.
+
+<<eval = F>>=
+library(tidyverse)
+@
+
+
+\subsection{From wide to long}
+
+The \texttt{relig\_income} dataset stores counts based on a survey which (among other things) asked people about their religion and annual income:
+
+<<pivot_longer, echo = T>>=
+
+relig_income
+
+@
+
+This dataset contains three variables:
+\begin{enumerate}
+\item \texttt{religion}, stored in the rows,
+\item \texttt{income}, spread across the column names, and
+\item \texttt{count}, stored in the cell values.
+\end{enumerate}
+
+To put the values that we see in the columns into one single column, we use \texttt{pivot\_longer()}:
+
+
+<<echo = T>>=
+relig_income %>% 
+  pivot_longer(cols = -religion, # columns that need to be restructured
+               names_to = "income", # name of new variable with old column names
+               values_to = "count") # name of new variable with values
+@
+
+\begin{itemize}
+\item The \texttt{cols} argument describes which columns need to be reshaped. In this case, it is every column except religion.
+
+\item The \texttt{names\_to} argument gives the name of the variable that will be created using the column names, i.e. income.
+
+\item The \texttt{values\_to} argument gives the name of the variable that will be created from the data stored in the cells, i.e. count.
+
+\end{itemize}
+
+\subsection{From long to wide}
+
+
+The \texttt{us\_rent\_income} dataset contains information about median income and rent for each state in the US for 2017 (from the American Community Survey, retrieved with the \texttt{tidycensus} package).
+
+
+<<pivot_wider, echo = T>>=
+us_rent_income
+
+@
+
+Here both \texttt{estimate} and \texttt{moe} are variables (column names), so we can supply them to the function argument \texttt{values\_from()} to make new variables:
+
+<<echo = T>>=
+us_rent_income %>% 
+  pivot_wider(names_from = variable, 
+              values_from = c(estimate, moe))
+@
+
+\begin{itemize}
+
+\item The \texttt{names\_from} argument gives the name of the variable that will be used for the new column names, i.e. \texttt{variable}
+
+\item The \texttt{values\_from} argument gives the name(s) of the variable(s) that store the value that you wish to see spread out across several columns. Here we have two such variables, i.e. \texttt{moe} and \texttt{estimate}
+
+\end{itemize}
+
+For more examples, see the vignette on pivoting.
+
+<< eval = F, echo = T>>=
+vignette("pivot")
+@
+
+
+
+\section{Measurement level}
+
+
+Data analysis is about variables and the relationships among them. In essence, data analysis is about describing how different values in one variable go together with different values in one or more other variables (co-variation). For example, if we have the variable \texttt{age} with values 'young' and 'old', and the variable \texttt{happiness} with values 'happy' and 'unhappy', we'd like to know whether 'happy' mostly comes together with either 'young' or 'old'. Therefore, data analysis is about variation and co-variation in variables.
+
+Linear models are important tools when describing co-varying variables. When we want to use linear models, we need to distinguish between different kinds of variables. One important distinction is about the measurement level of the variable: numeric, ordinal or categorical.
+
+
+\subsection{Numeric variables}
+
+Numeric variables have values that describe a measurable quantity as a number, like 'how many' or 'how much'. A numeric variable can be a \textit{count variable}, for instance the number of children in a classroom. A count variable can only consist of discrete, natural, positive numbers: 0, 1, 2, 3, etcetera. But a numeric variable can also be a \textit{continuous variable}. Continuous variables can take any value from the set of real numbers, for instance values like -200.765, -9.78, -2, 0.001, 4, and 7.8. The number of decimals can be as large as the instrument of measurement allows. Examples of continuous variables include height, time, age, blood pressure and temperature. Note that in all these examples, \textit{quantities} (age, height, temperature) are expressed as the number of a particular \textit{measurement unit} (years, inches, degrees).
+
+Whether a numeric variable is a count variable or a continuous variable, it is always expressing a \textit{quantity}, and therefore numeric variables can be called \textit{quantitative} variables.
+
+
+
+% For both interval and ratio variables, the interval between one-unit distances is the same, for example the interval between one kilogram and two kilograms is the same as the interval between three kilograms and four kilograms: in both cases the interval (the difference) is one kilogram. The difference between two buildings and three buildings, is the same as the difference between four buildings and five buildings: in both cases the difference is one building.
+
+For numeric variables, there is a further distinction between \textit{interval variables} and \textit{ratio variables}. The distinction is rather technical. The difference between interval and ratio variables is that for ratio variables, the ratio between two measurement values is meaningful, and for interval variables it is not. An example of a ratio variable is height. You could measure height in two persons where one measures 1 meter and the other measures 2 meters. It is then meaningful to say that the second person is twice as tall as the first person. This is meaningful, because had we chosen a different measurement unit, the ratio would be the same. For instance, suppose we express the heights of the two persons in inches, we would get 39.37 and \Sexpr{2*39.37} inches respectively. The ratio remains 2: namely \Sexpr{2*39.37}/39.37. The same ratio would hold for measurements in feet, miles, millimetres or even light years. Thus, whatever the unit of measurement you use, the ratio of height for these individuals would always be 2. Therefore, if we have a variable that measures height in meters, we are dealing with a ratio variable. 
+
+
+
+
+% Suppose we measure the temperature of two classrooms in degrees Celsius. 
+% This is true since for height we have a natural zero-point: a zero reflects the absence of height. 
+% 
+% Note that this interpretation cannot be used for temperature: zero degrees Fahrenheit does not imply the absence of temperature. Thus, for every numeric variable where there is a natural zero-point that expresses the absence of a quantity, ratios between values have meaning. That is the reason why they are called ratio variables.
+
+
+% A common case of this is temperature measured in degrees Fahrenheit or degrees Celcius.
+
+Now let's look at an example of an interval variable. Suppose we measure the temperature in two classrooms: one is 10 degrees Celsius and the other is 20 degrees Celsius. The ratio of these two temperatures is $20/10=2$, but does that ratio convey meaningful information? Could we state for example that the second classroom is twice as warm as the first classroom? The answer is no, and the reason is simple: had we expressed temperature in Fahrenheit, we would have gotten a very different ratio. Temperatures of 10 and 20 degrees Celsius correspond to 50 and 68 degrees Fahrenheit, respectively. These Fahrenheit temperatures have a ratio of 68/50=\Sexpr{68/50}. Based on the Fahrenheit metric, the second classroom would now be \Sexpr{68/50} times warmer than the first classroom. We therefore say that the ratio does not have a meaningful interpretation, since the ratio depends on the metric system that you use (Fahrenheit or Celsius). It would be strange to say that there is twice more warmth in classroom B than in classroom A, but only if you measure temperature in Celsius, not when you measure it in Fahrenheit!
+
+The reason why the ratios depend on the metric system, is because both the Celsius and Fahrenheit metrics have arbitrary zero-points. In the Celsius metric, 0 degrees does not mean that there is no warmth, nor is that implied in the Fahrenheit metric. In both metrics, a value of 0 is still warmer than a value of -1. 
+
+Contrasting this to the example of height: a height of 0 is indeed the absence of height, as you would not even be able to see a person with a height of 0, whatever metric you would use. Thus, the difference between ratio and interval variables is that ratio variables have a meaningful zero point where zero indicates the absence of the quantity that is being measured. This meaningful zero-point makes it possible to make meaningful statements about ratios (e.g., 4 is twice as much as 2) which gives ratio variables their name.
+
+What ratio and interval variables have in common is that they are both numeric variables, expressing quantities in terms of units of measurements. This implies that the distance between 1 and 2 is the same as the distances between 3 and 4, 4 and 5, etcetera. This distinguishes them from ordinal variables. 
+
+
+
+
+\subsection{Ordinal variables}
+
+Ordinal variables are also about quantities. However, the important difference with numeric variables is that ordinal variables are not measured in units. An example would be a variable that would quantify size, by stating whether a T-shirt is small, medium or large. Yes, there is a quantity here, size, but there is no unit to state \textit{exactly} how much of that quantity is present in that T-shirt.
+
+Even though ordinal variables are not measured in specific units, you can still have a meaningful order in the values of the variable. For instance, we know that a large T-shirt is larger than a medium T-shirt, and a medium T-shirt is larger than a small T-shirt.
+
+Similar for age, we could code a number of people as young, middle-aged or old, but on the basis of such a variable we could not state by \textit{how much} two individuals differ in age. As opposed to numeric variables that are often continuous, ordinal variables are usually \textit{discrete}: there isn't an infinite number of levels of the variable. If we have sizes small, medium and large, there are no meaningful other values in between these values.
+
+Ordinal variables often involve subjective measurements. One example would be having people rank five films by preference from one to five. A different example would be having people assess pain: "On a scale from 1 to 10, how bad is the pain?"
+
+Ordinal variables often look numeric. For example, you may have large, medium and small T-shirts, but these values may end up in your data matrix as '3', '2' and '1', respectively. However, note that with a truly numeric variable there should be a unit of measurement involved (3 of what? 2 of what?), and that numeric implies that the distance between 3 and 2 is equal to the distance between 2 and 1. Here you would not have that information: you only know that a large T-shirt (coded as '3') is larger than a medium T-shirt (coded as '2'), but how large that difference is, and whether that difference is that same as the difference between a medium T-shirt ('2') is larger than a small T-shirt ('1'), you do not know. Therefore, even though we see numbers in our data matrix, the variable is called an ordinal variable. 
+
+
+\subsection{Categorical variables}
+
+Categorical variables are not about quantity at all. Categorical variables are about \textit{quality}. They have values that describe 'what type' or 'which category' a unit of belongs to. For example, a school could either be publicly funded or not, or a person could either have the Swedish nationality or not. A variable that indicates such a dichotomy between publicly funded 'yes' or 'no', or Swedish nationality 'yes' or 'no', is called a \textit{dichotomous} variable, and is a subtype of a categorical variable. The other subtype of a categorical variable is a \textit{nominal} variable. Nominal comes from the Latin \textit{nomen}, which means name. When you name the nationality of a person, you have a nominal variable. Table \ref{tab:data_9} shows an example of both a dichotomous variable (\texttt{Swedish}) that always has only two different values, and a nominal variable (\texttt{Nationality}), that can have as many different values as you want (usually more than two).
+
+
+
+<<data_9, fig.height=4, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+
+data.frame(ID = 1:8, Swedish = rep(c("Yes", "Yes", "No", "No"), 2),  
+           Nationality = c("Swedish", "Swedish", "Angolan", "Norwegian",
+                           "Swedish", "Swedish", "Danish", "Unknown")) %>%
+  xtable(caption = "Nationalities.", label = "tab:data_9", digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+Another example of a nominal variable could be the answer to the question: "name the colours of a number of pencils". Nothing quantitative could be stated about a bunch of pencils that are only assessed regarding their colour. In addition, there is usually no logical order in the values of such variables, something that we do see with ordinal variables.
+
+
+
+
+\subsection{Treatment of variables in data analysis}
+For data analysis with linear models, you have to decide for each variable whether you want to treat it as numeric or as categorical.\footnote{In data analysis, it is possible to treat variables as ordinal, but only in more advanced models and methods than treated in this book.} The easiest choice is for numeric variables: numeric variables should always be treated as numeric.
+
+Categorical data should always be treated as categorical. However, the problem with categorical variables is that they often \textit{look} like numeric variables. For example, take the categorical variable \texttt{country}. In your data file, this variable could be coded with strings like "Netherlands", "Belgium", "Luxembourg", etc. But the variable could also be coded with numbers: 1, 2 and 3. In a codebook that belongs to a data file, it could be stated that 1 stands for "Netherlands", 2 for "Belgium", and 3 for "Luxembourg" (these are the value labels), but still in your data matrix your variable would look numeric. You then have to make sure that, even though the variable \textit{looks} numeric, it should be \textit{interpreted} as a categorical variable and therefore be \textit{treated} like a categorical variable.
+
+The most difficult problem involves ordinal variables: in linear models you can either treat them as numeric variables or as categorical variables. The choice is usually based on common sense and whether the results are meaningful. For instance, if you have an ordinal variable with 7 levels, like a Likert scale, the variable is often coded with numbers 1 through 7, with value labels 1="completely disagree", 2="mostly disagree", 3="somewhat disagree", 4="ambivalent", 5="somewhat agree", 6="mostly agree", and 7="completely agree". In this example, you could choose to treat this variable as a categorical variable, recognising that this is not a numeric variable as there is no measurement unit. However, if you feel this is awkward, you could choose to treat the variable as numeric, but be aware that this implies that you feel that the difference between 1 and 2 is the same as the difference between 2 and 3. In general, with ordinal data like Likert scales or sizes like, Small, Medium and Large, one generally chooses to use categorical treatment for low numbers of categories, say 3 or 4 categories, and numerical treatment for variables with many categories, say 5 or more. However, this should not be used as a rule of thumb: first think about the meaning of your variable and the objective of your data analysis project, and only then take the most reasonable choice. Often, you can start with numerical treatment, and if the analysis shows peculiar results\footnote{For instance, you may find that the assumptions of your linear model are not met, see Chapter \ref{chap:assumptions}.}, you can choose categorical treatment in secondary analyses.
+
+In the coming chapters, we will come back to the important distinction between categorical and numerical treatment (mostly in Chapter \ref{chap:categorical}). For now, remember that numeric variables are always treated as numeric variables, categorical variables are always treated as categorical variables (even when they appear numeric), and that for ordinal variables you have to think before you act.
+
+
+
+% \subsection{Exercises}
+% In the following, identify the type of variable in termes of numeric, ordinal, or categorical:
+% \begin{enumerate}
+% \item Age: \dots years
+% \item Exercise intensity: low, moderate, high
+% \item Size: \dots meters
+% \item Size: small, medium, large
+% \item Weight: \dots kilograms
+% \item Agreement: not agree, somewhat agree, agree
+% \item Agreement: totally not agree, somewhat not agree, neither disagree nor agree, somewhat agree, totally agree
+% \item Pain: 1, 2.. ..... , 99, 100, with 1="total absence of pain" and 100="the worst imaginable pain"
+% \item Quality of life: 1=extremely low, \dots, \dots, 7=extremely high
+% \item Colour: blue, green, yellow, other
+% \item Nationality: Chinese, Korean, Australian, Dutch, other
+% \item Gender: Female, Male, other
+% \item Gender: 0=Female, 1=Male
+% \item Number of shoes:
+% \item How would you describe count variables: are they always ratio variables or always interval variables?
+% \end{enumerate}
+% 
+% Answers:
+% 
+% \begin{enumerate}
+% \item Numeric
+% \item Ordinal
+% \item Numeric
+% \item Ordinal
+% \item Numeric
+% \item Ordinal
+% \item Technically this is an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of the agreement. However, given the number of categories and the small differences in meaning across adjacent categories, such variables are sometimes treated as numeric by using numbers 1, 2, 3, 4, 5 for the respective categories.
+% \item The numbers might trick you into thinking it is a numeric variable. However, again, this is technically an ordinal variable as there is no measurement unit and there is only an ordering in the intensity of pain. However, given the large the number of categories, such variables are most often treated as numeric.
+% \item The numbers might trick you into thinking it is a numeric variable. But technically it is still an ordinal variable because there is no measurement unit and there is only a meaningful order. But again, given the large number of categories, such variables are often treated as numeric.
+% \item Categorical
+% \item Categorical
+% \item Categorical
+% \item The numbers might trick you into thinking it is a numeric variable. However, it is conceptually still a categorical variable as there is no measurement unit and there is no ordering.
+% \item Numeric, because you count the number of shoes. It is a discrete variable, but one can also imagine that 2.5 shoes is a meaningful value.
+% \item A count of 0 means the absence of the thing that is being counted. If one person has two balloons, and the other person has six balloons, it is meaningful to say that the second person has three times more balloons than the first person. Count variables are therefore always ratio variables.
+% \end{enumerate}
+% 
+% 
+% 
+
+
+\section{Measurement level in R}
+
+In a previous section we saw the creation of a data frame. Let's store the resulting data frame as an object called \texttt{course\_results}.
+
+<<echo = T, eval = T>>=
+studentID <- seq(4132211, 4132215) 
+course <- c("Chemistry", "Physics", "Math", "Math", "Chemistry")
+grade <- c(4, 6, 3, 6, 8)
+shirtsize <- c("medium", "small", "large", "medium", "small")
+course_results <- tibble(studentID, course, shirtsize, grade)
+course_results
+@
+
+We see that the variable \texttt{studentID} is stored as integer. That means that the values are stored as numeric values. However, the values are quite meaningless, they are only used to identify persons. If we want to treat this variable as a categorical variable in data analysis, it is necessary to change this variable into a factor variable. We can do this by typing:
+
+<<echo = T, eval = T>>=
+course_results$studentID <- 
+  course_results$studentID %>% 
+  factor()
+@
+
+When we look at this variable after the transformation, we see that this new categorical variable has 5 different categories (levels).
+
+<<echo = T, eval = T>>=
+course_results$studentID
+@
+
+
+When we look at the variable \texttt{course}, we see that it is stored as a character variable. If we want R to treat it as a categorical variable in data analysis, we can also transform this variable into a factor variable. We could use the same code as above, or we could use the function \texttt{mutate()}.
+
+<<echo = T, eval = T>>=
+course_results <- course_results %>% 
+  mutate(course = factor(course))
+@
+
+The \texttt{shirtsize} variable is stored as character, but we tell R that this is an ordinal variable. For this we need to turn it into a factor variable, indicating that there is an order in the values, where small is the lowest quantity, and large the highest quantity.
+
+<<echo = T, eval = T>>=
+course_results <- course_results %>% 
+  mutate(shirtsize = factor(shirtsize, 
+                            levels = c("small", "medium", "large"),
+                            ordered = TRUE)
+  )
+course_results$shirtsize
+@
+
+The last variable \texttt{grade} is stored as double. Variables of this type will be treated as numeric in data analyses. If we're fine with that for this variable, we leave it as it is. If we want the variable to be treated as ordinal, then we need the same type of factor transformation as for shirtsize. For now, we leave it as it is. The resulting data frame then looks like this:
+
+
+<<echo = T, eval = T>>=
+course_results
+@
+
+Now both \texttt{studentID} and \texttt{course} are stored as factors and will be treated as categorical. Variable \texttt{shirtsize} is stored as an ordinal factor and will be treated accordingly. Variable \texttt{grade} is still stored as double and will therefore be treated as numeric. 
+
+
+\section{Frequency tables, frequency plots and histograms}
+
+Variables have different values. For example, age is a (numeric, ratio) variable: lots of people have different ages. Suppose we have an imaginary town with 1000 children. For each age measured in years, we can count the number of children who have that particular age. The results of the counting are in Table \ref{tab:frequency_1}. The number of observed children with a certain age, say 8 years, is called the \textit{frequency} of age 8. The table is therefore called a frequency table. Generally in a frequency table, values that are not observed are omitted (i.e., the frequency of children with age 16 is 0).
+
+<<frequency_1, fig.height=4, message = F, echo=FALSE, fig.align='center', fig.cap='A frequency distribution table. The number of children with age 16 is 0.', results='asis' >>=
+set.seed(123)
+age <- rpois(1000, 7)
+tibble(age) %>% 
+  group_by(age) %>%
+  summarise(frequency = n(),
+             proportion = n()/1000) %>%
+  mutate(cum_frequency = cumsum(frequency)) %>%
+  mutate(cum_proportion = cumsum(proportion)) %>%
+  xtable(caption = "Frequency table for age, with proportions and cumulative proportions.", 
+         label = "tab:frequency_1", 
+         digits = 3) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+<<distr_1, fig.height=3.5, echo=FALSE, fig.align='center', message=F, fig.cap='A frequency plot' >>=
+tibble(age) %>%
+  ggplot(aes(age)) + 
+  geom_freqpoly(binwidth = 1)  +
+  xlab('age in years') + ylab('count') +
+  scale_x_continuous(breaks = seq(0, 20)) +
+  scale_y_continuous(breaks = seq(0, 180, 10))
+@
+
+The data in the frequency table can also be represented using a frequency plot. Figure \ref{fig:distr_1} gives the same information, not in a table but in a graphical way. On the horizontal axis we see several possible values for age in years, and on the vertical axis we see the number of children (the count) that were observed for each particular age. Both the frequency table and the frequency plot tell us something about the \textit{distribution} of age in this imaginary town with 1000 children. For example, both tell us that the oldest child is 17 years old. Furthermore, we see that there are quite a lot of children with ages between 5 and 8, but not so many children with ages below 3 or above 14. The advantage of the table over the graph is that we can get the exact number of children of a particular age very easily. But on the other hand, the graph makes it easier to get a quick idea about the shape of the distribution, which is hard to make out from the table.
+
+% <<distr_1, fig.height=4, echo=FALSE, fig.align='center', message=F, fig.cap='A frequency distribution' >>=
+% set.seed(123)
+% numbers <- runif(20, 1,10) %>%  round(0)
+% data.frame(age) %>%
+%         ggplot(aes(numbers)) + geom_bar()  
+% +
+%         xlab('observed values') + ylab('count')+
+%         scale_x_continuous(breaks=seq(1,10))
+% @
+
+% Numeric variables have distributions. That means that if you put all the values you observed in order from low to high, you see a certain shape. For example, take the set of following numbers: \Sexpr{numbers}. If you plot these values on the horizontal axis, and how often they are observed (the \textit{frequency} or \textit{count}) on the vertical you get the frequency plot in Figure \ref{fig:distr_1}. Such a frequency plot is referred to as a \textit{bar chart}.
+
+% Often a \textit{histogram} is plotted. A histogram is very much like a frequency plot or bar chart, except that groups of values can be taken together. Such a group of values is called a \textit{bin}. Figure \ref{fig:distr_2} shows the same data, but uses only 5 bins: for the first bin, we take values of 1 and 2, for the second bin we take values 3 and 4 together, etcetera, until we take vales 9 and 10 for the fifth bin. For each bin, we compute how often we observe the values in that bin. Histograms are also for continous data, for instance if we have values like 3.4, 2,1, etcetera. All values within a bin are defined by their rounded value. For instance, in Figure \ref{fig:distr_2}, all possible values between 2.5 and 4.5 will end up in the second bin. The \textit{binwidth} is here 2: all values between 2.5 and 4.5 are taken to lie in the second bin, and the distance between these values is $4.5-2.5=2$.
+
+Instead of frequency plots, one often sees \textit{histograms}. Histograms contain the same information as frequency plots, except that \textit{groups of values} are taken together. Such a group of values is called a \textit{bin}. Figure \ref{fig:distr_2} shows the same age data, but uses only 9 bins: for the first bin, we take values of age 0 and 1 together, for the second bin we take ages 2 and 3 together, etcetera, until we take ages 16 and 17 together for the last bin. For each bin, we compute how often we observe the ages in that bin.
+
+Histograms are very convenient for continuous data, for instance if we have values like 3.473, 2.154, etcetera. Or, more generally, for variables with values that have very low frequencies. Suppose that we had measured age not in years but in days. Then we could have had a data set of 1000 children where each and every child had a unique value for age. In that case, the length of the frequency table would be 1000 rows (each value observed only once) and the frequency plot would be very flat. By using age measured in years, what we have actually done is putting all children with an age less than 365 days into the first bin (age 0 years) and the children with an age of at least 365 but less than 730 days into the second bin (age 1 year). And so on. Thus, if you happen to have data with many many values with very low frequencies, consider binning the data, and using a histogram to visualise the distribution of your numeric variable.
+
+
+
+<<distr_2, fig.height=3.5, echo=FALSE, fig.align='center', warning=FALSE, message=F, fig.cap='A histogram' >>=
+ 
+tibble(age) %>%
+  ggplot(aes(age)) + 
+  geom_histogram(binwidth = 2, center = 0.5)  +
+  xlab('age in years') + 
+  ylab('count') +
+  scale_x_continuous(breaks = seq(0, 21, 1)) +
+  scale_y_continuous(breaks = seq(0, 680, 20))
+@
+
+
+
+\section{Frequencies, proportions and cumulative frequencies and proportions}
+
+
+When we have the frequency for each observed age, we can calculate the \textit{relative frequency} or \textit{proportion} of children that have that particular age. For example, when we look again at the frequencies in Table \ref{tab:frequency_1} we see that there are two children who have age 0. Given that there are in total 1000 children, we know that the \textit{proportion} of people with age 0 equals $\frac{2}{1000}=0.002$. Thus, the proportion is calculated by taking the frequency and dividing it by the total number.
+
+
+We can also compute \textit{cumulative frequencies}. You get cumulative frequencies by accumulating (summing) frequencies. For instance, the cumulative frequency for the age of 3, is the frequency for age 3 plus all frequencies for younger ages. Thus, the cumulative frequency of age 3 equals 50 + 20 (for age 2) + 7 (for age 1) + 2 (for age 0) = 79. The cumulative frequencies for all ages are presented in Table \ref{tab:frequency_1}.
+
+We can also compute \textit{cumulative proportions}: if we take for each age the proportion of people who have that age \textit{or less}, we get the fifth column in Table \ref{tab:frequency_1}. For example, for age 2, we see that there are 20 children with an age of 2. This corresponds to a proportion of 0.020 of all children. Furthermore, there are 9 children who have an even younger age. The proportion of children with an age of 1 equals 0.007, and the proportion of children with an age of 0 equals 0.002. Therefore, the proportion of all children with an age of 2 or less equals $0.020+0.007+0.002=0.029$, which is called the cumulative proportion for the age of 2.
+
+
+\section{Frequencies and proportions in R}
+
+The \texttt{mtcars} data set contains information about a number of cars: miles per gallon (\texttt{mpg}), number of cylinders (\texttt{cyl}), etcetera. 
+
+<<>>=
+mtcars 
+@
+
+The object is a data frame. We can turn it into a tibble as follows:
+
+<<>>=
+mtcars <- mtcars %>% as_tibble()
+@
+
+The function \texttt{as\_tibble()} is available when you load the \texttt{tidyverse} package. From now on, we assume that you load the \texttt{tidyverse} package at the start of every R session.
+
+If we want to know how many cars belong to which category of number of cylinders, we can use the function \texttt{count()}:
+
+<<>>=
+mtcars %>% 
+  count(cyl)
+@
+
+The new variable \texttt{n} is the frequency. We see that the value 4 occurs 11 times, the value 6 occurs 7 times and the value 8 occurs 14 times. Thus, in this data set there are 11 cars with 4 cylinders, 7 cars with 6 cylinders, and 14 cars with 8 cylinders. 
+
+We obtain proportions when we divide the frequencies by the total number of cars (the sum of all the values in the \texttt{n} variable):
+
+<<>>=
+mtcars %>% 
+  count(cyl) %>% 
+  mutate(proportion = n/sum(n))
+@
+
+Cumulative frequencies and cumulative proportions can be obtained using the \texttt{cumsum()} function:
+
+<<>>=
+mtcars %>% 
+  count(cyl) %>% 
+  mutate(proportion = n/sum(n)) %>% 
+  mutate(cumfreq = cumsum(n), 
+         cumprop = cumsum(proportion))
+@
+
+
+A frequency plot can be made using ggplot combined with \texttt{geom\_line()}:
+
+<<eval = F>>=
+mtcars %>% 
+  count(cyl) %>% 
+  mutate(proportion = n/sum(n)) %>% 
+  ggplot(aes(x = cyl, y = n)) +
+  geom_line()
+@
+
+A histogram of the \texttt{mpg} variable can be made using \texttt{geom\_histogram()}:
+
+<<eval = F>>=
+mtcars %>% 
+  ggplot(aes(x = mpg)) +
+  geom_histogram(breaks = seq(5, 40, 5))
+@
+
+It is wise to play around with the number of bins that you'd like to make, or with the boundaries of the bins. Here we choose boundaries $5, 10, 15, \dots, 40$.
+
+\section{Quartiles, quantiles and percentiles}
+
+Suppose we want to split the group of 1000 children into 4 equally-sized subgroups, with the 25\% youngest children in the first group, the 25\% oldest children in the last group, and the remaining 50\% of the children in two equally sized middle groups. What ages should we then use to divide the groups? First, we can order the 1000 children on the basis of their age: the youngest first, and the oldest last. We could then use the concept of \textit{quartiles} (from quarter, a fourth) to divide the group in four. In order to break up all ages into 4 subgroups, we need 3 points to make the division, and these three points are called quartiles. The first quartile is the value below which 25\% of the observations fall, the second quartile is the value below which 50\% of the observations fall, and the third quartile is the value below which 75\% of the observations fall.\footnote{The fourth quartile would be the value below which \textit{all} values are, so that would be the largest value in the row (the age of the last child in the row).}
+
+Let's first look at a smaller but similar problem. For example, suppose your observed values are {10, 5, 6, 21, 11, 1, 7, 9}. You first order them from low to high so that you obtain {1, 5, 6, 7, 9, 10, 11, 21}. You have 8 values, so the first 25\% of your values are the first two. The highest value of these two equals 5, and this we define as our first quartile.\footnote{Note that we could also choose to use 6, because 1 and 5 are lower than 6. Don't worry, the method that we show here to compute quartiles is only one way of doing it. In your life, you might stumble upon alternative ways to determine quartiles. These are just arbitrary agreements made by human beings. They can result in different outcomes when you have small data sets, but usually not when you have large data sets.} We find the second quartile by looking at the values of the first 50\% of the observations, so 4 values. The first 4 values are 1, 5, 6, and 7. The last of these is 7, so that is our second quartile. The first 75\% of the observations are 1, 5 ,6 ,7 , 9, and 10. The value last in line is 10, so our fourth quartile is 10.
+
+The quartiles as defined here can also be found graphically, using cumulative proportions. Figure \ref{fig:quartile_1} shows for each observed value the cumulative proportion. It also shows where the cumulative proportions are equal to 0.25, 0.50 and 0.75. We see that the 0.25 line intersects the other line at the value of 5. This is the first quartile. The 0.50 line intersects the other line at a value of 7, and the 0.75 line intersects at a value of 10. The three percentiles are therefore 5, 7 and 10.
+
+
+<<quartile_1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='Cumulative proportions.', results='asis' >>=
+
+value =  c(1, 5, 6, 7, 9, 10, 11, 21)
+
+tibble(value) %>%
+  count(value, name = "frequency") %>% 
+  mutate(proportion = frequency/8) %>%
+  mutate(cum.proportion = cumsum(proportion)) %>%
+  ggplot(aes(value, cum.proportion)) +
+  geom_line() + 
+  geom_point() + 
+  scale_x_continuous(breaks = 1:21) + 
+  geom_hline(yintercept = c(0.25, 0.5, 0.75))
+
+
+@
+
+If you have a large data set, the graphical way is far easier than doing it by hand. If we plot the cumulative proportions for the ages of the 1000 children, we obtain Figure \ref{fig:quartile_2}. We see a nice S-shaped curve. We also see that the three horizontal quartile lines no longer intersect the curve at specific values, so what do we do? By eye-balling we can find that the first quartile is somewhere between 4 and 5. But which value should we give to the quartile? If we look at the cumulative proportion for an age of 4, we see that its value is slightly below the 0.25 point. Thus, the proportion of children with age 4 or younger is lower than 0.25. This means that the child that happens to be the 250th cannot be 4 years old. If we look at the cumulative proportion of age 5, we see that its value is slightly above 0.25. This means that the proportion of children that is 5 years old or younger is slightly more than 0.25. Therefore, of the the total of 1000 children, the 250th child must have age 5. Thus, by definition, the first quantile is 5. 
+The second quartile is somewhere between 6 an 7, so by using the same reasoning as for the first quartile we know that 50\% of the youngest children is 7 years old or younger. The third quartile is somewhere between 8 and 9 and this tells us that the youngest 75\% of the children is age 9 or younger. Thus, we can call 5, 7 and 9 our three quartiles.
+
+
+
+<<quartile_2, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='Cumulative proportions.', results='asis' >>=
+
+age =  age
+tibble(age) %>% 
+  count(age, name = 'frequency') %>%
+  mutate(proportion = frequency/1000) %>%
+  mutate(cum.proportion = cumsum(proportion)) %>%
+  ggplot(aes(age, cum.proportion)) +
+  geom_line() + 
+  geom_point() + 
+  scale_x_continuous(breaks = 0:17) + 
+  geom_hline(yintercept = c(0.25, 0.5, 0.75))
+@
+
+
+Alternatively, we could also use the frequency table (Table \ref{tab:frequency_1}). First, if we want to have 25\% of the children that are the youngest, and we know that we have 1000 children in total, we should have $0.25 \times 1000=250$ children in the first group. So if were to put all the children in a row, ordered from youngest to oldest, we want to know the age of the 250th child.
+
+In order to find the age of this 250th child, and we look at Table \ref{tab:frequency_1}, we see that 29.7\% of the children have an age of 5 or less (297 children), and 18.4\% of the children have an age of 4 or less (184 children). This tells us that, since 250 comes after 184, the 250th child must be older than 4, and because 250 comes before 297, it must be younger than or equal to 5, hence the child is 5 years old.
+
+Furthermore, if we want to find a cut-off age for the oldest 25\%, we see from the table, that 83.8\% of the children (838 children) have an age of 9 or less, and 73.0\% of the children (730) have an age of 8 or less. Therefore, the age of the 750th child (when ordered from youngest to oldest) must be 9.
+
+
+What we just did for quartiles, (i.e. 0.25, 0.50, 0.75) we can do for any proportion between 0 and 1. We then no longer call them quartiles, but \textit{quantiles}. A quantile is the value below which a given proportion of observations in a group of observations fall. From this table it is easy to see that a proportion of 0.606 of the children have an age of 7 or less. Thus, the 0.606 quantile is 7. One often also sees \textit{percentiles}. Percentiles are very much like quantiles, except that they refer to percentages rather than proportions. Thus, the 20th percentile is the same as the 0.20 quantile. And the 0.81 quantile is the same as the 81st percentile.
+
+The reason that quartiles, quantiles and percentiles are important is that they are very short ways of saying something about a distribution. Remember that the best way to represent a distribution is either a frequency table or a frequency plot. However, since they can take up quite a lot of space sometimes, one needs other ways to briefly summarise a distribution. Saying that "the third quartile is 454" is a condensed way of saying that "75\% of the values is either 454 or lower". In the next sections, we look at other ways of summarising information about distributions.
+
+Another way in which quantiles and percentiles are used is to say something about \textit{individuals}, relative to a group. Suppose a student has done a test and she comes home saying she scored in the 76th percentile of her class. What does that mean? Well, you don't know her score exactly, but you do know that of her classmates, 76 percent had the same score or lower. That means she did pretty well, compared to the others, since only 24 percent had a higher score.
+
+% \subsection{Exercises}
+% 
+% <<frequency_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+% set.seed(123)
+% x <- rpois(200, 3)
+% data.frame(x) %>% 
+%   group_by(x) %>%
+%   summarise(frequency = n(),
+%             proportion = n()/200) %>%
+%   mutate(cum.proportion = cumsum(proportion)) %>%
+%   xtable(caption = "Freqency table for x, with proportions and cumulative proportions.", 
+%          label = "tab:frequency_2", 
+%          digits = 3) %>%
+%   print(include.rownames = F, caption.placement = "top")
+% @
+% 
+% \begin{enumerate}
+% \item Look at Table \ref{tab:frequency_2}. Determine the 10th quantile for variable \textbf{x}.
+% 
+% \item Determine the 95th percentile.
+% 
+% \item Determine the first quartile.
+% 
+% \item Determine the second quartile.
+% 
+% \item Determine the 50th percentile.
+% 
+% \item Determine the third quantile.
+% 
+% \item Determine the 0.75 quantile.
+% 
+% \item Suppose we have the values {6,5,4,8,6,5,6,4,5,6,7,8}. Determine the third quartile.
+% 
+% \item Suppose we have the values {4,4,4,8,6,4,6,4,5,6,7,8}. Determine the third quartile.
+% 
+% \item From Figure \ref{fig:quartile_3}, determine the 30th, 40th and 90th percentiles.
+% 
+% <<quartile_3, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Cumulative proportions.', results='asis' >>=
+% 
+% value = rchisq(100, 4) %>% round()
+% tibble(value) %>% 
+%   group_by(value) %>%
+%   summarise (frequency = n(),
+%              proportion= n()/100) %>%
+%   mutate(cum.proportion = cumsum(proportion)) %>%
+%   ggplot(aes(value, cum.proportion)) +
+%   geom_line() + 
+%   geom_point() +
+%   scale_y_continuous(breaks = seq(0, 1, 0.1)) +
+%   scale_x_continuous(breaks = 0:17) +
+%   geom_hline(yintercept = c(0.30, 0.40, 0.90))
+% @
+% 
+% \item Suppose yesterday you did an IQ test, together with 999 other students. Today you hear that you scored 100 points. They tell you that the 8th percentile was a score of 80, and the 9th percentile was a score of 100. What does that tell you about your performance yesterday?
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% 
+% \item
+% 1
+% \item
+% 6
+% \item
+% 2
+% \item
+% 3
+% \item
+% 3
+% \item
+% 4
+% \item
+% 4
+% \item
+% ordered series: 445 556 666 788, last value of third quart: 6
+% \item
+% orderd series: 444 445 666 788, last value of third quart: 6
+% 
+% \item
+% 2, 2 and 7
+% 
+% \item
+% 
+% Nine percent of my fellow students scored the same or lower than I did on the exam, so 91 percent did better. I did not do so well.
+% 
+% \end{enumerate}
+% 
+
+\section{Quantiles in R}
+
+Obtaining quartiles, quantiles and percentiles can be done with the \texttt{quantile()} function:
+
+<<>>=
+quantile(mtcars$mpg, 
+         probs = c(0.25, 0.50, 0.75, 0.90))
+@
+
+
+
+
+
+
+\section{Measures of central tendency}
+
+The mean, the median and the mode are three different measures that say something about the \textit{central tendency} of a distribution. If you have a series of values: around which value do they tend to cluster?
+
+\subsection{The mean}
+Suppose we have the values 1, 2 and 3, then we compute the mean by first adding these numbers and then divide them by the number of values we have. In this case we have three values, so the mean is equal to $(1 + 2 + 3)/3 = 2$. In statistical formulas, the mean of a variable is indicated by a bar above that variable. So if our values of variable $Y$ are 1, 2 and 3, then we denote the mean by $\widebar{Y}$ (pronounced as 'y-bar'). When taking the sum of a set of values, statistical formulas show the summation sign $\Sigma$ (the Greek letter sigma). So we often see the following formula for the mean of a set of $n$ values for variable $Y$\footnote{Variables are symbolised by capitals, e.g., $Y$. Specific values of a variable are indicated in lowercase, e.g., $y$.}:
+
+\begin{equation}
+\widebar{Y} = \frac{\Sigma_{i=1}^n Y_i}{n}
+\end{equation}
+
+In words, in order to compute $\widebar{Y}$, we take every value for variable $Y$ from $i=1$ to $i=n$ and sum them, and the result is divided by $n$. Suppose we have variable $Y$ with the values {6, -3, and 21}, then the mean of $Y$ equals:
+
+\begin{equation}
+\widebar{Y} = \frac {  \Sigma_{i} Y_i} {n} =    \frac{Y_1 + Y_2 + Y_3}{n} = \frac{6 + (-3) + 21}{3} = \frac{24}{3} = 8
+\end{equation}
+
+
+
+
+
+
+
+\subsection{The median}
+The mean is only one of the measures of central tendency. An alternative measure of central tendency is the \textit{median}. The median is nothing but the middle value of an ordered series. Suppose we have the values 45, 567, and 23. Then what value lies in the middle when ordered? Let's first order them from small to large to get a better look. We then get 23, 45 and 567. Then it's easy to see that the value in the middle is 45.
+
+Suppose we have the values 45, 45, 45, 65, and 23. What is the middle value when ordered? We first order them again and see what value is in the middle: 23, 45, 45, 45 and 65. Obviously now 45 is the median. You can also see that half of the values is equal or smaller than this value, and half of the values is equal or larger than this value. The median therefore is the same as the second quartile.
+
+What if we have two values in the middle? Suppose we have the values 46, 56, 45 and 34. If we order them we get 34, 45, 46 and 56. Now there are two values in the middle: 45 and 46. In that case, we take the mean of these two middle values, so the median is 45.5. 
+
+When do you use a median and when do you use a mean? For numeric variables that have a more or less symmetric distribution (i.e., a frequency plot that is more or less symmetric), the mean is most often used. Actually, for distributions that are more or less symmetric the mean and median are very similar. For numeric variables that do not have a symmetric distribution, it is usually more informative to use the median. An example of such a situation is income. Figure \ref{fig:median} shows a typical distribution of yearly income. The distribution is highly asymmetric, it is severely skewed to the right. The bulk of the values are between 20,000 and 40,000, with only a very few extreme values on the high end. Even though there are only a few people with a very high income, the few high values have a huge effect on the mean.
+
+<<median, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='Distribution of yearly income.', results='asis' >>=
+set.seed(34)
+income <- rnorm(1000, 10, 0.4) %>% exp()
+tibble(income) %>%
+  ggplot(aes(income)) +
+  geom_histogram(bins = 20)
+options(scipen = 999) # disable scientific notation
+@
+
+The mean of the distribution turns out to be \Sexpr{round(mean(income),0)}. The largest value in the distribution is an income of \Sexpr{round(max(income),0)}. Imagine what would happen to the mean and the median if we would change only this one value, that is, the highest observed income. Which would be most affected, do you think: the mean or the median?
+
+<<median2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of yearly income.', results='asis' >>=
+c <- which(income == max(income))
+income[c] <- income[c] + 10000
+# table(income) %>% max
+@
+
+Well, if we would change this value into \Sexpr{round(income[c],0)}, you see an immediate impact on the mean: the mean is then \Sexpr{round(mean(income),0)}. This means that the mean is very sensitive to extreme values. One single change in a data set can have a huge effect on the mean. The median on the other hand is much more stable. The median remains unaffected by changes in the extremes. This because it only looks at the middle value. The middle value is unaffected by a change in the extreme values, as long as the order of the values remains the same and the middle value remains the same.
+
+This can be seen even more clearly by looking at the example in Table \ref{tab:median_2}. There we have three values, X1, X2 and X3, for which we compute both the mean and the median. First, suppose we have the values 4, 5, and 8 (like in the first row of Table \ref{tab:median_2}). Obviously, the median is 5. Next, instead of 4, 5 and 8, we could have values 4, 5 and 80, or 4, 5 and 800, or 4, 5 and 8000. Regardless, the middle value of this series remains 5. In contrast, the mean would be very much affected by having either an 8, an 80, an 800 or an 8000 in the series. In sum: the median is a more stable measure of central tendency than the mean.
+
+
+<<median_2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+x <- matrix (c(4, 5, 8,
+               4, 5, 80,
+               4, 5, 800,
+               4, 5, 8000), 3, 4)
+data.frame(t(x), median = 5, mean = apply(t(x), 1, mean)) %>%
+  xtable(caption = "Four series of values and their respective medians and means.", 
+         label = "tab:median_2", 
+         digits = c(0, 0, 0, 0, 0, 1)) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+
+
+\subsection{The mode}
+A third measure of central tendency is the \textit{mode}. The mode is defined as the value that we see most frequently in a series of values. For example, if we have the series 4, 7, 5, 5, 6, 6, 6, 4, then the value observed most often is 6 (three times). Modes are easily inferred from frequency tables: the value with the largest frequency is the mode. They are also easily inferred from frequency plots: the value on the horizontal axis for which we see the highest count (on the vertical axis).
+
+The mode can also be determined for categorical variables. If we have the observed values 'Dutch', 'Danish', 'Dutch', and 'Chinese', the mode is 'Dutch' because that is the value that is observed most often.
+
+If we look back at the distribution in Figure \ref{fig:median}, we see that the peak of the distribution is around the value of 19,000. However, whether this is the mode, we cannot say. Because income is a more or less continuous variable, every value observed in the Figure occurs only once: there is no value of income with a frequency more than 1. So technically, there is no mode. However, if we split the values into 20 bins, like we did for the histogram in Figure \ref{fig:median}, we see that the fifth bin has the highest frequency. In this bin there are values between 17000 and 21000, so our mode could be around there. If we really want a specific value, we could decide to take the average value in the fifth bin. There are many other statistical tricks to find a value for the mode, where technically there is none. The point is that for the mode, we're looking for the value or the range of values that are most frequent. Graphically, it is the value under the peak of the distribution. Similar to the median, the mode is also quite stable: it is not affected by extreme values and is therefore to be preferred over the mean in the case of asymmetric distributions.
+
+
+
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% 
+% \item If we have values 56, 78, 23 and 45, what is the mean?
+% 
+% \item If we have values 56, 78, 23 and 45, what is the median?
+% 
+% \item If we have values 56, 23, 78, 23 and 45, what is the mode?
+% 
+% \item Figure \ref{fig:mode} shows a distribution of systolic bloodpressure measures in older men. What would be more or less the mode of these values?
+% 
+% <<mode, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of systolic bloodpressure.', results='asis' >>=
+% set.seed(34)
+% sbp <- rnorm(100, 5, 0.2) %>% exp()
+% tibble(sbp) %>%
+%   ggplot(aes(sbp)) +
+%   geom_histogram(bins = 10) + 
+%   xlab("Systolic bloodpressure")
+% @
+% 
+% \item Figure \ref{fig:quartile_3} shows a distribution of values. What would be more or less the median of these values?
+% 
+% \item Figure \ref{fig:mode2} shows a distribution of number of bicycles for 100 households. If you could choose only one measure to describe this distribution, what would you choose to report: the mean, the mode or the median? Motivate your answer.
+% 
+% <<mode2, fig.height=4, echo=FALSE, fig.align='center', fig.cap='Distribution of number of bicycles per household.', results='asis' >>=
+% set.seed(34)
+% bicycles <- rpois(100, 1) %>% round()
+% tibble(bicycles) %>%
+%   ggplot(aes(bicycles)) +
+%   geom_histogram(bins = 10, binwidth = 1) +
+%   scale_x_continuous(breaks = seq(0, 10))
+% @
+% 
+% 
+% 
+% \end{enumerate}
+% 
+% 
+% \subsection{Answers}
+% 
+% \begin{enumerate}
+% \item \Sexpr{mean(c(56, 78, 23,45))}
+% \item \Sexpr{median(c(56, 78, 23,45))}
+% \item  23
+% \item 140
+% \item 3
+% \item The median. Because the distribution is very skew and in that case the mean would be relatively high, because it is influenced by a few households with very many bicycles. The mode would not say very much other than that 0 bicycles is the most common observation. But saying that half the households have 1 bicycle or lesswould be more informative than that. 
+% 
+% \end{enumerate}
+
+
+
+
+
+
+\section{Relationship between measures of tendency and measurement level}
+
+There is a close relationship between measures of tendency and measurement level. For numeric variables, all three measures of tendency are meaningful. Suppose you have the numeric variable age measured in years, with the values 56, 68, 68, 99 and 100. Then it is meaningful to say that the average age is 78.2 years, that the median age is 68 years, and that the mode is 68 years.
+
+For ordinal variables, it is quite different. Suppose you have 5 T-shirts, with the following sizes: M, S, M, L, XL. Then what is the average size? There are no numeric values here to put in the algebraic formula. But we can determine the median: if we order the values from small to large we get the set S, M, M, L, XL and we see that the middle value is M. So M is our median in this case. \footnote{However, suppose that our collection of T-shirts had the following sizes: S, M, L, L. Then there would be no single middle value in we would have to average the M and L values, which would be impossible!} The other meaningful measure of tendency for ordinal variables is the mode.
+
+For categorical variables, both the mean and the median are pointless to report. Suppose we have the nominal variable Study Programme with observed values "Medicine", "Engineering", "Engineering", "Mathematics", and "Biology". It would be impossible to derive a numerical mean, nor would it be possible to determine the middle value to determine the median, as there is no logical or natural order.\footnote{Unless you see one? But then it would not be a categorical value but an ordinal variable.} It is meaningful though to report a mode. It would be meaningful to state that the study programme mentioned most often in the news is "Psychology", or that the most popular study programme in India is "Engineering". Thus, for categorical variables, both dichotomous and nominal variables, only the mode is a meaningful measure of central tendency.
+
+As stated earlier, the appearance of a variable in a data matrix can be quite misleading. Categorical variables and ordinal variables can often look like numeric variables, which makes it very tempting to compute means and medians where they are completely meaningless. Take a look at Table \ref{tab:modemedian}. It is entirely possible to compute the average University, Size, or Programme, but it would be utterly senseless to report these values.
+
+It is entirely possible to compute the median University, Size, or Programme, but it is only meaningful to report the median for the variable Size, as Size is an ordinal variable. Reporting that the median size is equal to 2 is saying that about half of the study programmes is of medium size or small, and about half of the study programmes is of medium size or large.
+
+It is entirely possible to compute the mode for the variables University, Size, or Programme, and it is always meaningful to report them. It is meaningful to say that in your data there is no University that is observed more than others. It is meaningful to report that most study programmes are of medium size, and that most study programmes are study programme number 2 (don't forget to look up and write down which study programme that actually is!).
+
+
+
+<<tab_modemedian, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency table of nationalities.', results='asis' >>=
+set.seed(123)
+University <- c(1, 2, 3, 4, 5, 6)
+Size <- c(1, 3, 2, 2, 3, 2)
+Programme <- c(2, 2, 3, 3, 4, 1)
+tibble(University, Size, Programme) %>%
+  xtable(caption = "Study programmes and their relative sizes (1=small, 2=medium, 3=large) for six different universities.", 
+         label = "tab:modemedian", 
+         digits = 0) %>%
+        print(include.rownames = F, caption.placement = "top")
+height <- c(120, 120, 135)
+@
+
+\section{Measures of central tendency in R}
+
+The mean and median for numeric variables can be obtained as follows:
+
+<<>>=
+mtcars %>% 
+  summarise(mean_cyl = mean(cyl),
+            median_cyl = median(cyl))
+@
+
+
+R does not have an in-built function to calculate modes. So we create our own function \texttt{getmode()}. This function takes a vector as input and gives the mode value as output.
+
+<<>>=
+getmode <- function(variable){
+  unique_values <- unique(variable)
+  unique_values[
+    match(variable, unique_values) %>% 
+      tabulate() %>% 
+      which.max()
+    ]
+}
+
+mtcars %>% 
+  summarise(mode_cyl = getmode(cyl))
+@
+
+
+
+
+\section{Measures of variation}
+
+Above we saw that we can summarise distributions by measures of central tendency. Here we discuss how we can summarise distributions of numeric variables by a measure that describes their \textit{variation}. Variables show variation, by definition, but how much variation do they actually show?
+
+Suppose we measure the height of 3 children, and their heights (in cms) are 120, 120 and 120. There is no variation in height: all heights are the same. There are no differences. Then the average height is 120, the median height is 120, and the mode is 120. The variation is 0: non-existing, absent.
+
+Now suppose their heights are \Sexpr{height}. Now there are differences: one child is taller than the other two, who have the same height. There is some variation now. We know how to quantify the mean, which is \Sexpr{mean(height)}, we know how to quantify the median, which is 120, and we know how to quantify the mode, which is also 120. But how do we quantify the variation? Is there a lot of variation, or just a little, and how do we measure it?
+
+\subsection{Range and interquartile range}
+
+One thing you could think of is measuring the distance or difference between the lowest value and the highest value. We call this the \textit{range}. The lowest value is 120, and the highest value is 135, so the range of the data is equal to $135-120=15$. As another example, suppose we have the values 20, 20, 21, 20, 19, 20 and 454. Then the range is equal to $454-19=435$. That's a large range, for a series of values that for the most part hardly differ from each other.
+
+Instead of measuring the distance from the lowest to the highest value, we could also measure the distance between the first and the third quartile: how much does the third quartile \textit{deviate} from the first quartile? This distance or deviation is called the \textit{interquartile range} (IQR) or the \textit{interquartile distance}. Suppose that we have a large number of systolic blood pressure measurements, where 25\% are 120 or lower, and 75\% are 147 or lower, then the interquartile range is equal to $147-120=27$.
+
+Thus, we can measure variation using the range or the interquartile range. A third measure for variation is \textit{variance}, and variance is based on the \textit{sum of squares}.
+
+\subsection{Sum of squares}
+
+What we call a sum of squares is actually a sum of squared deviations. But deviations from what? We could for instance be interested in how much the values \Sexpr{height} vary around the mean of these values. The mean of these three values equals \Sexpr{mean(height)}. The first value differs $120-125= -5$, the second value also differs $120-125= -5$, and the third value differs $135-125= 10$.
+
+Whenever we look at deviations from the mean, some deviations are positive and some deviations will be negative (except when there is no variation). If we want to measure variation, it should not matter whether deviations are positive or negative: any deviation should add to the total variation in a positive way. Moreover, if we would add up all deviations from the mean, we would always end up with 0, as you can see in our example. Adding up -5, -5 and +10 would lead to a sum of 0. This would mean no variation. However, as you can see, there is variation. So that is why we would better make all deviations positive, and this can be done by taking the square of the deviations, since a negative number squared is always positive. So for our three values 120, 120 and 135, we get the deviations -5, -5 and +10, and if we square these deviations, we get 25, 25 and 100. If we add these three squares, we obtain the sum 150. This is a sum of squared differences, or sum of squares.
+
+In most cases, the sum of squares (SS) refers to the sum of squared deviations from the mean. In brief, suppose you have $n$ values of a variable $Y$, you first take the mean of those values (this is $\widebar{Y}$), you subtract this mean from each of these $n$ values ($Y_i-\widebar{Y}$), then you take the squares of these deviations, $(Y_i-\widebar{Y})^2$, and then add them up (take the sum of these squared deviations, $\Sigma (Y_i-\widebar{Y})^2$. In formula form, this process looks like:
+
+\begin{equation}
+SS = \Sigma_i^n (Y_i-\widebar{Y})^2
+\end{equation}
+
+As an example, suppose you have the values 10, 11 and 12, then the mean is 11. Then the deviations from the mean are -1, 0 and +1. If you square them you get $(-1)^2=1$, $0^2=0$ and $(+1)^2=1$, and if you sum these three values, you get $SS=1+0+1=2$. In formula form:
+
+
+\begin{eqnarray}
+SS &=& (Y_1-\widebar{Y})^2 + (Y_2-\widebar{Y})^2 +(Y_3-\widebar{Y})^2 \\
+&=& (10-11)^2 + (11-11)^2 +(12-11)^2 = (-1)^2 + 0^2 + 1^2=2 \nonumber
+\end{eqnarray}
+
+Now let's use some values that are more different from each other, but with the same mean. Suppose you have the values 9, 11 and 13. The average value is still 11, but the deviations from the mean are larger. The deviations from 11 are -2, 0 and +2. Taking the squares, you get $(-2)^2=4$, $0^2=0$ and $(+2)^2=4$ and if you add them you get $SS=4+0+4=8$.
+
+\begin{eqnarray}
+SS &=& (Y_1-\widebar{Y})^2 + (Y_2-\widebar{Y})^2 +(Y_3-\widebar{Y})^2 \\
+&=& (9-11)^2 + (11-11)^2 +(13-11)^2= (-2)^2 + 0^2 + 2^2=8 \nonumber
+\end{eqnarray}
+
+Thus, the more the values differ from each other, the larger the deviations from the mean. And the larger the deviations from the mean, the larger the sum of squares. The sum of squares is therefore a nice measure of how much values differ from each other.
+
+\subsection{Variance and standard deviation} \label{sec:standarddeviation}
+
+The sum of squares can be seen as a measure of total variation: all (squared) deviations from a certain value are added up. This means that the more data values you have, the larger the sum of squares. Often-times, you are not interested in the total variation, but you're interested in the average variation. Suppose we have the values 10, 11 and 24. The mean is then $45/3=15$. We have two values that are smaller than the mean and one value that is larger than the mean, so two negative deviations and one positive deviation. Squaring them makes them all positive. The squared deviations are 25, 16, and 81. The third value has a huge squared deviation (81) compared to the other two values. If we take the \textit{average} squared deviation, we get $(25+16+81)/3 \approx 40.67$. So the average squared deviation is equal to 40.67. This value is called the \textit{variance}. So the variance of a bunch of values is nothing but the $SS$ divided by the number of values, $n$. The variance is \textit{the average squared deviation from the mean}. The symbol used for the variance is usually $\sigma^2$ (pronounced as 'sigma squared').\footnote{Online you will often find the formula $\frac{\Sigma_i (Y_i-\widebar{Y})^2}{n-1}$. The difference is that here we are talking about the definition of the variance of an observed variable $Y$, and that elsewhere one talks about trying to figure out what the variance might be of all values of $Y$ when we only see a small portion of the values of $Y$. When we use all values of $Y$, we talk about the \textit{population} variance, denoted by $\sigma^2$. When we only see a small part of the values of $Y$, we talk about a \textit{sample} of $Y$-values. We will come back to the distinction between population variance and sample variance and why they differ in Chapter \ref{chap:mean}.}
+
+\begin{equation}
+\mathrm{Var}(Y) = \frac{SS}{n}= \frac{\Sigma_i (Y_i-\widebar{Y})^2}{n}
+\end{equation}
+
+
+As an example, suppose you have the values 10, 11 and 12, then the average value is 11. Then the deviations are -1, 0 and 1. If you square them you get $(-1)^2=1$, $0^2=0$ and $1^2=1$, and if you add these three values, you get $SS=1+0+1=2$. If you divide this by 3, you get the variance: $\frac{2}{3}$. Put differently, if the squared deviations are 1, 0 and 1, then the average squared deviation (i.e., the variance) is $\frac{1+0+1}{3}=\frac{2}{3}$.
+
+As another example, suppose you have the values 8, 10, 10 and 12, then the average value is 10. Then the deviations from 10 are -2, 0, 0 and +2. Taking the squares, you get 4, 0, 0 and 4 and if you add them you get $SS=8$. To get the variance, you divide this by 4: $8/4=2$. Put differently, if the squared deviations are 4, 0, 0 and 4, then the average squared deviation (i.e., the variance) is $\frac{4+0+0+4}{4}=2$.
+
+Often we also see another measure of variation: the \textit{standard deviation}. The standard deviation is the square root of the variance and is therefore denoted as $\sigma$:
+
+\begin{equation}
+\sigma = \sqrt{\sigma^2}= \sqrt{\mathrm{Var}(Y)}=\sqrt{  \frac{\Sigma_i (Y_i-\widebar{Y})^2}{n}}
+\end{equation}
+
+The standard deviation is often used to indicate how deviant a particular value is from the rest of the values. Take for instance an IQ score of 105. Is that a high IQ score or a low IQ score? Well, if someone tells you that the average person has an IQ score of 100, you know that a score of 105 is above average. However, still you do not know whether it is much higher than average, or just slightly higher than average. Suppose I tell you that the standard deviation of IQ scores is 15, then you know that a score of 105 is a third of a standard deviation above the mean. Therefore, in order to know how deviant a particular value is relative to a the rest of the values, one needs both a measure of central tendency and a measure of variation. In psychological testing, IQ testing for instance, one usually uses the mean and the standard deviation to express someone's score as the number of standard deviations above or below the average score. This process of counting the number of standard deviations is called \textit{standardisation}. If we go back to the IQ score of 105, and if we want to standardise the score in terms of standard deviations from the mean, we saw that a score of 105 was a third of a standard deviation above the mean, so $+\frac{1}{3}$. As another example, suppose the mean is 100 and we observe an IQ score of 80, we see that we are 20 points below the average of 100. This is equal to $20/15=4/3$ standard deviations below the average, so our standardised measure equals $-4/3$ (note the negative sign: it indicates we are below the mean). In general, a standardised score can be computed by subtracting the mean and dividing the result by the standard deviation. A standardised score for a particular value of $Y$, $Y = y$, is usually denoted by the $z$-score:
+
+
+\begin{equation}
+z = \frac{y - \widebar{Y}}{\sigma}
+\end{equation}
+
+
+% As an aside, online and in other textbooks you often see another formula for the variance:
+% 
+% \begin{equation}
+% \hat{\sigma^2} = \frac{SS}{n-1}= \frac{\Sigma_i^n (y_i-\bar{y})^2}{n-1}.
+% \end{equation}
+% 
+% The difference is in the denominator: using $n-1$ instead of $n$. Note that what these textbooks and online sources mean is not the \textit{definition} of the variance of a set of observed values, but an \textit{estimator} of the variance of values that are for the most part not observed. An estimator is a formula for combining the values occuring in the observed data to infer something about data that are for the most part unobserved. We will come back to the issue of inference in Chapter \ref{chap:confidence}.
+
+% \subsection{Exercises}
+% 
+% \begin{enumerate}
+% \item Suppose we have the values 9, 6, 5, and 66. What is the range?
+% \item Suppose we have the values -9, 6, -5, and 66. What is the range?
+% \item Suppose we have the values 9, 6, 5, and 4. What is the sum of squared deviations from 0?
+% \item Suppose we have the values 9, 6, 5, and 4. What is the sum of squared deviations from the mean?
+% \item Suppose we have the values -7, 6, -5, and 6. What is the sum of squared deviations from the mean?
+% \item Suppose we have the values -7, 6, -5, and 6. What is the variance?
+% \item Suppose we have the values 77, 76, and 78. What is the standard deviation?
+% \item Suppose we have the values 197, 197, and 197. What is the standard deviation?
+% \end{enumerate}
+% 
+% Answers:
+% 
+% 
+% \begin{enumerate}
+% \item Smallest value is 5, largest value is 66. The range is $66-5=61$.
+% \item Smallest value is -9, largest value is 66. The range is $66-(-9)=75$.
+% \item $9^2+6^2+5^2+4^2=81+36+25+16=\Sexpr{81+36+25+16}$
+% \item The mean is $(9+6+5+4)/4=\Sexpr{(9+6+5+4)/4}$. So we have $(9-6)^2+(6-6)^2+(5-6)^2+(4-6)^2=9+0+1+4=14$.
+% \item The mean is $(-7+6-5+6)/4=\Sexpr{(-7+6-5+6)/4}$. So we have $(-7)^2+6^2+(-5)^2+6^2=49+36+25+36=\Sexpr{49+36+25+36}$.
+% \item The mean is 0. So the sum of squares equals $(-7)^2+6^2+(-5)^2+6^2=49+36+25+36=\Sexpr{49+36+25+36}$. Then the variance is $\Sexpr{49+36+25+36}/4=\Sexpr{(49+36+25+36)/4}$.
+% \item The average is $(77+76+78)/3=77$. The sum of squares is then $(-1)^2+0^2+1^2=2$. The variance is then $2/3=0.67$. The standard deviation is the root of the variance, so $\sqrt{0.67}=\Sexpr{round(sqrt(0.67),2)}$.
+% \item All values are the same: there is no variation. Therefore the variance is 0, and therefore the standard deviation is $\sqrt{0}=0$.
+% \end{enumerate}
+
+\section{Variance, standard deviation, and standardisation in R}
+
+The functions \texttt{var()} and \texttt{sd()} calculate the variance and standard deviation for a variable, respectively. 
+
+<<>>=
+mtcars %>% 
+  summarise(var_mpg = var(mpg),
+            std_mpg = sd(mpg))
+@
+
+However, these functions use the formulas $\frac{\Sigma_i (Y_i-\widebar{Y})^2}{n-1}$ and $\sqrt{\frac{\Sigma_i (Y_i-\widebar{Y})^2}{n-1}}$, respectively. We will discuss this further in Chapter \ref{chap:mean}. If you want to use the formula $\frac{\Sigma_i (Y_i-\widebar{Y})^2}{n}$, you need to write your own function that computes the sum of squares (SS) and divides by \textit{n}:
+
+<<>>=
+var_n <- function(variable){
+  SS <- (variable - mean(variable))**2 %>% 
+    sum()
+  return(SS/length(variable)) # dividing by N
+}
+
+mtcars %>% 
+  summarise(var_mpg = var_n(mpg),
+            std_mpg = sqrt(var_n(mpg))) # taking the square root
+
+@
+
+Note that you get different results. For large data sets (large \textit{n}), the differences will be negligible.
+
+Standardised measures can be obtained using the \texttt{scale()} function:
+
+
+<<>>=
+mtcars %>% 
+  mutate(z_mpg = scale(mpg)) %>% 
+  select(mpg, z_mpg)
+@
+
+
+
+\section{Density plots}
+
+Earlier in this chapter we saw that when we have a number of values for a numeric variable, frequency tables and frequency plots fully describe all values of the variable that are observed. A histogram is a helpful tool to visualise the distribution of a variable when there are so many different values that a frequency table would be too long and a frequency plot would become too cluttered. 
+
+% Another helpful tool to summarise a distribution is a measure of central tendency. A measure of central tendency describes very succcintly where values of the variable tend to cluster. A measure of spread or variation describes how much variation there is around such a measure of central tendency. For instance, the variance very succintly describes how much variation there is around the mean of the distribution.  
+
+A histogram can then be used to give a quick graphical overview of the distribution. The bin width is usually chosen rather arbitrarily. Figure \ref{fig:histbin1} shows a histogram of one million values of a numeric variable, say yearly \texttt{wage} for an administrative clerk. Figure \ref{fig:histbin2} shows a histogram for the exact same data, but now using a much smaller bin size. You see that when you have a lot of values, a million in this case, you can choose a very small bin size, and in some cases this can result in a very clear shape of the distribution.
+
+<<histbin1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A histogram of wages with bin size 1000.' >>=
+set.seed(123)
+wage <- rnorm(1000000, 30000, 1000) %>% round(0)
+tibble(wage) %>%
+  ggplot(aes(wage))+
+  geom_histogram(binwidth = 1000)
+@
+
+<<histbin2, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A histogram of wages with bin size 10.' >>=
+
+tibble(wage) %>%
+  ggplot(aes(wage))+
+  geom_histogram(binwidth = 10)
+@
+
+The shape of the distribution that we discern in Figure \ref{fig:histbin2} can be represented by a \textit{density plot}. Density plots are an elegant representation of how the frequency of certain values are distributed across a continuum. They are particularly suited for large amounts of non-discrete (continuous) values, typically more than 1000. Figure \ref{fig:densitywages} shows a density plot of the one million wages. They more or less 'smooth' the histogram: drawing a smooth line connecting the dots of the histogram in Figure \ref{fig:histbin2} while looking through your eyelashes. On the vertical axis, we no longer see 'count' or 'frequency', but 'density'. The quantity \textit{density} is defined such that the area under the curve equals 1. Density plots are particularly suited for large data sets, where one is no longer interested in the particular counts, but  more interested in relative frequencies: how often are certain values observed, relative to other values. From this density plot, it is very clear that, relatively speaking, there are more values around 30,000 than around 27,500 or 32,500.
+
+<<densitywages, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A density plot of the wage variable.' >>=
+
+tibble(wage) %>%
+  ggplot(aes(wage)) +
+  geom_density()
+@
+
+
+
+
+
+% Figure \ref{fig:distr_3} shows a density plot of 1000 temperature values between 50 and 60 Fahrenheit, where all values had a precision of 4 decimal points (i.e., values like 53.9845, 56.0912, etc.). The plot suggests that values around 55 degrees are most frequent, and that values around 52 or around 58 are rather infrequent in the data set. On the vertical axis, we no longer see 'count' or 'frequency', but we see 'density'. Density is defined such that the area under the curve equals 1. Density plots are particularly suited for large data sets, where one is no longer interested in the particular counts: we're more interested in relative frequencies: how often are certain values observed, relative to other values. From this density plot, it is very clear that, relatively speaking, there are more values between 54 and 55 than between 52 and 53.
+% 
+% <<distr_3, fig.height=4, echo=FALSE, fig.align='center', message=F,warning=FALSE, fig.cap='Density plot of 1000 observed temperature measures.' >>=
+% set.seed(1234)
+%  tibble(temperature = rnorm(1000,55, 1)) %>%
+%         ggplot(aes(temperature)) + geom_density()  +
+%         scale_x_continuous(breaks=seq(50, 60)) +
+%         xlim(c(50,60))
+% @
+
+\section{Density plots in R}
+
+Density plots can be obtained using \texttt{geom\_density()}:
+
+<<eval = F>>=
+mtcars %>% 
+  ggplot(aes(x = mpg)) +
+  geom_density()
+@
+
+
+\section{The normal distribution}\label{sec:normal}
+
+Sometimes distributions of observed variables bear close resemblance to \textit{theoretical} distributions. For instance, Figure \ref{fig:densitywages} bears close resemblance to the theoretical \textit{normal} distribution with mean 30,000 and standard deviation 1000. This theoretical shape can be described with the mathematical function
+
+\begin{equation}
+f(x)  = \frac{1}{\sqrt{2 \pi 1000^2}} e^{ { -\frac{(x - 30000)^2}{2 \times  1000^2}  } }
+\end{equation}
+
+which you are allowed to forget immediately. It is only to illustrate that distributions observed in the wild (empirical distributions) sometimes resemble mathematical functions (theoretical distributions).
+
+The density function of that distribution is plotted in Figure \ref{fig:distr_4}. Because of its bell-shaped form, the normal distribution is sometimes informally called 'the bell curve'. The histogram in Figure \ref{fig:densitywages} and the normal density function in Figure \ref{fig:distr_4} look so similar, they are practically indistinguishable.
+
+
+
+
+
+<<distr_4, fig.height=3.5, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The theoretical normal distribution with mean 30,000 and standard deviation 1000.' >>=
+shaded <- tibble(x = seq(29000, 31000, 100),  
+                     y = dnorm(seq(29000, 31000, 100), 30000, 1000))
+shadedleft <- tibble(x = seq(25000, 30000-1.96*1000, 100), 
+                         y = dnorm(seq(25000, 30000-1.96*1000, 100), 30000, 1000))
+shadedright <- tibble(x = seq(30000+1.96*1000, 35000, 100), 
+                          y = dnorm(x = seq(30000+1.96*1000, 35000, 100), 30000, 1000))
+tibble(wage = seq(25000, 35000, 100)) %>%
+  ggplot() +
+  geom_line(aes(x = wage, y = dnorm(wage, mean = 30000, sd = 1000))) +
+  scale_x_continuous(breaks = seq(25000, 35000, 5000)) +
+  geom_area(data = shaded, 
+            mapping = aes(x = seq(29000, 31000, 100), 
+                          y = dnorm(seq(29000, 31000, 100), 30000, 1000)), 
+            alpha = 0.5) +
+  geom_area(data = shadedleft, 
+            mapping = aes(x = seq(25000 , 30000-1.96*1000, 100), 
+                          y = dnorm(x = seq(25000, 30000-1.96*1000, 100), 30000, 1000)), 
+            alpha = 0.5) +
+  geom_area(data = shadedright, 
+            mapping = aes(x = seq(30000+1.96*1000, 35000, 100), 
+                          y = dnorm(x = seq(30000+1.96*1000, 35000, 100), 30000, 1000)), 
+            alpha = 0.5) +
+  ylab("density") +
+  geom_text(x = 30000, y = 0.0002, label = "68 percent") +
+  geom_text(x = 34000, y = 0.00004, label = "2.5 percent") +
+  geom_text(x = 26000, y = 0.00004, label = "2.5 percent") +
+  geom_text(x = 32000, y = 0.00025, label = "inflexion point") +
+  geom_text(x = 28000, y = 0.00025, label = "inflexion point") +
+  geom_line(aes(x = c(29000), y = c(0.00025)), arrow = arrow(length = unit(0.30, "cm"), 
+                                                             ends = "last", 
+                                                             type = "closed")) +
+  geom_line(aes(x = c(31000), y = c(0.00025)), arrow = arrow(length = unit(0.30, "cm"), 
+                                                             ends = "first", 
+                                                             type = "closed"))
+          
+@
+
+
+Mathematicians have discovered many interesting things about the normal distribution. If the distribution of a variable closely resembles the normal distribution, you can infer many things. One thing we know about the normal distribution is that the mean, mode and median are always the same. Another thing we know from theory is that the inflexion points\footnote{The inflexion point is where concave turns into convex, and vice versa. Mathematically, the inflexion point can be found by equating the second derivative of a function to 0.} are one standard deviation away from the mean. Figure \ref{fig:distr_4} shows the two inflexion points. From theory we also know that if a variable has a normal distribution, 68\% of the observed values lies between these two inflexion points. We also know that 5\% of the observed values lie more than 1.96 standard deviations away from the mean (2.5\% on both sides, see Figure \ref{fig:distr_4}). Theorists have constructed tables that make it easy to see what proportion of values lies more than $1, 1.1, 1.2 \dots, 3.8, 3.9, \dots$ standard deviations away from the mean. These tables are easy to find online or in books, and these are fully integrated into statistical software like SPSS and R. Because all these percentages are known for the number of standard deviations, it is easier to talk about the \textit{standard normal distribution}.
+
+In such tables online or in books, you find information only about this standard normal distribution. The standard normal distribution is a normal distribution where all values have been \textit{standardised} (see Section \ref{sec:standarddeviation}). When values have been standardised, they automatically have a mean of 0 and a standard deviation of 1. As we saw in Section \ref{sec:standarddeviation}, such standardised values are obtained if you subtract the mean score from each value, and divide the result by the standard deviation. A standardised value is usually denoted as a $z$-score. Thus in formula form, a value $Y=y$ is standardised by using the following equation:
+
+
+\begin{equation}
+z = \frac{y - \widebar{Y}}{\sigma}
+\end{equation}
+
+
+
+<<normal_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency table of nationalities.', results='asis' >>=
+set.seed(123)
+Y <- rnorm(10, 10, 5) 
+mean <- mean(Y)
+Y_minus_mean = Y - mean
+Z <- scale(Y)[1:10, 1]
+tibble(Y, mean, Y_minus_mean, Z) %>%
+  xtable(caption = "Standardising scores.", label = "tab:normal_1", digits = 1) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+Table \ref{tab:normal_1} shows an example set of values for $Y$ that are standardised. The mean of the $Y$-values turns out to be 10.38, and the standard deviation 4.77. By subtracting the mean, we ensure that the average $z$-score becomes 0, and by subsequently dividing by the standard deviation, we make sure that the standard deviation of the $z$-scores becomes 1.
+
+This standardisation makes it much easier to look up certain facts about the normal distribution. For instance, if we go back to the normally distributed wage values, we see that the average is 30,000, and the standard deviation is 1,000. Thus, if we take all wages, subtract 30,000 and divide by 1,000, we get standardised wages with mean 0 and standard deviation 1. The result is shown in Figure \ref{fig:normal_2}. We know that the inflexion points lie at one standard deviation below and above the mean. The mean is 30,000, and the standard deviation equals 1,000, so the inflexion points are at $30000-1000=29000$ and $30000+1000=31000$. Thus we know that 68\% of the wages are between 29,000 and 31,000.
+
+
+<<normal_2, fig.height=3.5, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The standard normal distribution.' >>=
+shaded <- tibble(x = seq(-1, 1, 0.1),  y = dnorm(seq(-1, 1, 0.1), 0, 1))
+shadedleft <- tibble(x = seq(-5, 0-1.96, .1), y = dnorm(seq(-5, 0-1.96, .1), 0, 1))
+shadedright <- tibble(x = seq(0+1.96, 5, .1), y = dnorm(x=seq(0+1.96, 5, .1), 0, 1))
+  tibble(z = seq(-5, 5, 0.1)) %>%
+    ggplot() +
+    geom_line(aes(x = z, y = dnorm(z, mean = 0, sd = 1))) +
+    scale_x_continuous(breaks=seq(-5, 5)) +
+    geom_area(data = shaded, 
+              mapping = aes(x = seq(-1, 1, .1),
+                            y = dnorm(seq(-1, 1, .1), 0, 1)), 
+              alpha = 0.5) +
+    geom_area(data = shadedleft, 
+              mapping = aes(x = seq(-5 , 0-1.96, .1), 
+                            y = dnorm(x = seq(-5, 0-1.96, .1), 0, 1)), 
+              alpha = 0.5) +
+    geom_area(data = shadedright, 
+              mapping = aes(x = seq(0+1.96, 5, .1), 
+                            y = dnorm(x = seq(0+1.96, 5, .1), 0, 1)), 
+              alpha = 0.5) +
+    ylab("density") +
+    geom_text(x = 0, y = 0.2, label = "68 percent") +
+    geom_text(x = -3.5, y = 0.05, label = "2.5 percent") + 
+    geom_text(x = 3.5, y = 0.05, label = "2.5 percent") + 
+    xlab("Z")
+@
+
+
+
+How do we know that 68\% of the observations lie between the two inflexion points? Similar to proportions and cumulative proportions, we can plot the cumulative normal distribution. Figure \ref{fig:normal_3} shows the cumulative proportions curve for the normal distribution. Note that we no longer see dots because the variable $Z$ is continuous.
+
+<<normal_3, fig.height=3.5, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='The cumulative standard normal distribution.' >>=
+z <- seq(-5, 5, 0.1)
+tibble(z) %>%
+  mutate(cum.prob = pnorm(z)) %>%
+  ggplot(aes(x = z, y = cum.prob)) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(-6, 6)) +
+  geom_segment(x = -4.9, y = pnorm(-1), xend = -1, yend = pnorm(-1), linetype = "dashed") +
+  geom_segment(x = -4.9, y = pnorm(1), xend = 1, yend = pnorm(1), linetype = "dashed") +
+  geom_segment(x = -1, y = 0,xend = -1, yend = pnorm(-1), linetype = "dashed") +
+  geom_segment(x = 1, y = 0,xend = 1, yend = pnorm(1), linetype = "dashed") +
+  geom_text(aes(x = -5.8, pnorm(-1)), label = paste(round(pnorm(-1), 2))) +
+  geom_text(aes(x = -5.8, pnorm(1)), label = paste(round(pnorm(1), 2))) +
+  ylab("Cumulative proportion") +
+  xlab("Z")
+@
+
+We know that the two inflexion points lie one standard deviation below and above the mean. Thus, if we look at a $z$-value of 1, we see that the cumulative probability equals about \Sexpr{round(pnorm(1),2)}. This means that \Sexpr{round(pnorm(1)*100,0)}\% of the $z$-values are lower than 1. If we look at a $z$-value of -1, we see that the cumulative probability equals about \Sexpr{round(pnorm(-1),2)}. This means that \Sexpr{round(pnorm(-1)*100,0)}\% of the $z$-values are lower than -1. Therefore, if we want to know what percentage of the $z$-values lie between -1 and 1, we can calculate this by subtracting \Sexpr{round(pnorm(-1),2)} from \Sexpr{round(pnorm(1),2)}, which equals \Sexpr{round(pnorm(1)-pnorm(-1),2)}, which corresponds to 68\%.
+
+All quantiles for the standard normal distribution can be looked up online\footnote{See for example www.normaltable.com or www.mathsisfun.com/data/standard-normal-distribution-table.html} or in Appendix \ref{app:normal}, but also using R. Table \ref{tab:normal_4} gives a short list of quantiles. From this table, you see that 1\% of the $z$-values is lower than -2.33, and that 25\% of the $z$-values is lower than -0.67. We also see that half of all the $z$-values is lower than 0.00 and that 10\% of the $z$-values is larger than 1.28, and that the 1\% largest values are higher than 2.33. 
+
+Although tables are readily found online, it's helpful to memorise the so-called \textit{68 --  95 -- 99.7 rule}, also called \textit{the empirical rule}. It says that 68\% of normally distributed values are at most 1 standard deviation away from the mean, 95\% of the values are at most 2 standard deviations away (more precisely, 1.96), and 99.7\% of the values are at most 3 standard deviations away. In other words, 68\% of standardised values are between -1 and +1, 95\% of standardised values are between -2 and +2 (-1.96 and +1.96), and 99.7\% of standardised values are between -3 and +3.
+
+<<normal_4, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+proportion <- c(0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99)
+Z <- qnorm(proportion)
+data.frame(Z, cum_proportion = proportion) %>%
+  xtable(caption = "Some quantiles for the standard normal distribution.", 
+         label = "tab:normal_4", 
+         digits = 2) %>%
+  print(include.rownames = F, caption.placement = "top")
+
+@
+
+
+Thus, if we return to our wages with mean 30,000 and standard deviation 1,000, we know from Table \ref{tab:normal_4} that 99\% of the wages are below 30000 + 2.33 times the standard deviation = $30000 + 2.33 \times 1000=\Sexpr{30000+2.33*1000}$.
+
+Returning back to the IQ example of Section \ref{sec:standarddeviation}. Suppose we have IQ scores that are normally distributed with a mean of 100 and a standard deviation of 15. What IQ score would be the 90th percentile? From Table \ref{tab:normal_4} we see that the 90th percentile is a $z$-value of \Sexpr{round(qnorm(0.90),2)}. Thus, the 90th percentile for our IQ scores lies \Sexpr{round(qnorm(0.90),2)} standard deviations above the mean (above because the $z$-value is positive). The mean is 100 so we have to look at \Sexpr{round(qnorm(0.90),2)} standard deviations above that. The standard deviation equals 15, so we have to look at an IQ score of $100 + \Sexpr{round(qnorm(0.90),2)} \times 15$, which equals \Sexpr{round(qnorm(0.90),2)*15+100}. This tells us that 90\% of the IQ scores are equal to or lower than \Sexpr{round(qnorm(0.90),2)*15+100}.
+
+As a last example, suppose we have a personality test that measures extraversion. If we know that test scores are normally distributed with a mean of 18 and a standard deviation of 2, what would be the 0.10 quantile? From Table \ref{tab:normal_4} we see that the 0.10 quantile is a $z$-value of \Sexpr{round(qnorm(0.10),2)}. This tells us that the 0.10 quantile for the personality scores lies at 1.28 standard deviations below the mean. The mean is 18, so the 0.10 quantile for the personality scores lies at 1.28 standard deviations below 18. The standard deviation is 2, so this amounts to $18-1.28 \times 2= \Sexpr{18-1.28*2}$. This tells us that 10\% of the scores on this test are 15.44 or lower.
+
+Such handy tables are also available for other theoretical distributions. Theoretical distributions are at the core of many data analysis techniques, including linear models. In this book, apart from the normal distribution, we will also encounter other theoretical distributions: the $t$-distribution (Chapter \ref{chap:mean}), the $F$-distribution (Chapter \ref{chap:categorical}), the chi-square distribution (Chapters \ref{chap:mean}, \ref{chap:nonpar1}, \ref{chap:nonpar2}, \ref{chap:logistic} and \ref{chap:poisson}) and the Poisson distribution (\ref{chap:poisson}).
+
+% \subsection{The chi-square distribution}
+% Suppose that we have 1,000 temperature measures from one location. Say that these measures were taken on 1000 different days, so that for each day, temperature was measured once randomly during the day. If we compute, for every day, the squared deviation of the observed temperature from the average temperature, and we plot these 1000 different values, we might get something like is shown in Figure \ref{fig:distr_5}. This in turn bears close resemblance to another theoretical distributution, the chi-square distibution (or $\chi^2$-distribution). This $\chi^2$-distribution is plotted in Figure \ref{fig:distr_6}. For this distribution, there are also tables that tell us the percentage of observed values that are equal to or smaller than a particular value, say 5. For example, we know from theory that for the chi-square distribution depicted in Figure \ref{fig:distr_5}, that 95\% of the values is smaller than 3.84.
+% 
+% <<distr_5, fig.height=4, echo=T, fig.align='center', warning=T, fig.cap='Density plots of 1000 observed squared deviations from the average temperature.' >>=
+% set.seed(1234)
+% tibble(temperature = rnorm(1000,30000, 1), day=rep(1:1000)) %>%
+%         group_by(day) %>%
+%         summarise(SS=(temperature-30000)^2) %>%
+%         ggplot()+
+%         geom_density(aes(x=SS)) +
+%         ylab("density") + xlab("Temperature minus average temperature squared")+
+%         xlim(c(0,10))
+% @
+% %
+% 
+% %%%% something goes wrong when running with this figure below that didnt go wrong before. something to doe with \vref or \vpageref (may loop) package varioref error
+% 
+% 
+% <<distr_6, fig.height=2, echo=T, message=T, fig.align='center', warning=T, fig.cap='The theoretical chi-square distribution' >>=
+% shaded <-  tibble(x = seq(3.84, 10,0.1),  y = dchisq(seq(3.84, 10,0.1), 1, 0))
+% tibble(temperature = seq(0.18,10,0.1)) %>%
+%         ggplot()+
+%         geom_line(aes(x=temperature, y = dchisq(temperature,df=1, ncp=0))) +
+%         geom_area(data=shaded, mapping = aes(x=x ,  y=y),alpha=0.5)+
+%         ylab("density") + xlab("chi-square")
+%         xlim(c(0,10)) +
+%         geom_text(x=3.84,y=-0.01, label=paste(3.84))+
+%           geom_text(x=5.5, y=0.05, label="5 percent")
+%  @
+% %
+%
+
+
+\section{Obtaining quantiles of the normal distribution using R}
+
+Quantiles of a normal distribution with a certain mean and standard deviation (sd) can be obtained using the \texttt{qnorm()} function:
+
+<<>>=
+qnorm(c(0.05, 0.50, 0.95), mean = 100, sd = 15)
+@
+
+This means that if you have a normal distribution with mean 100 and standard deviation 15, 5\% of the values are 75.3272 or less, 50\% of the values are 100 or less, and 95\% of the values are 124.6728 or less.
+
+If you want to know the cumulative proportion for a certain value of a variable that is normally distributed, you can use \texttt{pnorm()}:
+
+<<>>=
+pnorm(-1, mean = 0, sd = 1)
+@
+
+So 15.86\% of the values from a standard normal distribution (mean 0, standard deviation 1), are -1 or less.
+
+\section{Visualising numeric variables: the box plot}
+
+We started this chapter with variables that can be stored in a data matrix. With a variable with a large number of values on a large number of units of analysis, it is hard to get a an intuitive feel for the data. Making a frequency table is one way of summarising a variable, computing measures of central tendency and variation is another way. Visualisation is probably the best way of getting a quick and dirty feel for the information contained in a large data matrix. Earlier in this chapter we came across frequency plots, histograms, and density plots to visualise the distribution of a single variable. A fourth plot for a single variable that we discuss in this book is the \textit{box plot}.  
+
+A box plot gives a quick overview of the distribution of a numeric variable in terms of its quartiles. Figure \ref{fig:chis_7} gives an example of a box plot of (part of) the wage data. The white box represents the interquartile range. The top of the white box equals the third quartile, and the bottom of the white box equals the first quartile. Therefore, we know that half of the workers have a wage between 29,400 and 30,800 The horizontal black line within the white box represents the second quartile (the median), so half of the workers earn less than 30,100. 
+
+A box plot also shows whiskers: two vertical lines sprouting from the white box. There are several ways to draw these two whiskers. One way is to draw the top whisker to the largest value (the maximum) and the bottom whisker to the smallest value (the minimum). Another way, used in Figure \ref{fig:chis_7}, is to have the upper whisker extend from the third quartile to the observed value equal to at most 1.5 times the interquartile range away from the median, and the lower whisker extend from the first quartile to the value at most 1.5 times the interquartile range below the median (the interquartile range is of course the height of the white box). The dots are outlying values, or simply called \textit{outliers}: values that are even further away from the median. This is displayed in Figure \ref{fig:chis_7}. There you see first and third quartiles of 29,400 and 30,800, respectively, so an interquartile range (IQR) of $30800-29400=\Sexpr{30800-29400}$. Multiplying this IQR by 1.5 we get $1.5 \times \Sexpr{30800-29400}= \Sexpr{1.5*(30800-29400)}$. The whiskers therefore extend to $29400-\Sexpr{1.5*(30800-29400)}=\Sexpr{29400-1.5*(30800-29400)}$ and $30800+\Sexpr{1.5*(30800-29400)}=\Sexpr{1.5*(30800-29400)+30800}$. 
+
+Thus, the box plot is a quick way of visualising in what range the middle half of the values are (the range in the white box), where most of the values are (the range of the white box plus the whiskers), and where the extreme values are (the outliers, individually plotted as dots). Note that the white box always contains 50\% of the values. The whiskers are only extensions of the box by a factor of 1.5. In many cases you see that they contain most of the values, but sometimes they miss a lot of values. You will see that when you notice a lot of outliers.
+
+<<chis_7, fig.height=7, echo=F, message=T, fig.align='center', warning=T, fig.cap='A box plot of the wages earned by a sample of 150 administrative clerks' >>=
+set.seed(622854)
+tibble(wage) %>% 
+  sample_n(150) %>% 
+  ggplot(aes(x = "", y = wage)) +
+  geom_boxplot() +
+  scale_y_continuous(breaks = seq(25000, 35000, 200)) +
+  theme(axis.ticks.x = element_blank()) +
+  xlab("")
+ @
+
+\section{Box plots in R}
+
+A box plot can be made using \texttt{geom\_boxplot()}:
+
+<<eval = F, fig.show=F>>=
+mtcars %>% 
+  ggplot(aes(x = "", y = mpg)) +
+  geom_boxplot() +
+  xlab("") 
+  
+@
+
+
+
+\section{Visualising categorical variables}
+
+The histogram, the density plot and the box plot can be used for numeric variables, but also for ordinal variables that you'd like to treat numerically. For categorical variables and ordinal variables that can't be treated numerically, we need other types of plots.
+
+For example, suppose we are in a lecture hall with 456 students and we count the number of Dutch, German, Belgian, Indian, Chinese and Indonesian students. We could summarise the results in a frequency table (see Table \ref{tab:nationality_1}), but a \textit{bar chart} shows the distribution in a more dramatic way, see Figure \ref{fig:nationality_2}.
+
+
+
+<<nationality_1, fig.height=4, echo=FALSE, fig.align='center', fig.cap='A frequency table of the observed nationalities in a lecture hall.', results='asis' >>=
+set.seed(12345)
+nationality <- c("German", "German", "German", "German", "German", "German", "Dutch", "Dutch", "Dutch")
+nationality <- rep(nationality, 5)
+nationality <- c(nationality, "Indian", "Indonesian", "Chinese")
+nationality <- sample(nationality, 456, replace = T)
+tibble(nationality) %>% 
+  count(nationality) %>%
+  xtable(caption="A frequency table of nationalities.", 
+         label = "tab:nationality_1", 
+         digits = 0) %>%
+  print(include.rownames = F, caption.placement = "top")
+@
+
+<<nationality_2, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A bar chart of the observed nationalities in a lecture hall.'>>=
+tibble(nationality) %>%
+  ggplot(aes(nationality)) +
+  geom_bar()
+@
+
+Sometimes, counts of values of a categorical variable are displayed as a \textit{pie chart}, see Figure \ref{fig:nationality_3}. Pie charts are however best avoided. First, because compared to bar charts, they show no information about the actual counts; you only observe relative sizes of the counts. Second, it is very hard to see from a pie chart what the exact proportions are. For example, from the bar chart in Figure \ref{fig:nationality_2} it is easily seen that the ratio German students to Dutch students is about 2 to 1. Research shows that this ratio cannot be read with the same precision from the pie chart in Figure \ref{fig:nationality_3}. In sum, pie charts are best replaced by bar charts.
+
+
+
+<<nationality_3, message = F, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A pie chart of nationalities.'>>=
+tibble(nationality) %>% 
+  group_by(nationality) %>%
+  summarise (proportion = as.numeric(n()/456)) %>%
+  ggplot(aes(x = factor(1), 
+             y = proportion, 
+             fill = factor(nationality))) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  xlab("") +
+  ylab("") +
+  theme_void() +
+  scale_fill_brewer(palette = "Blues") +
+  labs(fill = "Nationality")
+@
+
+
+Ordinal variables are often visualised using bar charts. Figure \ref{fig:climate_1} shows the variation of the answers to a Likert questionnaire item, where Nairobi inhabitants are asked "To what degree do you agree with the statement that the climate in Iceland is agreeable?". With ordinal variables, make sure that the labels are in the natural order. 
+
+<<climate_1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='Opinions on the climate in Iceland.', results='asis' >>=
+set.seed(12345)
+opinion <- c("Completely disagree", "Disagree", "Somewhat disagree",
+              "Somewhat agree", "Agree", "Completely agree") 
+opinion <- factor(opinion, 
+                  levels = c("Completely disagree", "Disagree", 
+                             "Somewhat disagree","Somewhat agree", 
+                             "Agree","Completely agree"),
+                  ordered = T)
+opinion <- sample(opinion, 456, replace=T) 
+tibble(opinion) %>% 
+ggplot(aes(opinion)) +
+        geom_bar() +
+        xlab("The climate in Iceland is agreeable") +
+  theme(axis.text.x = element_text(angle = 300))
+@
+
+
+\section{Visualising categorical and ordinal variables in R}
+
+If a categorical variable is stored as numeric, turn it into a factor first. Then R will treat it as categorical. A bar plot with the frequencies on the $y$-axis can be made with \texttt{geom\_bar()}: 
+
+<<fig.show = F, , fig.height=3>>=
+mtcars %>% 
+  mutate(cyl = factor(cyl, ordered = TRUE)) %>% 
+  ggplot(aes(x = cyl)) +
+  geom_bar()
+@
+
+If you really want a pie chart, then do:
+
+<<fig.show = F, fig.height=3>>=
+mtcars %>% 
+  count(cyl) %>% 
+  mutate(proportion = n/sum(n)) %>% 
+  ggplot(aes(x = "", 
+             y = proportion, 
+             fill = factor(cyl))) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  xlab("") +
+  ylab("") +
+  theme_void() +
+  scale_fill_brewer(palette = "Blues") +
+  labs(fill = "Cylinders")
+@
+
+
+\section{Visualising co-varying variables}
+
+\subsection{Categorical by categorical: cross-table}
+
+Variables are properties that vary: from person to person, or from location to location, or from time to time, or from object to object. Sometimes when you have two variables, you see that they co-vary: when one variable changes, the other variable changes too. For example, suppose I have 20 pencils. These pencils may vary in colour: twelve of them are red, and eight of them are blue. Therefore, \texttt{colour} is a variable with values "red" and "blue". The twenty pencils also vary in length: four are unused and therefore still long, and sixteen of them have been used many times so that they are short. Therefore, \texttt{length} is also a variable, with values "long" and "short". Note that these variables have been measured using the same pencils. In theory I could have long blue pencils, long red pencils, short blue pencils and short red pencils. Let's look at the pencils that I have: for each combination of \texttt{length} and \texttt{colour}, I count the number of pencils. The result I put in Table \ref{tab:cross-table_1}.
+
+<<crosstable_1, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+set.seed(123)
+colour <- c(rep("blue", 12), rep("red", 8))
+length <- c(rep("long", 4), rep("short", 16))
+tibble(length, colour) %>% table() %>%
+  xtable(caption = "Cross-tabulation of colour and length for twenty pencils.", 
+         label = "tab:cross-table_1", 
+         digits = 0) %>%
+  print(include.rownames = T, caption.placement = "top")
+@
+
+Such a table is called a \textit{cross-table}. For every combination of two variables, I see the number of objects (units of analysis) that have that combination. From the table we see that there is not a single pencil that is both red and long (count is 0). At the same time you see that all long pencils are blue. A cross-table is therefore a nice way to show how two variables co-vary. From this particular table for instance, you can easily see that once you know that a pencil is long, you automatically know it is blue.
+
+
+Cross-tables are a nice visualisation of how two categorical variables co-vary. But what if one of the two variables is not a categorical variable?
+
+
+\subsection{Categorical by numerical: box plot}
+Suppose instead of determining length by values "short" and "long", we could measure the exact length of the pencils in centimetres. The results are displayed in Table \ref{tab:cross-table_2}. We see that the table is much larger than Table \ref{tab:cross-table_1}. We also see quite a few cells with zeros. In most cases, for every particular combination of length and colour we only see a count of 1 pencil. In general, you see that when one of the variables is numeric, the cross-table becomes very large and in addition it becomes sparse, that is, with many zeros. With such a large and sparse table, it is hard to get a quick impression of how two variables co-vary.
+
+<<crosstable_2, echo=FALSE, fig.align='center', fig.cap='A frequency distribution', results='asis' >>=
+set.seed(123)
+colour <- c(rep("blue", 12), rep("red",8))
+length <- c(round(rnorm(4, 9, 0.01), 1), round(rnorm(16, 4, 1), 1)) %>% factor()
+tibble(length, colour) %>% 
+  table() %>%
+  xtable(caption = "Cross-tabulation of colour and length for twenty pencils.", 
+         label = "tab:cross-table_2", 
+         digits = 2) %>%
+  print(include.rownames = T, caption.placement = "top")
+@
+
+
+The alternative for two variables where one is categorical and the other one is numeric, is to create a \textit{box plot}. Figure \ref{fig:crosstable_3} shows a box plot of the pencil data. A box plot gives a quick overview of the distribution of the pencils: one distribution of the blue pencils, and one distribution of the red pencils. Let's have a look at the distribution of the blue pencils on the left side of the plot. The white box represents the interquartile range (IQR), so that we know that half of the blue pencils have a length between 4 and 9. The horizontal black line within the white box represents the median (the middle value), so half of the blue pencils are smaller than 4.85. The vertical lines are called whiskers. These typically indicate where the data points are that lie at most 1.5 times the IQR away from the median. For the blue pencils, we see no whisker on top of the white box. That means that there are no data points that lie more than 1.5 times the IQR above the median of 4.85 (here the IQR equals 5.03). We see a whisker on the bottom of the white box, to the lowest observed value of 2.7. This value is less than 1.5 times $5.03 = 7.545$ away from the median of 4.85 so it is included in the whisker. It is the lowest observed value for the blue pencils so the whisker ends there. 
+
+
+<<crosstable_3, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A box plot of the pencil data.', results='asis' >>=
+set.seed(123)
+colour <- c(rep("blue", 12), rep("red", 8))
+length <- c(round(rnorm(4, 9, 0.01), 1),round(rnorm(16, 4, 1), 1))
+tibble(length, colour) %>% 
+  ggplot(aes(x = colour, y = length)) +
+  geom_boxplot()
+# tibble(colour, length) %>% group_by(colour) %>% 
+#   summarise(median = median(length))
+# tibble(colour, length) %>% group_by(colour) %>% 
+#   summarise(IQR = IQR(length))
+
+@
+
+From a box plot like this it is easy to spot differences in the distribution of a quantitative measure for different levels of a qualitative measure. From Figure \ref{fig:crosstable_3} we easily spot that the red pencils (varying between 2 and 6 cm) tend to be shorter than the blue pencils (varying between 3 and 9 cm). Thus, in these pencils, \texttt{length} and \texttt{colour} tend to co-vary: red pencils are often short and blue pencils are often long.
+
+
+\subsection{Numeric by numeric: scatter plot}
+
+<<crosstable_4, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='', results='asis' >>=
+set.seed(123)
+weight <- c(round(rnorm(4, 4, 0.001), 1), round(rnorm(16, 3.5, .1), 1)) %>% 
+  factor()
+tibble(length, weight) %>%
+  mutate(length = factor(length)) %>% 
+  table() %>%
+  xtable(caption = "Cross-tabulation of length (rows) and weight (columns) for twenty pencils.", 
+         label = "tab:cross-table_4", 
+         digits = 2) %>%
+  print(include.rownames = T, caption.placement = "top")
+@
+
+
+<<crosstable_5, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A box plot of the pencil data.', results='asis' >>=
+
+tibble(length, weight) %>% 
+  ggplot(aes(x = weight, y = length)) +
+  geom_boxplot()
+@
+
+Suppose we also measure the weight of my pencils in grams. Table \ref{tab:cross-table_4} shows the cross-tabulation of \texttt{length} and \texttt{weight}. This is a very sparse table (i.e., with lots of zeros), which makes it very hard to see any systematic co-variation in \texttt{weight} and \texttt{length}. Figure \ref{fig:crosstable_5} shows a box plot of \texttt{weight} and \texttt{length}. Also this plot seems a bit strange, because for every observed weight value under 4 grams, there is only one observation, so that only the median can be plotted.
+
+Therefore, in cases where we have two numeric variables, we generally use a \textit{scatter plot}. Figure \ref{fig:scatter_1} shows a scatter plot of \texttt{weight} by \texttt{length}. Now, the relationship between \texttt{weight} and \texttt{length} is easily understood: it appears there is a \textit{linear} relationship between \texttt{weight} and \texttt{length}. For every increase in \texttt{weight}, there is also an increase in \texttt{length}. The relationship is called linear because we could summarise the relationship by drawing a straight line through the dots. This line is shown in Figure \ref{fig:line_1}.
+
+
+<<scatter_1, fig.height=3.5, echo=FALSE, fig.align='center', fig.cap='A scatter plot of length and weight.', results='asis' >>=
+set.seed(123)
+weight <- c(round(rnorm(4, 4, 0.001), 1), round(rnorm(16, 3.5, .1), 1))
+tibble(length, weight) %>%
+  ggplot(aes(x = weight, y = length)) +
+  geom_point() + 
+  theme_minimal()
+@
+
+<<line_1, fig.height=3.5, message = F, echo=FALSE, fig.align='center', fig.cap='A scatter plot of length and weight, with a straight line that summarises the relationship.', results='asis' >>=
+set.seed(123)
+weight <- c(round(rnorm(4, 4, 0.001), 1), round(rnorm(16, 3.5, .1), 1))
+tibble(length, weight) %>%
+  ggplot(aes(x = weight, y = length)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = F) + 
+  theme_minimal()
+@
+
+You see that by visualising two variables, important patterns may emerge that you can easily overlook when only looking at the values. Cross-tables, box plots and scatter plots are powerful tools to find regularities but also oddities in your data that you'd otherwise miss. Some such patterns can be summarised by straight lines, as we see in Figure \ref{fig:line_1}. The remainder of this book focuses on how we can use straight lines to summarise data, but also how to make predictions for data that we have not seen yet.
+
+\section{Visualising two variables using R}
+
+A scatter plot for two numeric variables can be made using \texttt{geom\_point()}:
+
+<<eval = F>>=
+mtcars %>% 
+  ggplot(aes(x = wt, y = mpg)) +
+  geom_point()
+@
+
+A box plot for one categorical and one numeric variable can be made using \texttt{geom\_boxplot()}:
+
+<<eval = F>>=
+mtcars %>% 
+  mutate(cyl = factor(cyl)) %>% 
+  ggplot(aes(x = cyl, y = mpg)) +
+  geom_boxplot()
+@
+
+A cross table for two categorical variables can be made using \texttt{table()}:
+
+<<>>=
+table(mtcars$cyl, mtcars$gear)
+@
+
+Note that the number of cylinders (first-named variable) is in the rows (here 4, 6 and 8 cylinders), and the number of gears (second-named variable) is in the columns (3, 4, and 5 gears).
+
+
+
+\section{Overview of the book}
+
+Chapter \ref{chap:mean} will introduce the problem of \textit{inference}: if you only have a small selection of data points, what can they tell us about the rest of the data? We will use the example of a mean computed using a small number of numerical data points and try to figure out what the mean is likely to be if we would have all the data points. Chapter \ref{chap:prop} discusses the same problem but then for a proportion.
+
+Chapter \ref{chap:simple} will show how we can use a straight line to summarise the relationship between two numeric variables (simple regression), where one variable is the \textit{outcome} variable, and the other variable is a \textit{predictor} variable, that predicts the value on the outcome variable. Such a straight line is a simple form of a \textit{linear model}. We also describe how we can use straight lines (linear models) to summarise relationships between one outcome variable and more than two numeric predictor variables (multiple regression). In Chapter \ref{chap:inf_lm} we will discuss how you can draw conclusions about linear models for data that you have not seen. For example, in the previous section we described the relationship between weight and length of twenty pencils. The question that you may have is whether this linear relationship also holds for \textit{all} pencils of the same make, that is, whether the same linear model holds for both the observed twenty pencils and the total collection of pencils.
+
+In Chapter \ref{chap:categorical} we will show how we can use straight lines to summarise relationships with predictor variables that we want to treat as categorical.
+
+Chapter \ref{chap:assumptions} discusses when it is appropriate to use linear models to summarise your data, and when it is not. It introduces methods that enable you to decide whether to trust a linear model or not. Chapter \ref{chap:nonpar1} then discusses alternative methods that you can use when linear models are not appropriate.
+
+Chapter \ref{chap:moderation} focuses on moderation: how one predictor variable can affect the effect that a second predictor variable has on the outcome variable.
+
+Chapter \ref{chap:advanced} shows how you can make elaborate statements about differences between groups of observations, in case one of the predictor variables is a categorical variable.
+
+Chapters \ref{chap:mixed} and \ref{chap:premidpost} show how to deal with variables that are measured more than once in the same unit of analysis (the same participant, the same pencil, the same school, etc.). For example, you may measure the weight of a pencil before and after you have made a drawing with it. Models that we use for such data are called \textit{linear mixed models}. Similar to linear models, linear mixed models are not always appropriate for some data sets. Therefore, Chapter \ref{chap:nonpar2} discusses alternative methods to study variables that are repeatedly measured in the same research unit.
+
+Chapters \ref{chap:logistic} and \ref{chap:poisson} discuss \textit{generalised linear models}. These are models where the outcome variable is not numeric and continuous. Chapter \ref{chap:logistic} discusses a method that is appropriate when the outcome variable has only two values, say "yes" and "no", or "pass" and "fail". Chapter \ref{chap:poisson} discusses a method that can be used when the outcome variable is a count variable and therefore discrete, for example the number of children in a classroom, or the number of harvested zucchini from one plant.
+
+Chapter \ref{chap:bda} discusses relatively new statistical methodology that is needed when you have a lot of variables. In such cases, traditional inferential data analysis as discussed in the previous chapters often fails. 
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,310 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+
+
+\title{Exercises linear mixed modelling: mixed design}
+\author{St\'ephanie M. van den Berg}
+
+\begin{document}
+
+\maketitle
+
+
+<<libraries, echo=FALSE,  warning=FALSE, message=F>>=
+library(tidyverse)
+library(foreign)
+library(haven)
+library(lme4)
+library(xtable)
+library(scales)
+library(DAAG)
+library(ggthemes)
+library(latex2exp)
+library(broom)
+library(modelr)
+@
+
+
+
+There are two sections with exercises.
+
+\subsection{Exercises}
+
+Below we see data from a study on the effects of the financial crisis on the number of employees in specific Dutch companies. The companies are distinguised into food and non-food related companies. The number of employees are recorded in January 2008 and January 2011.
+
+<<analysisprepostmixed11, fig.height=4, echo=FALSE, fig.align='center', warning=F>>=
+set.seed(1234)
+company <- rep (seq(1:1000), 2)
+year <- rep( c( 2008,2011), each=1000)
+# time <- as.factor(time)
+food <- rep(c("nonfood", "food"),1000 )
+employees <-  rnorm(2000, 60 + 21*(year==2011) + 40 *(food=="food")  , 15) %>% round(0)
+datalong <- data.frame(company, food, year, employees) %>% dplyr::arrange(company)
+datawide <- datalong %>% tidyr::spread(year, employees) %>% dplyr::arrange(company)
+names(datawide) <- c('company','food','2008','2011')
+source('/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/writeForeignCode.R')
+write.foreign(datalong,
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/mixedprepostexercise.sav',
+              '/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data Analysis/spss examples linear mixed model/mixedprepost/getdatamixedprepostexercise.sps',
+              package = c("SPSS"))
+datawide %>% head(4) %>% kable()
+@
+
+\begin{enumerate}
+\item These data are in wide format. Rewrite the datamatrix in such a way that we have the same data in long format. Provide column (variable) names.
+\\
+ \\
+ \begin{tabular}{llrrrr}
+   & \dots & \dots  & \dots & \dots  & \dots  \\ \hline
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+  & \dots & \dots  & \dots & \dots  & \dots  \\
+ \end{tabular}
+\\
+\\
+\item Do we need to use a linear mixed model, or can we analyse these data with an ordinary linear model?
+\item We want to test the null-hypothesis that the effects of the financial crisis in 2008 has the same effect on the number of employees in the food sector as in the non-food sector. Provide the syntax that helps you test this hypothesis.
+\item Suppose the output in Figure \ref{fig:mixedprepostemployee} results from an analysis done by a colleague:
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[scale=0.8, trim={0cm 15cm 0cm 0cm}]{/Users/stephanievandenberg/Dropbox/Statistiek_Onderwijs/Data" "Analysis/spss" "examples" "linear" "mixed" "model/mixedprepost/mixedprepostemployee.pdf}
+    \end{center}
+    \label{fig:mixedprepostemployee}
+    \caption{Output of a MIXED analysis done by a colleague.}
+\end{figure}
+
+She provides you with the information that food=1 means the food sector and food=2 is the nonfood sector.
+
+What does the model predict regarding the number of employees in 2008 in the non-food sector?
+\item What does the model predict regarding the number of employees in 2011 in the non-food sector?
+\item What does the model predict regarding the number of employees in 2008 in the food sector?
+\item What does the model predict regarding the number of employees in 2011 in the food sector?
+\item How large is the effect of the crisis in the food sector?
+\item How large is the effect of the crisis in the non-food sector
+\item How large is the intraclass correlation (ICC)? Give the computation.
+\item Could we have done the analysis with an ordinary linear model? Explain your answer.
+\item Can we reject the null-hypothesis that the effects of the crisis were the same in the food and non-food sectors? Explain your answer.
+\end{enumerate}
+
+
+
+\subsection{Answers}
+
+\begin{enumerate}
+\item It could look like this:
+\\
+\\
+\begin{tabular}{llrrrr}
+   & company & sector  & year & NEmployees  & \dots  \\ \hline
+  & 1 & nonfood  & 2008 & 42  & \dots  \\
+  & 1 & nonfood  & 2011 & 63  & \dots  \\
+  & 2 & food  & 2008 & 104  & \dots  \\
+  & 2 & food  & 2011 & 126  & \dots  \\
+  & 3 & nonfood  & 2008 & 76  & \dots  \\
+  & 3 & nonfood  & 2011 & 58  & \dots  \\
+  & 4 & food  & 2008 & 65  & \dots  \\
+  & 4 & food  & 2011 & 131  & \dots  \\
+\end{tabular}
+\\
+\\
+\item The data are clustered into companies: for each company we have two data points, so we should at least try a linear mixed model. Only if the variance of the company random effects is extremely small, we could use a linear model without random effects.
+\item One option is to let SPSS construct the dummy variables:
+
+\begin{verbatim}
+MIXED employees BY year sector
+  /FIXED=year sector year*sector
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+\end{verbatim}
+
+Or you do the dummy coding yourself, for example like this:
+
+\begin{verbatim}
+
+RECODE year (2008=0) (2011=1) INTO year2011.
+RECODE sector ('Nonfood'=0) ('food'=1) INTO food.
+EXECUTE.
+
+COMPUTE food2011=year2011*food.
+EXECUTE.
+
+MIXED employees WITH year2011 food food2011
+  /FIXED= year2011 food food2011
+  /PRINT=DESCRIPTIVES  SOLUTION
+  /RANDOM=intercept | SUBJECT(company) COVTYPE(VC).
+\end{verbatim}
+
+\item the nonfood sector is food=2, so the predicted number of employees in 2008 in the nonfood sector is equal to $81.57 + 0 -22.056 + 0= 59.514$
+\item the nonfood sector is food=2, so the predicted number of employees in 2011 in the nonfood sector is equal to $81.57 + 0 + 0 + 0= 81.57$
+\item the food sector is food=1, so the predicted number of employees in 2008 in the food sector is equal to $81.57 + 39.31 -22.056 + 0.85=99.674 $
+\item the food sector is food=1, so the predicted number of employees in 2011 in the food sector is equal to $81.57 + 39.31 + 0 + 0 = 120.88   $
+\item in the food sector the effect is a $120.88 - 99.674 =   21.206$ increase in number of employees
+\item in the non-food sector the effect is a $81.57 - 59.514 =   22.056$ increase in number of employees
+\item the ICC is $\frac{12}{12+208}=0.05$
+\item we have clustering, with multiple data point per company, so in general a linear mixed model is better than an ordinary linear model. However, since the intraclass correlation is rather low, the results would be very similar if we would use an ordinary linear model.
+\item The null-hypothesis cannot be reject as the year by sector interaction effect is not signifcantly different from 0, $t(998)=0.66, p=0.51$. (alternatively, $F(1,998)=0.44, p=0.51$). Note however that the statistical results are in terms of absolute number of employees. These data show that the average number of employees in 2008 is larger in the food sector than in the non-food sector. Perhaps it would be wiser to look at percentage increase in number of employees: A change from 100 to 102 reflects a larger impact than a change from 1000 to 1002.
+
+\end{enumerate}
+
+
+
+
+
+
+\subsection{Exercises}
+
+\begin{enumerate}
+\item A psychologist studies whether age affects math performance. In 2017, she measures math performance (one score) in a group of 80-year-olds and she measures math performance (one score) in a group of 90-year-olds. \\
+1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+2. Would you analyze these data with a linear model, or with a linear mixed model? Explain.
+\\
+\\
+\item A psychologist studies whether age affects math performance. She measures math performance (one score) in a group of 7-year-olds and she measures math performance again when the same children are 8 years old. \\
+1. In this design, is the age variable a between-participants variable or a within-participant variable?  \\
+2. Would you analyze these data with a linear model, or with a linear mixed model? Explain.
+\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{rllr}
+  ID & Nationality & Sex & Mathscore  \\ \hline
+  1   & Dutch      &  Male & 67   \\
+ 2   &  Dutch     &  Female & 88   \\
+ 3    & German         &  Male & 50   \\
+ 4   &  German        &  Female & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+In this data set on Math performance, we see two variables, nationality and sex.
+1. What kind of variables are these: within-participant variables or between-participants variables? Explain. \\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+\\
+\\
+\item Look at the data table below.
+\\
+\\
+ \begin{tabular}{rllr}
+  ID & Nationality & Age & Mathscore  \\ \hline
+  1   & Dutch      &  3 & 67   \\
+ 1   &  Dutch     &  5 & 88   \\
+ 2    & German         &  4 & 50   \\
+ 2   &  German        &  6 & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+1. In this data set on Math performance, we see two variables, nationality and age. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+\\
+\\
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{rllr}
+  ID & Subject & Sex & Mood  \\ \hline
+  1   & Psychology      &  Male & 67   \\
+ 1   &  Psychology     &  Female & 88   \\
+ 2    & Sociology         &  Female & 50   \\
+ 2   &  Sociology        &  Male & 98  \\
+  \dots   & \dots        &  \dots& \dots  \\
+ \end{tabular}
+\\
+\\
+1. In this data set on mood in transsexuals, we see two variables, the subject they have a Master's degree in, and sex. What kind of variables are these: within-participant variables or between-participants variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+
+
+\item Look at the data table below.
+\\
+ \\
+ \begin{tabular}{lrrr}
+  SchoolID & Country & Year & Avarage Mathscore  \\ \hline
+ 1   & The Netherlands      &  2010 & 67   \\
+ 1   &  The Netherlands     &  2011 & 88   \\
+ 1    & The Netherlands         &  2012 & 50   \\
+ 1   &  The Netherlands        &  2013 & 98  \\
+ 2   & Germany      &  2010 & 67   \\
+ 2   &  Germany     &  2011 & 88   \\
+ 2    & Germany         &  2012 & 50   \\
+ 2   &  Germany        &  2013 & 98  \\
+  \dots   & \dots        &  \dots & \dots  \\
+ \end{tabular}
+\\
+\\
+1.In this data set on average Math performance in schools, we see two variables, country of the school and year of data collection. What kind of variables are these: within-school variables or between-schools variables? Explain.\\
+2. Would you call this a mixed design? Explain.\\
+3. Would you analyze this data set with a linear model or with a linear mixed model? Explain.
+
+\end{enumerate}
+
+
+\section{Answers}
+
+\begin{enumerate}
+
+\item
+
+1. The age variable is a between-participants variable: some of the participants are 80 years old and some are 90 years old: none are both at the same time. Age discriminates between two sets of participants, so it is a between-participants variable.\\
+2. Two groups of participants were studied. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+
+
+\item
+1. The age variable is a within-participants variable: children are studied twice and scores can therefore be compared within an individual.\\
+2. One group of participants was studied and for each participant we have two math scores. Because we have more than one measure for each participant, we have to use a linear mixed model to account for clustering.
+
+\item
+1.Each participant is either Dutch or German. This is a between-participants variable. Each participant is either male or female, sex discriminates between separate groups of participants, so sex is a between-participants variable.\\
+2. This is \textit{not} a mixed design as it does not have both within-participant and between-participants independent variables. \\
+3. Because we only have one measure for each participant, there is no clustering, and we use an ordinary linear model.
+
+
+\item
+1. Each participant is either Dutch or German. This is a between-participants variable. On measurement 1 the same participants have a different age than on measurement 2. Age is therefore a within-participant variable.\\
+2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+3. For each participant we have two math scores, so we would have to use a linear mixed model to account for clustering.
+
+\item
+1. Each participant has only one Master’s degree. This is a between-participants variable. Between the two measurements, participants change their sex. This is a within-participant variable: we can compare people's mood when they are male and when they are female.\\
+2. This is a mixed design as it has both a within-participant and a between-participants independent variable. \\
+3. For each participant we have two mood scores, so we would have to use a linear mixed model to account for clustering.
+
+
+\item
+
+1. Each school is based in only one country and has measurements across four years. Country is a between-schools variable and year is a within-school variable.\\
+2. This is a mixed design as it has both a within-school and a between-schools independent variable. \\
+3. For each school we have four average math scores, so we would have to use a linear mixed model to account for clustering.
+
+
+
+\end{enumerate}
+
+
+
+
+\end{document}
+
+

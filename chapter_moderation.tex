@@ -1,0 +1,192 @@
+
+\chapter{Moderation: testing interaction effects}\label{chap:moderation}
+
+
+
+
+
+\section{Interaction with one numeric and one dichotomous variable}
+
+Suppose there is a linear relationship between age (in years) and vocabulary (the number of words one knows): the older you get, the more words you know. Suppose we have the following linear regression equation for this relationship:
+
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = 205 + 500 \times \texttt{age} 
+\end{eqnarray}
+
+So according to this equation, the expected number of words for a newborn baby (age=0) equals 205. This may sound silly, but suppose this model is a very good model for vocabulary size in children between 2 and 5 years of age. Then this equation tells us that the expected increase in vocabulary size is 500 words per year.
+
+This model is meant for everybody in the Netherlands. But suppose that one researcher expects that the increase in words is much faster in children from high socio-economic status (SES) families than in children from low SES families. First he believes that vocabulary will be larger in higher SES children than in low SES children. In other words, he expects an effect of SES, over and above the effect of age:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + b_1 \times \texttt{age} + b_2 \times \texttt{SES}
+\end{eqnarray}
+
+This \textit{main effect} of \texttt{SES} is yet unknown and denoted by $b_2$. Note that this linear equation is an example of multiple regression.
+
+
+Let's use some numerical example. Suppose age is coded in years, and SES is dummy coded, with a 1 for high SES and a 0 for low SES. Let $b_2$, the effect of SES over and above age, be 10. Then we can write out the linear equation for low SES and high SES separately.
+
+
+\begin{eqnarray}
+low SES: \widehat{\texttt{vocab}} &=& 200 + 500 \times \texttt{age} + 10 \times 0  \\
+&=& 200 + 500 \times \texttt{age} \\
+high SES: \widehat{\texttt{vocab}} &=& 200 + 500 \times \texttt{age} + 10 \times 1  \\
+&=& (200+10) + 500 \times \texttt{age} \\
+&=& 210 + 500 \times \texttt{age}
+\end{eqnarray}
+
+Figure \ref{fig:summary_plot0} depicts the two regression lines for the high and low SES children separately. So we see that the effect of SES involves a change in the intercept: the intercept equals 200 for low SES children and the intercept for high SES children equals $210$. The difference in intercept is indicated by the coefficient for SES. Note that the two regression lines are parallel: for every age, the difference between the two lines is equal to 10. For every age therefore, the predicted number of words is 10 words more for high SES children than for low SES children.
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cars \%>\% ggplot(aes(speed, dist)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+So far, this ordinary multiple regression. But suppose that such a model does not describe the data that we actually have, or does not make the right predictions based on on our theories. Suppose our researcher also expects that the \textit{yearly increase} in vocabulary is a bit lower than 500 words in low SES families, and a little bit higher than 500 words in high SES families. In other words, he believes that SES might \textit{moderate} (affect or change) the slope coefficient for age. Let's call the slope coefficient in this case $b_1$. In the above equation this slope parameter is equal to 500, but let's now let itself have a linear relationship with SES:
+
+\begin{eqnarray}
+b_1 = a + b_3 \times SES
+\end{eqnarray}
+
+In words: the slope coefficient for the regression of vocabulary on age, is itself linearly related to SES: we predict the slope on the basis of SES. We model that by including a slope $b_3$, but also an intercept $a$. Now we have \textit{two} linear equations for the relationship between vocabulary, age and SES:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} &=& b_0 + b_1 \times \texttt{age} + b_2 \times \texttt{SES}  \\
+b_1 &=& a + b_3 \times \texttt{SES}
+\end{eqnarray}
+
+We can rewrite this by plugging the second equation into the first one (substitution):
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + (a + b_3 \times \texttt{SES})  \times \texttt{age} + b_2 \times \texttt{SES} 
+\end{eqnarray}
+
+
+Multiplying this out gets us:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + a \times \texttt{age} + b_3 \times \texttt{SES}  \times \texttt{age} + b_2 \times \texttt{SES}
+\end{eqnarray}
+
+If we rearrange the terms a bit, we get:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + a \times \texttt{age} + b_2 \times \texttt{SES} + b_3 \times \texttt{SES}  \times \texttt{age}
+\end{eqnarray}
+
+Now this very much looks like a regression equation with one intercept and \textit{three} slope coefficients: one for \texttt{age} ($a$), one for \texttt{SES} ($b_2$) and one for \texttt{SES}$\times$ \texttt{age} ($b_3$).
+
+
+We might want to change the label $a$ into $b_1$ to get a more familiar looking form:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = b_0 + b_1\times \texttt{age} + b_2 \times \texttt{SES} + b_3 \times \texttt{SES}  \times \texttt{age}
+\end{eqnarray}
+
+So the first slope coefficient is the increase in vocabulary for every year that \texttt{age} increases ($b_1$), the second slope coefficient is the increase in vocabulary for an increase of 1 on the \texttt{SES} variable ($b_2$), and the third slope coefficient is the increase in vocabulary for every increase of 1 on the \textit{product} of \texttt{age} and \texttt{SES} ($b_3$).
+\\
+So what does this mean exactly?
+
+% If we look at this equation:
+% 
+% \begin{eqnarray}
+% b_1 = \alpha + b_3 \times SES
+% \end{eqnarray}
+% 
+% we see that a high positive value of $b_3$ increases the size of $b_1$, which is the effect of age on vocabulary.
+
+Suppose we find the following parameter values for the regression equation:
+
+\begin{eqnarray}
+\widehat{\texttt{vocab}} = 200 + 450 \times \texttt{age} + 125 \times \texttt{SES} + 100 \times \texttt{SES}  \times \texttt{age} \label{eq:vocab}
+\end{eqnarray}
+
+If we code low SES children as \texttt{SES = 0}, and high SES children as \texttt{SES = 1}, we can write the above equation into two regression equations, one for low SES children (\texttt{SES = 0}) and one for high SES children (\texttt{SES = 1}):
+
+\begin{eqnarray}
+low SES: \widehat{\texttt{vocab}} &=&  200 + 450 \times \texttt{age}   \\
+high SES: \widehat{\texttt{vocab}} &=& 200 + 450 \times \texttt{age} + 125  + 100   \times \texttt{age}\\
+&=& (200 + 125) + (450 + 100) \times \texttt{age} \nonumber\\
+&=& 325 + 550 \times \texttt{age} \nonumber
+\end{eqnarray}
+
+So for low SES children, the intercept is 200 and the regression slope for age is 450, so they learn 450 words per year. For high SES children, we see the same intercept of 200, with an extra 125 (this is the main effect of SES). So effectively their intercept is now 325. For the regression slope, we now have $450 \times \texttt{age}+ 100   \times \texttt{age}$ which is of course equal to $550 \times \texttt{age}$. So we see that the high SES group has both a different intercept, and a different slope: the increase in vocabulary is 550 per year: somewhat steeper than in low SES children. So yes, the researcher was right: vocabulary increase per year is faster in high SES children than in low SES children.
+
+These two different regression lines are depicted in Figure \ref{fig:summary_plot}. It can be clearly seen that the lines have two different intercepts and two different slopes. That they have two different slopes can be seen from the fact that the lines are not parallel. One has a slope of 450 words per year and the other has a slope of 550 words per year. This difference in slope of 100 is exactly the size of the slope coefficient pertaining to the product $\texttt{SES} \times \texttt{age}$, $b_3$. Thus, the interpretation of the regression coefficient for a product of two variables is that it represents \textit{the difference in slope}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cars \%>\% ggplot(aes(speed, dist)): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+The observation that the slope coefficient is different for different groups is called an \textit{interaction effect}, or \textit{interaction} for short. Other words for this phenomenon are \textit{modification} and \textit{moderation}. In this case, \texttt{SES} is called the \textit{modifier variable}: it modifies the relationship between \texttt{age} on vocabulary. Note however that you could also interpret \texttt{age} as the modifier variable: the effect of \texttt{SES} is larger for older children than for younger children. In the plot you see that the difference between vocabulary for high and low SES children of age 6 is larger than it is for children of age 2.
+
+
+
+
+
+
+
+\section{Interaction effect with a dummy variable in R}
+
+Let's look at some example output for an R data set where we have a categorical variable that is not dummy-coded yet. The data set is on chicks and their weight during the first days of their lives. Weight is measured in grams. The chicks were given one of four different diets. Here we use only the data from chicks on two different diets 1 and 2. We select only the Diet 1 and 2 data. We store the Diet 1 and 2 data under the name \texttt{chick\_data}:
+ 
+ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{chick_data} \hlkwb{<-} \hlstd{ChickWeight} \hlopt{%>%}
+  \hlkwd{filter}\hlstd{(Diet} \hlopt{==} \hlnum{1} \hlopt{|} \hlstd{Diet} \hlopt{==} \hlnum{2}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ChickWeight \%>\% filter(Diet == 1 | Diet == 2): could not find function "{}\%>\%"{}}}\begin{alltt}
+\hlstd{chick_data} \hlopt{%>%}
+    \hlkwd{glimpse}\hlstd{()}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in chick\_data \%>\% glimpse(): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in chick\_data \%>\% ggplot(aes(x = Time, y = weight)): could not find function "{}\%>\%"{}}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in chick\_data \%>\% lm(weight \textasciitilde{} Time, data = .): could not find function "{}\%>\%"{}}}\end{kframe}
+\end{knitrout}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

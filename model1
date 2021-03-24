@@ -1,0 +1,15 @@
+model {
+
+
+for (i in 1:1){
+M[i] ~ dnorm(values[mu_cat], 1/s[i]^2)
+}
+
+
+mu_cat ~ dcat(p)
+
+
+
+
+
+}

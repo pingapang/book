@@ -1,0 +1,327 @@
+
+\chapter{Linear mixed modelling: introduction}\label{chap:mixed}
+
+
+\section{Fixed effects and random effects}
+
+Up till now, we've dealt with linear models that involved only \textit{fixed effects}. A fixed effect is an effect that is the same for every observation. For example, if we have the simple linear model for the relationship between $x$ and $y$,
+
+\begin{equation}
+y = b_0 + b_1 + b_1x + e
+\end{equation}
+
+then both $b_0$ and $b_1$ are called fixed effects. This is because if we have an observation of variable $y$ on individual $i$, the predicted value for variable $y$, that is, $\hat{y_i}$, depends on the value for independent variable $x$ in the following way:
+
+\begin{equation}
+\hat{y_i} = b_0 + b_1x_i
+\end{equation}
+
+In this equation, the expected value for $y$ only varies as a function of an individual's $x$-value. Here, the only elements that vary are the variables $x$ and $y$. The elements that remain fixed are intercept $b_0$ and slope $b_1$. No matter who's $y$-value we are predicting, we are always using the same intercept and the same slope, so in that sense they are fixed effects.
+
+In order to introduce the concept of \textit{random effects}, let's look at a data set on ratings done by customers in a large department store. After each sale, a customer is free to rate the quality of the sale using a 1-100 point system, 100 points being the best possible experience and 1 point being the worst possible experience. The points are awarded to the person responsible for the sale. The data set shows ratings for 5 different salespersons. Suppose these data were gathered to estimate the differences in performance between salespersons Ellen, Mary, John, Vera, and Mark.
+
+<<fig:ratings_boxplot,  fig.cap = "Different ratings for different salespersons.", fig.align='center' , echo=F >>=
+set.seed(1234)
+mu <- rnorm(5, 70, 5)
+name <- c("Ellen", "Mary", "John", "Vera", "Mark") %>% rep(each = 60) 
+rating <- rnorm(300,  rep(mu, each = 60), 5)
+
+tibble(name, rating) %>%
+  ggplot(aes(name, rating)) +
+  geom_boxplot()
+
+fixed_model <- lm(rating ~ name, data = tibble(name, rating))
+@
+
+
+Suppose these data were gathered on only a couple of days in the year, and of course we would be interested to estimate the difference in the rest of the year. So we could set up a linear model in the usual way, with rating as our dependent variable and name as our independent variable. Because the independent variable is a categorical variable with five categories, we use 4 dummy variables, arbitrarily choosing the ratings for Ellen as our reference category.
+
+\begin{eqnarray}
+rating = b_0 + b_1 nameJohn + b_2 nameMary + b_3 nameMark + b_3 nameVera + e \nonumber
+\end{eqnarray}
+
+For the data in the plot we would get the values with the confidence intervals in Table \ref{tab:mixed1}. Here, by choosing a linear model with 4 dummy variables, we have a linear model with 5 fixed effects: 1 intercept and 4 dummy effects. For every observation, the intercept is the same. Similarly, for every observation (rating) the effect of all the dummy variables are the same. For example, for a rating on Mary, the value for the dummy variables nameJohn, nameMary, nameMark, and nameVera are 0, 1, 0, and 0, respectively. When we fill in the equation for such an observation, we find:
+
+\begin{eqnarray}
+\hat{rating} &=& b_0 + b_1 \times 0 + b_2 \times 1 + b_3 \times 0 + b_3 \times 0  \nonumber\\
+              &=& 75.40 + 3.92 \times 0 + 2.22 \times 1 + 0.86 \times 0  -0.62 \times 0  \nonumber\\
+              &=& 75.40 + 2.22 = \Sexpr{75.40 + 2.22}
+\end{eqnarray}
+
+The coefficients for the dummy variables are fixed: no matter whether we compute the expected rating for Ellen, John, Mary, Mark of Vera, the coefficients are the same.
+
+
+<<tab:mixed1, echo = F, results='asis'>>=
+coefs <- fixed_model$coefficients %>%
+  as.matrix() %>%
+  round(2)
+colnames(coefs) <- "coefficient"
+
+cbind(coefs, confint(fixed_model)) %>%
+  xtable(caption = "Parameters for the fixed effects model and their 95 percent confidence intervals.",
+         label = "tab:mixed1") %>%
+  print(include.rownames = T, caption.placement = "top")
+
+library(lme4)
+library(broom)
+random_model <- lmer(rating ~ 1 + ( 1| name), data = tibble(name, rating))
+out <- random_model %>% summary()
+out <- out$coefficients[1] %>% round(2)
+out2 <- tidy(random_model)[2:3, 2]
+
+@
+
+In an earlier chapter (Chapter \ref{chap:categorical}) we saw that the dummy effects actually model the sample means. Here, the reference category is Ellen, so that the intercept is actually the sample mean of Ellen's customer ratings. The parameter of the nameJohn variable is here 3.92, and this is the difference in mean ratings between John's customers and Ellen's customers. We see therefore that in these sample data, the mean rating for John is 3.92 higher than than mean rating for Ellen. By the same token, we see that in the sample, the mean rating by Vera's customers is 0.62 points \textit{lower} than Ellen's mean rating. The sample means are plotted in Figure \ref{fig:}.
+
+Now let's model these same data using random effects. Suppose that we are not at all interested in the mean ratings by Ellen, John, Mary, Mark and Vera and how these particular salespersons differ from eachother. Suppose in contrast that we are interested how salespersons \textit{in general} differ from eachother.
+
+Suppose I am a storemanager and I've only randomly selected 5 salespersons out of a large number of salespersons. I assume that salespersons have different means in customer ratings, and I'm only interested in how much variation there is. I'm not at all interested in Ellen's or Mark's mean ratings: they are \textit{exchangeable} with any other salesperson. I merely randomly selected 5 salespersons to get an estimate of how much variation there is in mean ratings. To make such an estimate, I make a simple assumption. I assume that there is an overall mean rating, and that every salesperson has a mean rating that deviates from that grand mean: some salespersons have a higher mean and some salespersons have a lower mean. More specifically, I assume that these deviations from the grand mean are normally distributed. In other words, I assume that the mean ratings of salespersons are normally distributed around the grand mean. Let's denote the grand mean by $b_0$ and the deviation from the grand mean for each salesperson $i$ by $\mu_i$. We then assume $mu_i$ comes from a normal distribution with mean 0 and variance $\sigma^2_mu$, $\mu_i \sim N(0, \sigma^2_\mu)$.
+
+\begin{equation}
+\mu_i \sim N(0, \sigma^2_\mu)
+\end{equation}
+
+Next, for my data I assume a linear model, with an intercept $b_0$ and residual $e$, and include the deviations $\mu_i$:
+
+\begin{equation}
+rating_{ij} = b_0 + \mu_i + e_{ij}
+\mu_i \sim N(0, \sigma^2_\mu)
+e_{ij} \sim N(0, \sigma^2_e)
+\end{equation}
+
+What this model is saying is that for every $j$-th rating for salesperson $i$, we have an intercept $b_0$, a random effect $mu_i$ that is specific for a salesperson, and a residual $e$ that is specific for each and every rating. We could also see it like this: if we want to predict a specific rating, our best guess is the grand mean (which is $b_0$), but if we also know who the salesperson was, we can add (or substract) the deviation from the grand mean to get a better prediction.
+
+Here we see that for each rating, the intercept is the same, as it has no subscript. Therefore, $b_0$ is again a fixed effect. For $\mu_i$ we saw that we assumed that it comes from a normal distribution, and of course we assume the same for the residual.
+
+Both $mu_i$ and $e_{ij}$ we call random effects: we call them \textit{not fixed} because they are different for different observations. The $mu_i$ effects are different for observations from different salespersons, and the residuals $e_{ij}$ are different for each and every observation. They are called \textit{random} because we assume they are \textit{random draws from distributions}, in this case normal distributions.
+
+Because the random effects are assumed to be on average zero, they are \textit{deviations} from the intercept $b_0$. The intercept can therefore be seen a the \textit{grand mean}: the mean rating for all salespersons taken together. Note the difference with the fixed effects model: there the intercept is the mean of the reference category, that is, one of the salespersons, and the fixed effects are the deviations from that particular reference salespersons. Note that is an arbitary choice: in the fixed model, we could also choose the intercept to represent the grand mean and choose 4 dummy variables to represent deviations from this grand mean.
+
+Therefore, modelwise, the only \textit{fundamental} difference between a fixed effects model and a random effects model is the added assumption in a random effects model that the random effects are normally distributed.
+
+However, there is also a difference in estimation. In the random effects approach, like the storemanager, one is not interested in the random effects themselves, but in the overall variation. One therefore only estimates the variance of the random effects, that is, $\sigma^2_\mu$. If we analyze the same data set with the random effects model, we obtain only estimates of intercept $b_0$, the variance of the deviations from the grand mean, $\sigma^2_\mu$, and the variance of the residuals, $\sigma^2_e$. We then obtain the following model:
+
+
+\begin{eqnarray}
+rating_{ij} = 76.68 + \mu_i + e_{ij} \\
+\mu_i \sim N(0, ) \\
+e_{ij} \sim N(0, )
+\end{eqnarray}
+
+So estimation-wise there is a big difference: in the fixed effects model, we estimate the dummy effects themselves, whereas in the random effects model, we estimate only the \textit{variance of the effects}. This is important to know. So if you're a storemanager and you want to know how large the difference in mean ratings is between John and Ellen on the basis of a sample of data, you definitely have to use the fixed effects approach. In contrast, if you only randomly picked a number of salespersons and you want to estimate the variance of the mean ratings in the population of all salespersons, you definitely have to use the random effects approach.
+
+
+As another example where a random effects model would be more logical than a fixed effects model, consider the problem of studying math scores at all high schools in the Netherlands. Suppose the research question is to what extent there are differences in math achievement across different high schools. Now research budgets are always limited. You never cannot test all kids at every school. Suppose you can only test 3 students at each school, and only in a sample of high schools at that. You therefore set up a sampling scheme where you randomly pick 400 schools, and at every school you randomly select 3 students and test their mathematical ability. Now, suppose you would analyze these data with a fixed effects model: you would then have one intercept and a categorical predictor variable with 400 levels, that you would have to code with 399 dummy variables! Moreover, consider that you would have to estimate one of those dummy effects: suppose school A would be the reference category, and for school B we would have to estimate the dummy effect. For school A we would have 3 data points and for school B we would also have only 3 data points. Now imagine how meaningless it would be to estimate the population means for schools A and B on the basis of only 6 students! Consequently, the dummy effects would show very large standard errors. We could effectively say nothing about the population means on the basis of the dummy effects. This would be true for all 399 dummy effects. Moreover, we would not really be interested in the differences between the population means between these specific 400 schools. We are actually interested in the differences of \textit{all} schools in the Netherlands: these 400 schools were only randomly picked to obtain a representative sample. In contrast, if we would use a random effects model, we would estimate only an intercept and the variance of the random effects. This variance would tell us something about how much variation there is in mean mathematical achievement across schools, and this would answer our research question.
+
+As an example where a fixed effects model would be more appropriate, consider the research question whether female students perform better at math when taught by a female than by a male. Two-hundred eighth-grade students were identified that were taught math by either mainly a female or mainly a male during the last 2 years, and their ability was assessed on a standardized exam. There were 120 students in the male teacher group (the reference group) and 80 students in the female teacher group. The dependent variable is \textbf{math} and the independent variable is \textbf{teacher}, with a dummy variable \textbf{$Teacher_{female}$}. Since we are really interested in the effect of the dummy variable -- we want to know what the effect is of a female teacher relative to a male teacher --, a fixed effects model seems most appropriate. Thus we have the linear model:
+
+\begin{eqnarray}
+math_{i} = b_0 + Teacher_{female} + e_{i} \\
+e_{i} \sim N(0, \sigma^2)
+\end{eqnarray}
+
+We have a fixed effect for the intercept, a fixed effect for female teachers, and a random effect for the residual (residuals are always random for they are always assumed normally distributed). Here, a random effect for the teacher effect would not be meaningful, because the teacher effect does not come from a population of effects: we are not sampling from a distribution of teacher effects of which we believe that this female teacher effect is only one particular instance. Moreover, how could we estimate a variance on the basis of only these two teacher groups? Values should be representative of the normal distribution that they are sampled from. How can only two values be representative of the total variation seen in a normal distribution?
+
+From the above, a number of rules of thump can be gleaned:
+
+\begin{itemize}
+\item
+If the categories of an independent variable are of specific interest, for example you want to estimate population means or population differences, then use fixed effects for this variable.
+\item
+If the categories of an independent variable are of no specific interest, for example they are just random instances of a larger population of categories, then use random effects for this variable.
+\item
+In most cases where your categorical independent variable has more than 10 categories, one is not interested in the population means or population differences between the categories. But if you are, and you want to use fixed effects, make sure that you have enough observations per category (at the very least 10) to make it possible to make these comparisons. If you don't, then use random effects.
+\item
+If you are interested in the variation of category means at population level, and have taken a sample of categories, make sure that have a sufficient number of categories. Estimating a variance at population level on the basis of only 3 or 4 categories is very limited, and could not possibly be representative of the variation at population level. If you have fewer than 4 categories, ask yourself whether fixed effects are not more suitable for your research question than random effects.
+\end{itemize}
+
+
+\section{Estimating variance of random effects}
+
+In Chapter \ref{chap:simple} we saw that the coefficients of linear regression models can be estimated using the principle of ordinary least squares. Unfortunately this principle cannot be used for linear models that contain random effects. Here we discuss two principles that can be used: Maximum Likelihood (ML) and Restricted Maximum Likelihood (REML). Both these methods are based on the Maximum Likelihood estimation principle.
+
+\subsection{The principle of Maximum Likelihood (ML) estimation}
+
+In order to get the essence of the maximum likelihood estimation principle, imagine a population parameter $\pi$ that you do not know. Suppose it is the probability of getting heads with a coin of which we suspect it is not quite fair. This $\pi$ parameter could in theory be 0.5 and then it would be a fair coin, but what if I would have some data, what could those data tell us about the best guess for the value of $\pi$?
+
+Suppose I throw the coin 4 times and I get the following sequence: heads, heads, tails, and heads. Then this sequence constitues my data and I want to use these data to get an ML estimate of $\pi$. The ML estimate is defined as that value for $\pi$ that is the most likely value to have resulted in the given sequence, under a given model.
+
+Suppose we use a very simple model. We assume the coin outcomes are independent events, and we assume that the probability of throwing heads at each event is equal to $\pi$, and consequently the probability of throwing tails equals $1-\pi$. We can then use probability theory to compute the probability of the sequence, in this case the probability of producing this sequence is equal to the product:
+
+\begin{eqnarray}
+P(HHTH) &=& P(H) \times P(H) \times P(T) \times P(H) \\
+&=& \pi \times \pi \times (1-\pi) \times \pi = \pi^3 (1-\pi)
+\end{eqnarray}
+
+Then using this model, we can compute the probability of obtaining the data for different values of $\pi$. For example, suppose the true value of $\pi$ is 0.5, then the probability of $P(HHTH)$ equals $0.5^3 (1-0.5) =  0.0625$. If we compute this probablity for all possible values between 0 and 1, we get the function in Figure \ref{fig:likelihood_pi}. This function is called \textit{the likelihood function} for $\pi$ given the data. The dotted line indicates the likelihood for $\pi$ value of 0.5. It is easily seen that 0.50 is not the most likely value for $\pi$. A more likely value value seems to be somewhere around 0.75. As said, the ML estimate is defined as that value for $\pi$ that is the most likely value to have resulted in the given sequence. We therefore have to find the \textit{maximum} of the likelihood function. The maximum in Figure \ref{fig:} is that value of $\pi$ for which the slope of the red tangent line equals 0. The maximum can be found by taking the first derivative of a function, setting it to 0, and solving it for $\pi$.
+
+So we have our likelihood function
+
+
+\begin{equation}
+L(\pi|HHTH)=\pi^3 (1-\pi) = \pi ^3 - \pi^4
+\end{equation}
+
+If we take the first derivative, we get
+
+\begin{equation}
+L'(\pi|HHTH)=3 \pi^2 - 4\pi^3
+\end{equation}
+
+When we set it equal to 0 and solve for $\pi$, we obtain:
+
+\begin{eqnarray}
+3 \pi^2 - 4\pi^3 = 0 \\
+\pi^2 ( 3- 4 \pi) = 0 \\
+\pi = 0 \vee \pi = \frac{3}{4}
+\end{eqnarray}
+
+A $\pi$ of 0 gives us a minimum (see Figure \ref{fig:likelihood_pi}) and a $\pi$ value of $\frac{3}{4}$ gives us the maximum likelihood. Thus, our maximum likihood estimate (MLE) for $\pi$ given our sequence of heads, heads, tails and heads, is 0.75.
+
+In sum, in the maximum likelihood approach, we use our data and determine which value of the parameter leads to the highest probability of the observed data. The approach can also be used for models with more than one parameter, for example a linear model with more than one coefficient. The solution is then the \textit{combination} of parameters that leads to the highest probability of the observed data.
+
+It can be shown that for regression models, the ordinary least squares method of getting the model coefficients (intercept and slopes) will always give you exactly the same result as the ML approach. For models with random effects, the method of ordinary least squares cannot be used, but the ML method can.
+
+
+<<likelihood_pi, eval=F,  fig.cap = "The likelihood function for pi given the data.", fig.align='center' , echo=F >>=
+pi <- seq(0,1,0.01)
+probability <- pi^3*(1-pi)
+
+max = 0.75^3*(1-0.75)
+
+tibble(pi, probability) %>% 
+  ggplot(aes(x = pi, y = probability)) +
+  geom_line() + 
+  geom_segment(x = 0.5, xend = 0.5, y = 0, yend = 0.0625, lty = 4) +
+  geom_segment(x = 0, xend = 0.5, y = 0.0625, yend = 0.0625, lty = 4) +
+  scale_y_continuous(breaks = seq(0, 0.125, 0.0125)) + 
+  ylab("likelihood") +
+  xlab(expression(pi)) +
+  geom_segment(x = 0.70 , y = max, xend = 0.80, yend = max, col = "red")
+@
+
+If instead to a series of coin flips, we apply the principle of ML to the data set on customer ratings, 
+
+Similar to the coin flip example, we compute the probability of obtaining the data points for a given combination of parameters, under a given model. Here, the model is
+
+\begin{eqnarray}
+rating^*_{ij} = b_0 + \mu_i + e_{ij} \\
+\mu_i \sim N(0, \sigma_\mu^2 ) \\
+e_{ij} \sim N(0,\sigma_e^2 )
+\end{eqnarray}
+
+
+% Unlike the coin example, the model assumes independence only within a particular salesperson: the ratings are more similar for one salespersons than ratings for two different salespersons, because ratings from the same salesperson have the same mean $\mu_i$. There is dependence in the data and that means the data from the same salesperson are correlated. This can be modelled by using a multivariate normal distribution. 
+% 
+% Now the problem with probabilities is that when you multiply them, you easily get values that are so small that calculators and computers get into trouble because of the large number of decimal places. In order to circumvent this problem, one doesn't generally compute the likelihood function, but the \textit{loglikelihood} function. This means taking the natural logarithm of the probability of observing the data given certain values of the model parameters. Thus we have for the log-density:
+% 
+% 
+% \begin{eqnarray}
+% LL(\sigma_\mu^2, \sigma^2_e, b_0|data) \nonumber\\
+% =
+% -\frac{1}{2} ln(|\Sigma|)  
+% -\frac{1}{2}ln(|X^{T}\Sigma^{-1}X|) 
+% -\frac{1}{2}  (y-Xb_0)^{T}  \Sigma^{-1}  (y-Xb_0)
+% \end{eqnarray}
+% 
+% Here we have three unknown quantities: $\sigma_\mu^2$, $\sigma^2_e$, and $b_0$. With the ML method, one first estimates $\sigma_\mu^2$ assuming that one knows the values of $\sigma^2_e$, and $b_0$ by finding the optimum, similar to finding the maximum in Figure \ref{fig:}. Next, using this value of $\sigma_\mu^2$, one then tries to find the best guesses for $\sigma^2_e$, and $b_0$ (the maxima), assuming one knows $\sigma_\mu^2$ to be the true value. 
+
+
+
+
+% https://www.mathworks.com/help/stats/estimating-parameters-in-linear-mixed-effects-models.html
+
+In case you have two kinds of parameters, fixed parameters and variance parameters, there are two general ways in which you can use the maximum likelihood estimation principle to get solutions. The first is Restricted Maximum Likelihood (REML) and the second is, confusingly, Maximum Likelihood. 
+
+
+\subsection{Restricted Maximum Likelihood (REML)}
+%
+REML looks for parameter values for the variances that maximizes the probability of obtaining the given data. But instead of using the observed data, it uses a transformation of the data.
+%
+% The advantage of REML is that, in contrast to the maximum likelihood estimation, REML can produce unbiased estimates of the variance parameters of random effects. With unbiased, we mean that ... The ML is negatively biased.
+%
+% the bias gets smaller for larger sample sizes, though. So if you want to estimate the variance of the random effect and you have relatively small sample size, then use REML.
+%
+% ML method underestimates the variance parameters because it assumes that the fixed parameters are known without uncertainty when estimating the variance parameters.
+%
+% The REML method uses a mathematical trick to make the estimates for the variance parameters independent of the estimates for the fixed effects. REML works by first getting regression residuals for the observations modeled by the fixed effects portion of the model, ignoring at this point any variance components.
+%
+% ML estimates are unbiased for the fixed effects but biased for the random effects, whereas the REML estimates are biased for the fixed effects and unbiased for the random effects.
+
+% More technically, the REML likelihood is a likelihood of linear combinations of the original data: instead of the likelihood of 𝑦, we consider the likelihood of 𝐾𝑦, where the matrix 𝐾 is such that E[𝐾𝑦]=0.
+
+
+The idea of the transformation is that we get rid of the fixed effects of the model, and compute the likelihood function only for the residuals of the model. To illustrate this idea, let's look at the example of the customer ratings again. There we want to estimate the variance of the deviations from the grand mean rating, $\sigma_\mu^2$ and the variance of the residuals, $\sigma^2_e$. However, in order to compute the likelihood function, we don't need the data points themselves, but we transform the data points. We actually want to use the residuals after the fixed effects of the model have been taken into account. This implies that we want the transformed data to be on average 0. For this very simple example and relatively simple model, it is possible to get this when we subtract the overall sample mean from every data point. Here, the mean rating in the sample data equals \Sexpr{round(mean(rating),2)}. If we then compute a new variable $rating^*= rating - \Sexpr{round(mean(rating),2)}$, we can then apply the ML principle to obtain estimates for $\sigma_\mu^2$ and $\sigma^2_e$. Thus we have for the log-density for the first ratings of each salesperson:
+
+
+\begin{eqnarray}
+LL(\sigma_\mu^2, \sigma^2_e|data) \nonumber\\
+=
+-\frac{1}{2} ln(|\Sigma|)  
+-\frac{1}{2}ln(|X^{T}\Sigma^{-1}X|) 
+-\frac{1}{2}  (y-\Sexpr{round(mean(rating),2)})^{T}  \Sigma^{-1}  (y-\Sexpr{round(mean(rating),2)})
+\end{eqnarray}
+
+If we make a two-dimensional plot for various combinations of values for $\sigma_\mu^2$ and $\sigma^2_e)$ and the value of the log-likelihood function, we obtain Figure \ref{fig:}.
+
+
+<< echo = F, warning = F>>=
+
+N <- length(rating)
+I <- diag(1, N)
+X <- matrix(rep(1, N), N, 1) # design matrix for fixed effects
+S = I - X %*% (t(X)%*%X)^(-1) %*% t(X)
+# t(S) %*% rating
+# mean(rating)
+# mean(t(S) %*% rating)
+
+rating_star <- t(S) %*% rating
+
+LL <- 
+  function(var_mu = 25, var_e = 25, rating_star = rating_star) {
+  N <- length(rating_star)
+  Sigma <- diag((var_mu + var_e),N)
+  for (i in seq(1,N,(N/5))){
+  Sigma[i:(i+(N/5-1)) , i:(i+(N/5-1))] <- var_mu
+  }
+  diag(Sigma) <- rep((var_mu + var_e), N)
+  ll <- -0.5*determinant(Sigma, logarithm = T)$modulus[1] -0.5*log( det( t(X)  %*%  solve(Sigma)%*% X  ) ) -0.5* t(rating_star)%*% solve(Sigma) %*% rating_star
+  return(ll)
+  }
+
+v_mu <- seq(20, 110, 2)
+v_e <- seq(22, 27, 1)
+
+data <- expand.grid(v_mu, v_e)
+ll <- apply(data, 1, function(x) LL(x[1],x[2], rating_star))
+
+plot <- tibble(v_mu = data$Var1, v_e = data$Var2, ll) %>% 
+  ggplot(aes(x = v_mu, y = v_e, z = ll)) +
+  stat_contour(aes(colour = ..level..)) +
+  xlab(expression(sigma))+
+  ylab("variance of e")
+data <- ggplot_build(plot)$data[[1]] 
+indices <- setdiff(1:nrow(data), which(duplicated(data$level))) # distinct levels
+plot + 
+  geom_text(aes(x = x, y = y, z = NULL, label = level), data = data[indices, ]) 
+
+# https://www.stt.msu.edu/users/pszhong/Lecture_16_Spring_2017.pdf
+# tibble(v_mu = data$Var1, v_e = data$Var2, ll) %>% View()
+
+# https://people.csail.mit.edu/xiuming/docs/tutorials/reml.pdf
+# https://www.r-bloggers.com/using-2d-contour-plots-within-ggplot2-to-visualize-relationships-between-three-variables/
+# https://stackoverflow.com/questions/42688657/labeled-likelihood-contour-plot-in-r
+
+@
+
+Usually, after REML has obtained estimated the variance components of the model, it gets estimates for the fixed part. 
+
+
+\subsection{ML}
+
+
+\subsection{REML or ML?}
+
+REML is specifically designed for estimating the variance components on the model, so if your research question is mainly focused on the variance components of your model, then you should definitely choose REML over ML. 
+In contrast, if your research question is mainly about the fixed effects of your model, for instance, you want to know whether a slope parameter is significantly different from 0, then you would be better off with the ML approach. 
+
