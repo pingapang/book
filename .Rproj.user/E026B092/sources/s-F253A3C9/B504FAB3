@@ -1,0 +1,26 @@
+{
+    "id": "B504FAB3",
+    "path": "~/surfdrive/Werk/Onderwijs/statistiek/book/linear models/book/appendices.Rnw",
+    "project_path": "appendices.Rnw",
+    "type": "sweave",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1620391145097.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "74,0",
+        "scrollLine": "67"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1616496578,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1616496578,
+    "read_only": false,
+    "read_only_alternatives": []
+}

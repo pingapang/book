@@ -1,0 +1,26 @@
+{
+    "id": "A8BB9A9A",
+    "path": "~/surfdrive/Werk/Onderwijs/statistiek/book/linear models/book/chapter_inference_mean.Rnw",
+    "project_path": "chapter_inference_mean.Rnw",
+    "type": "sweave",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1620830319402.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "374,36",
+        "scrollLine": "362"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1616496578,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1616496578,
+    "read_only": false,
+    "read_only_alternatives": []
+}
